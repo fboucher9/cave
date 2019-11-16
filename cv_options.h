@@ -13,16 +13,18 @@
 
 struct cv_options
 {
-    cv_options_desc o_desc;
-    /* -- */
     cv_node o_list;
 };
 
-cv_options * cv_options_create(
-    cv_options_desc const * p_options_desc);
-
-void cv_options_destroy(
+char cv_options_init(
     cv_options * p_this);
+
+void cv_options_cleanup(
+    cv_options * p_this);
+
+char cv_options_setup(
+    cv_options * p_this,
+    cv_options_desc const * p_desc);
 
 char cv_options_add(
     cv_options * p_this,

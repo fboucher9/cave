@@ -27,6 +27,7 @@ cv_test_srcs = \
     cv_memory.c \
     cv_clock.c \
     cv_node.c \
+    cv_node_it.c \
 
 cv_test_srcs_abs = $(addprefix $(cv_src_path)/,$(cv_test_srcs))
 

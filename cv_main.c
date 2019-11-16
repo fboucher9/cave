@@ -23,12 +23,15 @@ char cv_main_dispatch(
         /* load all plugins */
         if (cv_manager_load())
         {
-            cv_options * p_options = cv_options_create(p_options_desc);
-            if (p_options)
+            cv_options o_options;
+            if (cv_options_init(&o_options))
             {
-                b_result = (*p_func)(p_options);
+                if (cv_options_setup(&o_options, p_options_desc))
+                {
+                    b_result = (*p_func)(&o_options);
+                }
 
-                cv_options_destroy(p_options);
+                cv_options_cleanup(&o_options);
             }
 
             /* unload all plugins */

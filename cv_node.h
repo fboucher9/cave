@@ -5,10 +5,12 @@
 
 #include <cv_node_pred.h>
 
+#include <cv_node_ptr.h>
+
 struct cv_node
 {
-    cv_node * p_next;
-    cv_node * p_prev;
+    cv_node_ptr o_next;
+    cv_node_ptr o_prev;
 };
 
 void cv_node_init(

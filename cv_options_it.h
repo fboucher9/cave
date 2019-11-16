@@ -5,10 +5,13 @@
 
 #include <cv_options_pred.h>
 
+#include <cv_node_it.h>
+
+#include <cv_string_pred.h>
+
 struct cv_options_it
 {
-    char const * const * p_cur;
-    char const * const * p_end;
+    cv_node_it o_node_it;
 };
 
 char cv_options_it_init(
@@ -20,6 +23,6 @@ void cv_options_it_cleanup(
 
 char cv_options_it_next(
     cv_options_it * p_this,
-    char const * * r_cur);
+    cv_string const * * r_string);
 
 #endif /* #ifndef cv_options_it_h_ */

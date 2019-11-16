@@ -40,10 +40,10 @@ static char cv_test_func(
                 &o_options_it,
                 p_options))
         {
-            char const * p_cur;
+            cv_string const * p_cur;
             while (cv_options_it_next(&o_options_it, &p_cur))
             {
-                printf("option = %s\n", p_cur);
+                printf("option = %s\n", p_cur->o_min.pc_char);
             }
             cv_options_it_cleanup(&o_options_it);
         }

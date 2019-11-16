@@ -7,8 +7,8 @@ void cv_node_init(
 {
     if (p_this)
     {
-        p_this->p_next = p_this;
-        p_this->p_prev = p_this;
+        p_this->o_next.p_node = p_this;
+        p_this->o_prev.p_node = p_this;
     }
 }
 
@@ -27,14 +27,14 @@ void cv_node_join(
 {
     if (p_left && p_right)
     {
-        cv_node * const p_left_next = p_left->p_next;
-        cv_node * const p_right_prev = p_right->p_prev;
+        cv_node * const p_left_next = p_left->o_next.p_node;
+        cv_node * const p_right_prev = p_right->o_prev.p_node;
         if (p_left_next && p_right_prev)
         {
-            p_left_next->p_prev = p_right->p_prev;
-            p_right_prev->p_next = p_left->p_next;
-            p_left->p_next = p_right;
-            p_right->p_prev = p_left;
+            p_left_next->o_prev.p_node = p_right->o_prev.p_node;
+            p_right_prev->o_next.p_node = p_left->o_next.p_node;
+            p_left->o_next.p_node = p_right;
+            p_right->o_prev.p_node = p_left;
         }
     }
 }
