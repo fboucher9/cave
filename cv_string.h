@@ -29,6 +29,10 @@ char cv_string_init(
     void const * p_ref_min,
     void const * p_ref_max);
 
+char cv_string_init0(
+    cv_string * p_string,
+    char const * p_ref0);
+
 void cv_string_cleanup(
     cv_string * p_string);
 

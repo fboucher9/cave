@@ -4,6 +4,12 @@
 
 #include <cv_options_desc.h>
 
+#include <cv_options_node.h>
+
+#include <cv_options_node_desc.h>
+
+#include <cv_options_node_ptr.h>
+
 #include <cv_heap.h>
 
 #include <cv_null.h>
@@ -12,22 +18,63 @@
 
 #include <cv_unused.h>
 
-struct cv_options
-{
-    cv_options_desc o_desc;
-};
+#include <cv_memory.h>
 
-/*
- *      Initialize instance of cv_options object using provided descriptor
- *      structure.  All strings are copied, using heap allocations.
- */
-static char cv_options_init(
-    cv_options * p_this,
-    cv_options_desc const * p_options_desc)
+static void cv_options_cleanup_list(
+    cv_options * p_this)
 {
-    char b_result;
-    p_this->o_desc = *(p_options_desc);
-    b_result = 1;
+    if (p_this)
+    {
+        while (p_this->o_list.p_next != &p_this->o_list)
+        {
+            cv_options_node_ptr o_options_node_ptr;
+
+            o_options_node_ptr.p_node =
+                p_this->o_list.p_next;
+
+            cv_options_node_destroy(
+                o_options_node_ptr.p_options_node);
+        }
+    }
+}
+
+static char cv_options_init_list_cb(
+    cv_options * p_this,
+    char const * p_arg0)
+{
+    char b_result = 0;
+    if (p_this && p_arg0)
+    {
+        cv_string o_string;
+        if (cv_string_init0(&o_string, p_arg0))
+        {
+            b_result = cv_options_add(p_this, &o_string);
+
+            cv_string_cleanup(&o_string);
+        }
+    }
+    return b_result;
+}
+
+static char cv_options_init_list(
+    cv_options * p_this)
+{
+    char b_result = 0;
+    if (p_this)
+    {
+        char const * const * p_args_it = p_this->o_desc.p_args_min;
+        b_result = 1;
+        while (b_result && (p_args_it < p_this->o_desc.p_args_max))
+        {
+            char const * const p_arg0 = *p_args_it;
+            b_result = cv_options_init_list_cb(p_this, p_arg0);
+            p_args_it ++;
+        }
+        if (!b_result)
+        {
+            cv_options_cleanup_list(p_this);
+        }
+    }
     return b_result;
 }
 
@@ -38,7 +85,32 @@ static char cv_options_init(
 static void cv_options_cleanup(
     cv_options * p_this)
 {
-    cv_unused_(p_this);
+    if (p_this)
+    {
+        cv_options_cleanup_list(p_this);
+    }
+}
+
+/*
+ *      Initialize instance of cv_options object using provided descriptor
+ *      structure.  All strings are copied, using heap allocations.
+ */
+static char cv_options_init(
+    cv_options * p_this,
+    cv_options_desc const * p_options_desc)
+{
+    char b_result = 0;
+    if (p_this && p_options_desc)
+    {
+        cv_memory_zero(p_this, cv_sizeof_(cv_options));
+        p_this->o_desc = *p_options_desc;
+        cv_node_init(&p_this->o_list);
+        if (cv_options_init_list(p_this))
+        {
+            b_result = 1;
+        }
+    }
+    return b_result;
 }
 
 /*
@@ -97,20 +169,24 @@ void cv_options_destroy(
     }
 }
 
-/*
-
-Function: cv_options_query()
-
-Description:
-
-    Get information about options.
-
-*/
-char cv_options_query(
-    cv_options const * p_this,
-    cv_options_desc * p_desc)
+char cv_options_add(
+    cv_options * p_this,
+    cv_string const * p_string)
 {
-    *p_desc = p_this->o_desc;
-    return 1;
+    char b_result = 0;
+    if (p_this && p_string)
+    {
+        cv_options_node * p_options_node;
+        cv_options_node_desc o_options_node_desc;
+        o_options_node_desc.p_parent = &p_this->o_list;
+        o_options_node_desc.p_string = p_string;
+        p_options_node = cv_options_node_create(
+            &o_options_node_desc);
+        if (p_options_node)
+        {
+            b_result = 1;
+        }
+    }
+    return b_result;
 }
 

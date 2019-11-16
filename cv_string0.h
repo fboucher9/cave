@@ -5,12 +5,11 @@
 
 #include <cv_string_pred.h>
 
-#include <cv_string_ptr.h>
+#include <cv_string1.h>
 
 struct cv_string0
 {
-    cv_string_ptr o_buf;
-    void * pv_padding[1u];
+    cv_string1 o_buf1;
 };
 
 char cv_string0_init(
@@ -24,6 +23,6 @@ char const * cv_string0_get(
     cv_string0 const * p_this);
 
 long cv_string0_len(
-    char const * p_buf0);
+    cv_string0 const * p_this);
 
 #endif /* #ifndef cv_string0_h_ */

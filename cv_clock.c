@@ -34,7 +34,7 @@ char cv_clock_sleep(
 
 char cv_clock_convert_freq(
     cv_clock * p_value,
-    cv_ull_t i_freq)
+    cv_ull i_freq)
 {
     char b_result;
 

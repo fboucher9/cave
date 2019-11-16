@@ -2,6 +2,8 @@
 
 #include <cv_memory.h>
 
+#include <cv_cast.h>
+
 #include <string.h>
 
 void cv_memory_zero(
@@ -32,5 +34,28 @@ long cv_memory_copy(
         i_copy_len = 0;
     }
     return i_copy_len;
+}
+
+long cv_memory_find0(
+    void const * p_src,
+    long i_src_len)
+{
+    long i_find_len;
+    i_find_len = 0;
+    if (p_src && i_src_len > 0)
+    {
+        void const * p_memchr_result;
+        size_t const i_memchr_len = cv_cast_(size_t, i_src_len);
+        p_memchr_result = memchr(p_src, '\000', i_memchr_len);
+        if (p_memchr_result)
+        {
+            char const * const pc_min_char =
+                cv_cast_(char const *, p_src);
+            char const * const pc_max_char =
+                cv_cast_(char const *, p_memchr_result);
+            i_find_len = cv_cast_(long, pc_max_char - pc_min_char);
+        }
+    }
+    return i_find_len;
 }
 

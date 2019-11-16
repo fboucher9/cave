@@ -7,8 +7,8 @@
 
 #include <stdint.h>
 
-typedef uint64_t cv_ull_t;
-typedef int64_t cv_sll_t;
+typedef uint64_t cv_ull;
+typedef int64_t cv_sll;
 
 #else /* cv_have_stdint_h_ */
 

@@ -12,4 +12,7 @@ typedef union cv_string_ptr cv_string_ptr;
 /* Predefine */
 typedef struct cv_string0 cv_string0;
 
+/* Predefine */
+typedef struct cv_string1 cv_string1;
+
 #endif /* #ifndef cv_string_pred_h_ */

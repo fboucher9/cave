@@ -11,9 +11,9 @@
 
 struct cv_clock
 {
-    cv_ull_t i_freq;
+    cv_ull i_freq;
     /* -- */
-    cv_ull_t i_count;
+    cv_ull i_count;
     /* -- */
     cv_clock_epoch e_clock_epoch;
     int ui_padding[3u];
@@ -28,7 +28,7 @@ char cv_clock_sleep(
 
 char cv_clock_convert_freq(
     cv_clock * p_value,
-    cv_ull_t i_freq);
+    cv_ull i_freq);
 
 char cv_clock_convert_epoch(
     cv_clock * p_value,

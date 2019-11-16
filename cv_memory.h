@@ -13,4 +13,8 @@ long cv_memory_copy(
     void const * p_src,
     long i_src_len);
 
+long cv_memory_find0(
+    void const * p_src,
+    long i_src_len);
+
 #endif /* #ifndef cv_memory_zero_h_ */

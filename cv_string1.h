@@ -1,0 +1,25 @@
+/* See LICENSE for license details */
+
+#ifndef cv_string1_h_
+#define cv_string1_h_
+
+#include <cv_string_pred.h>
+
+#include <cv_string.h>
+
+struct cv_string1
+{
+    cv_string o_buf;
+};
+
+char cv_string1_init(
+    cv_string1 * p_this,
+    long i_length);
+
+void cv_string1_cleanup(
+    cv_string1 * p_this);
+
+long cv_string1_len(
+    cv_string1 const * p_this);
+
+#endif /* #ifndef cv_string1_h_ */
