@@ -2,14 +2,17 @@
 
 #include <cv_node.h>
 
-void cv_node_init(
+char cv_node_init(
     cv_node * p_this)
 {
+    char b_result = 0;
     if (p_this)
     {
         p_this->o_next.p_node = p_this;
         p_this->o_prev.p_node = p_this;
+        b_result = 1;
     }
+    return b_result;
 }
 
 void cv_node_cleanup(

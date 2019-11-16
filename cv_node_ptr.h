@@ -5,6 +5,13 @@
 
 #include <cv_node_pred.h>
 
+/*
+
+Cast of cv_node pointers to or from void pointer.  Also cast to or from const
+pointers.
+
+*/
+
 union cv_node_ptr
 {
     void * p_void;

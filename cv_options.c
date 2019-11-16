@@ -10,6 +10,8 @@
 
 #include <cv_options_node_ptr.h>
 
+#include <cv_node_it.h>
+
 #include <cv_heap.h>
 
 #include <cv_null.h>
@@ -25,23 +27,23 @@ static void cv_options_cleanup_list(
 {
     if (p_this)
     {
-        while (p_this->o_list.o_next.p_node != &p_this->o_list)
+        cv_node_it o_node_it;
+        if (cv_node_it_init(&o_node_it, &p_this->o_list))
         {
             cv_options_node_ptr o_options_node_ptr;
-
-            o_options_node_ptr.o_node_ptr =
-                p_this->o_list.o_next;
-
-            cv_options_node_destroy(
-                o_options_node_ptr.p_options_node);
+            while (cv_node_it_first(&o_node_it,
+                    &o_options_node_ptr.o_node_ptr))
+            {
+                cv_options_node_destroy(
+                    o_options_node_ptr.p_options_node);
+            }
+            cv_node_it_cleanup(&o_node_it);
         }
     }
 }
 
-/*
- *      Cleanup instance of cv_options object.  Undo all that was initialized
- *      during entire lifetime of object.
- */
+/* Cleanup instance of cv_options object.  Undo all that was initialized
+during entire lifetime of object.  */
 void cv_options_cleanup(
     cv_options * p_this)
 {

@@ -3,6 +3,12 @@
 #ifndef cv_node_it_h_
 #define cv_node_it_h_
 
+/*
+
+Base iterator for linked lists.
+
+*/
+
 #include <cv_node_pred.h>
 
 #include <cv_node_ptr.h>
