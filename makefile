@@ -3,10 +3,10 @@
 #
 # GNU makefile for build of library
 #
-#
-cv_src_path = .
 
-cv_dst_path = .
+cv_src_path ?= .
+
+cv_dst_path ?= .
 
 cv_test_srcs = \
     cv_test.c \
@@ -20,6 +20,9 @@ cv_test_srcs = \
     cv_options_it.c \
     cv_options_node.c \
     cv_heap.c \
+    cv_heap_primary.c \
+    cv_heap_node.c \
+    cv_heap_pool.c \
     cv_debug.c \
     cv_thread_desc.c \
     cv_thread.c \
@@ -28,6 +31,7 @@ cv_test_srcs = \
     cv_clock.c \
     cv_node.c \
     cv_node_it.c \
+    cv_mutex.c \
 
 cv_test_srcs_abs = $(addprefix $(cv_src_path)/,$(cv_test_srcs))
 
