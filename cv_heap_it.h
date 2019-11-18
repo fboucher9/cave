@@ -12,6 +12,8 @@ struct cv_heap_it
     cv_node_it o_node_it;
 };
 
+#define cv_heap_it_initializer_ { cv_node_it_initializer_ }
+
 char cv_heap_it_init(
     cv_heap_it * p_this,
     cv_list const * p_list);

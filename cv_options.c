@@ -50,6 +50,7 @@ void cv_options_cleanup(
     if (p_this)
     {
         cv_options_cleanup_list(p_this);
+        cv_list_cleanup(&p_this->o_list);
     }
 }
 

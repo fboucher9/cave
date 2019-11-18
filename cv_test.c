@@ -73,7 +73,7 @@ int main(
     char const * const * argv)
 {
     int i_result = 1;
-    cv_options_desc o_options_desc;
+    cv_options_desc o_options_desc = cv_options_desc_initializer_;
     if (cv_options_desc_init(&o_options_desc))
     {
         o_options_desc.p_args_min = argv;

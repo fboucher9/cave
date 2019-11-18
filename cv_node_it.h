@@ -19,6 +19,8 @@ struct cv_node_it
     cv_node_ptr o_list;
 };
 
+#define cv_node_it_initializer_ { cv_node_ptr_null_, cv_node_ptr_null_ }
+
 char cv_node_it_init(
     cv_node_it * p_this,
     cv_list const * p_list);

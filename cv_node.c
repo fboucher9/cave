@@ -2,6 +2,8 @@
 
 #include <cv_node.h>
 
+#include <cv_null.h>
+
 char cv_node_init(
     cv_node * p_this)
 {
@@ -21,6 +23,8 @@ void cv_node_cleanup(
     if (p_this)
     {
         cv_node_join(p_this, p_this);
+        p_this->o_next.p_node = cv_null_;
+        p_this->o_prev.p_node = cv_null_;
     }
 }
 
@@ -52,5 +56,17 @@ char cv_list_init(
             &p_this->o_node);
     }
     return b_result;
+}
+
+void cv_list_cleanup(
+    cv_list * p_this)
+{
+    if (p_this)
+    {
+        /* Assert if not already empty */
+
+        cv_node_cleanup(
+            &p_this->o_node);
+    }
 }
 

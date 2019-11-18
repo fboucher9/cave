@@ -29,7 +29,8 @@ void cv_heap_pool_cleanup(
     cv_heap_pool * p_this);
 
 void * cv_heap_pool_alloc(
-    cv_heap_pool * p_this);
+    cv_heap_pool * p_this,
+    long i_len);
 
 void cv_heap_pool_free(
     cv_heap_pool * p_this,

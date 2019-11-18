@@ -40,4 +40,7 @@ void cv_node_join(
 char cv_list_init(
     cv_list * p_this);
 
+void cv_list_cleanup(
+    cv_list * p_this);
+
 #endif /* #ifndef cv_node_h_ */
