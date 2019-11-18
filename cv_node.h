@@ -22,6 +22,11 @@ struct cv_node
     cv_node_ptr o_prev;
 };
 
+struct cv_list
+{
+    cv_node o_node;
+};
+
 char cv_node_init(
     cv_node * p_this);
 
@@ -31,5 +36,8 @@ void cv_node_cleanup(
 void cv_node_join(
     cv_node * p_left,
     cv_node * p_right);
+
+char cv_list_init(
+    cv_list * p_this);
 
 #endif /* #ifndef cv_node_h_ */

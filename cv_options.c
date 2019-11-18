@@ -64,7 +64,7 @@ char cv_options_init(
     if (p_this)
     {
         cv_memory_zero(p_this, cv_sizeof_(cv_options));
-        cv_node_init(&p_this->o_list);
+        cv_list_init(&p_this->o_list);
         b_result = 1;
     }
     return b_result;

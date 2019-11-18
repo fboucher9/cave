@@ -11,7 +11,7 @@
 
 struct cv_options_node_desc
 {
-    cv_node * p_parent;
+    cv_list * p_parent;
 
     cv_string const * p_string;
 

@@ -21,7 +21,7 @@ struct cv_node_it
 
 char cv_node_it_init(
     cv_node_it * p_this,
-    cv_node const * p_list);
+    cv_list const * p_list);
 
 void cv_node_it_cleanup(
     cv_node_it * p_this);

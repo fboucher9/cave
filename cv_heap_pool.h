@@ -13,9 +13,9 @@ struct cv_heap_pool
 {
     cv_mutex o_mutex; /* safety first */
     /* -- */
-    cv_node o_used_list; /* list of allocations */
+    cv_list o_used_list; /* list of allocations */
     /* -- */
-    cv_node o_free_list; /* list of unused */
+    cv_list o_free_list; /* list of unused */
     /* -- */
     long i_len;
     long l_padding[1u];

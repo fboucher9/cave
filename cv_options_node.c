@@ -14,13 +14,13 @@
 
 static char cv_options_node_init_node(
     cv_options_node * p_this,
-    cv_node * p_parent)
+    cv_list * p_parent)
 {
     char b_result = 0;
     if (p_this && p_parent)
     {
         cv_node_init(&(p_this->o_node));
-        cv_node_join(&(p_this->o_node), p_parent);
+        cv_node_join(&(p_this->o_node), &p_parent->o_node);
         b_result = 1;
     }
     return b_result;

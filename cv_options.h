@@ -13,7 +13,7 @@
 
 struct cv_options
 {
-    cv_node o_list;
+    cv_list o_list;
 };
 
 char cv_options_init(

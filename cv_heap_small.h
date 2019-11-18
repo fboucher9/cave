@@ -9,6 +9,10 @@ Heap for allocations with small length, less than 4KB.
 
 */
 
+void cv_heap_small_load(void);
+
+void cv_heap_small_unload(void);
+
 void * cv_heap_small_alloc(
     long i_len);
 

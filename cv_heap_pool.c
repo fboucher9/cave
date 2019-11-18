@@ -8,6 +8,8 @@
 
 #include <cv_heap_node_ptr.h>
 
+#include <cv_heap_it.h>
+
 #include <cv_mutex.h>
 
 #include <cv_memory.h>
@@ -26,9 +28,9 @@ char cv_heap_pool_init(
         cv_memory_zero(p_this, cv_sizeof_(cv_heap_pool));
         if (cv_mutex_init(&p_this->o_mutex))
         {
-            if (cv_node_init(&p_this->o_used_list))
+            if (cv_list_init(&p_this->o_used_list))
             {
-                if (cv_node_init(&p_this->o_free_list))
+                if (cv_list_init(&p_this->o_free_list))
                 {
                     p_this->i_len = i_len;
 
@@ -57,34 +59,42 @@ void * cv_heap_pool_alloc(
     void * p_result = cv_null_;
     if (p_this)
     {
-        cv_heap_node_ptr o_heap_ptr = cv_heap_node_ptr_null_;
-
         /* Look for free compatible item */
         cv_mutex_lock(&p_this->o_mutex);
-        if (p_this->o_free_list.o_next.pc_node != &p_this->o_free_list)
         {
-            o_heap_ptr.o_node_ptr = p_this->o_free_list.o_next;
-            /* Detach from free list */
-            cv_node_join(
-                o_heap_ptr.o_node_ptr.p_node,
-                o_heap_ptr.o_node_ptr.p_node);
-            /* Attach to used list */
-            cv_node_join(
-                o_heap_ptr.o_node_ptr.p_node,
-                &p_this->o_used_list);
-            p_result = cv_cast_(void *, o_heap_ptr.p_heap_node + 1);
-        }
-        else
-        {
-            /* Create new item */
-            o_heap_ptr.p_heap_node = cv_heap_node_create(p_this->i_len);
-            if (o_heap_ptr.p_heap_node)
+            cv_heap_it o_heap_it;
+            if (cv_heap_it_init(&o_heap_it, &p_this->o_free_list))
             {
-                /* Attach to used list */
-                cv_node_join(
-                    o_heap_ptr.o_node_ptr.p_node,
-                    &p_this->o_used_list);
-                p_result = cv_cast_(void *, o_heap_ptr.p_heap_node + 1);
+                cv_heap_node_ptr o_heap_ptr;
+                if (cv_heap_it_next(&o_heap_it, &o_heap_ptr))
+                {
+                    /* Detach from free list */
+                    cv_node_join(
+                        o_heap_ptr.o_node_ptr.p_node,
+                        o_heap_ptr.o_node_ptr.p_node);
+                    /* Attach to used list */
+                    cv_node_join(
+                        o_heap_ptr.o_node_ptr.p_node,
+                        &p_this->o_used_list.o_node);
+                    p_result = cv_heap_node_to_payload(
+                        o_heap_ptr.p_heap_node);
+                }
+                else
+                {
+                    /* Create new item */
+                    o_heap_ptr.p_heap_node =
+                        cv_heap_node_create(p_this->i_len);
+                    if (o_heap_ptr.p_heap_node)
+                    {
+                        /* Attach to used list */
+                        cv_node_join(
+                            o_heap_ptr.o_node_ptr.p_node,
+                            &p_this->o_used_list.o_node);
+                        p_result = cv_heap_node_to_payload(
+                            o_heap_ptr.p_heap_node);
+                    }
+                }
+                cv_heap_it_cleanup(&o_heap_it);
             }
         }
         cv_mutex_unlock(&p_this->o_mutex);
@@ -100,18 +110,17 @@ void cv_heap_pool_free(
     {
         cv_mutex_lock(&p_this->o_mutex);
         {
-            cv_heap_node_ptr o_heap_ptr = cv_heap_node_ptr_null_;
+            cv_heap_node * const p_heap_node =
+                cv_heap_node_from_payload(p_buf);
 
-            o_heap_ptr.o_node_ptr.p_void = p_buf;
-            o_heap_ptr.p_heap_node --;
             /* Detach from used list */
             cv_node_join(
-                o_heap_ptr.o_node_ptr.p_node,
-                o_heap_ptr.o_node_ptr.p_node);
+                &p_heap_node->o_node,
+                &p_heap_node->o_node);
             /* Attach to free list */
             cv_node_join(
-                o_heap_ptr.o_node_ptr.p_node,
-                &p_this->o_free_list);
+                &p_heap_node->o_node,
+                &p_this->o_free_list.o_node);
         }
         cv_mutex_unlock(&p_this->o_mutex);
     }

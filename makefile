@@ -22,7 +22,10 @@ cv_test_srcs = \
     cv_heap.c \
     cv_heap_primary.c \
     cv_heap_node.c \
+    cv_heap_node_ptr.c \
     cv_heap_pool.c \
+    cv_heap_it.c \
+    cv_heap_small.c \
     cv_debug.c \
     cv_thread_desc.c \
     cv_thread.c \

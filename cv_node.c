@@ -42,3 +42,15 @@ void cv_node_join(
     }
 }
 
+char cv_list_init(
+    cv_list * p_this)
+{
+    char b_result = 0;
+    if (p_this)
+    {
+        b_result = cv_node_init(
+            &p_this->o_node);
+    }
+    return b_result;
+}
+

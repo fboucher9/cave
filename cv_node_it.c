@@ -10,7 +10,7 @@
 
 char cv_node_it_init(
     cv_node_it * p_this,
-    cv_node const * p_list)
+    cv_list const * p_list)
 {
     char b_result = 0;
     if (p_this)
@@ -19,8 +19,8 @@ char cv_node_it_init(
         p_this->o_list.p_void = cv_null_;
         if (p_list)
         {
-            p_this->o_cur.pc_node = p_list;
-            p_this->o_list.pc_node = p_list;
+            p_this->o_cur.pc_node = & p_list->o_node;
+            p_this->o_list.pc_node = & p_list->o_node;
             b_result = 1;
         }
     }

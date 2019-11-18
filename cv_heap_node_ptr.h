@@ -20,4 +20,10 @@ union cv_heap_node_ptr
 
 #define cv_heap_node_ptr_null_ { cv_null_ }
 
+void * cv_heap_node_to_payload(
+    cv_heap_node * p_heap_node);
+
+cv_heap_node * cv_heap_node_from_payload(
+    void * p_void);
+
 #endif /* #ifndef cv_heap_ptr_h_ */
