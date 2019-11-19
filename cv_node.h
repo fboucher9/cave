@@ -22,10 +22,14 @@ struct cv_node
     cv_node_ptr o_prev;
 };
 
+#define cv_node_initializer_ { cv_node_ptr_null_, cv_node_ptr_null_ }
+
 struct cv_list
 {
     cv_node o_node;
 };
+
+#define cv_list_initializer_ { cv_node_initializer_ }
 
 char cv_node_init(
     cv_node * p_this);

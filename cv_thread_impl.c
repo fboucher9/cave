@@ -55,8 +55,12 @@ char cv_thread_init(
 void cv_thread_cleanup(
     cv_thread * p_this)
 {
-    void * p_result;
-    pthread_join(p_this->o_handle, &p_result);
-    cv_unused_(p_result);
+    if (p_this)
+    {
+        /* check detach flag */
+        void * p_result;
+        pthread_join(p_this->o_handle, &p_result);
+        cv_unused_(p_result);
+    }
 }
 

@@ -18,8 +18,6 @@
 
 #include <cv_sizeof.h>
 
-#include <cv_unused.h>
-
 #include <cv_memory.h>
 
 static void cv_options_cleanup_list(

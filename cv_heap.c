@@ -6,6 +6,12 @@
 
 #include <cv_heap_small.h>
 
+#include <cv_heap_large.h>
+
+#include <cv_heap_node.h>
+
+#include <cv_heap_node_ptr.h>
+
 #include <cv_null.h>
 
 #include <stdlib.h>
@@ -25,8 +31,11 @@ char cv_heap_load(void)
     {
         if (cv_heap_small_load())
         {
-            g_heap_loaded = 1;
-            b_result = 1;
+            if (cv_heap_large_load())
+            {
+                g_heap_loaded = 1;
+                b_result = 1;
+            }
         }
     }
     return b_result;
@@ -37,6 +46,7 @@ void cv_heap_unload(void)
     if (g_heap_loaded)
     {
         printf("*** %ld leaks ***\n", g_heap_count);
+        cv_heap_large_unload();
         cv_heap_small_unload();
         g_heap_loaded = 0;
     }
@@ -55,15 +65,9 @@ void * cv_heap_alloc(
         }
         else
         {
-#if 0
-            size_t const i_calloc_len = cv_cast_(size_t, i_buffer_length);
-            p_buffer = calloc(i_calloc_len, 1);
-            if (p_buffer)
-            {
-                g_heap_count ++;
-            }
-#endif
+            p_buffer = cv_heap_large_alloc(i_buffer_length);
         }
+
         if (p_buffer)
         {
             g_heap_count ++;
@@ -75,13 +79,22 @@ void * cv_heap_alloc(
 void cv_heap_free(
     void * p_buffer)
 {
-    if (p_buffer)
+    if (
+        p_buffer)
     {
-        cv_heap_small_free(p_buffer);
+        cv_heap_node const * const p_heap_node =
+            cv_heap_node_from_payload(p_buffer);
 
-#if 0
-        free(p_buffer);
-#endif
+        long const i_buffer_length = p_heap_node->i_len;
+
+        if (i_buffer_length <= 4096)
+        {
+            cv_heap_small_free(p_buffer);
+        }
+        else
+        {
+            cv_heap_large_free(p_buffer);
+        }
 
         g_heap_count --;
     }

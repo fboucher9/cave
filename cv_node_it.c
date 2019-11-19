@@ -6,8 +6,6 @@
 
 #include <cv_null.h>
 
-#include <cv_unused.h>
-
 char cv_node_it_init(
     cv_node_it * p_this,
     cv_list const * p_list)
@@ -30,7 +28,11 @@ char cv_node_it_init(
 void cv_node_it_cleanup(
     cv_node_it * p_this)
 {
-    cv_unused_(p_this);
+    if (p_this)
+    {
+        p_this->o_cur.p_void = cv_null_;
+        p_this->o_list.p_void = cv_null_;
+    }
 }
 
 char cv_node_it_first(

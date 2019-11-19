@@ -26,6 +26,7 @@ cv_test_srcs = \
     cv_heap_pool.c \
     cv_heap_it.c \
     cv_heap_small.c \
+    cv_heap_large.c \
     cv_debug.c \
     cv_thread_desc.c \
     cv_thread.c \

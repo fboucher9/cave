@@ -16,6 +16,8 @@
 
 #include <cv_thread_desc.h>
 
+#include <cv_heap.h>
+
 #include <cv_null.h>
 
 #include <cv_unused.h>
@@ -32,7 +34,14 @@ static void cv_test_job(
 static char cv_test_func(
     cv_options const * p_options)
 {
-    cv_unused_(p_options);
+    {
+        /* Test large allocation */
+        void * const p_large = cv_heap_alloc(64 * 1024);
+        if (p_large)
+        {
+            cv_heap_free(p_large);
+        }
+    }
     /* dump of cmd line options */
     {
         cv_options_it o_options_it;

@@ -2,8 +2,6 @@
 
 #include <cv_string.h>
 
-#include <cv_unused.h>
-
 #include <cv_memory.h>
 
 #include <cv_null.h>

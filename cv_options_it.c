@@ -10,8 +10,6 @@
 
 #include <cv_options_node.h>
 
-#include <cv_unused.h>
-
 char cv_options_it_init(
     cv_options_it * p_this,
     cv_options const * p_options)
