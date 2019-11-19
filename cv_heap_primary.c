@@ -14,7 +14,7 @@ static char * g_heap_primary_cur = cv_null_;
 
 static char * g_heap_primary_end = cv_null_;
 
-static long g_heap_primary_max = 1024L * 1024L;
+static long g_heap_primary_max = ((1024L * 1024L) - 256L);
 
 static cv_mutex g_heap_primary_lock = cv_mutex_initializer_;
 

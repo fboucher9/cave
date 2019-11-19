@@ -36,6 +36,7 @@ cv_test_srcs = \
     cv_node.c \
     cv_node_it.c \
     cv_mutex.c \
+    cv_mutex_pool.c \
 
 cv_test_srcs_abs = $(addprefix $(cv_src_path)/,$(cv_test_srcs))
 

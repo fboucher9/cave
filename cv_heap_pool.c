@@ -2,6 +2,8 @@
 
 #include <cv_heap_pool.h>
 
+#include <cv_heap_pool_impl.h>
+
 #include <cv_heap_primary.h>
 
 #include <cv_heap_node.h>
@@ -124,5 +126,31 @@ void cv_heap_pool_free(
         }
         cv_mutex_unlock(&p_this->o_mutex);
     }
+}
+
+cv_heap_pool * cv_heap_pool_load(
+    long i_len)
+{
+    cv_heap_pool * p_this = cv_null_;
+    void * p_placement = cv_heap_primary_alloc(cv_sizeof_(cv_heap_pool));
+    if (p_placement)
+    {
+        p_this = cv_cast_(cv_heap_pool *, p_placement);
+        if (cv_heap_pool_init(p_this, i_len))
+        {
+        }
+        else
+        {
+            p_this = cv_null_;
+        }
+    }
+    return p_this;
+}
+
+void cv_heap_pool_unload(
+    cv_heap_pool * p_this)
+{
+    cv_heap_pool_cleanup(p_this);
+    /* Memory is not freed */
 }
 

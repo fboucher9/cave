@@ -4,9 +4,23 @@
 
 #include <cv_mutex_impl.h>
 
+#include <cv_mutex_pool.h>
+
+#include <cv_mutex_plugin.h>
+
 #include <cv_null.h>
 
-#include <cv_heap.h>
+char cv_mutex_load(void)
+{
+    char b_result = 0;
+    b_result = cv_mutex_pool_load();
+    return b_result;
+}
+
+void cv_mutex_unload(void)
+{
+    cv_mutex_pool_unload();
+}
 
 char cv_mutex_init(
     cv_mutex * p_this)
@@ -46,7 +60,7 @@ cv_mutex * cv_mutex_create(void)
 {
     cv_mutex * p_this = cv_null_;
 
-    p_this = cv_new_(cv_mutex);
+    p_this = cv_mutex_pool_alloc();
 
     if (p_this)
     {
@@ -55,7 +69,7 @@ cv_mutex * cv_mutex_create(void)
         }
         else
         {
-            cv_delete_(p_this);
+            cv_mutex_pool_free(p_this);
             p_this = cv_null_;
         }
     }
@@ -69,7 +83,7 @@ void cv_mutex_destroy(
     if (p_this)
     {
         cv_mutex_cleanup(p_this);
-        cv_delete_(p_this);
+        cv_mutex_pool_free(p_this);
     }
 }
 

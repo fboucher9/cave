@@ -18,53 +18,41 @@
 
 #define cv_heap_small_count_ (256)
 
-#define cv_heap_small_max_len_ (4096)
-
 typedef char cv_verify_heap_small_align [
     (cv_heap_small_align_ * cv_heap_small_count_) == cv_heap_small_max_len_
     ? 1 : -1 ];
 
 static char g_heap_small_loaded = 0;
 
-static cv_heap_pool * g_heap_small_pool = cv_null_;
+static cv_heap_pool * g_heap_small_pool[cv_heap_small_count_];
 
 char cv_heap_small_load(void)
 {
     char b_result = 0;
     if (!g_heap_small_loaded)
     {
-        long const i_placement_len =
-            cv_sizeof_(cv_heap_pool) * cv_heap_small_count_;
-
-        void * const p_placement =
-            cv_heap_primary_alloc(i_placement_len);
-
-        if (p_placement)
+        long i_pool_index = 0;
+        b_result = 1;
+        while (b_result && (i_pool_index < cv_heap_small_count_))
         {
-            long i_pool_index = 0;
-            g_heap_small_pool = cv_cast_(cv_heap_pool *, p_placement);
-            b_result = 1;
-            while (b_result && (i_pool_index < cv_heap_small_count_))
+            g_heap_small_pool[i_pool_index] = cv_heap_pool_load(
+                (i_pool_index + 1) * cv_heap_small_align_);
+            if (g_heap_small_pool[i_pool_index])
             {
-                b_result = cv_heap_pool_init(g_heap_small_pool + i_pool_index,
-                    (i_pool_index + 1) * cv_heap_small_align_);
-                if (b_result)
+                i_pool_index ++;
+            }
+            else
+            {
+                while (i_pool_index)
                 {
-                    i_pool_index ++;
-                }
-                else
-                {
-                    while (i_pool_index)
-                    {
-                        i_pool_index --;
-                        cv_heap_pool_cleanup(g_heap_small_pool + i_pool_index);
-                    }
+                    i_pool_index --;
+                    cv_heap_pool_unload(g_heap_small_pool[i_pool_index]);
                 }
             }
-            if (b_result)
-            {
-                g_heap_small_loaded = 1;
-            }
+        }
+        if (b_result)
+        {
+            g_heap_small_loaded = 1;
         }
     }
     return b_result;
@@ -77,7 +65,7 @@ void cv_heap_small_unload(void)
         long i_pool_index = 0;
         while (i_pool_index < cv_heap_small_count_)
         {
-            cv_heap_pool_cleanup(g_heap_small_pool + i_pool_index);
+            cv_heap_pool_unload(g_heap_small_pool[i_pool_index]);
             i_pool_index ++;
         }
         g_heap_small_loaded = 0;
@@ -104,7 +92,7 @@ void * cv_heap_small_alloc(
         if ((i_pool_index >= 0) && (i_pool_index < cv_heap_small_count_))
         {
             cv_heap_pool * const p_heap_pool =
-                g_heap_small_pool + i_pool_index;
+                g_heap_small_pool[i_pool_index];
 
             p_result = cv_heap_pool_alloc(p_heap_pool, i_len);
         }
@@ -129,7 +117,7 @@ void cv_heap_small_free(
         if ((i_pool_index >= 0) && (i_pool_index < cv_heap_small_count_))
         {
             cv_heap_pool * const p_heap_pool =
-                g_heap_small_pool + i_pool_index;
+                g_heap_small_pool[i_pool_index];
 
             cv_heap_pool_free(p_heap_pool, p_buf);
         }

@@ -4,18 +4,25 @@
 
 #include <cv_heap_plugin.h>
 
+#include <cv_mutex_plugin.h>
+
 char cv_manager_load(void)
 {
     char b_result = 0;
     if (cv_heap_load())
     {
-        b_result = 1;
+        if (cv_mutex_load())
+        {
+            b_result = 1;
+        }
     }
     return b_result;
 }
 
 void cv_manager_unload(void)
 {
+    cv_mutex_unload();
+
     cv_heap_unload();
 }
 
