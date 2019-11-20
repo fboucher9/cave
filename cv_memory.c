@@ -10,7 +10,9 @@ void cv_memory_zero(
     void * p_buf,
     long i_buf_len)
 {
-    memset(p_buf, 0, (size_t)i_buf_len);
+    size_t const i_memset_len = cv_cast_(size_t, i_buf_len);
+
+    memset(p_buf, 0, i_memset_len);
 }
 
 long cv_memory_copy(
@@ -27,7 +29,8 @@ long cv_memory_copy(
     }
     if (i_copy_len > 0)
     {
-        memcpy(p_dst, p_src, (size_t)i_copy_len);
+        size_t const i_memcpy_len = cv_cast_(size_t, i_copy_len);
+        memcpy(p_dst, p_src, i_memcpy_len);
     }
     else
     {

@@ -6,6 +6,8 @@
 
 #include <cv_null.h>
 
+#include <cv_cast.h>
+
 char cv_string_init(
     cv_string * p_string,
     void const * p_ref_min,
@@ -53,7 +55,7 @@ long cv_string_len(
     long i_string_length = 0;
     if (p_string)
     {
-        i_string_length = (long)(
+        i_string_length = cv_cast_(long,
             p_string->o_max.pc_uchar
             - p_string->o_min.pc_uchar);
     }
