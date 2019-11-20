@@ -27,10 +27,4 @@ union cv_mutex
 /* Macro used to initialize a static instance of cv_mutex object */
 #define cv_mutex_initializer_ { PTHREAD_MUTEX_INITIALIZER }
 
-char cv_mutex_init(
-    cv_mutex * p_this);
-
-void cv_mutex_cleanup(
-    cv_mutex * p_this);
-
 #endif /* #ifndef cv_mutex_impl_h_ */

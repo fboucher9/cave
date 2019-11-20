@@ -6,9 +6,11 @@
 
 #include <cv_heap_node_ptr.h>
 
-#include <cv_mutex_impl.h>
+#include <cv_mutex_mgr.h>
 
 #include <cv_mutex.h>
+
+#include <cv_list.h>
 
 #include <cv_node_it.h>
 
@@ -19,8 +21,6 @@
 #include <stdlib.h>
 
 static char g_heap_large_loaded = 0;
-
-static cv_mutex g_heap_large_mutex = cv_mutex_initializer_;
 
 static cv_list g_heap_large_used_list = cv_list_initializer_;
 
@@ -49,6 +49,23 @@ void cv_heap_large_unload(void)
     {
         /* Detect leaks */
         /* Free all items ... */
+        {
+            cv_node_it o_node_it = cv_node_it_initializer_;
+            if (cv_node_it_init(&o_node_it, &g_heap_large_free_list))
+            {
+                cv_heap_node_ptr o_heap_ptr = cv_heap_node_ptr_null_;
+                while (cv_node_it_first(&o_node_it, &o_heap_ptr.o_node_ptr))
+                {
+                    /* Detach from free list */
+                    cv_node_join(
+                        o_heap_ptr.o_node_ptr.p_node,
+                        o_heap_ptr.o_node_ptr.p_node);
+                    /* Free memory */
+                    free(o_heap_ptr.p_void);
+                }
+                cv_node_it_cleanup(&o_node_it);
+            }
+        }
         cv_list_cleanup(&g_heap_large_used_list);
         cv_list_cleanup(&g_heap_large_free_list);
         g_heap_large_loaded = 0;

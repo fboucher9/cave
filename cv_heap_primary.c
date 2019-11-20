@@ -6,9 +6,17 @@
 
 #include <cv_mutex.h>
 
-#include <cv_mutex_impl.h>
+#include <cv_mutex_mgr.h>
+
+#include <cv_list.h>
+
+#include <cv_node.h>
+
+#include <cv_node_it.h>
 
 #include <stdlib.h>
+
+static cv_list g_heap_sections = cv_list_initializer_;
 
 static char * g_heap_primary_cur = cv_null_;
 
@@ -16,16 +24,48 @@ static char * g_heap_primary_end = cv_null_;
 
 static long g_heap_primary_max = ((1024L * 1024L) - 256L);
 
-static cv_mutex g_heap_primary_lock = cv_mutex_initializer_;
+char cv_heap_primary_load(void)
+{
+    char b_result = 0;
+
+    if (cv_list_init(&g_heap_sections))
+    {
+        b_result = 1;
+    }
+
+    return b_result;
+}
+
+void cv_heap_primary_unload(void)
+{
+    /* Free list of sections */
+    {
+        cv_node_it o_node_it = cv_node_it_initializer_;
+        if (cv_node_it_init(&o_node_it, &g_heap_sections))
+        {
+            cv_node_ptr o_node_ptr = cv_node_ptr_null_;
+            while (cv_node_it_first(&o_node_it, &o_node_ptr))
+            {
+                /* Detach from list */
+                cv_node_cleanup(
+                    o_node_ptr.p_node);
+                /* Free memory */
+                free(o_node_ptr.p_void);
+            }
+            cv_node_it_cleanup(&o_node_it);
+        }
+    }
+    cv_list_cleanup(&g_heap_sections);
+}
 
 static void cv_heap_primary_lock(void)
 {
-    cv_mutex_lock(&g_heap_primary_lock);
+    cv_mutex_lock(&g_heap_primary_mutex);
 }
 
 static void cv_heap_primary_unlock(void)
 {
-    cv_mutex_unlock(&g_heap_primary_lock);
+    cv_mutex_unlock(&g_heap_primary_mutex);
 }
 
 void * cv_heap_primary_alloc(
@@ -52,9 +92,23 @@ void * cv_heap_primary_alloc(
 
             if (p_new_segment)
             {
-                g_heap_primary_cur = cv_cast_(char *, p_new_segment);
+                cv_node_ptr o_node_ptr = cv_node_ptr_null_;
 
-                g_heap_primary_end = g_heap_primary_cur + g_heap_primary_max;
+                o_node_ptr.p_void = p_new_segment;
+
+                cv_node_init(
+                    o_node_ptr.p_node);
+
+                cv_node_join(
+                    o_node_ptr.p_node,
+                    &g_heap_sections.o_node);
+
+                o_node_ptr.p_node ++;
+
+                g_heap_primary_cur = cv_cast_(char *, o_node_ptr.p_void);
+
+                g_heap_primary_end = g_heap_primary_cur + g_heap_primary_max -
+                    sizeof(cv_node);
             }
         }
 

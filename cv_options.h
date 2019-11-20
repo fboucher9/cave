@@ -9,7 +9,7 @@
 
 #include <cv_options_desc.h>
 
-#include <cv_node.h>
+#include <cv_list.h>
 
 struct cv_options
 {

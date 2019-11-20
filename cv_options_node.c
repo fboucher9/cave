@@ -12,6 +12,8 @@
 
 #include <cv_memory.h>
 
+#include <cv_list.h>
+
 static char cv_options_node_init_node(
     cv_options_node * p_this,
     cv_list * p_parent)

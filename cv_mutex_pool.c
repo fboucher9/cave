@@ -4,13 +4,11 @@
 
 #include <cv_heap_pool.h>
 
-#include <cv_mutex_impl.h>
+#include <cv_mutex.h>
 
 #include <cv_mutex_ptr.h>
 
 #include <cv_null.h>
-
-#include <cv_sizeof.h>
 
 static char g_mutex_pool_loaded = 0;
 
@@ -21,7 +19,7 @@ char cv_mutex_pool_load(void)
     char b_result = 0;
     if (!g_mutex_pool_loaded)
     {
-        g_mutex_pool = cv_heap_pool_load(cv_sizeof_(cv_mutex));
+        g_mutex_pool = cv_heap_pool_load(cv_mutex_sizeof());
         if (g_mutex_pool)
         {
             g_mutex_pool_loaded = 1;
@@ -50,7 +48,7 @@ cv_mutex * cv_mutex_pool_alloc(void)
     if (g_mutex_pool_loaded && g_mutex_pool)
     {
         o_placement.p_void = cv_heap_pool_alloc(g_mutex_pool,
-            cv_sizeof_(cv_mutex));
+            cv_mutex_sizeof());
     }
     return o_placement.p_mutex;
 }

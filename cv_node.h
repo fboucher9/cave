@@ -24,13 +24,6 @@ struct cv_node
 
 #define cv_node_initializer_ { cv_node_ptr_null_, cv_node_ptr_null_ }
 
-struct cv_list
-{
-    cv_node o_node;
-};
-
-#define cv_list_initializer_ { cv_node_initializer_ }
-
 char cv_node_init(
     cv_node * p_this);
 
@@ -40,11 +33,5 @@ void cv_node_cleanup(
 void cv_node_join(
     cv_node * p_left,
     cv_node * p_right);
-
-char cv_list_init(
-    cv_list * p_this);
-
-void cv_list_cleanup(
-    cv_list * p_this);
 
 #endif /* #ifndef cv_node_h_ */

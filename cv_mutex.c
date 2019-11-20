@@ -8,6 +8,8 @@
 
 #include <cv_mutex_plugin.h>
 
+#include <cv_sizeof.h>
+
 #include <cv_null.h>
 
 char cv_mutex_load(void)
@@ -20,6 +22,11 @@ char cv_mutex_load(void)
 void cv_mutex_unload(void)
 {
     cv_mutex_pool_unload();
+}
+
+long cv_mutex_sizeof(void)
+{
+    return cv_sizeof_(cv_mutex);
 }
 
 char cv_mutex_init(

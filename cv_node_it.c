@@ -4,6 +4,8 @@
 
 #include <cv_node.h>
 
+#include <cv_list.h>
+
 #include <cv_null.h>
 
 char cv_node_it_init(

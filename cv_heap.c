@@ -23,6 +23,8 @@ are thread-safe.
 
 #include <cv_heap_node_ptr.h>
 
+#include <cv_heap_primary.h>
+
 #include <cv_null.h>
 
 #include <cv_debug.h>
@@ -42,21 +44,28 @@ char cv_heap_load(void)
     char b_result = 0;
     if (!g_heap_loaded)
     {
-        if (cv_heap_small_load())
+        if (cv_heap_primary_load())
         {
-            if (cv_heap_large_load())
+            if (cv_heap_small_load())
             {
-                g_heap_loaded = 1;
-                b_result = 1;
+                if (cv_heap_large_load())
+                {
+                    g_heap_loaded = 1;
+                    b_result = 1;
+                }
+                else
+                {
+                    cv_debug_msg_("heap load large fail");
+                }
             }
             else
             {
-                cv_debug_msg_("heap load large fail");
+                cv_debug_msg_("heap load small fail");
             }
         }
         else
         {
-            cv_debug_msg_("heap load small fail");
+            cv_debug_msg_("heap load primary fail");
         }
     }
     else
@@ -88,6 +97,7 @@ void cv_heap_unload(void)
         printf("*** %ld leaks ***\n", g_heap_count);
         cv_heap_large_unload();
         cv_heap_small_unload();
+        cv_heap_primary_unload();
         g_heap_loaded = 0;
     }
     else
