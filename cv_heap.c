@@ -94,7 +94,9 @@ void cv_heap_unload(void)
 {
     if (g_heap_loaded)
     {
+#if defined cv_have_libc_
         printf("*** %ld leaks ***\n", g_heap_count);
+#endif /* #if defined cv_have_libc_ */
         cv_heap_large_unload();
         cv_heap_small_unload();
         cv_heap_primary_unload();

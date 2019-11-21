@@ -14,6 +14,8 @@ struct cv_options_it
     cv_node_it o_node_it;
 };
 
+#define cv_options_it_initializer_ { cv_node_it_initializer_ }
+
 char cv_options_it_init(
     cv_options_it * p_this,
     cv_options const * p_options);

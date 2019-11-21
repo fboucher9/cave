@@ -141,20 +141,19 @@ void cv_heap_pool_free(
 cv_heap_pool * cv_heap_pool_load(
     long i_len)
 {
-    cv_heap_pool * p_this = cv_null_;
-    void * p_placement = cv_heap_primary_alloc(cv_sizeof_(cv_heap_pool));
-    if (p_placement)
+    cv_heap_pool_ptr o_heap_pool_ptr = cv_heap_pool_ptr_null_;
+    o_heap_pool_ptr.p_void = cv_heap_primary_alloc(cv_sizeof_(cv_heap_pool));
+    if (o_heap_pool_ptr.p_void)
     {
-        p_this = cv_cast_(cv_heap_pool *, p_placement);
-        if (cv_heap_pool_init(p_this, i_len))
+        if (cv_heap_pool_init(o_heap_pool_ptr.p_heap_pool, i_len))
         {
         }
         else
         {
-            p_this = cv_null_;
+            o_heap_pool_ptr.p_void = cv_null_;
         }
     }
-    return p_this;
+    return o_heap_pool_ptr.p_heap_pool;
 }
 
 void cv_heap_pool_unload(

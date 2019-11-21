@@ -48,6 +48,7 @@ char cv_heap_small_load(void)
                     i_pool_index --;
                     cv_heap_pool_unload(g_heap_small_pool[i_pool_index]);
                 }
+                b_result = 0;
             }
         }
         if (b_result)
@@ -86,8 +87,7 @@ void * cv_heap_small_alloc(
             i_len + cv_heap_small_align_ - i_remainder : i_len;
 
         /* Locate pool */
-        int const i_pool_index = cv_cast_(int,
-            (i_aligned_len - 1) / cv_heap_small_align_);
+        long const i_pool_index = (i_aligned_len - 1) / cv_heap_small_align_;
 
         if ((i_pool_index >= 0) && (i_pool_index < cv_heap_small_count_))
         {
@@ -111,8 +111,7 @@ void cv_heap_small_free(
 
         long const i_len = p_heap_node->i_len;
 
-        long const i_pool_index = cv_cast_(int,
-            (i_len - 1) / cv_heap_small_align_);
+        long const i_pool_index = (i_len - 1) / cv_heap_small_align_;
 
         if ((i_pool_index >= 0) && (i_pool_index < cv_heap_small_count_))
         {

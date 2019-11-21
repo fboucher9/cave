@@ -24,6 +24,8 @@ struct cv_string
     cv_string_ptr o_max;
 };
 
+#define cv_string_initializer_ { cv_string_ptr_null_, cv_string_ptr_null_ }
+
 char cv_string_init(
     cv_string * p_string,
     void const * p_ref_min,

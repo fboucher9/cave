@@ -55,9 +55,9 @@ long cv_string_len(
     long i_string_length = 0;
     if (p_string)
     {
-        i_string_length = cv_cast_(long,
+        i_string_length = (
             p_string->o_max.pc_uchar
-            - p_string->o_min.pc_uchar);
+            - p_string->o_min.pc_uchar) & 0x7FFFFFFFL;
     }
     return i_string_length;
 }

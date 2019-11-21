@@ -18,7 +18,9 @@
 
 #include <cv_unused.h>
 
+#if defined cv_have_libc_
 #include <stdlib.h>
+#endif /* #if defined cv_have_libc_ */
 
 static char g_heap_large_loaded = 0;
 
@@ -61,7 +63,10 @@ void cv_heap_large_unload(void)
                         o_heap_ptr.o_node_ptr.p_node,
                         o_heap_ptr.o_node_ptr.p_node);
                     /* Free memory */
+#if defined cv_have_libc_
                     free(o_heap_ptr.p_void);
+#else /* #if defined cv_have_libc_ */
+#endif /* #if defined cv_have_libc_ */
                 }
                 cv_node_it_cleanup(&o_node_it);
             }
@@ -126,8 +131,12 @@ static void * cv_heap_large_alloc_cb(
         }
         else
         {
+#if defined cv_have_libc_
             size_t const i_malloc_len = cv_cast_(size_t, i_aligned_len);
             o_heap_ptr.p_void = malloc(i_malloc_len);
+#else /* #if defined cv_have_libc_ */
+            o_heap_ptr.p_void = cv_null_;
+#endif /* #if defined cv_have_libc_ */
             if (o_heap_ptr.p_void)
             {
                 cv_heap_node_init( o_heap_ptr.p_heap_node, i_len);
@@ -166,9 +175,9 @@ void * cv_heap_large_alloc(
     void * p_result = cv_null_;
     if (g_heap_large_loaded && (i_len > 4096))
     {
-        cv_mutex_lock(&g_heap_large_mutex);
+        cv_mutex_lock(&cv_heap_large_mutex);
         p_result = cv_heap_large_alloc_cb(i_len);
-        cv_mutex_unlock(&g_heap_large_mutex);
+        cv_mutex_unlock(&cv_heap_large_mutex);
     }
     return p_result;
 }
@@ -178,9 +187,9 @@ void cv_heap_large_free(
 {
     if (g_heap_large_loaded && p_buf)
     {
-        cv_mutex_lock(&g_heap_large_mutex);
+        cv_mutex_lock(&cv_heap_large_mutex);
         cv_heap_large_free_cb(p_buf);
-        cv_mutex_unlock(&g_heap_large_mutex);
+        cv_mutex_unlock(&cv_heap_large_mutex);
     }
 }
 

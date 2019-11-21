@@ -9,9 +9,9 @@
 
 #include <cv_mutex_pred.h>
 
-extern cv_mutex g_heap_primary_mutex;
+extern cv_mutex cv_heap_primary_mutex;
 
-extern cv_mutex g_heap_large_mutex;
+extern cv_mutex cv_heap_large_mutex;
 
 cv_mutex * cv_mutex_mgr_acquire(void);
 

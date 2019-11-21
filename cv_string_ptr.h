@@ -5,6 +5,8 @@
 
 #include <cv_string_pred.h>
 
+#include <cv_null.h>
+
 /*
 
 Family of compatible pointers.  A string may be composed of signed or unsigned
@@ -19,13 +21,15 @@ to verify the size of the union.
 
 union cv_string_ptr
 {
-    unsigned char const * pc_uchar;
-    unsigned char * p_uchar;
-    char const * pc_char;
-    char * p_char;
     void const * pc_void;
     void * p_void;
+    char const * pc_char;
+    char * p_char;
+    unsigned char const * pc_uchar;
+    unsigned char * p_uchar;
 };
+
+#define cv_string_ptr_null_ { cv_null_ }
 
 /* Verify that sizeof union matches size of each member */
 typedef char cv_verify_sizeof_string_ptr [

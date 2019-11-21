@@ -15,6 +15,38 @@ Windows, the WaitForSingleObject function is used.
 
 */
 
+#include <cv_file_pred.h>
+
+#include <cv_types.h>
+
+union cv_file_data
+{
+    cv_sll ll_align;
+
+    void * p_void;
+
+    int i_index;
+
+};
+
+#define cv_file_data_initializer { 0 }
+
+struct cv_file
+{
+    union cv_file_data o_data;
+};
+
+#define cv_file_initializer_ { cv_file_data_initializer_ }
+
+long cv_file_sizeof(void);
+
+char cv_file_init(
+    cv_file * p_this,
+    cv_file_desc const * p_desc);
+
+void cv_file_cleanup(
+    cv_file * p_this);
+
 cv_file * cv_file_create(
     cv_file_desc const * p_desc);
 

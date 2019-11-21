@@ -49,13 +49,15 @@ cv_profile_cflags = \
 
 cv_cflags = \
     -g \
-    -O0 \
+    -O2 \
     -no-pie \
     -fno-pie \
+    -fno-stack-protector \
     -fno-unwind-tables \
     -fno-asynchronous-unwind-tables \
     -D _DEFAULT_SOURCE \
     -D cv_debug_ \
+    -D cv_have_libc_ \
     -I . \
     -ansi \
     -pedantic \
@@ -94,7 +96,7 @@ cv_cflags = \
     -Wredundant-decls \
     -Wsequence-point \
     -Wshadow \
-    -Wstrict-overflow=5 \
+    -Wstrict-overflow=2 \
     -Wsync-nand \
     -Wundef \
     -Wunused \

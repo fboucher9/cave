@@ -7,9 +7,18 @@
 
 */
 
+#include <cv_file_pred.h>
+
+#include <cv_string.h>
+
 struct cv_file_desc
 {
-    cv_buffer
+    cv_string o_name;
+    cv_string o_mode;
 };
+
+#define cv_file_desc_initializer_ { \
+    cv_string_initializer_, \
+    cv_string_initializer_ }
 
 #endif /* #ifndef cv_file_desc_h_ */

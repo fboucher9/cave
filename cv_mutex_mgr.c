@@ -10,9 +10,9 @@
 
 #include <cv_heap_primary.h>
 
-cv_mutex g_heap_primary_mutex = cv_mutex_initializer_;
+cv_mutex cv_heap_primary_mutex = cv_mutex_initializer_;
 
-cv_mutex g_heap_large_mutex = cv_mutex_initializer_;
+cv_mutex cv_heap_large_mutex = cv_mutex_initializer_;
 
 cv_mutex * cv_mutex_mgr_acquire(void)
 {

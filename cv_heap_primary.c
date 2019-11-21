@@ -14,7 +14,9 @@
 
 #include <cv_node_it.h>
 
+#if defined cv_have_libc_
 #include <stdlib.h>
+#endif /* #if defined cv_have_libc_ */
 
 static cv_list g_heap_sections = cv_list_initializer_;
 
@@ -50,7 +52,9 @@ void cv_heap_primary_unload(void)
                 cv_node_cleanup(
                     o_node_ptr.p_node);
                 /* Free memory */
+#if defined cv_have_libc_
                 free(o_node_ptr.p_void);
+#endif /* #if defined cv_have_libc_ */
             }
             cv_node_it_cleanup(&o_node_it);
         }
@@ -60,12 +64,12 @@ void cv_heap_primary_unload(void)
 
 static void cv_heap_primary_lock(void)
 {
-    cv_mutex_lock(&g_heap_primary_mutex);
+    cv_mutex_lock(&cv_heap_primary_mutex);
 }
 
 static void cv_heap_primary_unlock(void)
 {
-    cv_mutex_unlock(&g_heap_primary_mutex);
+    cv_mutex_unlock(&cv_heap_primary_mutex);
 }
 
 void * cv_heap_primary_alloc(
@@ -86,10 +90,13 @@ void * cv_heap_primary_alloc(
 
         if ((g_heap_primary_cur + i_aligned_count) > g_heap_primary_end)
         {
+            void * p_new_segment = cv_null_;
+#if defined cv_have_libc_
             size_t const i_malloc_len = cv_cast_(size_t, g_heap_primary_max);
-
-            void * const p_new_segment = malloc(i_malloc_len);
-
+            p_new_segment = malloc(i_malloc_len);
+#else /* #if defined cv_have_libc_ */
+            p_new_segment = cv_null_;
+#endif /* #if defined cv_have_libc_ */
             if (p_new_segment)
             {
                 cv_node_ptr o_node_ptr = cv_node_ptr_null_;
