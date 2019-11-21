@@ -42,7 +42,7 @@ struct cv_heap_pool
     0, \
     { 0 }
 
-char cv_heap_pool_init(
+cv_bool cv_heap_pool_init(
     cv_heap_pool * p_this,
     long i_len);
 

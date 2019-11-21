@@ -36,19 +36,22 @@ static void * cv_thread_start(
     return p_void;
 }
 
-char cv_thread_init(
+cv_bool cv_thread_init(
     cv_thread * p_this,
     cv_thread_desc const * p_thread_desc)
 {
-    char b_result;
-    cv_memory_zero(p_this, cv_sizeof_(cv_thread));
-    p_this->o_desc = *(p_thread_desc);
-    pthread_create(
-        &(p_this->o_handle),
-        cv_null_,
-        & cv_thread_start,
-        p_this);
-    b_result = 1;
+    cv_bool b_result = cv_false_;
+    if (p_this && p_thread_desc)
+    {
+        cv_memory_zero(p_this, cv_sizeof_(cv_thread));
+        p_this->o_desc = *(p_thread_desc);
+        pthread_create(
+            &(p_this->o_handle),
+            cv_null_,
+            & cv_thread_start,
+            p_this);
+        b_result = cv_true_;
+    }
     return b_result;
 }
 

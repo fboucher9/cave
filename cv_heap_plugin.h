@@ -3,7 +3,9 @@
 #ifndef cv_heap_plugin_h_
 #define cv_heap_plugin_h_
 
-char cv_heap_load(void);
+#include <cv_bool.h>
+
+cv_bool cv_heap_load(void);
 
 void cv_heap_unload(void);
 

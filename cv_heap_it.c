@@ -4,11 +4,11 @@
 
 #include <cv_heap_node_ptr.h>
 
-char cv_heap_it_init(
+cv_bool cv_heap_it_init(
     cv_heap_it * p_this,
     cv_list const * p_list)
 {
-    char b_result = 0;
+    cv_bool b_result = cv_false_;
     if (p_this)
     {
         b_result = cv_node_it_init(
@@ -28,11 +28,11 @@ void cv_heap_it_cleanup(
     }
 }
 
-char cv_heap_it_next(
+cv_bool cv_heap_it_next(
     cv_heap_it * p_this,
     cv_heap_node_ptr * r_ptr)
 {
-    char b_result = 0;
+    cv_bool b_result = cv_false_;
     if (p_this)
     {
         b_result = cv_node_it_next(

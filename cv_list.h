@@ -11,6 +11,8 @@
 
 #include <cv_node.h>
 
+#include <cv_bool.h>
+
 struct cv_list
 {
     cv_node o_node;
@@ -18,7 +20,7 @@ struct cv_list
 
 #define cv_list_initializer_ { cv_node_initializer_ }
 
-char cv_list_init(
+cv_bool cv_list_init(
     cv_list * p_this);
 
 void cv_list_cleanup(

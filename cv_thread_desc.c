@@ -18,7 +18,7 @@ static void cv_thread_dummy_func(
     cv_unused_(p_context);
 }
 
-char cv_thread_desc_init(
+cv_bool cv_thread_desc_init(
     cv_thread_desc * p_this)
 {
     cv_memory_zero(
@@ -27,7 +27,7 @@ char cv_thread_desc_init(
     p_this->p_func = & cv_thread_dummy_func;
     p_this->p_context = cv_null_;
     p_this->p_name0 = cv_null_;
-    return 1;
+    return cv_true_;
 }
 
 void cv_thread_desc_cleanup(

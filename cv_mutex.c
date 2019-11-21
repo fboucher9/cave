@@ -12,9 +12,9 @@
 
 #include <cv_null.h>
 
-char cv_mutex_load(void)
+cv_bool cv_mutex_load(void)
 {
-    char b_result = 0;
+    cv_bool b_result = cv_false_;
     b_result = cv_mutex_pool_load();
     return b_result;
 }
@@ -29,17 +29,17 @@ long cv_mutex_sizeof(void)
     return cv_sizeof_(cv_mutex);
 }
 
-char cv_mutex_init(
+cv_bool cv_mutex_init(
     cv_mutex * p_this)
 {
-    char b_result = 0;
+    cv_bool b_result = cv_false_;
     if (p_this)
     {
         int const i_pthread_result = pthread_mutex_init(&p_this->o_private,
             cv_null_);
         if (0 == i_pthread_result)
         {
-            b_result = 1;
+            b_result = cv_true_;
         }
         else
         {

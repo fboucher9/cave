@@ -3,7 +3,7 @@
 #ifndef cv_mutex_plugin_h_
 #define cv_mutex_plugin_h_
 
-char cv_mutex_load(void);
+cv_bool cv_mutex_load(void);
 
 void cv_mutex_unload(void);
 

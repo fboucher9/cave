@@ -10,11 +10,11 @@
 
 #include <cv_options_node.h>
 
-char cv_options_it_init(
+cv_bool cv_options_it_init(
     cv_options_it * p_this,
     cv_options const * p_options)
 {
-    char b_result = 0;
+    cv_bool b_result = cv_false_;
     if (p_this && p_options)
     {
         b_result = cv_node_it_init(&p_this->o_node_it, &p_options->o_list);
@@ -31,11 +31,11 @@ void cv_options_it_cleanup(
     }
 }
 
-char cv_options_it_next(
+cv_bool cv_options_it_next(
     cv_options_it * p_this,
     cv_string const * * r_string)
 {
-    char b_result = 0;
+    cv_bool b_result = cv_false_;
 
     if (p_this && r_string)
     {
@@ -43,7 +43,7 @@ char cv_options_it_next(
         if (cv_node_it_next(&p_this->o_node_it, &o_ptr.o_node_ptr))
         {
             *r_string = & o_ptr.pc_options_node->o_buf0.o_buf1.o_buf;
-            b_result = 1;
+            b_result = cv_true_;
         }
     }
 

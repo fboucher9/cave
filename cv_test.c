@@ -35,7 +35,7 @@ static void cv_test_job(
 #endif /* #if defined cv_have_libc_ */
 }
 
-static char cv_test_func(
+static cv_bool cv_test_func(
     cv_options const * p_options)
 {
     {
@@ -80,7 +80,7 @@ static char cv_test_func(
             cv_thread_desc_cleanup(&o_desc);
         }
     }
-    return 1;
+    return cv_true_;
 }
 
 #if defined cv_have_libc_

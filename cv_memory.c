@@ -81,7 +81,7 @@ long cv_memory_find0(
         size_t const i_memchr_len = cv_cast_(size_t, i_src_len);
         p_memchr_result = memchr(p_src, '\000', i_memchr_len);
 #else /* #if defined cv_have_libc_ */
-        char b_found = 0;
+        cv_bool b_found = cv_false_;
         char const * p_src_it = cv_cast_(char const *, p_src);
         char const * p_src_end = p_src_it + i_src_len;
         while (!b_found && (p_src_it < p_src_end))
@@ -89,7 +89,7 @@ long cv_memory_find0(
             if ('\000' == *p_src_it)
             {
                 p_memchr_result = cv_cast_(void const *, p_src_it);
-                b_found = 1;
+                b_found = cv_true_;
             }
             else
             {

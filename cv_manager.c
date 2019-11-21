@@ -1,5 +1,13 @@
 /* See LICENSE for license details */
 
+/*
+
+Module: cv_manager.c
+
+Description: None.
+
+*/
+
 #include <cv_manager.h>
 
 #include <cv_heap_plugin.h>
@@ -8,16 +16,19 @@
 
 #include <cv_options_plugin.h>
 
-char cv_manager_load(void)
+/*
+
+*/
+cv_bool cv_manager_load(void)
 {
-    char b_result = 0;
+    cv_bool b_result = cv_false_;
     if (cv_heap_load())
     {
         if (cv_mutex_load())
         {
             if (cv_options_load())
             {
-                b_result = 1;
+                b_result = cv_true_;
             }
         }
     }

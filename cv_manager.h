@@ -3,7 +3,18 @@
 #ifndef cv_manager_h_
 #define cv_manager_h_
 
-char cv_manager_load(void);
+/*
+
+Module: cv_manager.h
+
+Description: Init and cleanup of main application context.  The manager
+does init and cleanup of all modules.
+
+*/
+
+#include <cv_bool.h>
+
+cv_bool cv_manager_load(void);
 
 void cv_manager_unload(void);
 

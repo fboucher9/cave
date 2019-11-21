@@ -4,15 +4,15 @@
 
 #include <cv_null.h>
 
-char cv_options_desc_init(
+cv_bool cv_options_desc_init(
     cv_options_desc * p_options_desc)
 {
-    char b_result = 0;
+    cv_bool b_result = cv_false_;
     if (p_options_desc)
     {
         p_options_desc->p_args_min = cv_null_;
         p_options_desc->p_args_max = cv_null_;
-        b_result = 1;
+        b_result = cv_true_;
     }
     return b_result;
 }

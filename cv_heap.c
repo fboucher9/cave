@@ -35,13 +35,13 @@ are thread-safe.
 
 #include <stdio.h>
 
-static char g_heap_loaded = 0;
+static cv_bool g_heap_loaded = cv_false_;
 
-static long g_heap_count = 0;
+static long g_heap_count = 0L;
 
-char cv_heap_load(void)
+cv_bool cv_heap_load(void)
 {
-    char b_result = 0;
+    cv_bool b_result = cv_false_;
     if (!g_heap_loaded)
     {
         if (cv_heap_primary_load())
@@ -50,8 +50,8 @@ char cv_heap_load(void)
             {
                 if (cv_heap_large_load())
                 {
-                    g_heap_loaded = 1;
-                    b_result = 1;
+                    g_heap_loaded = cv_true_;
+                    b_result = cv_true_;
                 }
                 else
                 {
@@ -100,7 +100,7 @@ void cv_heap_unload(void)
         cv_heap_large_unload();
         cv_heap_small_unload();
         cv_heap_primary_unload();
-        g_heap_loaded = 0;
+        g_heap_loaded = cv_false_;
     }
     else
     {

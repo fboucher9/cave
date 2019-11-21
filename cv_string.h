@@ -18,6 +18,8 @@ convert a string to a zero-terminated string.
 
 #include <cv_string_ptr.h>
 
+#include <cv_bool.h>
+
 struct cv_string
 {
     cv_string_ptr o_min;
@@ -26,12 +28,12 @@ struct cv_string
 
 #define cv_string_initializer_ { cv_string_ptr_null_, cv_string_ptr_null_ }
 
-char cv_string_init(
+cv_bool cv_string_init(
     cv_string * p_string,
     void const * p_ref_min,
     void const * p_ref_max);
 
-char cv_string_init0(
+cv_bool cv_string_init0(
     cv_string * p_string,
     char const * p_ref0);
 

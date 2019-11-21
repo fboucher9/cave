@@ -8,13 +8,13 @@
 
 /* Setup all managers, convert arguments to an options object and provide
 options to application callback.  */
-char cv_main_dispatch(
+cv_bool cv_main_dispatch(
     /* Pointer to command line arguments */
     cv_options_desc const * p_options_desc,
     /* Pointer to callback */
     cv_main_func * p_func)
 {
-    char b_result = 0;
+    cv_bool b_result = cv_false_;
 
     /* Validate input parameters and descriptor contents */
     if (p_options_desc &&

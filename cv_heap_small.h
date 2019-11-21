@@ -9,9 +9,11 @@ Heap for allocations with small length, less than 4KB.
 
 */
 
+#include <cv_bool.h>
+
 #define cv_heap_small_max_len_ (4096)
 
-char cv_heap_small_load(void);
+cv_bool cv_heap_small_load(void);
 
 void cv_heap_small_unload(void);
 

@@ -114,4 +114,6 @@ $(cv_dst_path)/test.exe : $(cv_test_srcs_abs)
 $(cv_dst_path)/test.exe :
 	gcc -x c -o $(cv_dst_path)/test.exe $(cv_cflags) $(cv_test_srcs_abs) -lpthread
 	gcc -x c++ -o $(cv_dst_path)/test.cxx.exe -fno-rtti -fno-exceptions -Wold-style-cast $(cv_cflags) $(cv_test_srcs_abs) -lpthread
+	clang -x c -o $(cv_dst_path)/test.clang.exe -ansi -pedantic -Weverything -I . -D cv_debug_ -D cv_have_libc_ $(cv_test_srcs_abs) -lpthread
+	clang++ -x c++ -o $(cv_dst_path)/test.clang++.exe -fno-rtti -fno-exceptions -ansi -pedantic -Weverything -I . -D cv_debug_ -D cv_have_libc_ $(cv_test_srcs_abs) -lpthread
 

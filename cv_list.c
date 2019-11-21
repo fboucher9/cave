@@ -28,16 +28,16 @@ Returns: boolean value
 Comments: The memory allocated for instance may be uninitialized.
 
 */
-char cv_list_init(
+cv_bool cv_list_init(
     cv_list * p_this)
 {
-    char b_result = 0;
+    cv_bool b_result = cv_false_;
     if (p_this)
     {
         if (cv_node_init(
             &p_this->o_node))
         {
-            b_result = 1;
+            b_result = cv_true_;
         }
     }
     else

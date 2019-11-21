@@ -15,7 +15,7 @@ struct cv_thread
     pthread_t o_handle;
 };
 
-char cv_thread_init(
+cv_bool cv_thread_init(
     cv_thread * p_this,
     cv_thread_desc const * p_thread_desc);
 

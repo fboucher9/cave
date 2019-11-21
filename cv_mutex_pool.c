@@ -10,20 +10,20 @@
 
 #include <cv_null.h>
 
-static char g_mutex_pool_loaded = 0;
+static cv_bool g_mutex_pool_loaded = cv_false_;
 
 static cv_heap_pool * g_mutex_pool = cv_null_;
 
-char cv_mutex_pool_load(void)
+cv_bool cv_mutex_pool_load(void)
 {
-    char b_result = 0;
+    cv_bool b_result = cv_false_;
     if (!g_mutex_pool_loaded)
     {
         g_mutex_pool = cv_heap_pool_load(cv_mutex_sizeof());
         if (g_mutex_pool)
         {
-            g_mutex_pool_loaded = 1;
-            b_result = 1;
+            g_mutex_pool_loaded = cv_true_;
+            b_result = cv_true_;
         }
     }
     return b_result;
@@ -38,7 +38,7 @@ void cv_mutex_pool_unload(void)
             cv_heap_pool_unload( g_mutex_pool);
             g_mutex_pool = cv_null_;
         }
-        g_mutex_pool_loaded = 0;
+        g_mutex_pool_loaded = cv_false_;
     }
 }
 

@@ -4,15 +4,15 @@
 
 #include <cv_null.h>
 
-char cv_node_init(
+cv_bool cv_node_init(
     cv_node * p_this)
 {
-    char b_result = 0;
+    cv_bool b_result = cv_false_;
     if (p_this)
     {
         p_this->o_next.p_node = p_this;
         p_this->o_prev.p_node = p_this;
-        b_result = 1;
+        b_result = cv_true_;
     }
     return b_result;
 }

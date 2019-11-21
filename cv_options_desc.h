@@ -7,6 +7,8 @@
 
 #include <cv_null.h>
 
+#include <cv_bool.h>
+
 struct cv_options_desc
 {
     char const * const * p_args_min;
@@ -15,7 +17,7 @@ struct cv_options_desc
 
 #define cv_options_desc_initializer_ { cv_null_, cv_null_ }
 
-char cv_options_desc_init(
+cv_bool cv_options_desc_init(
     cv_options_desc * p_options_desc);
 
 void cv_options_desc_cleanup(

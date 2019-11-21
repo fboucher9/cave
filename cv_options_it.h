@@ -16,14 +16,14 @@ struct cv_options_it
 
 #define cv_options_it_initializer_ { cv_node_it_initializer_ }
 
-char cv_options_it_init(
+cv_bool cv_options_it_init(
     cv_options_it * p_this,
     cv_options const * p_options);
 
 void cv_options_it_cleanup(
     cv_options_it * p_this);
 
-char cv_options_it_next(
+cv_bool cv_options_it_next(
     cv_options_it * p_this,
     cv_string const * * r_string);
 

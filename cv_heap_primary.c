@@ -26,13 +26,13 @@ static char * g_heap_primary_end = cv_null_;
 
 static long g_heap_primary_max = ((1024L * 1024L) - 256L);
 
-char cv_heap_primary_load(void)
+cv_bool cv_heap_primary_load(void)
 {
-    char b_result = 0;
+    cv_bool b_result = cv_false_;
 
     if (cv_list_init(&g_heap_sections))
     {
-        b_result = 1;
+        b_result = cv_true_;
     }
 
     return b_result;

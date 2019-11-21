@@ -13,6 +13,8 @@ Base iterator for linked lists.
 
 #include <cv_node_ptr.h>
 
+#include <cv_bool.h>
+
 struct cv_node_it
 {
     cv_node_ptr o_cur;
@@ -21,26 +23,26 @@ struct cv_node_it
 
 #define cv_node_it_initializer_ { cv_node_ptr_null_, cv_node_ptr_null_ }
 
-char cv_node_it_init(
+cv_bool cv_node_it_init(
     cv_node_it * p_this,
     cv_list const * p_list);
 
 void cv_node_it_cleanup(
     cv_node_it * p_this);
 
-char cv_node_it_first(
+cv_bool cv_node_it_first(
     cv_node_it * p_this,
     cv_node_ptr * r_cur);
 
-char cv_node_it_last(
+cv_bool cv_node_it_last(
     cv_node_it * p_this,
     cv_node_ptr * r_cur);
 
-char cv_node_it_next(
+cv_bool cv_node_it_next(
     cv_node_it * p_this,
     cv_node_ptr * r_cur);
 
-char cv_node_it_prev(
+cv_bool cv_node_it_prev(
     cv_node_it * p_this,
     cv_node_ptr * r_cur);
 

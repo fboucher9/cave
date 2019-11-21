@@ -22,11 +22,11 @@ Convert cv_string object to a zero-terminated string.  The cv_string0 object
 holds resources allocated for zero-terminated string.
 
 */
-char cv_string0_init(
+cv_bool cv_string0_init(
     cv_string0 * p_this,
     cv_string const * p_string)
 {
-    char b_result = 0;
+    cv_bool b_result = cv_false_;
 
     /* Validate input parameters */
     if (p_this)
@@ -46,7 +46,7 @@ char cv_string0_init(
                     i_length);
             }
             p_this->o_buf1.o_buf.o_min.p_char[i_length] = '\000';
-            b_result = 1;
+            b_result = cv_true_;
         }
     }
     return b_result;

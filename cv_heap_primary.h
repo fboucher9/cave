@@ -11,7 +11,9 @@ memory from once callbacks.  It is used for small allocations maximum 1MB.
 
 */
 
-char cv_heap_primary_load(void);
+#include <cv_bool.h>
+
+cv_bool cv_heap_primary_load(void);
 
 void cv_heap_primary_unload(void);
 

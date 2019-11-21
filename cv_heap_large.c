@@ -22,23 +22,23 @@
 #include <stdlib.h>
 #endif /* #if defined cv_have_libc_ */
 
-static char g_heap_large_loaded = 0;
+static cv_bool g_heap_large_loaded = cv_false_;
 
 static cv_list g_heap_large_used_list = cv_list_initializer_;
 
 static cv_list g_heap_large_free_list = cv_list_initializer_;
 
-char cv_heap_large_load(void)
+cv_bool cv_heap_large_load(void)
 {
-    char b_result = 0;
+    cv_bool b_result = cv_false_;
     if (!g_heap_large_loaded)
     {
         if (cv_list_init(&g_heap_large_used_list))
         {
             if (cv_list_init(&g_heap_large_free_list))
             {
-                g_heap_large_loaded = 1;
-                b_result = 1;
+                g_heap_large_loaded = cv_true_;
+                b_result = cv_true_;
             }
         }
     }
@@ -73,7 +73,7 @@ void cv_heap_large_unload(void)
         }
         cv_list_cleanup(&g_heap_large_used_list);
         cv_list_cleanup(&g_heap_large_free_list);
-        g_heap_large_loaded = 0;
+        g_heap_large_loaded = cv_false_;
     }
 }
 
@@ -94,7 +94,7 @@ static cv_heap_node * cv_heap_large_find_existing(
     cv_node_it o_free_it = cv_node_it_initializer_;
     if (cv_node_it_init(&o_free_it, &g_heap_large_free_list))
     {
-        char b_found_existing = 0;
+        cv_bool b_found_existing = cv_false_;
         while (!b_found_existing &&
             cv_node_it_next(&o_free_it, &o_heap_ptr.o_node_ptr))
         {

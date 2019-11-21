@@ -7,6 +7,8 @@
 
 #include <cv_node.h>
 
+#include <cv_bool.h>
+
 struct cv_heap_node
 {
     cv_node o_node;
@@ -19,7 +21,7 @@ struct cv_heap_node
     /* payload follows ... */
 };
 
-char cv_heap_node_init(
+cv_bool cv_heap_node_init(
     cv_heap_node * p_this,
     long i_len);
 

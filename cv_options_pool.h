@@ -5,7 +5,9 @@
 
 #include <cv_options_pred.h>
 
-char cv_options_pool_load(void);
+#include <cv_bool.h>
+
+cv_bool cv_options_pool_load(void);
 
 void cv_options_pool_unload(void);
 

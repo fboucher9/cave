@@ -5,7 +5,9 @@
 
 #include <cv_mutex_pred.h>
 
-char cv_mutex_pool_load(void);
+#include <cv_bool.h>
+
+cv_bool cv_mutex_pool_load(void);
 
 void cv_mutex_pool_unload(void);
 

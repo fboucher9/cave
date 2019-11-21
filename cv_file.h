@@ -19,6 +19,8 @@ Windows, the WaitForSingleObject function is used.
 
 #include <cv_types.h>
 
+#include <cv_bool.h>
+
 union cv_file_data
 {
     cv_sll ll_align;
@@ -40,7 +42,7 @@ struct cv_file
 
 long cv_file_sizeof(void);
 
-char cv_file_init(
+cv_bool cv_file_init(
     cv_file * p_this,
     cv_file_desc const * p_desc);
 
@@ -61,11 +63,11 @@ long cv_file_write(
     cv_file * p_this,
     cv_buffer const * p_buffer);
 
-char cv_file_wait_read(
+cv_bool cv_file_wait_read(
     cv_file * p_this,
     cv_clock const * p_clock);
 
-char cv_file_wait_write(
+cv_bool cv_file_wait_write(
     cv_file * p_this,
     cv_clock const * p_clock);
 

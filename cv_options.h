@@ -16,17 +16,17 @@ struct cv_options
     cv_list o_list;
 };
 
-char cv_options_init(
+cv_bool cv_options_init(
     cv_options * p_this);
 
 void cv_options_cleanup(
     cv_options * p_this);
 
-char cv_options_setup(
+cv_bool cv_options_setup(
     cv_options * p_this,
     cv_options_desc const * p_desc);
 
-char cv_options_add(
+cv_bool cv_options_add(
     cv_options * p_this,
     cv_string const * p_string);
 

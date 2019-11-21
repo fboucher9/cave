@@ -5,6 +5,8 @@
 
 #include <cv_thread_pred.h>
 
+#include <cv_bool.h>
+
 typedef void (cv_thread_func)(
     void * p_context);
 
@@ -15,7 +17,7 @@ struct cv_thread_desc
     char const * p_name0;
 };
 
-char cv_thread_desc_init(
+cv_bool cv_thread_desc_init(
     cv_thread_desc * p_this);
 
 void cv_thread_desc_cleanup(

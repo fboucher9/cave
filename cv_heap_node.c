@@ -12,18 +12,18 @@
 
 #include <cv_null.h>
 
-char cv_heap_node_init(
+cv_bool cv_heap_node_init(
     cv_heap_node * p_this,
     long i_len)
 {
-    char b_result = 0;
+    cv_bool b_result = cv_false_;
     if (p_this)
     {
         cv_memory_zero(p_this, cv_sizeof_(cv_heap_node));
         if (cv_node_init(&p_this->o_node))
         {
             p_this->i_len = i_len;
-            b_result = 1;
+            b_result = cv_true_;
         }
     }
     return b_result;

@@ -9,6 +9,8 @@
 
 #include <cv_types.h>
 
+#include <cv_bool.h>
+
 struct cv_clock
 {
     cv_ull i_freq;
@@ -19,18 +21,18 @@ struct cv_clock
     int ui_padding[3u];
 };
 
-char cv_clock_read(
+cv_bool cv_clock_read(
     cv_clock_epoch e_clock_epoch,
     cv_clock * p_value);
 
-char cv_clock_sleep(
+cv_bool cv_clock_sleep(
     cv_clock const * p_value);
 
-char cv_clock_convert_freq(
+cv_bool cv_clock_convert_freq(
     cv_clock * p_value,
     cv_ull i_freq);
 
-char cv_clock_convert_epoch(
+cv_bool cv_clock_convert_epoch(
     cv_clock * p_value,
     cv_clock_epoch e_clock_epoch);
 

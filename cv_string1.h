@@ -7,12 +7,14 @@
 
 #include <cv_string.h>
 
+#include <cv_bool.h>
+
 struct cv_string1
 {
     cv_string o_buf;
 };
 
-char cv_string1_init(
+cv_bool cv_string1_init(
     cv_string1 * p_this,
     long i_length);
 

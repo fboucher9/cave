@@ -24,12 +24,12 @@
 
 #include <cv_memory.h>
 
-char cv_options_load(void)
+cv_bool cv_options_load(void)
 {
-    char b_result = 0;
+    cv_bool b_result = cv_false_;
     if (cv_options_pool_load())
     {
-        b_result = 1;
+        b_result = cv_true_;
     }
     return b_result;
 }
@@ -75,24 +75,24 @@ void cv_options_cleanup(
  *      Initialize instance of cv_options object using provided descriptor
  *      structure.  All strings are copied, using heap allocations.
  */
-char cv_options_init(
+cv_bool cv_options_init(
     cv_options * p_this)
 {
-    char b_result = 0;
+    cv_bool b_result = cv_false_;
     if (p_this)
     {
         cv_memory_zero(p_this, cv_sizeof_(cv_options));
         cv_list_init(&p_this->o_list);
-        b_result = 1;
+        b_result = cv_true_;
     }
     return b_result;
 }
 
-static char cv_options_setup_cb(
+static cv_bool cv_options_setup_cb(
     cv_options * p_this,
     char const * p_arg0)
 {
-    char b_result = 0;
+    cv_bool b_result = cv_false_;
     if (p_this && p_arg0)
     {
         cv_string o_string;
@@ -106,15 +106,15 @@ static char cv_options_setup_cb(
     return b_result;
 }
 
-char cv_options_setup(
+cv_bool cv_options_setup(
     cv_options * p_this,
     cv_options_desc const * p_desc)
 {
-    char b_result = 0;
+    cv_bool b_result = cv_false_;
     if (p_this && p_desc)
     {
         char const * const * p_args_it = p_desc->p_args_min;
-        b_result = 1;
+        b_result = cv_true_;
         while (b_result && (p_args_it < p_desc->p_args_max))
         {
             char const * const p_arg0 = *p_args_it;
@@ -125,11 +125,11 @@ char cv_options_setup(
     return b_result;
 }
 
-char cv_options_add(
+cv_bool cv_options_add(
     cv_options * p_this,
     cv_string const * p_string)
 {
-    char b_result = 0;
+    cv_bool b_result = cv_false_;
     if (p_this && p_string)
     {
         cv_options_node * p_options_node;
@@ -140,7 +140,7 @@ char cv_options_add(
             &o_options_node_desc);
         if (p_options_node)
         {
-            b_result = 1;
+            b_result = cv_true_;
         }
     }
     return b_result;

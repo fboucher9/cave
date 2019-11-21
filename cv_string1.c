@@ -9,11 +9,11 @@
 /*
 
 */
-char cv_string1_init(
+cv_bool cv_string1_init(
     cv_string1 * p_this,
     long i_length)
 {
-    char b_result = 0;
+    cv_bool b_result = cv_false_;
     if (p_this)
     {
         p_this->o_buf.o_min.p_void = cv_null_;
@@ -25,12 +25,12 @@ char cv_string1_init(
             {
                 p_this->o_buf.o_min.p_char = p_array;
                 p_this->o_buf.o_max.p_char = p_array + i_length;
-                b_result = 1;
+                b_result = cv_true_;
             }
         }
         else
         {
-            b_result = 1;
+            b_result = cv_true_;
         }
     }
     return b_result;

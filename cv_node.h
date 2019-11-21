@@ -16,6 +16,8 @@ single cv_node_join function is used to insert and remove nodes.
 
 #include <cv_node_ptr.h>
 
+#include <cv_bool.h>
+
 struct cv_node
 {
     cv_node_ptr o_next;
@@ -24,7 +26,7 @@ struct cv_node
 
 #define cv_node_initializer_ { cv_node_ptr_null_, cv_node_ptr_null_ }
 
-char cv_node_init(
+cv_bool cv_node_init(
     cv_node * p_this);
 
 void cv_node_cleanup(

@@ -5,11 +5,13 @@
 
 #include <cv_mutex_pred.h>
 
+#include <cv_bool.h>
+
 /* see cv_mutex_impl.h for cv_mutex members */
 
 long cv_mutex_sizeof(void);
 
-char cv_mutex_init(
+cv_bool cv_mutex_init(
     cv_mutex * p_this);
 
 void cv_mutex_cleanup(
