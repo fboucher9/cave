@@ -4,15 +4,17 @@
 
 #include <cv_options_node_desc.h>
 
-#include <cv_null.h>
+#include <cv_options_pool.h>
 
-#include <cv_heap.h>
+#include <cv_null.h>
 
 #include <cv_string.h>
 
 #include <cv_memory.h>
 
 #include <cv_list.h>
+
+#include <cv_sizeof.h>
 
 static char cv_options_node_init_node(
     cv_options_node * p_this,
@@ -109,7 +111,7 @@ cv_options_node * cv_options_node_create(
     cv_options_node * p_this = cv_null_;
     if (p_desc)
     {
-        p_this = cv_new_(cv_options_node);
+        p_this = cv_options_pool_alloc();
         if (p_this)
         {
             if (cv_options_node_init(p_this, p_desc))
@@ -117,7 +119,7 @@ cv_options_node * cv_options_node_create(
             }
             else
             {
-                cv_delete_(p_this);
+                cv_options_pool_free(p_this);
                 p_this = cv_null_;
             }
         }
@@ -131,7 +133,7 @@ void cv_options_node_destroy(
     if (p_this)
     {
         cv_options_node_cleanup(p_this);
-        cv_delete_(p_this);
+        cv_options_pool_free(p_this);
     }
 }
 

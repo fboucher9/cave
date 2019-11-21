@@ -6,6 +6,8 @@
 
 #include <cv_mutex_plugin.h>
 
+#include <cv_options_plugin.h>
+
 char cv_manager_load(void)
 {
     char b_result = 0;
@@ -13,7 +15,10 @@ char cv_manager_load(void)
     {
         if (cv_mutex_load())
         {
-            b_result = 1;
+            if (cv_options_load())
+            {
+                b_result = 1;
+            }
         }
     }
     return b_result;
@@ -21,6 +26,8 @@ char cv_manager_load(void)
 
 void cv_manager_unload(void)
 {
+    cv_options_unload();
+
     cv_mutex_unload();
 
     cv_heap_unload();

@@ -10,6 +10,10 @@
 
 #include <cv_options_node_ptr.h>
 
+#include <cv_options_plugin.h>
+
+#include <cv_options_pool.h>
+
 #include <cv_node_it.h>
 
 #include <cv_heap.h>
@@ -19,6 +23,21 @@
 #include <cv_sizeof.h>
 
 #include <cv_memory.h>
+
+char cv_options_load(void)
+{
+    char b_result = 0;
+    if (cv_options_pool_load())
+    {
+        b_result = 1;
+    }
+    return b_result;
+}
+
+void cv_options_unload(void)
+{
+    cv_options_pool_unload();
+}
 
 static void cv_options_cleanup_list(
     cv_options * p_this)

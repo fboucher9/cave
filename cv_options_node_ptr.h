@@ -14,6 +14,8 @@ union cv_options_node_ptr
     cv_options_node const * pc_options_node;
 };
 
+#define cv_options_node_ptr_null_ { cv_node_ptr_null_ }
+
 typedef char cv_verify_sizeof_options_node_ptr [
     sizeof(cv_options_node_ptr) == sizeof(cv_node_ptr)
     && sizeof(cv_options_node_ptr) == sizeof(cv_options_node *)

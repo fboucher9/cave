@@ -19,6 +19,7 @@ cv_test_srcs = \
     cv_options.c \
     cv_options_it.c \
     cv_options_node.c \
+    cv_options_pool.c \
     cv_heap.c \
     cv_heap_primary.c \
     cv_heap_node.c \
