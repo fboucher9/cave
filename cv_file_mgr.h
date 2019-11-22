@@ -5,13 +5,15 @@
 
 #include <cv_file_pred.h>
 
+#include <cv_bool.h>
+
 extern cv_file cv_file_stdin;
 
 extern cv_file cv_file_stdout;
 
 extern cv_file cv_file_stderr;
 
-void cv_file_mgr_load(void);
+cv_bool cv_file_mgr_load(void);
 
 void cv_file_mgr_unload(void);
 

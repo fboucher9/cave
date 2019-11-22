@@ -95,8 +95,8 @@ static cv_bool cv_options_setup_cb(
     cv_bool b_result = cv_false_;
     if (p_this && p_arg0)
     {
-        cv_string o_string;
-        if (cv_string_init0(&o_string, p_arg0))
+        cv_string o_string = cv_string_initializer_;
+        if (cv_string_setup0(&o_string, p_arg0))
         {
             b_result = cv_options_add(p_this, &o_string);
 

@@ -1,7 +1,7 @@
 /* See LICENSE for license details */
 
-#ifndef cv_memory_zero_h_
-#define cv_memory_zero_h_
+#ifndef cv_memory_h_
+#define cv_memory_h_
 
 void cv_memory_zero(
     void * p_buf,
@@ -17,4 +17,4 @@ long cv_memory_find0(
     void const * p_src,
     long i_src_len);
 
-#endif /* #ifndef cv_memory_zero_h_ */
+#endif /* #ifndef cv_memory_h_ */

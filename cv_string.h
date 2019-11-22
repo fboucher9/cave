@@ -29,13 +29,16 @@ struct cv_string
 #define cv_string_initializer_ { cv_string_ptr_null_, cv_string_ptr_null_ }
 
 cv_bool cv_string_init(
+    cv_string * p_string);
+
+cv_bool cv_string_setup0(
+    cv_string * p_string,
+    char const * p_ref0);
+
+cv_bool cv_string_setup(
     cv_string * p_string,
     void const * p_ref_min,
     void const * p_ref_max);
-
-cv_bool cv_string_init0(
-    cv_string * p_string,
-    char const * p_ref0);
 
 void cv_string_cleanup(
     cv_string * p_string);

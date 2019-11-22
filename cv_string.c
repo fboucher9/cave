@@ -9,6 +9,19 @@
 #include <cv_cast.h>
 
 cv_bool cv_string_init(
+    cv_string * p_string)
+{
+    cv_bool b_result = cv_false_;
+    if (p_string)
+    {
+        p_string->o_min.pc_void = cv_null_;
+        p_string->o_max.pc_void = cv_null_;
+        b_result = cv_true_;
+    }
+    return b_result;
+}
+
+cv_bool cv_string_setup(
     cv_string * p_string,
     void const * p_ref_min,
     void const * p_ref_max)
@@ -23,7 +36,7 @@ cv_bool cv_string_init(
     return b_result;
 }
 
-cv_bool cv_string_init0(
+cv_bool cv_string_setup0(
     cv_string * p_string,
     char const * p_ref0)
 {

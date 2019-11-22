@@ -4,7 +4,7 @@
 #define cv_file_pred_h_
 
 /* Predefine */
-typedef struct cv_file cv_file;
+typedef union cv_file cv_file;
 
 /* Predefine */
 typedef struct cv_file_desc cv_file_desc;
