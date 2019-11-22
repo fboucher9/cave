@@ -6,6 +6,8 @@
 
 #include <cv_null.h>
 
+#include <cv_bool.h>
+
 #if defined cv_have_libc_
 #include <string.h>
 #endif /* #if defined cv_have_libc_ */

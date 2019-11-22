@@ -10,7 +10,9 @@
 
 #include <cv_sizeof.h>
 
+#if defined cv_have_libc_
 #include <poll.h>
+#endif /* #if defined cv_have_libc_ */
 
 cv_bool cv_file_poll_dispatch(
     cv_file_poll * p_poll_min,
@@ -22,6 +24,7 @@ cv_bool cv_file_poll_dispatch(
     if (p_poll_min && p_poll_max)
     {
         cv_unused_(p_timeout);
+#if defined cv_have_libc_
         if (1 == (p_poll_max - p_poll_min))
         {
             struct pollfd a_pollfd[1u];
@@ -56,6 +59,7 @@ cv_bool cv_file_poll_dispatch(
         else
         {
         }
+#endif /* #if defined cv_have_libc_ */
     }
 
     return b_result;

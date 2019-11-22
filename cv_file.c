@@ -4,9 +4,9 @@
 
 #include <cv_string.h>
 
+#if defined cv_have_libc_
 #include <unistd.h>
-
-#include <fcntl.h>
+#endif /* #if defined cv_have_libc_ */
 
 long cv_file_read(
     cv_file const * p_this,
@@ -15,10 +15,11 @@ long cv_file_read(
     long i_result = -1;
     if (p_this && p_string)
     {
-        if (p_this->i_index >= 0)
+        long const i_string_len = cv_string_len(p_string);
+        if (i_string_len >= 0)
         {
-            long const i_string_len = cv_string_len(p_string);
-            if (i_string_len >= 0)
+#if defined cv_have_libc_
+            if (p_this->i_index >= 0)
             {
                 ssize_t i_read_result = -1;
                 size_t i_read_len = cv_cast_(size_t, i_string_len);
@@ -27,6 +28,7 @@ long cv_file_read(
                     i_read_len);
                 i_result = cv_cast_(long, i_read_result);
             }
+#endif /* #if defined cv_have_libc_ */
         }
     }
     return i_result;
@@ -39,10 +41,11 @@ long cv_file_write(
     long i_result = -1;
     if (p_this && p_string)
     {
-        if (p_this->i_index >= 0)
+        long const i_string_len = cv_string_len(p_string);
+        if (i_string_len >= 0)
         {
-            long const i_string_len = cv_string_len(p_string);
-            if (i_string_len >= 0)
+#if defined cv_have_libc_
+            if (p_this->i_index >= 0)
             {
                 ssize_t i_write_result = -1;
                 size_t i_write_len = cv_cast_(size_t, i_string_len);
@@ -51,6 +54,7 @@ long cv_file_write(
                     i_write_len);
                 i_result = cv_cast_(long, i_write_result);
             }
+#endif /* #if defined cv_have_libc_ */
         }
     }
     return i_result;

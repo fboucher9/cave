@@ -102,10 +102,7 @@ static cv_bool cv_test_func(
                             {
                                 long const i_file_read_result =
                                     cv_file_read(&p_stdin->o_file, &o_string);
-
-#if defined cv_have_libc_
-                                printf("fr -> %ld\n", i_file_read_result);
-#endif /* #if defined cv_have_libc_ */
+                                cv_unused_(i_file_read_result);
                             }
                             else
                             {

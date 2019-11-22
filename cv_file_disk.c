@@ -10,6 +10,9 @@
 
 #include <cv_string0.h>
 
+#include <cv_unused.h>
+
+#if defined cv_have_libc_
 #include <unistd.h>
 
 #include <sys/types.h>
@@ -17,7 +20,9 @@
 #include <sys/stat.h>
 
 #include <fcntl.h>
+#endif /* #if defined cv_have_libc_ */
 
+#if defined cv_have_libc_
 static int cv_file_disk_convert_flags(
     cv_file_disk_desc const * p_desc)
 {
@@ -51,6 +56,7 @@ static int cv_file_disk_convert_flags(
 
     return i_open_flags;
 }
+#endif /* #if defined cv_have_libc_ */
 
 cv_bool cv_file_disk_init(
     cv_file_disk * p_this,
@@ -70,6 +76,7 @@ cv_bool cv_file_disk_init(
                 char const * const p_open_pathname =
                     cv_string0_get(&o_name0);
 
+#if defined cv_have_libc_
                 int const i_open_flags =
                     cv_file_disk_convert_flags(p_desc);
 
@@ -78,6 +85,9 @@ cv_bool cv_file_disk_init(
 
                 p_this->o_file.i_index = open(p_open_pathname, i_open_flags,
                     i_open_mode);
+#else /* #if defined cv_have_libc_ */
+                cv_unused_(p_open_pathname);
+#endif /* #if defined cv_have_libc_ */
 
                 if (p_this->o_file.i_index >= 0)
                 {
@@ -99,7 +109,9 @@ void cv_file_disk_cleanup(
         /* Setup call to close */
         if (p_this->o_file.i_index >= 0)
         {
+#if defined cv_have_libc_
             close(p_this->o_file.i_index);
+#endif /* #if defined cv_have_libc_ */
             p_this->o_file.i_index = -1;
         }
     }

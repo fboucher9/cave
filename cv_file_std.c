@@ -25,6 +25,7 @@ cv_file_std const * cv_file_std_err(void)
     return & g_file_stderr;
 }
 
+#if 0
 static void cv_file_std_set_non_blocking(
     cv_file_std const * p_this)
 {
@@ -33,6 +34,7 @@ static void cv_file_std_set_non_blocking(
     fcntl(p_this->o_file.i_index,
         F_SETFL, i_flags | O_NONBLOCK);
 }
+#endif
 
 cv_bool cv_file_std_load(void)
 {
@@ -41,15 +43,6 @@ cv_bool cv_file_std_load(void)
     g_file_stdout.o_file.i_index = 1;
 
     g_file_stderr.o_file.i_index = 2;
-
-    if (0)
-    {
-        cv_file_std_set_non_blocking(&g_file_stdin);
-
-        cv_file_std_set_non_blocking(&g_file_stdout);
-
-        cv_file_std_set_non_blocking(&g_file_stderr);
-    }
 
     return cv_true_;
 }

@@ -112,14 +112,15 @@ cv_cflags = \
     -Wvla \
     -Wwrite-strings
 
-.PHONY : test
+.PHONY : test all bare
 test : $(cv_dst_path)/test.exe
 
-.PHONY : all
 all : $(cv_dst_path)/test.exe
 all : $(cv_dst_path)/test.cxx.exe
 all : $(cv_dst_path)/test.clang.exe
 all : $(cv_dst_path)/test.clangxx.exe
+all : bare
+bare : $(cv_dst_path)/test.bare.exe
 
 $(cv_dst_path)/test.exe : $(cv_src_path)/makefile $(cv_test_srcs_abs)
 	gcc -x c -o $(cv_dst_path)/test.exe $(cv_cflags) $(cv_test_srcs_abs) -lpthread
@@ -132,4 +133,7 @@ $(cv_dst_path)/test.clang.exe : $(cv_src_path)/makefile $(cv_test_srcs_abs)
 
 $(cv_dst_path)/test.clangxx.exe : $(cv_src_path)/makefile $(cv_test_srcs_abs)
 	clang++ -x c++ -o $(cv_dst_path)/test.clangxx.exe -fno-rtti -fno-exceptions -ansi -pedantic -Weverything -I . -D cv_debug_ -D cv_have_libc_ -D _DEFAULT_SOURCE $(cv_test_srcs_abs) -lpthread
+
+$(cv_dst_path)/test.bare.exe : $(cv_src_path)/makefile $(cv_test_srcs_abs)
+	gcc -x c -o $(cv_dst_path)/test.exe -I . -D cv_debug_ -ansi -pedantic -Wall -Wextra -fno-stack-protector $(cv_test_srcs_abs) -nodefaultlibs -nostartfiles -lpthread
 
