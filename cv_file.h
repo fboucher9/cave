@@ -17,25 +17,40 @@ Windows, the WaitForSingleObject function is used.
 
 #include <cv_file_pred.h>
 
-#include <cv_file_impl.h>
-
 #include <cv_bool.h>
 
 #include <cv_string_pred.h>
 
-cv_bool cv_file_init(
-    cv_file * p_this,
-    cv_file_desc const * p_desc);
+#include <cv_types.h>
 
-void cv_file_cleanup(
-    cv_file * p_this);
+union cv_file
+{
+    /* Alignment to 64-bits */
+    cv_sll ll_align;
+
+    /* Storage for FILE* or for Windows HANDLE */
+    void * p_void;
+
+    /* Storage for POSIX file descriptor */
+    int i_index;
+
+};
+
+#define cv_file_initializer_ { -1 }
+
+/* Compile-time verification of cv_file handle */
+typedef char cv_verify_sizeof_file [
+    (sizeof(cv_file) == sizeof(cv_sll))
+    && (sizeof(cv_file) >= sizeof(int))
+    && (sizeof(cv_file) >= sizeof(void *))
+    ? 1 : -1 ];
 
 long cv_file_read(
-    cv_file * p_this,
+    cv_file const * p_this,
     cv_string const * p_string);
 
 long cv_file_write(
-    cv_file * p_this,
+    cv_file const * p_this,
     cv_string const * p_string);
 
 #endif /* #ifndef cv_file_h_ */

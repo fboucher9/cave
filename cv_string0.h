@@ -14,6 +14,8 @@ struct cv_string0
     cv_string1 o_buf1;
 };
 
+#define cv_string0_initializer_ { cv_string1_initializer_ }
+
 cv_bool cv_string0_init(
     cv_string0 * p_this,
     cv_string const * p_string);

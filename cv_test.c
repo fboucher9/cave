@@ -18,6 +18,10 @@
 
 #include <cv_heap.h>
 
+#include <cv_file_std.h>
+
+#include <cv_file_poll.h>
+
 #include <cv_null.h>
 
 #include <cv_unused.h>
@@ -29,10 +33,13 @@
 static void cv_test_job(
     void * p_context)
 {
+    static char const g_msg[] = "thread says hello\n";
+    cv_file_std const * p_stdout = cv_file_std_out();
+    cv_string o_string = cv_string_initializer_;
+    o_string.o_min.pc_char = g_msg;
+    o_string.o_max.pc_char = g_msg + sizeof(g_msg) - 1;
+    cv_file_write(&p_stdout->o_file, &o_string);
     cv_unused_(p_context);
-#if defined cv_have_libc_
-    printf("thread says hello\n");
-#endif /* #if defined cv_have_libc_ */
 }
 
 static cv_bool cv_test_func(
@@ -74,6 +81,42 @@ static cv_bool cv_test_func(
                 cv_thread * const p_thread = cv_thread_create(&o_desc);
                 if (p_thread)
                 {
+                    {
+                        cv_file_std const * p_stdin = cv_file_std_in();
+                        cv_string o_string = cv_string_initializer_;
+                        if (cv_string_init(&o_string))
+                        {
+                            static char g_buf[80u];
+
+                            cv_file_poll o_poll_stdin;
+
+                            o_poll_stdin.p_file = &p_stdin->o_file;
+                            o_poll_stdin.i_flags_in = cv_file_poll_flag_read;
+                            o_poll_stdin.i_flags_out = 0;
+
+                            cv_string_setup(&o_string, g_buf,
+                                g_buf + sizeof(g_buf));
+
+                            if (cv_file_poll_dispatch(&o_poll_stdin,
+                                    &o_poll_stdin + 1, cv_null_))
+                            {
+                                long const i_file_read_result =
+                                    cv_file_read(&p_stdin->o_file, &o_string);
+
+#if defined cv_have_libc_
+                                printf("fr -> %ld\n", i_file_read_result);
+#endif /* #if defined cv_have_libc_ */
+                            }
+                            else
+                            {
+#if defined cv_have_libc_
+                                printf("poll err\n");
+#endif /* #if defined cv_have_libc_ */
+                            }
+
+                            cv_string_cleanup(&o_string);
+                        }
+                    }
                     cv_thread_destroy(p_thread);
                 }
             }

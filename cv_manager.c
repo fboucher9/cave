@@ -16,6 +16,8 @@ Description: None.
 
 #include <cv_options_plugin.h>
 
+#include <cv_file_std.h>
+
 /*
 
 */
@@ -28,7 +30,10 @@ cv_bool cv_manager_load(void)
         {
             if (cv_options_load())
             {
-                b_result = cv_true_;
+                if (cv_file_std_load())
+                {
+                    b_result = cv_true_;
+                }
             }
         }
     }
@@ -37,6 +42,8 @@ cv_bool cv_manager_load(void)
 
 void cv_manager_unload(void)
 {
+    cv_file_std_unload();
+
     cv_options_unload();
 
     cv_mutex_unload();

@@ -2,38 +2,57 @@
 
 #include <cv_file.h>
 
-#include <cv_unused.h>
+#include <cv_string.h>
 
-cv_bool cv_file_init(
-    cv_file * p_this,
-    cv_file_desc const * p_desc)
-{
-    cv_unused_(p_this);
-    cv_unused_(p_desc);
-    return cv_false_;
-}
+#include <unistd.h>
 
-void cv_file_cleanup(
-    cv_file * p_this)
-{
-    cv_unused_(p_this);
-}
+#include <fcntl.h>
 
 long cv_file_read(
-    cv_file * p_this,
+    cv_file const * p_this,
     cv_string const * p_string)
 {
-    cv_unused_(p_this);
-    cv_unused_(p_string);
-    return -1;
+    long i_result = -1;
+    if (p_this && p_string)
+    {
+        if (p_this->i_index >= 0)
+        {
+            long const i_string_len = cv_string_len(p_string);
+            if (i_string_len >= 0)
+            {
+                ssize_t i_read_result = -1;
+                size_t i_read_len = cv_cast_(size_t, i_string_len);
+                i_read_result = read(p_this->i_index,
+                    p_string->o_min.p_void,
+                    i_read_len);
+                i_result = cv_cast_(long, i_read_result);
+            }
+        }
+    }
+    return i_result;
 }
 
 long cv_file_write(
-    cv_file * p_this,
+    cv_file const * p_this,
     cv_string const * p_string)
 {
-    cv_unused_(p_this);
-    cv_unused_(p_string);
-    return -1;
+    long i_result = -1;
+    if (p_this && p_string)
+    {
+        if (p_this->i_index >= 0)
+        {
+            long const i_string_len = cv_string_len(p_string);
+            if (i_string_len >= 0)
+            {
+                ssize_t i_write_result = -1;
+                size_t i_write_len = cv_cast_(size_t, i_string_len);
+                i_write_result = write(p_this->i_index,
+                    p_string->o_min.pc_void,
+                    i_write_len);
+                i_result = cv_cast_(long, i_write_result);
+            }
+        }
+    }
+    return i_result;
 }
 
