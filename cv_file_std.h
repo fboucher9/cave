@@ -12,15 +12,21 @@ struct cv_file_std
 
 #define cv_file_std_initializer_ { cv_file_initializer_ }
 
-cv_file_std const * cv_file_std_in(void);
+extern cv_file_std g_cv_file_std_in;
 
-cv_file_std const * cv_file_std_out(void);
+extern cv_file_std g_cv_file_std_out;
 
-cv_file_std const * cv_file_std_err(void);
+extern cv_file_std g_cv_file_std_err;
 
 cv_bool cv_file_std_load(void);
 
 void cv_file_std_unload(void);
+
+cv_bool cv_file_std_out_write(
+    cv_string const * p_string);
+
+cv_bool cv_file_std_out_write0(
+    char const * const p_msg0);
 
 #endif /* #ifndef cv_file_std_h_ */
 

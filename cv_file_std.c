@@ -2,57 +2,73 @@
 
 #include <cv_file_std.h>
 
-#include <fcntl.h>
+#include <cv_string.h>
 
-static cv_file_std g_file_stdin = cv_file_std_initializer_;
+#include <cv_memory.h>
 
-static cv_file_std g_file_stdout = cv_file_std_initializer_;
+cv_file_std g_cv_file_std_in = cv_file_std_initializer_;
 
-static cv_file_std g_file_stderr = cv_file_std_initializer_;
+cv_file_std g_cv_file_std_out = cv_file_std_initializer_;
 
-cv_file_std const * cv_file_std_in(void)
-{
-    return & g_file_stdin;
-}
-
-cv_file_std const * cv_file_std_out(void)
-{
-    return & g_file_stdout;
-}
-
-cv_file_std const * cv_file_std_err(void)
-{
-    return & g_file_stderr;
-}
-
-#if 0
-static void cv_file_std_set_non_blocking(
-    cv_file_std const * p_this)
-{
-    int i_flags = fcntl(p_this->o_file.i_index,
-        F_GETFL, 0);
-    fcntl(p_this->o_file.i_index,
-        F_SETFL, i_flags | O_NONBLOCK);
-}
-#endif
+cv_file_std g_cv_file_std_err = cv_file_std_initializer_;
 
 cv_bool cv_file_std_load(void)
 {
-    g_file_stdin.o_file.i_index = 0;
+    g_cv_file_std_in.o_file.i_index = 0;
 
-    g_file_stdout.o_file.i_index = 1;
+    g_cv_file_std_out.o_file.i_index = 1;
 
-    g_file_stderr.o_file.i_index = 2;
+    g_cv_file_std_err.o_file.i_index = 2;
 
     return cv_true_;
 }
 
 void cv_file_std_unload(void)
 {
-    g_file_stdin.o_file.i_index = -1;
+    g_cv_file_std_in.o_file.i_index = -1;
 
-    g_file_stdout.o_file.i_index = -1;
+    g_cv_file_std_out.o_file.i_index = -1;
 
-    g_file_stderr.o_file.i_index = -1;
+    g_cv_file_std_err.o_file.i_index = -1;
+}
+
+cv_bool cv_file_std_out_write(
+    cv_string const * p_string)
+{
+    cv_bool b_result = cv_true_;
+    cv_string o_string_it;
+    o_string_it = *p_string;
+    while (b_result &&
+        (o_string_it.o_min.pc_char != o_string_it.o_max.pc_char))
+    {
+        long const i_write_result = cv_file_write(
+            & g_cv_file_std_out.o_file,
+            & o_string_it);
+        if (i_write_result > 0)
+        {
+            o_string_it.o_min.pc_char += i_write_result;
+        }
+        else
+        {
+            b_result = cv_false_;
+        }
+    }
+    return b_result;
+}
+
+cv_bool cv_file_std_out_write0(
+    char const * const p_msg0)
+{
+    cv_bool b_result = cv_false_;
+    cv_string o_string = cv_string_initializer_;
+    if (cv_string_init(&o_string))
+    {
+        if (cv_string_setup0(&o_string, p_msg0))
+        {
+            b_result = cv_file_std_out_write(&o_string);
+        }
+        cv_string_cleanup(&o_string);
+    }
+    return b_result;
 }
 

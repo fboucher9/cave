@@ -6,43 +6,69 @@
 
 #include <cv_options.h>
 
+#include <cv_bool.h>
+
+static cv_options g_cv_main_options = cv_options_initializer_;
+
+static cv_bool g_cv_main_init_done = cv_false_;
+
 /* Setup all managers, convert arguments to an options object and provide
 options to application callback.  */
-cv_bool cv_main_dispatch(
-    /* Pointer to command line arguments */
-    cv_options_desc const * p_options_desc,
-    /* Pointer to callback */
-    cv_main_func * p_func)
+cv_options * cv_main_init(
+    int argc,
+    char const * const * argv)
 {
-    cv_bool b_result = cv_false_;
+    cv_options * p_options = cv_null_;
 
-    /* Validate input parameters and descriptor contents */
-    if (p_options_desc &&
-        p_func)
+    if (!g_cv_main_init_done)
     {
         /* load all plugins */
         if (cv_manager_load())
         {
-            cv_options o_options;
-            if (cv_options_init(&o_options))
+            if (cv_options_init(&g_cv_main_options))
             {
-                if (cv_options_setup(&o_options, p_options_desc))
+                cv_options_desc o_options_desc = cv_options_desc_initializer_;
+
+                o_options_desc.p_args_min = argv;
+
+                o_options_desc.p_args_max = argv + argc;
+
+                if (cv_options_setup(&g_cv_main_options, &o_options_desc))
                 {
-                    b_result = (*p_func)(&o_options);
+                    g_cv_main_init_done = cv_true_;
+
+                    p_options = & g_cv_main_options;
                 }
 
-                cv_options_cleanup(&o_options);
+                if (!p_options)
+                {
+                    cv_options_cleanup(&g_cv_main_options);
+                }
             }
 
-            /* unload all plugins */
-            cv_manager_unload();
-        }
-        else
-        {
+            if (!p_options)
+            {
+                cv_manager_unload();
+            }
         }
     }
-    else
-    {
-    }
-    return b_result;
+    return p_options;
 }
+
+void cv_main_cleanup(
+    cv_options * p_options)
+{
+    if (g_cv_main_init_done)
+    {
+        if (p_options)
+        {
+            cv_options_cleanup(& g_cv_main_options);
+        }
+
+        /* unload all plugins */
+        cv_manager_unload();
+
+        g_cv_main_init_done = cv_false_;
+    }
+}
+
