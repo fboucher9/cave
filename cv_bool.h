@@ -17,7 +17,7 @@ typedef bool cv_bool;
 
 #define cv_true_ (1)
 
-typedef char cv_bool;
+typedef unsigned char cv_bool;
 
 #endif /* #if defined __cplusplus */
 
