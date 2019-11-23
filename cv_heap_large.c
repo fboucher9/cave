@@ -18,9 +18,7 @@
 
 #include <cv_unused.h>
 
-#if defined cv_have_libc_
-#include <stdlib.h>
-#endif /* #if defined cv_have_libc_ */
+#include <cv_runtime.h>
 
 static cv_bool g_heap_large_loaded = cv_false_;
 
@@ -63,10 +61,7 @@ void cv_heap_large_unload(void)
                         o_heap_ptr.o_node_ptr.p_node,
                         o_heap_ptr.o_node_ptr.p_node);
                     /* Free memory */
-#if defined cv_have_libc_
-                    free(o_heap_ptr.p_void);
-#else /* #if defined cv_have_libc_ */
-#endif /* #if defined cv_have_libc_ */
+                    cv_runtime_free(o_heap_ptr.p_void);
                 }
                 cv_node_it_cleanup(&o_node_it);
             }
@@ -131,12 +126,7 @@ static void * cv_heap_large_alloc_cb(
         }
         else
         {
-#if defined cv_have_libc_
-            size_t const i_malloc_len = cv_cast_(size_t, i_aligned_len);
-            o_heap_ptr.p_void = malloc(i_malloc_len);
-#else /* #if defined cv_have_libc_ */
-            o_heap_ptr.p_void = cv_null_;
-#endif /* #if defined cv_have_libc_ */
+            o_heap_ptr.p_void = cv_runtime_malloc(i_aligned_len);
             if (o_heap_ptr.p_void)
             {
                 cv_heap_node_init( o_heap_ptr.p_heap_node, i_len);

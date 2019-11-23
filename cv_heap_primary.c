@@ -14,9 +14,17 @@
 
 #include <cv_node_it.h>
 
-#if defined cv_have_libc_
-#include <stdlib.h>
-#endif /* #if defined cv_have_libc_ */
+#include <cv_runtime.h>
+
+typedef union cv_heap_section_ptr cv_heap_section_ptr;
+
+union cv_heap_section_ptr
+{
+    cv_node_ptr o_node_ptr;
+    char * p_char;
+};
+
+#define cv_heap_section_ptr_null_ { cv_node_ptr_null_ }
 
 static cv_list g_heap_sections = cv_list_initializer_;
 
@@ -52,9 +60,7 @@ void cv_heap_primary_unload(void)
                 cv_node_cleanup(
                     o_node_ptr.p_node);
                 /* Free memory */
-#if defined cv_have_libc_
-                free(o_node_ptr.p_void);
-#endif /* #if defined cv_have_libc_ */
+                cv_runtime_free(o_node_ptr.p_void);
             }
             cv_node_it_cleanup(&o_node_it);
         }
@@ -72,6 +78,55 @@ static void cv_heap_primary_unlock(void)
     cv_mutex_unlock(&cv_heap_primary_mutex);
 }
 
+static void cv_heap_primary_grow(void)
+{
+    cv_heap_section_ptr o_section_ptr = cv_heap_section_ptr_null_;
+    o_section_ptr.o_node_ptr.p_void = cv_runtime_malloc(g_heap_primary_max);
+    if (o_section_ptr.o_node_ptr.p_void)
+    {
+        cv_node_init(
+            o_section_ptr.o_node_ptr.p_node);
+
+        cv_node_join(
+            o_section_ptr.o_node_ptr.p_node,
+            &g_heap_sections.o_node);
+
+        o_section_ptr.o_node_ptr.p_node ++;
+
+        g_heap_primary_cur = o_section_ptr.p_char;
+
+        g_heap_primary_end = g_heap_primary_cur + g_heap_primary_max -
+            sizeof(cv_node);
+    }
+}
+
+static void * cv_heap_primary_alloc_cb(
+    long i_count)
+{
+    void * p_buffer = cv_null_;
+
+    long const i_alignment = 8;
+
+    long const i_remainder = i_count % i_alignment;
+
+    long const i_aligned_count = i_remainder ?
+        i_count + i_alignment - i_remainder : i_count;
+
+    if ((g_heap_primary_cur + i_aligned_count) > g_heap_primary_end)
+    {
+        cv_heap_primary_grow();
+    }
+
+    if ((g_heap_primary_cur + i_aligned_count) <= g_heap_primary_end)
+    {
+        p_buffer = g_heap_primary_cur;
+
+        g_heap_primary_cur += i_aligned_count;
+    }
+
+    return p_buffer;
+}
+
 void * cv_heap_primary_alloc(
     long i_count)
 {
@@ -79,52 +134,9 @@ void * cv_heap_primary_alloc(
 
     if ((i_count > 0) && (i_count <= g_heap_primary_max))
     {
-        long const i_alignment = 8;
-
-        long const i_remainder = i_count % i_alignment;
-
-        long const i_aligned_count = i_remainder ?
-            i_count + i_alignment - i_remainder : i_count;
-
         cv_heap_primary_lock();
 
-        if ((g_heap_primary_cur + i_aligned_count) > g_heap_primary_end)
-        {
-            void * p_new_segment = cv_null_;
-#if defined cv_have_libc_
-            size_t const i_malloc_len = cv_cast_(size_t, g_heap_primary_max);
-            p_new_segment = malloc(i_malloc_len);
-#else /* #if defined cv_have_libc_ */
-            p_new_segment = cv_null_;
-#endif /* #if defined cv_have_libc_ */
-            if (p_new_segment)
-            {
-                cv_node_ptr o_node_ptr = cv_node_ptr_null_;
-
-                o_node_ptr.p_void = p_new_segment;
-
-                cv_node_init(
-                    o_node_ptr.p_node);
-
-                cv_node_join(
-                    o_node_ptr.p_node,
-                    &g_heap_sections.o_node);
-
-                o_node_ptr.p_node ++;
-
-                g_heap_primary_cur = cv_cast_(char *, o_node_ptr.p_void);
-
-                g_heap_primary_end = g_heap_primary_cur + g_heap_primary_max -
-                    sizeof(cv_node);
-            }
-        }
-
-        if ((g_heap_primary_cur + i_aligned_count) <= g_heap_primary_end)
-        {
-            p_buffer = g_heap_primary_cur;
-
-            g_heap_primary_cur += i_aligned_count;
-        }
+        p_buffer = cv_heap_primary_alloc_cb(i_count);
 
         cv_heap_primary_unlock();
     }
