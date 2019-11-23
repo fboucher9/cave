@@ -15,4 +15,7 @@ typedef struct cv_string0 cv_string0;
 /* Predefine */
 typedef struct cv_string1 cv_string1;
 
+/* Predefine */
+typedef struct cv_string_it cv_string_it;
+
 #endif /* #ifndef cv_string_pred_h_ */
