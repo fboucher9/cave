@@ -16,6 +16,8 @@ struct cv_options
     cv_list o_list;
 };
 
+#define cv_options_initializer_ { cv_list_initializer_ }
+
 cv_bool cv_options_init(
     cv_options * p_this);
 
