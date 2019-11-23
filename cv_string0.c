@@ -14,8 +14,6 @@
 
 #include <cv_memory.h>
 
-#include <string.h>
-
 /*
 
 Convert cv_string object to a zero-terminated string.  The cv_string0 object
