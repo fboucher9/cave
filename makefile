@@ -14,6 +14,7 @@ cv_test_srcs = \
     cv_string.c \
     cv_string0.c \
     cv_string1.c \
+    cv_string_it.c \
     cv_manager.c \
     cv_options_desc.c \
     cv_options.c \
@@ -45,6 +46,7 @@ cv_test_srcs = \
     cv_file_disk_desc.c \
     cv_file_disk.c \
     cv_file_poll.c \
+    cv_runtime.c \
 
 cv_test_srcs_abs = $(addprefix $(cv_src_path)/,$(cv_test_srcs))
 
@@ -52,6 +54,15 @@ cv_profile_cflags = \
     -pg \
     -ftest-coverage \
     -fprofile-arcs \
+
+cv_defines = \
+    -D _DEFAULT_SOURCE \
+    -D cv_debug_ \
+    -D cv_have_libc_ \
+    -D cv_have_pthread_ \
+
+cv_includes = \
+    -I .
 
 cv_cflags = \
     -g \
@@ -61,10 +72,6 @@ cv_cflags = \
     -fno-stack-protector \
     -fno-unwind-tables \
     -fno-asynchronous-unwind-tables \
-    -D _DEFAULT_SOURCE \
-    -D cv_debug_ \
-    -D cv_have_libc_ \
-    -I . \
     -ansi \
     -pedantic \
     -Wall \
@@ -116,6 +123,7 @@ cv_cflags = \
 test : $(cv_dst_path)/test.exe
 
 all : $(cv_dst_path)/test.exe
+all : $(cv_dst_path)/test.m64.exe
 all : $(cv_dst_path)/test.cxx.exe
 all : $(cv_dst_path)/test.clang.exe
 all : $(cv_dst_path)/test.clangxx.exe
@@ -123,17 +131,20 @@ all : bare
 bare : $(cv_dst_path)/test.bare.exe
 
 $(cv_dst_path)/test.exe : $(cv_src_path)/makefile $(cv_test_srcs_abs)
-	gcc -x c -o $(cv_dst_path)/test.exe $(cv_cflags) $(cv_test_srcs_abs) -lpthread
+	gcc -m32 -x c -o $(cv_dst_path)/test.exe $(cv_cflags) $(cv_defines) $(cv_includes) $(cv_test_srcs_abs) -lpthread
+
+$(cv_dst_path)/test.m64.exe : $(cv_src_path)/makefile $(cv_test_srcs_abs)
+	gcc -m64 -x c -o $(cv_dst_path)/test.m64.exe $(cv_cflags) $(cv_defines) $(cv_includes) $(cv_test_srcs_abs) -lpthread
 
 $(cv_dst_path)/test.cxx.exe : $(cv_src_path)/makefile $(cv_test_srcs_abs)
-	gcc -x c++ -o $(cv_dst_path)/test.cxx.exe -fno-rtti -fno-exceptions -Wold-style-cast $(cv_cflags) $(cv_test_srcs_abs) -lpthread
+	gcc -x c++ -o $(cv_dst_path)/test.cxx.exe -fno-rtti -fno-exceptions -Wold-style-cast $(cv_cflags) $(cv_defines) $(cv_includes) $(cv_test_srcs_abs) -lpthread
 
 $(cv_dst_path)/test.clang.exe : $(cv_src_path)/makefile $(cv_test_srcs_abs)
-	clang -x c -o $(cv_dst_path)/test.clang.exe -ansi -pedantic -Weverything -I . -D cv_debug_ -D cv_have_libc_ -D _DEFAULT_SOURCE $(cv_test_srcs_abs) -lpthread
+	clang -x c -o $(cv_dst_path)/test.clang.exe -ansi -pedantic -Weverything $(cv_defines) $(cv_includes) $(cv_test_srcs_abs) -lpthread
 
 $(cv_dst_path)/test.clangxx.exe : $(cv_src_path)/makefile $(cv_test_srcs_abs)
-	clang++ -x c++ -o $(cv_dst_path)/test.clangxx.exe -fno-rtti -fno-exceptions -ansi -pedantic -Weverything -I . -D cv_debug_ -D cv_have_libc_ -D _DEFAULT_SOURCE $(cv_test_srcs_abs) -lpthread
+	clang++ -x c++ -o $(cv_dst_path)/test.clangxx.exe -fno-rtti -fno-exceptions -ansi -pedantic -Weverything $(cv_defines) $(cv_includes) $(cv_test_srcs_abs) -lpthread
 
 $(cv_dst_path)/test.bare.exe : $(cv_src_path)/makefile $(cv_test_srcs_abs)
-	gcc -x c -o $(cv_dst_path)/test.exe -I . -D cv_debug_ -ansi -pedantic -Wall -Wextra -fno-stack-protector $(cv_test_srcs_abs) -nodefaultlibs -nostartfiles -lpthread
+	gcc -x c -o $(cv_dst_path)/test.bare.exe -I . -D cv_debug_ -ansi -pedantic -nostdinc -Wall -Wextra -fno-stack-protector $(cv_test_srcs_abs) -nodefaultlibs -nostartfiles
 
