@@ -4,9 +4,11 @@
 
 #include <cv_unused.h>
 
+#if defined cv_have_libc_
 #include <time.h>
 
 #include <unistd.h>
+#endif /* #if defined cv_have_libc_ */
 
 cv_bool cv_clock_read(
     cv_clock_epoch e_clock_epoch,
