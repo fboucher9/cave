@@ -35,8 +35,11 @@ cv_bool cv_mutex_init(
     cv_bool b_result = cv_false_;
     if (p_this)
     {
-        int const i_pthread_result = pthread_mutex_init(&p_this->o_private,
+        int i_pthread_result = 0;
+#if defined cv_have_pthread_
+        i_pthread_result = pthread_mutex_init(&p_this->o_private,
             cv_null_);
+#endif /* #if defined cv_have_pthread_ */
         if (0 == i_pthread_result)
         {
             b_result = cv_true_;
@@ -53,7 +56,10 @@ void cv_mutex_cleanup(
 {
     if (p_this)
     {
-        int const i_pthread_result = pthread_mutex_destroy(&p_this->o_private);
+        int i_pthread_result = 0;
+#if defined cv_have_pthread_
+        i_pthread_result = pthread_mutex_destroy(&p_this->o_private);
+#endif /* #if defined cv_have_pthread_ */
         if (0 == i_pthread_result)
         {
         }
@@ -99,8 +105,13 @@ void cv_mutex_lock(
 {
     if (p_this)
     {
-        int const i_pthread_result = pthread_mutex_lock(
+        int i_pthread_result = 0;
+
+#if defined cv_have_pthread_
+        i_pthread_result = pthread_mutex_lock(
             &p_this->o_private);
+#endif /* #if defined cv_have_pthread_ */
+
         if (0 == i_pthread_result)
         {
         }
@@ -115,8 +126,13 @@ void cv_mutex_unlock(
 {
     if (p_this)
     {
-        int const i_pthread_result = pthread_mutex_unlock(
+        int i_pthread_result = 0;
+
+#if defined cv_have_pthread_
+        pthread_mutex_unlock(
             &p_this->o_private);
+#endif /* #if defined cv_have_pthread_ */
+
         if (0 == i_pthread_result)
         {
         }

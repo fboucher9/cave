@@ -7,12 +7,25 @@
 
 #include <cv_thread_desc.h>
 
+#include <cv_types.h>
+
+#if defined cv_have_pthread_
 #include <pthread.h>
+#endif /* #if defined cv_have_pthread_ */
 
 struct cv_thread
 {
     cv_thread_desc o_desc;
-    pthread_t o_handle;
+    /* -- */
+#if defined cv_have_pthread_
+    union cv_thread_handle
+    {
+        pthread_t o_handle;
+        cv_ull a_padding[
+            (sizeof(pthread_t) + sizeof(cv_ull) - 1) /
+                sizeof(cv_ull)];
+    } u;
+#endif /* #if defined cv_have_pthread_ */
 };
 
 cv_bool cv_thread_init(

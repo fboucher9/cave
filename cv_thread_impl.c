@@ -16,6 +16,7 @@ typedef union cv_thread_start_ptr
     cv_thread * p_thread;
 } cv_thread_start_ptr;
 
+#if defined cv_have_pthread_
 static void * cv_thread_start(
     void * p_void)
 {
@@ -35,6 +36,7 @@ static void * cv_thread_start(
 
     return p_void;
 }
+#endif /* #if defined cv_have_pthread_ */
 
 cv_bool cv_thread_init(
     cv_thread * p_this,
@@ -45,12 +47,20 @@ cv_bool cv_thread_init(
     {
         cv_memory_zero(p_this, cv_sizeof_(cv_thread));
         p_this->o_desc = *(p_thread_desc);
-        pthread_create(
-            &(p_this->o_handle),
-            cv_null_,
-            & cv_thread_start,
-            p_this);
-        b_result = cv_true_;
+        {
+            int i_pthread_result = 0;
+#if defined cv_have_pthread_
+            i_pthread_result = pthread_create(
+                &(p_this->u.o_handle),
+                cv_null_,
+                & cv_thread_start,
+                p_this);
+#endif /* #if defined cv_have_pthread_ */
+            if (0 == i_pthread_result)
+            {
+                b_result = cv_true_;
+            }
+        }
     }
     return b_result;
 }
@@ -61,9 +71,15 @@ void cv_thread_cleanup(
     if (p_this)
     {
         /* check detach flag */
-        void * p_result;
-        pthread_join(p_this->o_handle, &p_result);
+        int i_pthread_result = 0;
+        void * p_result = cv_null_;
+#if defined cv_have_pthread_
+        i_pthread_result = pthread_join(p_this->u.o_handle, &p_result);
+#endif /* #if defined cv_have_pthread_ */
         cv_unused_(p_result);
+        if (0 == i_pthread_result)
+        {
+        }
     }
 }
 
