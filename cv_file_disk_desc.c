@@ -9,13 +9,13 @@
 cv_bool cv_file_disk_desc_init(
     cv_file_disk_desc * p_this)
 {
-    cv_bool b_result = cv_false_;
+    cv_bool b_result = cv_false;
     if (p_this)
     {
         cv_memory_zero(
             p_this,
             cv_sizeof_(cv_file_disk_desc));
-        b_result = cv_true_;
+        b_result = cv_true;
     }
     return b_result;
 }

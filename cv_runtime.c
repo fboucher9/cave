@@ -106,7 +106,7 @@ void const * cv_runtime_memchr(
     size_t const i_memchr_len = cv_cast_(size_t, i_src_len);
     p_memchr_result = memchr(p_src, c_value, i_memchr_len);
 #else /* #if defined cv_have_libc_ */
-    cv_bool b_found = cv_false_;
+    cv_bool b_found = cv_false;
     unsigned char const * p_src_it = cv_cast_(unsigned char const *, p_src);
     unsigned char const * p_src_end = p_src_it + i_src_len;
     while (!b_found && (p_src_it < p_src_end))
@@ -114,7 +114,7 @@ void const * cv_runtime_memchr(
         if (c_value == *p_src_it)
         {
             p_memchr_result = cv_cast_(void const *, p_src_it);
-            b_found = cv_true_;
+            b_found = cv_true;
         }
         else
         {

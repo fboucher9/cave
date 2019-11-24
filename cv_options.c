@@ -26,10 +26,10 @@
 
 cv_bool cv_options_load(void)
 {
-    cv_bool b_result = cv_false_;
+    cv_bool b_result = cv_false;
     if (cv_options_pool_load())
     {
-        b_result = cv_true_;
+        b_result = cv_true;
     }
     return b_result;
 }
@@ -78,12 +78,12 @@ void cv_options_cleanup(
 cv_bool cv_options_init(
     cv_options * p_this)
 {
-    cv_bool b_result = cv_false_;
+    cv_bool b_result = cv_false;
     if (p_this)
     {
         cv_memory_zero(p_this, cv_sizeof_(cv_options));
         cv_list_init(&p_this->o_list);
-        b_result = cv_true_;
+        b_result = cv_true;
     }
     return b_result;
 }
@@ -92,7 +92,7 @@ static cv_bool cv_options_setup_cb(
     cv_options * p_this,
     char const * p_arg0)
 {
-    cv_bool b_result = cv_false_;
+    cv_bool b_result = cv_false;
     if (p_this && p_arg0)
     {
         cv_string o_string = cv_string_initializer_;
@@ -110,12 +110,12 @@ cv_bool cv_options_setup(
     cv_options * p_this,
     cv_options_desc const * p_desc)
 {
-    cv_bool b_result = cv_false_;
+    cv_bool b_result = cv_false;
     if (p_this && p_desc)
     {
-        char const * const * p_args_it = p_desc->p_args_min;
-        b_result = cv_true_;
-        while (b_result && (p_args_it < p_desc->p_args_max))
+        char const * const * p_args_it = p_desc->o_array.o_min.ppc_char;
+        b_result = cv_true;
+        while (b_result && (p_args_it < p_desc->o_array.o_max.ppc_char))
         {
             char const * const p_arg0 = *p_args_it;
             b_result = cv_options_setup_cb(p_this, p_arg0);
@@ -129,7 +129,7 @@ cv_bool cv_options_add(
     cv_options * p_this,
     cv_string const * p_string)
 {
-    cv_bool b_result = cv_false_;
+    cv_bool b_result = cv_false;
     if (p_this && p_string)
     {
         cv_options_node * p_options_node;
@@ -140,7 +140,7 @@ cv_bool cv_options_add(
             &o_options_node_desc);
         if (p_options_node)
         {
-            b_result = cv_true_;
+            b_result = cv_true;
         }
     }
     return b_result;

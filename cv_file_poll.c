@@ -19,7 +19,7 @@ cv_bool cv_file_poll_dispatch(
     cv_file_poll * p_poll_max,
     cv_clock const * p_timeout)
 {
-    cv_bool b_result = cv_false_;
+    cv_bool b_result = cv_false;
 
     if (p_poll_min && p_poll_max)
     {
@@ -52,7 +52,7 @@ cv_bool cv_file_poll_dispatch(
                     {
                         p_poll_min->i_flags_out |= cv_file_poll_flag_write;
                     }
-                    b_result = cv_true_;
+                    b_result = cv_true;
                 }
             }
         }

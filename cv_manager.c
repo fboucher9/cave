@@ -23,7 +23,7 @@ Description: None.
 */
 cv_bool cv_manager_load(void)
 {
-    cv_bool b_result = cv_false_;
+    cv_bool b_result = cv_false;
     if (cv_heap_load())
     {
         if (cv_mutex_load())
@@ -32,7 +32,7 @@ cv_bool cv_manager_load(void)
             {
                 if (cv_file_std_load())
                 {
-                    b_result = cv_true_;
+                    b_result = cv_true;
                 }
             }
         }

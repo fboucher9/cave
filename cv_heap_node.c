@@ -16,14 +16,14 @@ cv_bool cv_heap_node_init(
     cv_heap_node * p_this,
     long i_len)
 {
-    cv_bool b_result = cv_false_;
+    cv_bool b_result = cv_false;
     if (p_this)
     {
         cv_memory_zero(p_this, cv_sizeof_(cv_heap_node));
         if (cv_node_init(&p_this->o_node))
         {
             p_this->i_len = i_len;
-            b_result = cv_true_;
+            b_result = cv_true;
         }
     }
     return b_result;

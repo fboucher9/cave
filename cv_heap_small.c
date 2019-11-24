@@ -22,17 +22,17 @@ typedef char cv_verify_heap_small_align [
     (cv_heap_small_align_ * cv_heap_small_count_) == cv_heap_small_max_len_
     ? 1 : -1 ];
 
-static cv_bool g_heap_small_loaded = cv_false_;
+static cv_bool g_heap_small_loaded = cv_false;
 
 static cv_heap_pool * g_heap_small_pool[cv_heap_small_count_];
 
 cv_bool cv_heap_small_load(void)
 {
-    cv_bool b_result = cv_false_;
+    cv_bool b_result = cv_false;
     if (!g_heap_small_loaded)
     {
         long i_pool_index = 0;
-        b_result = cv_true_;
+        b_result = cv_true;
         while (b_result && (i_pool_index < cv_heap_small_count_))
         {
             g_heap_small_pool[i_pool_index] = cv_heap_pool_load(
@@ -48,12 +48,12 @@ cv_bool cv_heap_small_load(void)
                     i_pool_index --;
                     cv_heap_pool_unload(g_heap_small_pool[i_pool_index]);
                 }
-                b_result = cv_false_;
+                b_result = cv_false;
             }
         }
         if (b_result)
         {
-            g_heap_small_loaded = cv_true_;
+            g_heap_small_loaded = cv_true;
         }
     }
     return b_result;
@@ -69,7 +69,7 @@ void cv_heap_small_unload(void)
             cv_heap_pool_unload(g_heap_small_pool[i_pool_index]);
             i_pool_index ++;
         }
-        g_heap_small_loaded = cv_false_;
+        g_heap_small_loaded = cv_false;
     }
 }
 

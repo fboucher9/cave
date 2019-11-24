@@ -18,20 +18,20 @@ Description: Memory allocation pool for cv_options_node objects.
 
 #include <cv_sizeof.h>
 
-static cv_bool g_options_pool_loaded = cv_false_;
+static cv_bool g_options_pool_loaded = cv_false;
 
 static cv_heap_pool * g_options_pool = cv_null_;
 
 cv_bool cv_options_pool_load(void)
 {
-    cv_bool b_result = cv_false_;
+    cv_bool b_result = cv_false;
     if (!g_options_pool_loaded)
     {
         g_options_pool = cv_heap_pool_load(cv_sizeof_(cv_options_node));
         if (g_options_pool)
         {
-            g_options_pool_loaded = cv_true_;
-            b_result = cv_true_;
+            g_options_pool_loaded = cv_true;
+            b_result = cv_true;
         }
     }
     return b_result;
@@ -46,7 +46,7 @@ void cv_options_pool_unload(void)
             cv_heap_pool_unload(g_options_pool);
             g_options_pool = cv_null_;
         }
-        g_options_pool_loaded = cv_false_;
+        g_options_pool_loaded = cv_false;
     }
 }
 

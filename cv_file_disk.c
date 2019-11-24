@@ -62,7 +62,7 @@ cv_bool cv_file_disk_init(
     cv_file_disk * p_this,
     cv_file_disk_desc const * p_desc)
 {
-    cv_bool b_result = cv_false_;
+    cv_bool b_result = cv_false;
     if (p_this && p_desc)
     {
         cv_memory_zero(p_this, cv_sizeof_(*p_this));
@@ -91,7 +91,7 @@ cv_bool cv_file_disk_init(
 
                 if (p_this->o_file.i_index >= 0)
                 {
-                    b_result = cv_true_;
+                    b_result = cv_true;
                 }
 
                 cv_string0_cleanup(&o_name0);

@@ -10,7 +10,7 @@
 
 static cv_options g_cv_main_options = cv_options_initializer_;
 
-static cv_bool g_cv_main_init_done = cv_false_;
+static cv_bool g_cv_main_init_done = cv_false;
 
 /* Setup all managers, convert arguments to an options object and provide
 options to application callback.  */
@@ -29,15 +29,18 @@ cv_options * cv_main_init(
             {
                 cv_options_desc o_options_desc = cv_options_desc_initializer_;
 
-                o_options_desc.p_args_min = argv;
-
-                o_options_desc.p_args_max = argv + argc;
-
-                if (cv_options_setup(&g_cv_main_options, &o_options_desc))
+                if (cv_options_desc_init(&o_options_desc,
+                        argv,
+                        argv + argc))
                 {
-                    g_cv_main_init_done = cv_true_;
+                    if (cv_options_setup(&g_cv_main_options, &o_options_desc))
+                    {
+                        g_cv_main_init_done = cv_true;
 
-                    p_options = & g_cv_main_options;
+                        p_options = & g_cv_main_options;
+                    }
+
+                    cv_options_desc_cleanup(&o_options_desc);
                 }
 
                 if (!p_options)
@@ -68,7 +71,7 @@ void cv_main_cleanup(
         /* unload all plugins */
         cv_manager_unload();
 
-        g_cv_main_init_done = cv_false_;
+        g_cv_main_init_done = cv_false;
     }
 }
 

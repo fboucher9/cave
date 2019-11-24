@@ -13,7 +13,7 @@ cv_bool cv_string1_init(
     cv_string1 * p_this,
     long i_length)
 {
-    cv_bool b_result = cv_false_;
+    cv_bool b_result = cv_false;
     if (p_this)
     {
         p_this->o_buf.o_min.p_void = cv_null_;
@@ -25,12 +25,12 @@ cv_bool cv_string1_init(
             {
                 p_this->o_buf.o_min.p_char = p_array;
                 p_this->o_buf.o_max.p_char = p_array + i_length;
-                b_result = cv_true_;
+                b_result = cv_true;
             }
         }
         else
         {
-            b_result = cv_true_;
+            b_result = cv_true;
         }
     }
     return b_result;

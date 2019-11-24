@@ -14,7 +14,7 @@ cv_bool cv_options_it_init(
     cv_options_it * p_this,
     cv_options const * p_options)
 {
-    cv_bool b_result = cv_false_;
+    cv_bool b_result = cv_false;
     if (p_this && p_options)
     {
         b_result = cv_node_it_init(&p_this->o_node_it, &p_options->o_list);
@@ -35,7 +35,7 @@ cv_bool cv_options_it_next(
     cv_options_it * p_this,
     cv_string const * * r_string)
 {
-    cv_bool b_result = cv_false_;
+    cv_bool b_result = cv_false;
 
     if (p_this && r_string)
     {
@@ -43,7 +43,7 @@ cv_bool cv_options_it_next(
         if (cv_node_it_next(&p_this->o_node_it, &o_ptr.o_node_ptr))
         {
             *r_string = & o_ptr.pc_options_node->o_buf0.o_buf1.o_buf;
-            b_result = cv_true_;
+            b_result = cv_true;
         }
     }
 

@@ -27,7 +27,7 @@ cv_bool cv_thread_desc_init(
     p_this->p_func = & cv_thread_dummy_func;
     p_this->p_context = cv_null_;
     p_this->p_name0 = cv_null_;
-    return cv_true_;
+    return cv_true;
 }
 
 void cv_thread_desc_cleanup(

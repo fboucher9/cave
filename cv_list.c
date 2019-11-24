@@ -31,13 +31,13 @@ Comments: The memory allocated for instance may be uninitialized.
 cv_bool cv_list_init(
     cv_list * p_this)
 {
-    cv_bool b_result = cv_false_;
+    cv_bool b_result = cv_false;
     if (p_this)
     {
         if (cv_node_init(
             &p_this->o_node))
         {
-            b_result = cv_true_;
+            b_result = cv_true;
         }
     }
     else

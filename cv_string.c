@@ -11,12 +11,12 @@
 cv_bool cv_string_init(
     cv_string * p_string)
 {
-    cv_bool b_result = cv_false_;
+    cv_bool b_result = cv_false;
     if (p_string)
     {
         p_string->o_min.pc_void = cv_null_;
         p_string->o_max.pc_void = cv_null_;
-        b_result = cv_true_;
+        b_result = cv_true;
     }
     return b_result;
 }
@@ -26,12 +26,12 @@ cv_bool cv_string_setup(
     void const * p_ref_min,
     void const * p_ref_max)
 {
-    cv_bool b_result = cv_false_;
+    cv_bool b_result = cv_false;
     if (p_string)
     {
         p_string->o_min.pc_void = p_ref_min;
         p_string->o_max.pc_void = p_ref_max;
-        b_result = cv_true_;
+        b_result = cv_true;
     }
     return b_result;
 }
@@ -40,14 +40,14 @@ cv_bool cv_string_setup0(
     cv_string * p_string,
     char const * p_ref0)
 {
-    cv_bool b_result = cv_false_;
+    cv_bool b_result = cv_false;
     if (p_string)
     {
         long const i_ref0_len = cv_memory_find0(p_ref0,
             0x7FFFFFFFL);
         p_string->o_min.pc_char = p_ref0;
         p_string->o_max.pc_char = p_ref0 + i_ref0_len;
-        b_result = cv_true_;
+        b_result = cv_true;
     }
     return b_result;
 }

@@ -8,7 +8,7 @@ cv_bool cv_heap_it_init(
     cv_heap_it * p_this,
     cv_list const * p_list)
 {
-    cv_bool b_result = cv_false_;
+    cv_bool b_result = cv_false;
     if (p_this)
     {
         b_result = cv_node_it_init(
@@ -32,7 +32,7 @@ cv_bool cv_heap_it_next(
     cv_heap_it * p_this,
     cv_heap_node_ptr * r_ptr)
 {
-    cv_bool b_result = cv_false_;
+    cv_bool b_result = cv_false;
     if (p_this)
     {
         b_result = cv_node_it_next(

@@ -36,11 +36,11 @@ static long g_heap_primary_max = ((1024L * 1024L) - 256L);
 
 cv_bool cv_heap_primary_load(void)
 {
-    cv_bool b_result = cv_false_;
+    cv_bool b_result = cv_false;
 
     if (cv_list_init(&g_heap_sections))
     {
-        b_result = cv_true_;
+        b_result = cv_true;
     }
 
     return b_result;

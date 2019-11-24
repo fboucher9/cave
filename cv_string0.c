@@ -24,7 +24,7 @@ cv_bool cv_string0_init(
     cv_string0 * p_this,
     cv_string const * p_string)
 {
-    cv_bool b_result = cv_false_;
+    cv_bool b_result = cv_false;
 
     /* Validate input parameters */
     if (p_this)
@@ -44,7 +44,7 @@ cv_bool cv_string0_init(
                     i_length);
             }
             p_this->o_buf1.o_buf.o_min.p_char[i_length] = '\000';
-            b_result = cv_true_;
+            b_result = cv_true;
         }
     }
     return b_result;

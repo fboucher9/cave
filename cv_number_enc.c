@@ -79,7 +79,7 @@ static unsigned char const g_number_digit_upper[16u] =
 static cv_bool cv_number_enc_init_digits(
     cv_number_enc * p_this)
 {
-    cv_bool b_result = cv_false_;
+    cv_bool b_result = cv_false;
     if (p_this)
     {
         unsigned long i_unsigned = 0;
@@ -126,7 +126,7 @@ static cv_bool cv_number_enc_init_digits(
                 p_this->i_digit_count = 1;
             }
         }
-        b_result = cv_true_;
+        b_result = cv_true;
     }
     return b_result;
 }
@@ -135,7 +135,7 @@ cv_bool cv_number_enc_init(
     cv_number_enc * p_this,
     cv_number_desc const * p_desc)
 {
-    cv_bool b_result = cv_false_;
+    cv_bool b_result = cv_false;
     if (p_this && p_desc)
     {
         p_this->o_desc = *(p_desc);
@@ -155,7 +155,7 @@ cv_bool cv_number_enc_init(
                 p_this->i_state = cv_number_machine_before_dot;
                 p_this->i_state_count = p_this->i_digit_count;
             }
-            b_result = cv_true_;
+            b_result = cv_true;
         }
     }
     return b_result;

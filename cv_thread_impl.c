@@ -42,7 +42,7 @@ cv_bool cv_thread_init(
     cv_thread * p_this,
     cv_thread_desc const * p_thread_desc)
 {
-    cv_bool b_result = cv_false_;
+    cv_bool b_result = cv_false;
     if (p_this && p_thread_desc)
     {
         cv_memory_zero(p_this, cv_sizeof_(cv_thread));
@@ -58,7 +58,7 @@ cv_bool cv_thread_init(
 #endif /* #if defined cv_have_pthread_ */
             if (0 == i_pthread_result)
             {
-                b_result = cv_true_;
+                b_result = cv_true;
             }
         }
     }

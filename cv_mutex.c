@@ -14,7 +14,7 @@
 
 cv_bool cv_mutex_load(void)
 {
-    cv_bool b_result = cv_false_;
+    cv_bool b_result = cv_false;
     b_result = cv_mutex_pool_load();
     return b_result;
 }
@@ -32,7 +32,7 @@ long cv_mutex_sizeof(void)
 cv_bool cv_mutex_init(
     cv_mutex * p_this)
 {
-    cv_bool b_result = cv_false_;
+    cv_bool b_result = cv_false;
     if (p_this)
     {
         int i_pthread_result = 0;
@@ -42,7 +42,7 @@ cv_bool cv_mutex_init(
 #endif /* #if defined cv_have_pthread_ */
         if (0 == i_pthread_result)
         {
-            b_result = cv_true_;
+            b_result = cv_true;
         }
         else
         {

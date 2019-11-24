@@ -3,19 +3,19 @@
 #ifndef cv_bool_h_
 #define cv_bool_h_
 
+enum cv_bool_values
+{
+    cv_false = 0,
+
+    cv_true = 1
+
+};
+
 #if defined __cplusplus
-
-#define cv_false_ (false)
-
-#define cv_true_ (true)
 
 typedef bool cv_bool;
 
 #else /* #if defined __cplusplus */
-
-#define cv_false_ (0)
-
-#define cv_true_ (1)
 
 typedef unsigned char cv_bool;
 

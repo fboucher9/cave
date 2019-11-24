@@ -29,13 +29,13 @@ are thread-safe.
 
 #include <cv_debug.h>
 
-static cv_bool g_heap_loaded = cv_false_;
+static cv_bool g_heap_loaded = cv_false;
 
 static long g_heap_count = 0L;
 
 cv_bool cv_heap_load(void)
 {
-    cv_bool b_result = cv_false_;
+    cv_bool b_result = cv_false;
     if (!g_heap_loaded)
     {
         if (cv_heap_primary_load())
@@ -44,8 +44,8 @@ cv_bool cv_heap_load(void)
             {
                 if (cv_heap_large_load())
                 {
-                    g_heap_loaded = cv_true_;
-                    b_result = cv_true_;
+                    g_heap_loaded = cv_true;
+                    b_result = cv_true;
                 }
                 else
                 {
@@ -95,7 +95,7 @@ void cv_heap_unload(void)
         cv_heap_large_unload();
         cv_heap_small_unload();
         cv_heap_primary_unload();
-        g_heap_loaded = cv_false_;
+        g_heap_loaded = cv_false;
     }
     else
     {

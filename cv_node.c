@@ -7,12 +7,12 @@
 cv_bool cv_node_init(
     cv_node * p_this)
 {
-    cv_bool b_result = cv_false_;
+    cv_bool b_result = cv_false;
     if (p_this)
     {
         p_this->o_next.p_node = p_this;
         p_this->o_prev.p_node = p_this;
-        b_result = cv_true_;
+        b_result = cv_true;
     }
     return b_result;
 }

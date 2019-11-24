@@ -20,7 +20,7 @@ cv_bool cv_file_std_load(void)
 
     g_cv_file_std_err.o_file.i_index = 2;
 
-    return cv_true_;
+    return cv_true;
 }
 
 void cv_file_std_unload(void)
@@ -35,7 +35,7 @@ void cv_file_std_unload(void)
 cv_bool cv_file_std_out_write(
     cv_string const * p_string)
 {
-    cv_bool b_result = cv_true_;
+    cv_bool b_result = cv_true;
     cv_string o_string_it;
     o_string_it = *p_string;
     while (b_result &&
@@ -50,7 +50,7 @@ cv_bool cv_file_std_out_write(
         }
         else
         {
-            b_result = cv_false_;
+            b_result = cv_false;
         }
     }
     return b_result;
@@ -59,7 +59,7 @@ cv_bool cv_file_std_out_write(
 cv_bool cv_file_std_out_write0(
     char const * const p_msg0)
 {
-    cv_bool b_result = cv_false_;
+    cv_bool b_result = cv_false;
     cv_string o_string = cv_string_initializer_;
     if (cv_string_init(&o_string))
     {

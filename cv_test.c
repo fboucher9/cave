@@ -191,7 +191,7 @@ static cv_bool cv_test_main_cb(
 
     cv_test_thread();
 
-    return cv_true_;
+    return cv_true;
 }
 
 static int cv_test_main(

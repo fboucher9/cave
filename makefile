@@ -11,6 +11,7 @@ cv_dst_path ?= .
 cv_test_srcs = \
     cv_test.c \
     cv_main.c \
+    cv_array.c \
     cv_string.c \
     cv_string0.c \
     cv_string1.c \
