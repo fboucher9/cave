@@ -26,6 +26,12 @@
 
 #include <cv_unused.h>
 
+#include <cv_number_enc.h>
+
+#include <cv_number_desc.h>
+
+#include <cv_string_it.h>
+
 static void cv_test_job(
     void * p_context)
 {
@@ -119,12 +125,67 @@ static void cv_test_thread(void)
     }
 }
 
-static cv_bool cv_test_func(
+static void cv_test_number_step(
+    cv_number_desc const * p_desc)
+{
+    char c_buffer[64u];
+    cv_string o_buffer = cv_string_initializer_;
+    if (cv_string_init(&o_buffer))
+    {
+        cv_string_setup(&o_buffer,
+            c_buffer,
+            c_buffer + sizeof(c_buffer));
+        {
+            cv_string_it o_string_it = cv_string_it_initializer_;
+            if (cv_string_it_init(&o_string_it, &o_buffer))
+            {
+                if (cv_number_status_done == cv_number_enc_convert(p_desc, &o_string_it))
+                {
+                    cv_string o_result = cv_string_initializer_;
+                    if (cv_string_init(&o_result))
+                    {
+                        cv_string_setup(&o_result,
+                            c_buffer,
+                            o_string_it.o_string.o_min.pc_void);
+                        cv_file_std_out_write0("number = [");
+                        cv_file_std_out_write(&o_result);
+                        cv_file_std_out_write0("]\n");
+                        cv_string_cleanup(&o_result);
+                    }
+                }
+                cv_string_it_cleanup(&o_string_it);
+            }
+        }
+        cv_string_cleanup(&o_buffer);
+    }
+}
+
+static void cv_test_number(void)
+{
+    cv_number_desc o_desc = cv_number_desc_initializer_;
+    o_desc.o_data.i_signed = 12345;
+    o_desc.o_format.i_flags = 0;
+    cv_test_number_step(&o_desc);
+    o_desc.o_data.i_signed = -12345;
+    o_desc.o_format.i_flags = 0;
+    cv_test_number_step(&o_desc);
+    o_desc.o_data.i_unsigned = 0xabcd;
+    o_desc.o_format.i_flags = cv_number_flag_unsigned | cv_number_flag_hexadecimal;
+    cv_test_number_step(&o_desc);
+    o_desc.o_data.i_unsigned = 0xabcd;
+    o_desc.o_format.i_flags = cv_number_flag_unsigned | cv_number_flag_hexadecimal
+        | cv_number_flag_upper;
+    cv_test_number_step(&o_desc);
+}
+
+static cv_bool cv_test_main_cb(
     cv_options const * p_options)
 {
+    cv_test_dump_options(p_options);
+
     cv_test_heap_large();
 
-    cv_test_dump_options(p_options);
+    cv_test_number();
 
     cv_test_debug();
 
@@ -133,7 +194,7 @@ static cv_bool cv_test_func(
     return cv_true_;
 }
 
-static int main_handler(
+static int cv_test_main(
     int argc,
     char const * const * argv)
 {
@@ -141,7 +202,7 @@ static int main_handler(
     cv_options * p_options = cv_main_init(argc, argv);
     if (p_options)
     {
-        if (cv_test_func(p_options))
+        if (cv_test_main_cb(p_options))
         {
             i_result = 0;
         }
@@ -156,7 +217,7 @@ int main(
     int argc,
     char const * const * argv)
 {
-    return main_handler(argc, argv);
+    return cv_test_main(argc, argv);
 }
 
 #else /* #if defined cv_have_libc_ */
@@ -168,7 +229,7 @@ void _start(void);
 
 void _start(void)
 {
-    main_handler(0, cv_null_);
+    cv_test_main(0, cv_null_);
     __asm("movl $1,%eax;"
         "xorl %ebx,%ebx;"
         "int $0x80"

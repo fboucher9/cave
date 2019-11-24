@@ -34,6 +34,7 @@ cv_test_srcs = \
     cv_thread.c \
     cv_thread_impl.c \
     cv_memory.c \
+    cv_number_enc.c \
     cv_clock.c \
     cv_node.c \
     cv_node_it.c \
@@ -66,7 +67,7 @@ cv_includes = \
 
 cv_cflags = \
     -g \
-    -O2 \
+    -O0 \
     -no-pie \
     -fno-pie \
     -fno-stack-protector \
