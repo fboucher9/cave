@@ -14,6 +14,8 @@ struct cv_string_it
     cv_string o_string;
 };
 
+#define cv_string_it_initializer_ { cv_string_initializer_ }
+
 cv_bool cv_string_it_init(
     cv_string_it * p_string_it,
     cv_string const * p_string);
