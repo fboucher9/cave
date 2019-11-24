@@ -26,6 +26,8 @@
 
 #include <cv_string.h>
 
+#include <cv_array_it.h>
+
 cv_bool cv_options_load(void)
 {
     cv_bool b_result = cv_false;
@@ -118,13 +120,18 @@ cv_bool cv_options_setup(
     cv_bool b_result = cv_false;
     if (p_this && p_desc)
     {
-        char const * const * p_args_it = p_desc->o_array.o_min.ppc_char;
-        b_result = cv_true;
-        while (b_result && (p_args_it < p_desc->o_array.o_max.ppc_char))
+        cv_array_it o_array_it = cv_array_it_initializer_;
+        if (cv_array_it_init(&o_array_it, &p_desc->o_array))
         {
-            char const * const p_arg0 = *p_args_it;
-            b_result = cv_options_setup_cb(p_this, p_arg0, 0x7FFFFFFFL);
-            p_args_it ++;
+            cv_array_ptr o_array_ptr = cv_ptr_null_;
+            b_result = cv_true;
+            while (b_result && cv_array_it_next(&o_array_it,
+                    cv_sizeof_(char const *), &o_array_ptr))
+            {
+                char const * const p_arg0 = *o_array_ptr.ppc_char;
+                b_result = cv_options_setup_cb(p_this, p_arg0, 0x7FFFFFFFL);
+            }
+            cv_array_it_cleanup(&o_array_it);
         }
     }
     return b_result;
