@@ -13,7 +13,7 @@ Description: Pointer to cv_mutex object.
 
 #include <cv_mutex_pred.h>
 
-#include <cv_null.h>
+#include <cv_ptr.h>
 
 union cv_mutex_ptr
 {
@@ -22,8 +22,6 @@ union cv_mutex_ptr
     cv_mutex const * pc_mutex;
     cv_mutex * p_mutex;
 };
-
-#define cv_mutex_ptr_null_ { cv_null_ }
 
 #endif /* #ifndef cv_mutex_ptr_h_ */
 

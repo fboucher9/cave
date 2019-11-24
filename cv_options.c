@@ -24,6 +24,8 @@
 
 #include <cv_memory.h>
 
+#include <cv_string.h>
+
 cv_bool cv_options_load(void)
 {
     cv_bool b_result = cv_false;
@@ -90,16 +92,19 @@ cv_bool cv_options_init(
 
 static cv_bool cv_options_setup_cb(
     cv_options * p_this,
-    char const * p_arg0)
+    char const * p_arg0,
+    long i_arg0_max_len)
 {
     cv_bool b_result = cv_false;
     if (p_this && p_arg0)
     {
         cv_string o_string = cv_string_initializer_;
-        if (cv_string_setup0(&o_string, p_arg0))
+        if (cv_string_init(&o_string))
         {
-            b_result = cv_options_add(p_this, &o_string);
-
+            if (cv_string_setup0(&o_string, p_arg0, i_arg0_max_len))
+            {
+                b_result = cv_options_add(p_this, &o_string);
+            }
             cv_string_cleanup(&o_string);
         }
     }
@@ -118,7 +123,7 @@ cv_bool cv_options_setup(
         while (b_result && (p_args_it < p_desc->o_array.o_max.ppc_char))
         {
             char const * const p_arg0 = *p_args_it;
-            b_result = cv_options_setup_cb(p_this, p_arg0);
+            b_result = cv_options_setup_cb(p_this, p_arg0, 0x7FFFFFFFL);
             p_args_it ++;
         }
     }
@@ -132,8 +137,9 @@ cv_bool cv_options_add(
     cv_bool b_result = cv_false;
     if (p_this && p_string)
     {
-        cv_options_node * p_options_node;
-        cv_options_node_desc o_options_node_desc;
+        cv_options_node * p_options_node = cv_null_;
+        cv_options_node_desc o_options_node_desc =
+            cv_options_node_desc_initializer_;
         o_options_node_desc.p_parent = &p_this->o_list;
         o_options_node_desc.p_string = p_string;
         p_options_node = cv_options_node_create(

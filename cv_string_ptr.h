@@ -5,7 +5,7 @@
 
 #include <cv_string_pred.h>
 
-#include <cv_null.h>
+#include <cv_ptr.h>
 
 /*
 
@@ -28,8 +28,6 @@ union cv_string_ptr
     unsigned char const * pc_uchar;
     unsigned char * p_uchar;
 };
-
-#define cv_string_ptr_null_ { cv_null_ }
 
 /* Verify that sizeof union matches size of each member */
 typedef char cv_verify_sizeof_string_ptr [

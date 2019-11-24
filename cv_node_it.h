@@ -21,7 +21,7 @@ struct cv_node_it
     cv_node_ptr o_list;
 };
 
-#define cv_node_it_initializer_ { cv_node_ptr_null_, cv_node_ptr_null_ }
+#define cv_node_it_initializer_ { cv_ptr_null_, cv_ptr_null_ }
 
 cv_bool cv_node_it_init(
     cv_node_it * p_this,

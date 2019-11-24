@@ -5,16 +5,16 @@
 
 #include <cv_string_pred.h>
 
-#include <cv_string1.h>
+#include <cv_buffer.h>
 
 #include <cv_bool.h>
 
 struct cv_string0
 {
-    cv_string1 o_buf1;
+    cv_buffer o_buffer;
 };
 
-#define cv_string0_initializer_ { cv_string1_initializer_ }
+#define cv_string0_initializer_ { cv_buffer_initializer_ }
 
 cv_bool cv_string0_init(
     cv_string0 * p_this,

@@ -35,7 +35,7 @@ cv_heap_node * cv_heap_node_create(
     cv_heap_node * p_this = cv_null_;
     if (i_len)
     {
-        cv_heap_node_ptr o_heap_ptr = cv_heap_node_ptr_null_;
+        cv_heap_node_ptr o_heap_ptr = cv_ptr_null_;
 
         long const i_node_len = cv_sizeof_(cv_heap_node) + i_len;
 

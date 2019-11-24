@@ -80,7 +80,7 @@ void * cv_heap_pool_alloc(
             cv_heap_it o_heap_it = cv_heap_it_initializer_;
             if (cv_heap_it_init(&o_heap_it, &p_this->o_free_list))
             {
-                cv_heap_node_ptr o_heap_ptr = cv_heap_node_ptr_null_;
+                cv_heap_node_ptr o_heap_ptr = cv_ptr_null_;
                 if (cv_heap_it_next(&o_heap_it, &o_heap_ptr))
                 {
                     /* Detach from free list */
@@ -141,7 +141,7 @@ void cv_heap_pool_free(
 cv_heap_pool * cv_heap_pool_load(
     long i_len)
 {
-    cv_heap_pool_ptr o_heap_pool_ptr = cv_heap_pool_ptr_null_;
+    cv_heap_pool_ptr o_heap_pool_ptr = cv_ptr_null_;
     o_heap_pool_ptr.p_void = cv_heap_primary_alloc(cv_sizeof_(cv_heap_pool));
     if (o_heap_pool_ptr.p_void)
     {

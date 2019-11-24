@@ -12,10 +12,10 @@ cv_bool cv_options_desc_init(
     cv_bool b_result = cv_false;
     if (p_options_desc)
     {
-        if (cv_array_init(&p_options_desc->o_array,
-                p_args_min,
-                p_args_max))
+        if (cv_array_init(&p_options_desc->o_array))
         {
+            p_options_desc->o_array.o_min.ppc_char = p_args_min;
+            p_options_desc->o_array.o_max.ppc_char = p_args_max;
             b_result = cv_true;
         }
     }

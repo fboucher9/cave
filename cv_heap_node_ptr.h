@@ -7,7 +7,7 @@
 
 #include <cv_node_ptr.h>
 
-#include <cv_null.h>
+#include <cv_ptr.h>
 
 union cv_heap_node_ptr
 {
@@ -17,8 +17,6 @@ union cv_heap_node_ptr
     cv_heap_node * p_heap_node;
     cv_heap_node const * pc_heap_node;
 };
-
-#define cv_heap_node_ptr_null_ { cv_null_ }
 
 void * cv_heap_node_to_payload(
     cv_heap_node * p_heap_node);

@@ -16,7 +16,7 @@ cv_mutex cv_heap_large_mutex = cv_mutex_initializer_;
 
 cv_mutex * cv_mutex_mgr_acquire(void)
 {
-    cv_mutex_ptr o_mutex_ptr = cv_mutex_ptr_null_;
+    cv_mutex_ptr o_mutex_ptr = cv_ptr_null_;
     o_mutex_ptr.p_void = cv_heap_primary_alloc( cv_mutex_sizeof());
     if (o_mutex_ptr.p_void)
     {

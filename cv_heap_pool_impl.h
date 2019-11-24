@@ -19,8 +19,6 @@ union cv_heap_pool_ptr
     cv_heap_pool * p_heap_pool;
 };
 
-#define cv_heap_pool_ptr_null_ { cv_null_ }
-
 struct cv_heap_pool
 {
     cv_mutex * p_mutex; /* safety first */

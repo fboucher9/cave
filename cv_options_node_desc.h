@@ -9,6 +9,8 @@
 
 #include <cv_string_pred.h>
 
+#include <cv_null.h>
+
 struct cv_options_node_desc
 {
     cv_list * p_parent;
@@ -16,5 +18,7 @@ struct cv_options_node_desc
     cv_string const * p_string;
 
 };
+
+#define cv_options_node_desc_initializer_ { cv_null_, cv_null_ }
 
 #endif /* #ifndef cv_options_node_desc_h_ */

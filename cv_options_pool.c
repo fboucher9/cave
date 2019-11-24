@@ -52,7 +52,7 @@ void cv_options_pool_unload(void)
 
 cv_options_node * cv_options_pool_alloc(void)
 {
-    cv_options_node_ptr o_placement = cv_options_node_ptr_null_;
+    cv_options_node_ptr o_placement = cv_ptr_null_;
     if (g_options_pool_loaded && g_options_pool)
     {
         o_placement.o_node_ptr.p_void = cv_heap_pool_alloc(g_options_pool,
@@ -66,7 +66,7 @@ void cv_options_pool_free(
 {
     if (p_options_node && g_options_pool_loaded && g_options_pool)
     {
-        cv_options_node_ptr o_placement = cv_options_node_ptr_null_;
+        cv_options_node_ptr o_placement = cv_ptr_null_;
         o_placement.p_options_node = p_options_node;
         cv_heap_pool_free(g_options_pool, o_placement.o_node_ptr.p_void);
     }

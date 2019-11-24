@@ -25,6 +25,6 @@ void cv_options_it_cleanup(
 
 cv_bool cv_options_it_next(
     cv_options_it * p_this,
-    cv_string const * * r_string);
+    cv_string * r_string);
 
 #endif /* #ifndef cv_options_it_h_ */

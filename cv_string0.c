@@ -31,20 +31,24 @@ cv_bool cv_string0_init(
     {
         /* Get length of string */
         long const i_length = p_string ? cv_string_len(p_string) : 0;
-        if (cv_string1_init(
-                &(p_this->o_buf1),
-                i_length + 1))
+        if (cv_buffer_init(
+                &p_this->o_buffer))
         {
-            if (i_length)
+            if (cv_buffer_realloc(
+                    &p_this->o_buffer,
+                    i_length + 1))
             {
-                cv_memory_copy(
-                    p_this->o_buf1.o_buf.o_min.p_void,
-                    i_length,
-                    p_string->o_min.pc_void,
-                    i_length);
+                if (i_length)
+                {
+                    cv_memory_copy(
+                        p_this->o_buffer.o_array.o_min.p_void,
+                        i_length,
+                        p_string->o_array.o_min.pc_void,
+                        i_length);
+                }
+                p_this->o_buffer.o_array.o_min.p_char[i_length] = '\000';
+                b_result = cv_true;
             }
-            p_this->o_buf1.o_buf.o_min.p_char[i_length] = '\000';
-            b_result = cv_true;
         }
     }
     return b_result;
@@ -55,8 +59,8 @@ void cv_string0_cleanup(
 {
     if (p_this)
     {
-        cv_string1_cleanup(
-            &(p_this->o_buf1));
+        cv_buffer_cleanup(
+            &p_this->o_buffer);
     }
 }
 
@@ -66,7 +70,7 @@ char const * cv_string0_get(
     char const * p_result = cv_null_;
     if (p_this)
     {
-        p_result = p_this->o_buf1.o_buf.o_min.pc_char;
+        p_result = p_this->o_buffer.o_array.o_min.pc_char;
     }
     return p_result;
 }
@@ -78,7 +82,7 @@ long cv_string0_len(
     long i_len = 0;
     if (p_this)
     {
-        i_len = cv_string1_len(&(p_this->o_buf1));
+        i_len = cv_buffer_char_count(&p_this->o_buffer);
         if (i_len > 0)
         {
             i_len --;

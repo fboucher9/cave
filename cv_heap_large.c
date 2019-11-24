@@ -53,7 +53,7 @@ void cv_heap_large_unload(void)
             cv_node_it o_node_it = cv_node_it_initializer_;
             if (cv_node_it_init(&o_node_it, &g_heap_large_free_list))
             {
-                cv_heap_node_ptr o_heap_ptr = cv_heap_node_ptr_null_;
+                cv_heap_node_ptr o_heap_ptr = cv_ptr_null_;
                 while (cv_node_it_first(&o_node_it, &o_heap_ptr.o_node_ptr))
                 {
                     /* Detach from free list */
@@ -85,7 +85,7 @@ static long cv_heap_large_align(
 static cv_heap_node * cv_heap_large_find_existing(
     long i_aligned_len)
 {
-    cv_heap_node_ptr o_heap_ptr = cv_heap_node_ptr_null_;
+    cv_heap_node_ptr o_heap_ptr = cv_ptr_null_;
     cv_node_it o_free_it = cv_node_it_initializer_;
     if (cv_node_it_init(&o_free_it, &g_heap_large_free_list))
     {
@@ -112,7 +112,7 @@ static void * cv_heap_large_alloc_cb(
     if (i_len > 0)
     {
         long const i_aligned_len = cv_heap_large_align(i_len);
-        cv_heap_node_ptr o_heap_ptr = cv_heap_node_ptr_null_;
+        cv_heap_node_ptr o_heap_ptr = cv_ptr_null_;
         /* Look for free node */
         o_heap_ptr.p_heap_node = cv_heap_large_find_existing(
             i_aligned_len);
@@ -148,7 +148,7 @@ static void cv_heap_large_free_cb(
 {
     if (p_buf)
     {
-        cv_heap_node_ptr o_heap_ptr = cv_heap_node_ptr_null_;
+        cv_heap_node_ptr o_heap_ptr = cv_ptr_null_;
         o_heap_ptr.p_heap_node = cv_heap_node_from_payload(p_buf);
         /* Detach from used list */
         cv_node_join( o_heap_ptr.o_node_ptr.p_node,

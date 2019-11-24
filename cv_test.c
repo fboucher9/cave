@@ -58,11 +58,11 @@ static void cv_test_dump_options(
             &o_options_it,
             p_options))
     {
-        cv_string const * p_cur;
-        while (cv_options_it_next(&o_options_it, &p_cur))
+        cv_string o_cur;
+        while (cv_options_it_next(&o_options_it, &o_cur))
         {
             cv_file_std_out_write0("option = [");
-            cv_file_std_out_write(p_cur);
+            cv_file_std_out_write(&o_cur.o_array);
             cv_file_std_out_write0("]\n");
         }
         cv_options_it_cleanup(&o_options_it);
@@ -94,7 +94,7 @@ static void cv_test_poll_stdin(void)
                 &o_poll_stdin + 1, cv_null_))
         {
             long const i_file_read_result =
-                cv_file_read(&g_cv_file_std_in.o_file, &o_string);
+                cv_file_read(&g_cv_file_std_in.o_file, &o_string.o_array);
             cv_unused_(i_file_read_result);
         }
         else
@@ -137,7 +137,7 @@ static void cv_test_number_step(
             c_buffer + sizeof(c_buffer));
         {
             cv_string_it o_string_it = cv_string_it_initializer_;
-            if (cv_string_it_init(&o_string_it, &o_buffer))
+            if (cv_string_it_init(&o_string_it, &o_buffer.o_array))
             {
                 if (cv_number_status_done == cv_number_enc_convert(p_desc, &o_string_it))
                 {
@@ -146,9 +146,9 @@ static void cv_test_number_step(
                     {
                         cv_string_setup(&o_result,
                             c_buffer,
-                            o_string_it.o_string.o_min.pc_void);
+                            o_string_it.o_array.o_min.pc_void);
                         cv_file_std_out_write0("number = [");
-                        cv_file_std_out_write(&o_result);
+                        cv_file_std_out_write(&o_result.o_array);
                         cv_file_std_out_write0("]\n");
                         cv_string_cleanup(&o_result);
                     }

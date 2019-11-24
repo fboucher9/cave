@@ -6,14 +6,14 @@
 
 cv_bool cv_string_it_init(
     cv_string_it * p_string_it,
-    cv_string const * p_string)
+    cv_array const * p_array)
 {
     cv_bool b_result = cv_false;
-    if (p_string_it && p_string)
+    if (p_string_it && p_array)
     {
-        if (cv_string_init(&p_string_it->o_string))
+        if (cv_array_init(&p_string_it->o_array))
         {
-            p_string_it->o_string = *p_string;
+            p_string_it->o_array = *p_array;
             b_result = cv_true;
         }
     }
@@ -25,7 +25,7 @@ void cv_string_it_cleanup(
 {
     if (p_string_it)
     {
-        cv_string_cleanup(&p_string_it->o_string);
+        cv_array_cleanup(&p_string_it->o_array);
     }
 }
 
@@ -36,11 +36,11 @@ cv_bool cv_string_it_write_char(
     cv_bool b_result = cv_false;
     if (p_string_it)
     {
-        if (p_string_it->o_string.o_min.p_uchar !=
-            p_string_it->o_string.o_max.p_uchar)
+        if (p_string_it->o_array.o_min.p_uchar !=
+            p_string_it->o_array.o_max.p_uchar)
         {
-            *(p_string_it->o_string.o_min.p_uchar) = c_data;
-            p_string_it->o_string.o_min.p_uchar ++;
+            *(p_string_it->o_array.o_min.p_uchar) = c_data;
+            p_string_it->o_array.o_min.p_uchar ++;
             b_result = cv_true;
         }
     }
@@ -54,11 +54,11 @@ cv_bool cv_string_it_read_char(
     cv_bool b_result = cv_false;
     if (p_string_it && r_data)
     {
-        if (p_string_it->o_string.o_min.pc_uchar !=
-            p_string_it->o_string.o_max.pc_uchar)
+        if (p_string_it->o_array.o_min.pc_uchar !=
+            p_string_it->o_array.o_max.pc_uchar)
         {
-            *(r_data) = *(p_string_it->o_string.o_min.pc_uchar);
-            p_string_it->o_string.o_min.pc_uchar ++;
+            *(r_data) = *(p_string_it->o_array.o_min.pc_uchar);
+            p_string_it->o_array.o_min.pc_uchar ++;
             b_result = cv_true;
         }
     }
@@ -67,21 +67,21 @@ cv_bool cv_string_it_read_char(
 
 cv_bool cv_string_it_write_array(
     cv_string_it * p_string_it,
-    cv_string const * p_string)
+    cv_array const * p_array)
 {
     cv_bool b_result = cv_false;
-    if (p_string_it && p_string)
+    if (p_string_it && p_array)
     {
-        long const i_string_len = cv_string_len(p_string);
-        if ((p_string_it->o_string.o_min.p_uchar + i_string_len)
-            <= p_string_it->o_string.o_max.p_uchar)
+        long const i_array_len = cv_array_char_count(p_array);
+        if ((p_string_it->o_array.o_min.p_uchar + i_array_len)
+            <= p_string_it->o_array.o_max.p_uchar)
         {
             cv_memory_copy(
-                p_string_it->o_string.o_min.p_void,
-                i_string_len,
-                p_string->o_min.pc_void,
-                i_string_len);
-            p_string_it->o_string.o_min.p_uchar += i_string_len;
+                p_string_it->o_array.o_min.p_void,
+                i_array_len,
+                p_array->o_min.pc_void,
+                i_array_len);
+            p_string_it->o_array.o_min.p_uchar += i_array_len;
             b_result = cv_true;
         }
     }
@@ -90,21 +90,21 @@ cv_bool cv_string_it_write_array(
 
 cv_bool cv_string_it_read_array(
     cv_string_it * p_string_it,
-    cv_string const * p_string)
+    cv_array const * p_array)
 {
     cv_bool b_result = cv_false;
-    if (p_string_it && p_string)
+    if (p_string_it && p_array)
     {
-        long const i_string_len = cv_string_len(p_string);
-        if ((p_string_it->o_string.o_min.pc_uchar + i_string_len)
-            <= p_string_it->o_string.o_max.pc_uchar)
+        long const i_array_len = cv_array_char_count(p_array);
+        if ((p_string_it->o_array.o_min.pc_uchar + i_array_len)
+            <= p_string_it->o_array.o_max.pc_uchar)
         {
             cv_memory_copy(
-                p_string->o_min.p_void,
-                i_string_len,
-                p_string_it->o_string.o_min.pc_void,
-                i_string_len);
-            p_string_it->o_string.o_min.pc_uchar += i_string_len;
+                p_array->o_min.p_void,
+                i_array_len,
+                p_string_it->o_array.o_min.pc_void,
+                i_array_len);
+            p_string_it->o_array.o_min.pc_uchar += i_array_len;
             b_result = cv_true;
         }
     }

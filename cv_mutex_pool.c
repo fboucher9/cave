@@ -44,7 +44,7 @@ void cv_mutex_pool_unload(void)
 
 cv_mutex * cv_mutex_pool_alloc(void)
 {
-    cv_mutex_ptr o_placement = cv_mutex_ptr_null_;
+    cv_mutex_ptr o_placement = cv_ptr_null_;
     if (g_mutex_pool_loaded && g_mutex_pool)
     {
         o_placement.p_void = cv_heap_pool_alloc(g_mutex_pool,
@@ -58,7 +58,7 @@ void cv_mutex_pool_free(
 {
     if (p_mutex && g_mutex_pool_loaded && g_mutex_pool)
     {
-        cv_mutex_ptr o_placement = cv_mutex_ptr_null_;
+        cv_mutex_ptr o_placement = cv_ptr_null_;
         o_placement.p_mutex = p_mutex;
         cv_heap_pool_free(g_mutex_pool, o_placement.p_void);
     }

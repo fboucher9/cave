@@ -5,7 +5,7 @@
 
 #include <cv_node_pred.h>
 
-#include <cv_null.h>
+#include <cv_ptr.h>
 
 /*
 
@@ -20,9 +20,8 @@ union cv_node_ptr
     void const * pc_void;
     cv_node * p_node;
     cv_node const * pc_node;
+    cv_ptr o_ptr;
 };
-
-#define cv_node_ptr_null_ { cv_null_ }
 
 typedef char cv_verify_sizeof_node_ptr [
     sizeof(cv_node_ptr) == sizeof(void *)

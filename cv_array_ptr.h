@@ -3,9 +3,11 @@
 #ifndef cv_array_ptr_h_
 #define cv_array_ptr_h_
 
-#include <cv_null.h>
-
 #include <cv_array_pred.h>
+
+#include <cv_ptr.h>
+
+#include <cv_types.h>
 
 union cv_array_ptr
 {
@@ -19,10 +21,18 @@ union cv_array_ptr
     short * p_short;
     unsigned short const * pc_ushort;
     unsigned short * p_ushort;
+    int const * pc_int;
+    int * p_int;
+    unsigned const * pc_uint;
+    unsigned * p_uint;
     long const * pc_long;
     long * p_long;
     unsigned long const * pc_ulong;
     unsigned long * p_ulong;
+    cv_sll const * pc_ll;
+    cv_sll * p_ll;
+    cv_ull const * pc_ull;
+    cv_ull * p_ull;
     void const * const * ppc_void;
     void * * pp_void;
     char const * const * ppc_char;
@@ -30,8 +40,6 @@ union cv_array_ptr
     unsigned char const * const * ppc_uchar;
     unsigned char * * pp_uchar;
 };
-
-#define cv_array_ptr_null_ { cv_null_ }
 
 #endif /* #ifndef cv_array_ptr_h_ */
 

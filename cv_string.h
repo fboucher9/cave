@@ -18,22 +18,24 @@ convert a string to a zero-terminated string.
 
 #include <cv_string_ptr.h>
 
+#include <cv_array.h>
+
 #include <cv_bool.h>
 
 struct cv_string
 {
-    cv_string_ptr o_min;
-    cv_string_ptr o_max;
+    cv_array o_array;
 };
 
-#define cv_string_initializer_ { cv_string_ptr_null_, cv_string_ptr_null_ }
+#define cv_string_initializer_ { cv_array_initializer_ }
 
 cv_bool cv_string_init(
     cv_string * p_string);
 
 cv_bool cv_string_setup0(
     cv_string * p_string,
-    char const * p_ref0);
+    char const * p_ref0,
+    long i_ref0_max_len);
 
 cv_bool cv_string_setup(
     cv_string * p_string,

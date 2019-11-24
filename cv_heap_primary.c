@@ -20,11 +20,10 @@ typedef union cv_heap_section_ptr cv_heap_section_ptr;
 
 union cv_heap_section_ptr
 {
+    void const * pc_void;
     cv_node_ptr o_node_ptr;
     char * p_char;
 };
-
-#define cv_heap_section_ptr_null_ { cv_node_ptr_null_ }
 
 static cv_list g_heap_sections = cv_list_initializer_;
 
@@ -53,7 +52,7 @@ void cv_heap_primary_unload(void)
         cv_node_it o_node_it = cv_node_it_initializer_;
         if (cv_node_it_init(&o_node_it, &g_heap_sections))
         {
-            cv_node_ptr o_node_ptr = cv_node_ptr_null_;
+            cv_node_ptr o_node_ptr = cv_ptr_null_;
             while (cv_node_it_first(&o_node_it, &o_node_ptr))
             {
                 /* Detach from list */
@@ -80,7 +79,7 @@ static void cv_heap_primary_unlock(void)
 
 static void cv_heap_primary_grow(void)
 {
-    cv_heap_section_ptr o_section_ptr = cv_heap_section_ptr_null_;
+    cv_heap_section_ptr o_section_ptr = cv_ptr_null_;
     o_section_ptr.o_node_ptr.p_void = cv_runtime_malloc(g_heap_primary_max);
     if (o_section_ptr.o_node_ptr.p_void)
     {

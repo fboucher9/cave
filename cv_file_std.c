@@ -33,20 +33,20 @@ void cv_file_std_unload(void)
 }
 
 cv_bool cv_file_std_out_write(
-    cv_string const * p_string)
+    cv_array const * p_array)
 {
     cv_bool b_result = cv_true;
-    cv_string o_string_it;
-    o_string_it = *p_string;
+    cv_array o_array_it = cv_array_initializer_;
+    o_array_it = *p_array;
     while (b_result &&
-        (o_string_it.o_min.pc_char != o_string_it.o_max.pc_char))
+        (o_array_it.o_min.pc_char != o_array_it.o_max.pc_char))
     {
         long const i_write_result = cv_file_write(
             & g_cv_file_std_out.o_file,
-            & o_string_it);
+            & o_array_it);
         if (i_write_result > 0)
         {
-            o_string_it.o_min.pc_char += i_write_result;
+            o_array_it.o_min.pc_char += i_write_result;
         }
         else
         {
@@ -63,9 +63,9 @@ cv_bool cv_file_std_out_write0(
     cv_string o_string = cv_string_initializer_;
     if (cv_string_init(&o_string))
     {
-        if (cv_string_setup0(&o_string, p_msg0))
+        if (cv_string_setup0(&o_string, p_msg0, 0x7FFFFFFFL))
         {
-            b_result = cv_file_std_out_write(&o_string);
+            b_result = cv_file_std_out_write(&o_string.o_array);
         }
         cv_string_cleanup(&o_string);
     }

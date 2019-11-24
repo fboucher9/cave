@@ -19,7 +19,7 @@ Windows, the WaitForSingleObject function is used.
 
 #include <cv_bool.h>
 
-#include <cv_string_pred.h>
+#include <cv_array.h>
 
 #include <cv_types.h>
 
@@ -47,10 +47,10 @@ typedef char cv_verify_sizeof_file [
 
 long cv_file_read(
     cv_file const * p_this,
-    cv_string const * p_string);
+    cv_array const * p_array);
 
 long cv_file_write(
     cv_file const * p_this,
-    cv_string const * p_string);
+    cv_array const * p_array);
 
 #endif /* #ifndef cv_file_h_ */
