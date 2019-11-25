@@ -29,25 +29,6 @@ void cv_array_it_cleanup(
     }
 }
 
-cv_bool cv_array_it_next(
-    cv_array_it * p_this,
-    long i_sizeof_object,
-    cv_array_ptr * r_cur)
-{
-    cv_bool b_result = cv_false;
-    if (p_this && i_sizeof_object && r_cur)
-    {
-        if ((p_this->o_array.o_min.pc_char + i_sizeof_object) <=
-            p_this->o_array.o_max.pc_char)
-        {
-            *(r_cur) = p_this->o_array.o_min;
-            p_this->o_array.o_min.pc_char += i_sizeof_object;
-            b_result = cv_true;
-        }
-    }
-    return b_result;
-}
-
 cv_bool cv_array_it_read_char(
     cv_array_it * p_this,
     unsigned char * r_value)

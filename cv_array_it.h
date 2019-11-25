@@ -23,11 +23,6 @@ cv_bool cv_array_it_init(
 void cv_array_it_cleanup(
     cv_array_it * p_this);
 
-cv_bool cv_array_it_next(
-    cv_array_it * p_this,
-    long i_sizeof_object,
-    cv_array_ptr * r_cur);
-
 cv_bool cv_array_it_read_char(
     cv_array_it * p_this,
     unsigned char * r_value);
