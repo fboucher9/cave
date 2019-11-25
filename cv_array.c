@@ -68,9 +68,9 @@ long cv_array_char_count(
     long i_count = 0;
     if (p_array)
     {
-        i_count = cv_cast_(long,
+        i_count = ((
             p_array->o_max.pc_char
-            - p_array->o_min.pc_char);
+            - p_array->o_min.pc_char) & 0x7FFFFFFFL);
     }
     return i_count;
 }
@@ -81,9 +81,9 @@ long cv_array_short_count(
     long i_count = 0;
     if (p_array)
     {
-        i_count = cv_cast_(long,
+        i_count = ((
             p_array->o_max.pc_short
-            - p_array->o_min.pc_short);
+            - p_array->o_min.pc_short) & 0x7FFFFFFFL);
     }
     return i_count;
 }
@@ -94,9 +94,9 @@ long cv_array_int_count(
     long i_count = 0;
     if (p_array)
     {
-        i_count = cv_cast_(long,
+        i_count = ((
             p_array->o_max.pc_int
-            - p_array->o_min.pc_int);
+            - p_array->o_min.pc_int) & 0x7FFFFFFFL);
     }
     return i_count;
 }
@@ -107,9 +107,9 @@ long cv_array_long_count(
     long i_count = 0;
     if (p_array)
     {
-        i_count = cv_cast_(long,
+        i_count = ((
             p_array->o_max.pc_long
-            - p_array->o_min.pc_long);
+            - p_array->o_min.pc_long) & 0x7FFFFFFFL);
     }
     return i_count;
 }
@@ -120,9 +120,9 @@ long cv_array_ll_count(
     long i_count = 0;
     if (p_array)
     {
-        i_count = cv_cast_(long,
+        i_count = ((
             p_array->o_max.pc_ll
-            - p_array->o_min.pc_ll);
+            - p_array->o_min.pc_ll) & 0x7FFFFFFFL);
     }
     return i_count;
 }
@@ -133,9 +133,9 @@ long cv_array_ptr_count(
     long i_count = 0;
     if (p_array)
     {
-        i_count = cv_cast_(long,
+        i_count = ((
             p_array->o_max.ppc_void
-            - p_array->o_min.ppc_void);
+            - p_array->o_min.ppc_void) & 0x7FFFFFFFL);
     }
     return i_count;
 }

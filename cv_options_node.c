@@ -46,9 +46,21 @@ static cv_bool cv_options_node_init_buf0(
     cv_bool b_result = cv_false;
     if (p_this && p_array)
     {
-        if (cv_string0_init(&(p_this->o_buf0), p_array))
+        if (cv_buffer_init(&p_this->o_buffer))
         {
-            b_result = cv_true;
+            long const i_array_len = cv_array_char_count(p_array);
+            if (cv_buffer_realloc(&p_this->o_buffer, i_array_len))
+            {
+                if (i_array_len)
+                {
+                    cv_memory_copy(
+                        p_this->o_buffer.o_array.o_min.p_void,
+                        i_array_len,
+                        p_array->o_min.pc_void,
+                        i_array_len);
+                }
+                b_result = cv_true;
+            }
         }
     }
     return b_result;
@@ -59,7 +71,7 @@ static void cv_options_node_cleanup_buf0(
 {
     if (p_this)
     {
-        cv_string0_cleanup(&(p_this->o_buf0));
+        cv_buffer_cleanup(&(p_this->o_buffer));
     }
 }
 

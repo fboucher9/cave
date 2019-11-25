@@ -8,6 +8,8 @@
 
 #include <cv_bool.h>
 
+#include <cv_array.h>
+
 #include <cv_runtime.h>
 
 void cv_memory_zero(
@@ -48,15 +50,12 @@ long cv_memory_find0(
     long i_find_len = 0;
     if (p_src && i_src_len > 0)
     {
-        void const * p_memchr_result = cv_null_;
-        p_memchr_result = cv_runtime_memchr(p_src, '\000', i_src_len);
-        if (p_memchr_result)
+        cv_array o_array = cv_array_initializer_;
+        o_array.o_min.pc_void = p_src;
+        o_array.o_max.pc_void = cv_runtime_memchr(p_src, '\000', i_src_len);
+        if (o_array.o_max.pc_void)
         {
-            char const * const pc_min_char =
-                cv_cast_(char const *, p_src);
-            char const * const pc_max_char =
-                cv_cast_(char const *, p_memchr_result);
-            i_find_len = cv_cast_(long, pc_max_char - pc_min_char);
+            i_find_len = cv_array_char_count(&o_array);
         }
     }
     return i_find_len;

@@ -7,17 +7,17 @@
 
 #include <cv_node.h>
 
-#include <cv_string0.h>
+#include <cv_buffer.h>
 
 struct cv_options_node
 {
     cv_node o_node;
     /* -- */
-    cv_string0 o_buf0;
+    cv_buffer o_buffer;
 };
 
 #define cv_options_node_initializer_ \
-{ cv_node_initializer_, cv_string0_initializer_ }
+{ cv_node_initializer_, cv_buffer_initializer_ }
 
 cv_options_node * cv_options_node_create(
     cv_options_node_desc const * p_desc);
