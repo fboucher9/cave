@@ -23,30 +23,25 @@ structure instead of a format string.
 
 #include <cv_number_desc.h>
 
-enum cv_number_flag
-{
-    cv_number_flag_unsigned = 1,
-
-    cv_number_flag_hexadecimal = 2,
-
-    cv_number_flag_upper = 4
-
-};
-
 struct cv_number_enc
 {
     cv_number_desc o_desc;
     /* -- */
-    long i_state;
-    long i_state_count;
+    short i_state;
+    short i_before_space;
+    short i_after_space;
+    short i_zero_remain;
     /* -- */
+    short i_digit_count;
+    short s_padding[3u];
+    /* -- */
+    char b_sign;
+    unsigned char a_sign[1u];
     unsigned char a_digit[30u];
-    unsigned char i_digit_count;
-    char b_negative;
 };
 
 #define cv_number_enc_initializer_ \
-{ cv_number_desc_initializer_, 0, 0, {0}, 0, 0 }
+{ cv_number_desc_initializer_, 0, 0, 0, 0, 0, {0}, 0, {0}, {0} }
 
 typedef enum cv_number_status
 {

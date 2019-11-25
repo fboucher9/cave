@@ -151,6 +151,27 @@ static void cv_test_number(void)
     o_desc.o_format.i_flags = cv_number_flag_unsigned | cv_number_flag_hexadecimal
         | cv_number_flag_upper;
     cv_test_number_step(&o_desc);
+    o_desc.o_data.i_signed = 12345;
+    o_desc.o_format.i_flags = 0;
+    o_desc.o_format.i_width = 10;
+    cv_test_number_step(&o_desc);
+    o_desc.o_data.i_signed = -12345;
+    o_desc.o_format.i_flags = 0;
+    o_desc.o_format.i_width = 10;
+    cv_test_number_step(&o_desc);
+    o_desc.o_data.i_signed = 12345;
+    o_desc.o_format.i_flags = cv_number_flag_left;
+    o_desc.o_format.i_width = 10;
+    cv_test_number_step(&o_desc);
+    o_desc.o_data.i_signed = 12345;
+    o_desc.o_format.i_flags = cv_number_flag_center;
+    o_desc.o_format.i_width = 10;
+    cv_test_number_step(&o_desc);
+    o_desc.o_data.i_signed = 12345;
+    o_desc.o_format.i_flags = cv_number_flag_zero;
+    o_desc.o_format.i_digits = 7;
+    o_desc.o_format.i_width = 10;
+    cv_test_number_step(&o_desc);
 }
 
 static cv_bool cv_test_main_cb(

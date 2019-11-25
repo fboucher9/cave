@@ -16,15 +16,35 @@ typedef char cv_verify_sizeof_number_data [
     (sizeof(signed long) == sizeof(unsigned long))
     ? 1 : -1 ];
 
+enum cv_number_flag
+{
+    cv_number_flag_unsigned = 1,
+
+    cv_number_flag_hexadecimal = 2,
+
+    cv_number_flag_upper = 4,
+
+    cv_number_flag_left = 8,
+
+    cv_number_flag_center = 16,
+
+    cv_number_flag_plus = 32,
+
+    cv_number_flag_space = 64,
+
+    cv_number_flag_zero = 128
+
+};
+
 struct cv_number_format
 {
     short i_width;
-    short i_before_dot;
-    short i_after_dot;
+    short i_digits;
     short i_flags;
+    short s_padding[1u];
 };
 
-#define cv_number_format_initializer_ { 0, 0, 0, 0 }
+#define cv_number_format_initializer_ { 0, 0, 0, {0} }
 
 struct cv_number_desc
 {
