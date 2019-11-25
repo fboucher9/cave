@@ -2,7 +2,7 @@
 
 #include <cv_string0.h>
 
-#include <cv_string.h>
+#include <cv_array.h>
 
 #include <cv_heap.h>
 
@@ -16,13 +16,13 @@
 
 /*
 
-Convert cv_string object to a zero-terminated string.  The cv_string0 object
+Convert cv_array object to a zero-terminated string.  The cv_string0 object
 holds resources allocated for zero-terminated string.
 
 */
 cv_bool cv_string0_init(
     cv_string0 * p_this,
-    cv_string const * p_string)
+    cv_array const * p_string)
 {
     cv_bool b_result = cv_false;
 
@@ -30,7 +30,7 @@ cv_bool cv_string0_init(
     if (p_this)
     {
         /* Get length of string */
-        long const i_length = p_string ? cv_string_len(p_string) : 0;
+        long const i_length = p_string ? cv_array_char_count(p_string) : 0;
         if (cv_buffer_init(
                 &p_this->o_buffer))
         {
@@ -43,7 +43,7 @@ cv_bool cv_string0_init(
                     cv_memory_copy(
                         p_this->o_buffer.o_array.o_min.p_void,
                         i_length,
-                        p_string->o_array.o_min.pc_void,
+                        p_string->o_min.pc_void,
                         i_length);
                 }
                 p_this->o_buffer.o_array.o_min.p_char[i_length] = '\000';

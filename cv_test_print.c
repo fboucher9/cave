@@ -10,7 +10,7 @@
 
 #include <cv_number_desc.h>
 
-#include <cv_string.h>
+#include <cv_array.h>
 
 #include <cv_string_it.h>
 
@@ -34,33 +34,33 @@ void cv_print_number(
     cv_number_desc const * p_desc)
 {
     char c_buffer[64u];
-    cv_string o_buffer = cv_string_initializer_;
-    if (cv_string_init(&o_buffer))
+    cv_array o_buffer = cv_array_initializer_;
+    if (cv_array_init(&o_buffer))
     {
-        cv_string_setup(&o_buffer,
+        cv_array_setup(&o_buffer,
             c_buffer,
             c_buffer + sizeof(c_buffer));
         {
             cv_string_it o_string_it = cv_string_it_initializer_;
-            if (cv_string_it_init(&o_string_it, &o_buffer.o_array))
+            if (cv_string_it_init(&o_string_it, &o_buffer))
             {
                 if (cv_number_status_done ==
                     cv_number_enc_convert(p_desc, &o_string_it))
                 {
-                    cv_string o_result = cv_string_initializer_;
-                    if (cv_string_init(&o_result))
+                    cv_array o_result = cv_array_initializer_;
+                    if (cv_array_init(&o_result))
                     {
-                        cv_string_setup(&o_result,
+                        cv_array_setup(&o_result,
                             c_buffer,
                             o_string_it.o_array.o_min.pc_void);
-                        cv_file_std_out_write(&o_result.o_array);
-                        cv_string_cleanup(&o_result);
+                        cv_file_std_out_write(&o_result);
+                        cv_array_cleanup(&o_result);
                     }
                 }
                 cv_string_it_cleanup(&o_string_it);
             }
         }
-        cv_string_cleanup(&o_buffer);
+        cv_array_cleanup(&o_buffer);
     }
 }
 

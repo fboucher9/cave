@@ -33,7 +33,8 @@ union cv_array_ptr
     cv_sll * p_ll;
     cv_ull const * pc_ull;
     cv_ull * p_ull;
-    void const * const * ppc_void;
+    void const * const * pcpc_void;
+    void const * * ppc_void;
     void * * pp_void;
     char const * const * ppc_char;
     char * * pp_char;

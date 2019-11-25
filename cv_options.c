@@ -24,7 +24,7 @@
 
 #include <cv_memory.h>
 
-#include <cv_string.h>
+#include <cv_array.h>
 
 #include <cv_array_it.h>
 
@@ -100,14 +100,14 @@ static cv_bool cv_options_setup_cb(
     cv_bool b_result = cv_false;
     if (p_this && p_arg0)
     {
-        cv_string o_string = cv_string_initializer_;
-        if (cv_string_init(&o_string))
+        cv_array o_string = cv_array_initializer_;
+        if (cv_array_init(&o_string))
         {
-            if (cv_string_setup0(&o_string, p_arg0, i_arg0_max_len))
+            if (cv_array_setup0(&o_string, p_arg0, i_arg0_max_len))
             {
                 b_result = cv_options_add(p_this, &o_string);
             }
-            cv_string_cleanup(&o_string);
+            cv_array_cleanup(&o_string);
         }
     }
     return b_result;
@@ -125,10 +125,10 @@ cv_bool cv_options_setup(
         {
             cv_array_ptr o_array_ptr = cv_ptr_null_;
             b_result = cv_true;
-            while (b_result && cv_array_it_next(&o_array_it,
-                    cv_sizeof_(char const *), &o_array_ptr))
+            while (b_result && cv_array_it_read_ptr(&o_array_it,
+                    &o_array_ptr.pc_void))
             {
-                char const * const p_arg0 = *o_array_ptr.ppc_char;
+                char const * const p_arg0 = o_array_ptr.pc_char;
                 b_result = cv_options_setup_cb(p_this, p_arg0, 0x7FFFFFFFL);
             }
             cv_array_it_cleanup(&o_array_it);
@@ -139,16 +139,16 @@ cv_bool cv_options_setup(
 
 cv_bool cv_options_add(
     cv_options * p_this,
-    cv_string const * p_string)
+    cv_array const * p_array)
 {
     cv_bool b_result = cv_false;
-    if (p_this && p_string)
+    if (p_this && p_array)
     {
         cv_options_node * p_options_node = cv_null_;
         cv_options_node_desc o_options_node_desc =
             cv_options_node_desc_initializer_;
         o_options_node_desc.p_parent = &p_this->o_list;
-        o_options_node_desc.p_string = p_string;
+        o_options_node_desc.p_array = p_array;
         p_options_node = cv_options_node_create(
             &o_options_node_desc);
         if (p_options_node)

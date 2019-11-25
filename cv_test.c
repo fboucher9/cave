@@ -10,7 +10,7 @@
 
 #include <cv_debug.h>
 
-#include <cv_string.h>
+#include <cv_array.h>
 
 #include <cv_thread.h>
 
@@ -60,11 +60,11 @@ static void cv_test_dump_options(
             &o_options_it,
             p_options))
     {
-        cv_string o_cur;
+        cv_array o_cur;
         while (cv_options_it_next(&o_options_it, &o_cur))
         {
             cv_print_array0("option = [", 80);
-            cv_print_array(&o_cur.o_array);
+            cv_print_array(&o_cur);
             cv_print_array0("]\n", 80);
         }
         cv_options_it_cleanup(&o_options_it);
@@ -78,8 +78,8 @@ static void cv_test_debug(void)
 
 static void cv_test_poll_stdin(void)
 {
-    cv_string o_string = cv_string_initializer_;
-    if (cv_string_init(&o_string))
+    cv_array o_string = cv_array_initializer_;
+    if (cv_array_init(&o_string))
     {
         static char g_buf[80u];
 
@@ -89,14 +89,14 @@ static void cv_test_poll_stdin(void)
         o_poll_stdin.i_flags_in = cv_file_poll_flag_read;
         o_poll_stdin.i_flags_out = 0;
 
-        cv_string_setup(&o_string, g_buf,
+        cv_array_setup(&o_string, g_buf,
             g_buf + sizeof(g_buf));
 
         if (cv_file_poll_dispatch(&o_poll_stdin,
                 &o_poll_stdin + 1, cv_null_))
         {
             long const i_file_read_result =
-                cv_file_read(&g_cv_file_std_in.o_file, &o_string.o_array);
+                cv_file_read(&g_cv_file_std_in.o_file, &o_string);
             cv_unused_(i_file_read_result);
         }
         else
@@ -104,7 +104,7 @@ static void cv_test_poll_stdin(void)
             cv_debug_msg_("poll error");
         }
 
-        cv_string_cleanup(&o_string);
+        cv_array_cleanup(&o_string);
     }
 }
 

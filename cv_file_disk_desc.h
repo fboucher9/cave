@@ -9,7 +9,7 @@
 
 #include <cv_file_pred.h>
 
-#include <cv_string.h>
+#include <cv_array.h>
 
 #include <cv_bool.h>
 
@@ -25,7 +25,7 @@ enum cv_file_disk_flag
 
 struct cv_file_disk_desc
 {
-    cv_string o_name;
+    cv_array o_name;
 
     /* -- */
 
@@ -36,7 +36,7 @@ struct cv_file_disk_desc
 };
 
 #define cv_file_disk_desc_initializer_ { \
-    cv_string_initializer_, \
+    cv_array_initializer_, \
     0, \
     {0} }
 

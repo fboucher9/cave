@@ -7,7 +7,7 @@
 
 #include <cv_node_pred.h>
 
-#include <cv_string_pred.h>
+#include <cv_array_pred.h>
 
 #include <cv_null.h>
 
@@ -15,7 +15,7 @@ struct cv_options_node_desc
 {
     cv_list * p_parent;
 
-    cv_string const * p_string;
+    cv_array const * p_array;
 
 };
 

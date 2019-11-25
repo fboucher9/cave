@@ -5,6 +5,8 @@
 
 #include <cv_string_pred.h>
 
+#include <cv_array_pred.h>
+
 #include <cv_buffer.h>
 
 #include <cv_bool.h>
@@ -18,7 +20,7 @@ struct cv_string0
 
 cv_bool cv_string0_init(
     cv_string0 * p_this,
-    cv_string const * p_string);
+    cv_array const * p_string);
 
 void cv_string0_cleanup(
     cv_string0 * p_this);

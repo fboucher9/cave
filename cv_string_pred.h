@@ -7,9 +7,6 @@
 typedef struct cv_string cv_string;
 
 /* Predefine */
-typedef union cv_string_ptr cv_string_ptr;
-
-/* Predefine */
 typedef struct cv_string0 cv_string0;
 
 /* Predefine */

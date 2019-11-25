@@ -2,7 +2,7 @@
 
 #include <cv_file_std.h>
 
-#include <cv_string.h>
+#include <cv_array.h>
 
 #include <cv_memory.h>
 
@@ -61,14 +61,14 @@ cv_bool cv_file_std_out_write0(
     long i_msg0_max_len)
 {
     cv_bool b_result = cv_false;
-    cv_string o_string = cv_string_initializer_;
-    if (cv_string_init(&o_string))
+    cv_array o_array = cv_array_initializer_;
+    if (cv_array_init(&o_array))
     {
-        if (cv_string_setup0(&o_string, p_msg0, i_msg0_max_len))
+        if (cv_array_setup0(&o_array, p_msg0, i_msg0_max_len))
         {
-            b_result = cv_file_std_out_write(&o_string.o_array);
+            b_result = cv_file_std_out_write(&o_array);
         }
-        cv_string_cleanup(&o_string);
+        cv_array_cleanup(&o_array);
     }
     return b_result;
 }

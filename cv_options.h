@@ -5,7 +5,7 @@
 
 #include <cv_options_pred.h>
 
-#include <cv_string_pred.h>
+#include <cv_array_pred.h>
 
 #include <cv_options_desc.h>
 
@@ -30,7 +30,7 @@ cv_bool cv_options_setup(
 
 cv_bool cv_options_add(
     cv_options * p_this,
-    cv_string const * p_string);
+    cv_array const * p_array);
 
 #endif /* #ifndef cv_options_h_ */
 

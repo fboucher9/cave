@@ -28,6 +28,30 @@ cv_bool cv_array_it_next(
     long i_sizeof_object,
     cv_array_ptr * r_cur);
 
+cv_bool cv_array_it_read_char(
+    cv_array_it * p_this,
+    unsigned char * r_value);
+
+cv_bool cv_array_it_read_ptr(
+    cv_array_it * p_this,
+    void const * * r_value);
+
+cv_bool cv_array_it_read_array(
+    cv_array_it * p_this,
+    cv_array const * p_array);
+
+cv_bool cv_array_it_write_char(
+    cv_array_it * p_this,
+    unsigned char c_data);
+
+cv_bool cv_array_it_write_ptr(
+    cv_array_it * p_this,
+    void const * pc_void);
+
+cv_bool cv_array_it_write_array(
+    cv_array_it * p_this,
+    cv_array const * p_array);
+
 #endif /* #ifndef cv_array_it_h_ */
 
 /* end-of-file: cv_array_it.h */

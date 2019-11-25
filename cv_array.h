@@ -34,6 +34,11 @@ cv_bool cv_array_setup(
     void const * p_ref_min,
     void const * p_ref_max);
 
+cv_bool cv_array_setup0(
+    cv_array * p_array,
+    char const * p_ref0,
+    long i_ref0_max_len);
+
 long cv_array_char_count(
     cv_array const * p_array);
 

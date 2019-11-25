@@ -2,6 +2,8 @@
 
 #include <cv_array.h>
 
+#include <cv_memory.h>
+
 cv_bool cv_array_init(
     cv_array * p_array)
 {
@@ -36,6 +38,26 @@ cv_bool cv_array_setup(
         p_array->o_min.pc_void = p_ref_min;
         p_array->o_max.pc_void = p_ref_max;
         b_result = cv_true;
+    }
+    return b_result;
+}
+
+cv_bool cv_array_setup0(
+    cv_array * p_array,
+    char const * p_ref0,
+    long i_ref0_max_len)
+{
+    cv_bool b_result = cv_false;
+    if (p_array && p_ref0)
+    {
+        long const i_ref0_len = cv_memory_find0(p_ref0,
+            i_ref0_max_len);
+        if (cv_array_setup(p_array,
+                p_ref0,
+                p_ref0 + i_ref0_len))
+        {
+            b_result = cv_true;
+        }
     }
     return b_result;
 }

@@ -8,7 +8,7 @@
 
 #include <cv_null.h>
 
-#include <cv_string.h>
+#include <cv_array.h>
 
 #include <cv_memory.h>
 
@@ -41,12 +41,12 @@ static void cv_options_node_cleanup_node(
 
 static cv_bool cv_options_node_init_buf0(
     cv_options_node * p_this,
-    cv_string const * p_string)
+    cv_array const * p_array)
 {
     cv_bool b_result = cv_false;
-    if (p_this && p_string)
+    if (p_this && p_array)
     {
-        if (cv_string0_init(&(p_this->o_buf0), p_string))
+        if (cv_string0_init(&(p_this->o_buf0), p_array))
         {
             b_result = cv_true;
         }
@@ -75,7 +75,7 @@ static cv_bool cv_options_node_init(
         {
             if (cv_options_node_init_node(p_this, p_desc->p_parent))
             {
-                if (cv_options_node_init_buf0(p_this, p_desc->p_string))
+                if (cv_options_node_init_buf0(p_this, p_desc->p_array))
                 {
                     b_result = cv_true;
 #if 0
