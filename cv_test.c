@@ -32,10 +32,12 @@
 
 #include <cv_string_it.h>
 
+#include <cv_test_print.h>
+
 static void cv_test_job(
     void * p_context)
 {
-    cv_file_std_out_write0("thread says hello\n");
+    cv_print_array0("thread says hello\n", 80);
     cv_unused_(p_context);
 }
 
@@ -61,9 +63,9 @@ static void cv_test_dump_options(
         cv_string o_cur;
         while (cv_options_it_next(&o_options_it, &o_cur))
         {
-            cv_file_std_out_write0("option = [");
-            cv_file_std_out_write(&o_cur.o_array);
-            cv_file_std_out_write0("]\n");
+            cv_print_array0("option = [", 80);
+            cv_print_array(&o_cur.o_array);
+            cv_print_array0("]\n", 80);
         }
         cv_options_it_cleanup(&o_options_it);
     }
@@ -128,36 +130,9 @@ static void cv_test_thread(void)
 static void cv_test_number_step(
     cv_number_desc const * p_desc)
 {
-    char c_buffer[64u];
-    cv_string o_buffer = cv_string_initializer_;
-    if (cv_string_init(&o_buffer))
-    {
-        cv_string_setup(&o_buffer,
-            c_buffer,
-            c_buffer + sizeof(c_buffer));
-        {
-            cv_string_it o_string_it = cv_string_it_initializer_;
-            if (cv_string_it_init(&o_string_it, &o_buffer.o_array))
-            {
-                if (cv_number_status_done == cv_number_enc_convert(p_desc, &o_string_it))
-                {
-                    cv_string o_result = cv_string_initializer_;
-                    if (cv_string_init(&o_result))
-                    {
-                        cv_string_setup(&o_result,
-                            c_buffer,
-                            o_string_it.o_array.o_min.pc_void);
-                        cv_file_std_out_write0("number = [");
-                        cv_file_std_out_write(&o_result.o_array);
-                        cv_file_std_out_write0("]\n");
-                        cv_string_cleanup(&o_result);
-                    }
-                }
-                cv_string_it_cleanup(&o_string_it);
-            }
-        }
-        cv_string_cleanup(&o_buffer);
-    }
+    cv_print_array0("number = [", 80);
+    cv_print_number(p_desc);
+    cv_print_array0("]\n", 80);
 }
 
 static void cv_test_number(void)

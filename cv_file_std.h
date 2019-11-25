@@ -26,7 +26,8 @@ cv_bool cv_file_std_out_write(
     cv_array const * p_array);
 
 cv_bool cv_file_std_out_write0(
-    char const * const p_msg0);
+    char const * const p_msg0,
+    long i_msg0_max_len);
 
 #endif /* #ifndef cv_file_std_h_ */
 

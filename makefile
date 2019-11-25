@@ -10,6 +10,7 @@ cv_dst_path ?= .
 
 cv_test_srcs = \
     cv_test.c \
+    cv_test_print.c \
     cv_main.c \
     cv_array.c \
     cv_array_it.c \

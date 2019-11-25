@@ -57,13 +57,14 @@ cv_bool cv_file_std_out_write(
 }
 
 cv_bool cv_file_std_out_write0(
-    char const * const p_msg0)
+    char const * const p_msg0,
+    long i_msg0_max_len)
 {
     cv_bool b_result = cv_false;
     cv_string o_string = cv_string_initializer_;
     if (cv_string_init(&o_string))
     {
-        if (cv_string_setup0(&o_string, p_msg0, 0x7FFFFFFFL))
+        if (cv_string_setup0(&o_string, p_msg0, i_msg0_max_len))
         {
             b_result = cv_file_std_out_write(&o_string.o_array);
         }
