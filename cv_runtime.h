@@ -16,8 +16,6 @@ void cv_runtime_printf(
     char const * p_format0,
     ...);
 
-#endif /* #ifndef cv_runtime_h_ */
-
 void cv_runtime_memset(
     void * p_buf,
     unsigned char c_fill_value,
@@ -32,5 +30,7 @@ void const * cv_runtime_memchr(
     void const * p_src,
     unsigned char c_value,
     long i_src_len);
+
+#endif /* #ifndef cv_runtime_h_ */
 
 /* end-of-file: cv_runtime.h */
