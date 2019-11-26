@@ -30,18 +30,20 @@ struct cv_number_enc
     short i_state;
     short i_before_space;
     short i_after_space;
-    short i_zero_remain;
+    short i_before_zero;
     /* -- */
     short i_digit_count;
-    short s_padding[3u];
+    short i_after_zero;
+    short s_padding[2u];
     /* -- */
     char b_sign;
+    char b_dot;
     unsigned char a_sign[1u];
-    unsigned char a_digit[30u];
+    unsigned char a_digit[29u];
 };
 
 #define cv_number_enc_initializer_ \
-{ cv_number_desc_initializer_, 0, 0, 0, 0, 0, {0}, 0, {0}, {0} }
+{ cv_number_desc_initializer_, 0, 0, 0, 0, 0, 0, {0}, 0, 0, {0}, {0} }
 
 typedef enum cv_number_status
 {

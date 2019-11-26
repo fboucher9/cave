@@ -53,6 +53,10 @@ cv_test_srcs = \
 
 cv_test_srcs_abs = $(addprefix $(cv_src_path)/,$(cv_test_srcs))
 
+cv_test_objs = $(addsuffix .o,$(cv_test_srcs))
+
+cv_test_objs_abs = $(addprefix $(cv_dst_path)/.obj/,$(cv_test_objs))
+
 cv_profile_cflags = \
     -pg \
     -ftest-coverage \
@@ -122,6 +126,8 @@ cv_cflags = \
     -Wvla \
     -Wwrite-strings
 
+cv_verbose ?= @
+
 .PHONY : test all bare
 test : $(cv_dst_path)/test.exe
 
@@ -133,8 +139,18 @@ all : $(cv_dst_path)/test.clangxx.exe
 all : bare
 bare : $(cv_dst_path)/test.bare.exe
 
-$(cv_dst_path)/test.exe : $(cv_src_path)/makefile $(cv_test_srcs_abs)
-	gcc -m32 -x c -o $(cv_dst_path)/test.exe $(cv_cflags) $(cv_defines) $(cv_includes) $(cv_test_srcs_abs) -lpthread
+$(cv_dst_path)/test.exe : $(cv_src_path)/makefile $(cv_test_objs_abs)
+	@echo linking $(notdir $@)
+	$(cv_verbose)echo -m32 -o $(cv_dst_path)/test.exe $(cv_cflags) $(cv_test_objs_abs) -lpthread > $(cv_dst_path)/.obj/link.cmd
+	$(cv_verbose)gcc @$(cv_dst_path)/.obj/link.cmd
+
+$(cv_test_objs_abs) : $(cv_src_path)/makefile
+
+$(cv_dst_path)/.obj/%.c.o : $(cv_src_path)/%.c
+	@echo compiling $(notdir $<)
+	$(cv_verbose)mkdir -p $(cv_dst_path)/.obj
+	$(cv_verbose)echo -c -m32 -x c -o $@ $(cv_cflags) $(cv_defines) $(cv_includes) $< -MT $@ -MMD -MP -MF $@.d > $@.cmd
+	$(cv_verbose)gcc @$@.cmd
 
 $(cv_dst_path)/test.m64.exe : $(cv_src_path)/makefile $(cv_test_srcs_abs)
 	gcc -m64 -x c -o $(cv_dst_path)/test.m64.exe $(cv_cflags) $(cv_defines) $(cv_includes) $(cv_test_srcs_abs) -lpthread
@@ -151,3 +167,4 @@ $(cv_dst_path)/test.clangxx.exe : $(cv_src_path)/makefile $(cv_test_srcs_abs)
 $(cv_dst_path)/test.bare.exe : $(cv_src_path)/makefile $(cv_test_srcs_abs)
 	gcc -x c -o $(cv_dst_path)/test.bare.exe -I . -D cv_debug_ -ansi -pedantic -nostdinc -Wall -Wextra -fno-stack-protector $(cv_test_srcs_abs) -nodefaultlibs -nostartfiles
 
+include $(wildcard $(cv_dst_path)/.obj/*.d)

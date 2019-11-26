@@ -18,17 +18,23 @@ enum cv_number_machine
 {
     cv_number_machine_invalid = 0,
 
-    cv_number_machine_before_space = 1,
+    cv_number_machine_before_space,
 
-    cv_number_machine_sign = 2,
+    cv_number_machine_sign,
 
-    cv_number_machine_zero = 3,
+    cv_number_machine_before_zero,
 
-    cv_number_machine_before_dot = 4,
+    cv_number_machine_before_dot,
 
-    cv_number_machine_after_space = 5,
+    cv_number_machine_dot,
 
-    cv_number_machine_done = 6
+    cv_number_machine_after_zero,
+
+    cv_number_machine_after_dot,
+
+    cv_number_machine_after_space,
+
+    cv_number_machine_done
 
 };
 
@@ -151,14 +157,47 @@ cv_bool cv_number_enc_init(
                     p_this->b_sign = 1;
                 }
             }
-            if (p_this->o_desc.o_format.i_digits > p_this->i_digit_count)
+            if (p_this->o_desc.o_format.i_precision)
             {
-                p_this->i_zero_remain = ((
-                        p_this->o_desc.o_format.i_digits
-                        - p_this->i_digit_count) & 0x7FFF);
+                if (p_this->o_desc.o_format.i_precision >=
+                    p_this->o_desc.o_format.i_digits)
+                {
+                    p_this->o_desc.o_format.i_digits =
+                        (
+                            p_this->o_desc.o_format.i_precision + 1) & 0x7FFF;
+                }
+
+                p_this->b_dot = 1;
+                if (p_this->o_desc.o_format.i_precision > p_this->i_digit_count)
+                {
+                    p_this->i_before_zero = 1;
+                    p_this->i_after_zero = (
+                            p_this->o_desc.o_format.i_precision
+                            - p_this->i_digit_count) & 0x7FFF;
+                }
+                else
+                {
+                    if (p_this->o_desc.o_format.i_digits > p_this->i_digit_count)
+                    {
+                        p_this->i_before_zero = (
+                                p_this->o_desc.o_format.i_digits
+                                - p_this->i_digit_count) & 0x7FFF;
+                    }
+                }
+            }
+            else
+            {
+                if (p_this->o_desc.o_format.i_digits > p_this->i_digit_count)
+                {
+                    p_this->i_before_zero = ((
+                            p_this->o_desc.o_format.i_digits
+                            - p_this->i_digit_count) & 0x7FFF);
+                }
             }
             i_width = ((p_this->i_digit_count +
-                    p_this->i_zero_remain +
+                    p_this->i_before_zero +
+                    p_this->b_dot +
+                    p_this->i_after_zero +
                     p_this->b_sign) & 0x7FFF);
             if (p_this->o_desc.o_format.i_flags & cv_number_flag_left)
             {
@@ -250,17 +289,17 @@ static cv_number_status cv_number_enc_step(
             }
             else
             {
-                p_this->i_state = cv_number_machine_zero;
+                p_this->i_state = cv_number_machine_before_zero;
                 e_status = cv_number_status_continue;
             }
         }
-        else if (cv_number_machine_zero == p_this->i_state)
+        else if (cv_number_machine_before_zero == p_this->i_state)
         {
-            if (p_this->i_zero_remain > 0)
+            if (p_this->i_before_zero > 0)
             {
                 if (cv_string_it_write_char(p_string_it, '0'))
                 {
-                    p_this->i_zero_remain --;
+                    p_this->i_before_zero --;
                     e_status = cv_number_status_continue;
                 }
                 else
@@ -275,6 +314,70 @@ static cv_number_status cv_number_enc_step(
             }
         }
         else if (cv_number_machine_before_dot == p_this->i_state)
+        {
+            if (p_this->i_digit_count > p_this->o_desc.o_format.i_precision)
+            {
+                unsigned char const c = p_this->a_digit[
+                    p_this->i_digit_count
+                    - 1];
+
+                if (cv_string_it_write_char(p_string_it, c))
+                {
+                    p_this->i_digit_count --;
+                    e_status = cv_number_status_continue;
+                }
+                else
+                {
+                    e_status = cv_number_status_full;
+                }
+            }
+            else
+            {
+                p_this->i_state = cv_number_machine_dot;
+                e_status = cv_number_status_continue;
+            }
+        }
+        else if (cv_number_machine_dot == p_this->i_state)
+        {
+            if (p_this->b_dot)
+            {
+                if (cv_string_it_write_char(p_string_it, '.'))
+                {
+                    p_this->b_dot = 0;
+                    e_status = cv_number_status_continue;
+                }
+                else
+                {
+                    e_status = cv_number_status_full;
+                }
+            }
+            else
+            {
+                p_this->i_state = cv_number_machine_after_zero;
+                e_status = cv_number_status_continue;
+            }
+        }
+        else if (cv_number_machine_after_zero == p_this->i_state)
+        {
+            if (p_this->i_after_zero > 0)
+            {
+                if (cv_string_it_write_char(p_string_it, '0'))
+                {
+                    p_this->i_after_zero --;
+                    e_status = cv_number_status_continue;
+                }
+                else
+                {
+                    e_status = cv_number_status_full;
+                }
+            }
+            else
+            {
+                p_this->i_state = cv_number_machine_after_dot;
+                e_status = cv_number_status_continue;
+            }
+        }
+        else if (cv_number_machine_after_dot == p_this->i_state)
         {
             if (p_this->i_digit_count > 0)
             {

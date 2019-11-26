@@ -30,9 +30,7 @@ enum cv_number_flag
 
     cv_number_flag_plus = 32,
 
-    cv_number_flag_space = 64,
-
-    cv_number_flag_zero = 128
+    cv_number_flag_space = 64
 
 };
 
@@ -40,11 +38,11 @@ struct cv_number_format
 {
     short i_width;
     short i_digits;
+    short i_precision;
     short i_flags;
-    short s_padding[1u];
 };
 
-#define cv_number_format_initializer_ { 0, 0, 0, {0} }
+#define cv_number_format_initializer_ { 0, 0, 0, 0 }
 
 struct cv_number_desc
 {
