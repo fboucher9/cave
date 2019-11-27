@@ -23,27 +23,27 @@ cv_bool cv_array_it_init(
 void cv_array_it_cleanup(
     cv_array_it * p_this);
 
-cv_bool cv_array_it_read_char(
+cv_bool cv_array_it_read_next_char(
     cv_array_it * p_this,
     unsigned char * r_value);
 
-cv_bool cv_array_it_read_ptr(
+cv_bool cv_array_it_read_next_ptr(
     cv_array_it * p_this,
     void const * * r_value);
 
-cv_bool cv_array_it_read_array(
+cv_bool cv_array_it_read_next_array(
     cv_array_it * p_this,
     cv_array const * p_array);
 
-cv_bool cv_array_it_write_char(
+cv_bool cv_array_it_write_next_char(
     cv_array_it * p_this,
     unsigned char c_data);
 
-cv_bool cv_array_it_write_ptr(
+cv_bool cv_array_it_write_next_ptr(
     cv_array_it * p_this,
     void const * pc_void);
 
-cv_bool cv_array_it_write_array(
+cv_bool cv_array_it_write_next_array(
     cv_array_it * p_this,
     cv_array const * p_array);
 

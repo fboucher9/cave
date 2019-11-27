@@ -9,6 +9,8 @@ Base iterator for linked lists.
 
 */
 
+#include <cv_list_pred.h>
+
 #include <cv_node_pred.h>
 
 #include <cv_node_ptr.h>

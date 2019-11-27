@@ -125,7 +125,7 @@ cv_bool cv_options_setup(
         {
             cv_array_ptr o_array_ptr = cv_ptr_null_;
             b_result = cv_true;
-            while (b_result && cv_array_it_read_ptr(&o_array_it,
+            while (b_result && cv_array_it_read_next_ptr(&o_array_it,
                     &o_array_ptr.pc_void))
             {
                 char const * const p_arg0 = o_array_ptr.pc_char;

@@ -39,6 +39,10 @@ cv_bool cv_list_init(
         {
             b_result = cv_true;
         }
+        else
+        {
+            cv_debug_msg_("list init fail");
+        }
     }
     else
     {

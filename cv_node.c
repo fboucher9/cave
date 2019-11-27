@@ -4,6 +4,8 @@
 
 #include <cv_null.h>
 
+#include <cv_debug.h>
+
 cv_bool cv_node_init(
     cv_node * p_this)
 {
@@ -13,6 +15,10 @@ cv_bool cv_node_init(
         p_this->o_next.p_node = p_this;
         p_this->o_prev.p_node = p_this;
         b_result = cv_true;
+    }
+    else
+    {
+        cv_debug_msg_("null ptr");
     }
     return b_result;
 }
@@ -25,6 +31,10 @@ void cv_node_cleanup(
         cv_node_join(p_this, p_this);
         p_this->o_next.p_node = cv_null_;
         p_this->o_prev.p_node = cv_null_;
+    }
+    else
+    {
+        cv_debug_msg_("null ptr");
     }
 }
 
@@ -43,6 +53,14 @@ void cv_node_join(
             p_left->o_next.p_node = p_right;
             p_right->o_prev.p_node = p_left;
         }
+        else
+        {
+            cv_debug_msg_("join null members");
+        }
+    }
+    else
+    {
+        cv_debug_msg_("join null param");
     }
 }
 

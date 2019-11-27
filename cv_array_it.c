@@ -4,6 +4,8 @@
 
 #include <cv_memory.h>
 
+#include <cv_debug.h>
+
 cv_bool cv_array_it_init(
     cv_array_it * p_this,
     cv_array const * p_array)
@@ -16,6 +18,14 @@ cv_bool cv_array_it_init(
             p_this->o_array = *p_array;
             b_result = cv_true;
         }
+        else
+        {
+            cv_debug_msg_("failed init");
+        }
+    }
+    else
+    {
+        cv_debug_msg_("null ptr");
     }
     return b_result;
 }
@@ -27,9 +37,13 @@ void cv_array_it_cleanup(
     {
         cv_array_cleanup(&p_this->o_array);
     }
+    else
+    {
+        cv_debug_msg_("null ptr");
+    }
 }
 
-cv_bool cv_array_it_read_char(
+cv_bool cv_array_it_read_next_char(
     cv_array_it * p_this,
     unsigned char * r_value)
 {
@@ -44,10 +58,14 @@ cv_bool cv_array_it_read_char(
             b_result = cv_true;
         }
     }
+    else
+    {
+        cv_debug_msg_("null ptr");
+    }
     return b_result;
 }
 
-cv_bool cv_array_it_read_ptr(
+cv_bool cv_array_it_read_next_ptr(
     cv_array_it * p_this,
     void const * * r_value)
 {
@@ -62,10 +80,14 @@ cv_bool cv_array_it_read_ptr(
             b_result = cv_true;
         }
     }
+    else
+    {
+        cv_debug_msg_("null ptr");
+    }
     return b_result;
 }
 
-cv_bool cv_array_it_read_array(
+cv_bool cv_array_it_read_next_array(
     cv_array_it * p_this,
     cv_array const * p_array)
 {
@@ -85,10 +107,14 @@ cv_bool cv_array_it_read_array(
             b_result = cv_true;
         }
     }
+    else
+    {
+        cv_debug_msg_("null ptr");
+    }
     return b_result;
 }
 
-cv_bool cv_array_it_write_char(
+cv_bool cv_array_it_write_next_char(
     cv_array_it * p_this,
     unsigned char c_data)
 {
@@ -103,10 +129,14 @@ cv_bool cv_array_it_write_char(
             b_result = cv_true;
         }
     }
+    else
+    {
+        cv_debug_msg_("null ptr");
+    }
     return b_result;
 }
 
-cv_bool cv_array_it_write_ptr(
+cv_bool cv_array_it_write_next_ptr(
     cv_array_it * p_this,
     void const * pc_void)
 {
@@ -121,10 +151,14 @@ cv_bool cv_array_it_write_ptr(
             b_result = cv_true;
         }
     }
+    else
+    {
+        cv_debug_msg_("null ptr");
+    }
     return b_result;
 }
 
-cv_bool cv_array_it_write_array(
+cv_bool cv_array_it_write_next_array(
     cv_array_it * p_this,
     cv_array const * p_array)
 {
@@ -143,6 +177,10 @@ cv_bool cv_array_it_write_array(
             p_this->o_array.o_min.p_uchar += i_array_len;
             b_result = cv_true;
         }
+    }
+    else
+    {
+        cv_debug_msg_("null ptr");
     }
     return b_result;
 }

@@ -4,19 +4,24 @@
 
 #if defined cv_debug_
 
-#include <cv_unused.h>
-
 #include <cv_runtime.h>
 
 void cv_debug_msg(
     char const * p_msg0)
 {
-#if defined cv_have_libc_
     cv_runtime_printf("*** ouch! %s ***\n",
         p_msg0);
-#else /* #if defined cv_have_libc_ */
-    cv_unused_(p_msg0);
-#endif /* #if defined cv_have_libc_ */
+}
+
+void cv_debug_assert(
+    cv_bool b_expr,
+    char const * p_msg0)
+{
+    if (!b_expr)
+    {
+        cv_runtime_printf("*** assert! %s ***\n",
+            p_msg0);
+    }
 }
 
 #endif /* #if defined cv_debug_ */
