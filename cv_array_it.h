@@ -23,6 +23,19 @@ cv_bool cv_array_it_init(
 void cv_array_it_cleanup(
     cv_array_it * p_this);
 
+cv_bool cv_array_it_get_next_char(
+    cv_array_it * p_this,
+    cv_array_ptr * r_value);
+
+cv_bool cv_array_it_get_next_ptr(
+    cv_array_it * p_this,
+    cv_array_ptr * r_value);
+
+cv_bool cv_array_it_get_next_array(
+    cv_array_it * p_this,
+    long i_array_len,
+    cv_array_ptr * r_value);
+
 cv_bool cv_array_it_read_next_char(
     cv_array_it * p_this,
     unsigned char * r_value);

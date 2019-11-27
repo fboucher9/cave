@@ -19,9 +19,15 @@ void cv_debug_assert(
 {
     if (!b_expr)
     {
-        cv_runtime_printf("*** assert! %s ***\n",
-            p_msg0);
+        cv_debug_break(p_msg0);
     }
+}
+
+void cv_debug_break(
+    char const * p_msg0)
+{
+    cv_runtime_printf("*** assert! %s ***\n",
+        p_msg0);
 }
 
 #endif /* #if defined cv_debug_ */

@@ -43,6 +43,73 @@ void cv_array_it_cleanup(
     }
 }
 
+cv_bool cv_array_it_get_next_char(
+    cv_array_it * p_this,
+    cv_array_ptr * r_value)
+{
+    cv_bool b_result = cv_false;
+    if (p_this && r_value)
+    {
+        if (p_this->o_array.o_min.pc_uchar !=
+            p_this->o_array.o_max.pc_uchar)
+        {
+            *r_value = p_this->o_array.o_min;
+            p_this->o_array.o_min.pc_uchar ++;
+            b_result = cv_true;
+        }
+    }
+    else
+    {
+        cv_debug_msg_("null ptr");
+    }
+    return b_result;
+}
+
+cv_bool cv_array_it_get_next_ptr(
+    cv_array_it * p_this,
+    cv_array_ptr * r_value)
+{
+    cv_bool b_result = cv_false;
+    if (p_this && r_value)
+    {
+        if (p_this->o_array.o_min.pcpc_void <
+            p_this->o_array.o_max.pcpc_void)
+        {
+            *r_value = p_this->o_array.o_min;
+            p_this->o_array.o_min.pcpc_void ++;
+            b_result = cv_true;
+        }
+    }
+    else
+    {
+        cv_debug_msg_("null ptr");
+    }
+    return b_result;
+}
+
+cv_bool cv_array_it_get_next_array(
+    cv_array_it * p_this,
+    long i_array_len,
+    cv_array_ptr * r_value)
+{
+    cv_bool b_result = cv_false;
+    if (p_this && i_array_len && r_value)
+    {
+        if ((p_this->o_array.o_min.pc_uchar + i_array_len)
+            <= p_this->o_array.o_max.pc_uchar)
+        {
+            *r_value = p_this->o_array.o_min;
+            p_this->o_array.o_min.pc_uchar += i_array_len;
+            b_result = cv_true;
+        }
+    }
+    else
+    {
+        cv_debug_msg_("null ptr");
+    }
+    return b_result;
+}
+
 cv_bool cv_array_it_read_next_char(
     cv_array_it * p_this,
     unsigned char * r_value)
