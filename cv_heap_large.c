@@ -76,9 +76,7 @@ static long cv_heap_large_align(
     long i_len)
 {
     long const i_total_len = i_len + cv_sizeof_(cv_heap_node);
-    long const i_remainder = (i_total_len % 4096);
-    long const i_aligned_len = i_remainder ?
-        i_total_len + 4096 - i_remainder : i_total_len;
+    long const i_aligned_len = cv_sizeof_align(i_total_len, 4096);
     return i_aligned_len;
 }
 

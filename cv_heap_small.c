@@ -81,10 +81,8 @@ void * cv_heap_small_alloc(
     if (g_heap_small_loaded && (i_len > 0))
     {
         /* Align len to multiple */
-        long const i_remainder = i_len % cv_heap_small_align_;
-
-        long const i_aligned_len = i_remainder ?
-            i_len + cv_heap_small_align_ - i_remainder : i_len;
+        long const i_aligned_len =
+            cv_sizeof_align(i_len, cv_heap_small_align_);
 
         /* Locate pool */
         long const i_pool_index = (i_aligned_len - 1) / cv_heap_small_align_;

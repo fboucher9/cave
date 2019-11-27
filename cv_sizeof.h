@@ -18,4 +18,8 @@ of sizeof result to integer type reduces include dependencies of interfaces.
 #define cv_sizeof_(expr) cv_cast_(long, sizeof(expr))
 #endif /* #if ! defined cv_sizeof_ */
 
+long cv_sizeof_align(
+    long i_sizeof,
+    long i_alignment);
+
 #endif /* #ifndef cv_sizeof_h_ */

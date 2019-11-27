@@ -29,9 +29,11 @@ cv_test_srcs = \
     cv_heap_node_ptr.c \
     cv_heap_pool.c \
     cv_heap_it.c \
+    cv_heap_section.c \
     cv_heap_small.c \
     cv_heap_large.c \
     cv_debug.c \
+    cv_sizeof.c \
     cv_thread_desc.c \
     cv_thread.c \
     cv_thread_impl.c \

@@ -18,4 +18,10 @@ typedef union cv_heap_pool_ptr cv_heap_pool_ptr;
 /* Predefine */
 typedef struct cv_heap_it cv_heap_it;
 
+/* Predefine */
+typedef struct cv_heap_section_desc cv_heap_section_desc;
+
+/* Predefine */
+typedef struct cv_heap_section_list cv_heap_section_list;
+
 #endif /* #ifndef cv_heap_pred_h_ */

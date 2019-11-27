@@ -67,7 +67,7 @@ void cv_heap_pool_cleanup(
     }
 }
 
-void * cv_heap_pool_alloc(
+static void * cv_heap_pool_alloc_cb(
     cv_heap_pool * p_this,
     long i_len)
 {
@@ -75,40 +75,52 @@ void * cv_heap_pool_alloc(
     if (p_this)
     {
         /* Look for free compatible item */
-        cv_mutex_lock(p_this->p_mutex);
+        cv_heap_it o_heap_it = cv_heap_it_initializer_;
+        if (cv_heap_it_init(&o_heap_it, &p_this->o_free_list))
         {
-            cv_heap_it o_heap_it = cv_heap_it_initializer_;
-            if (cv_heap_it_init(&o_heap_it, &p_this->o_free_list))
+            cv_heap_node_ptr o_heap_ptr = cv_ptr_null_;
+            if (cv_heap_it_next(&o_heap_it, &o_heap_ptr))
             {
-                cv_heap_node_ptr o_heap_ptr = cv_ptr_null_;
-                if (cv_heap_it_next(&o_heap_it, &o_heap_ptr))
-                {
-                    /* Detach from free list */
-                    cv_node_join(
-                        o_heap_ptr.o_node_ptr.p_node,
-                        o_heap_ptr.o_node_ptr.p_node);
-                }
-                else
-                {
-                    /* Create new item */
-                    o_heap_ptr.p_heap_node =
-                        cv_heap_node_create(p_this->i_len);
-                }
-                if (o_heap_ptr.p_heap_node)
-                {
-                    /* Attach to used list */
-                    cv_node_join(
-                        o_heap_ptr.o_node_ptr.p_node,
-                        &p_this->o_used_list.o_node);
-                    /* Set actual len */
-                    o_heap_ptr.p_heap_node->i_len = i_len;
-                    /* Get payload */
-                    p_result = cv_heap_node_to_payload(
-                        o_heap_ptr.p_heap_node);
-                }
-                cv_heap_it_cleanup(&o_heap_it);
+                /* Detach from free list */
+                cv_node_join(
+                    o_heap_ptr.o_node_ptr.p_node,
+                    o_heap_ptr.o_node_ptr.p_node);
             }
+            else
+            {
+                /* Create new item */
+                o_heap_ptr.p_heap_node =
+                    cv_heap_node_create(p_this->i_len);
+            }
+            if (o_heap_ptr.p_heap_node)
+            {
+                /* Attach to used list */
+                cv_node_join(
+                    o_heap_ptr.o_node_ptr.p_node,
+                    &p_this->o_used_list.o_node);
+                /* Set actual len */
+                o_heap_ptr.p_heap_node->i_len = i_len;
+                /* Get payload */
+                p_result = cv_heap_node_to_payload(
+                    o_heap_ptr.p_heap_node);
+            }
+            cv_heap_it_cleanup(&o_heap_it);
         }
+    }
+    return p_result;
+}
+
+void * cv_heap_pool_alloc(
+    cv_heap_pool * p_this,
+    long i_len)
+{
+    void * p_result = cv_null_;
+    if (p_this)
+    {
+        cv_mutex_lock(p_this->p_mutex);
+
+        p_result = cv_heap_pool_alloc_cb(p_this, i_len);
+
         cv_mutex_unlock(p_this->p_mutex);
     }
     return p_result;
