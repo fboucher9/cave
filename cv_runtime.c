@@ -125,4 +125,21 @@ void const * cv_runtime_memchr(
     return p_memchr_result;
 }
 
+int cv_runtime_memcmp(
+    void const * p_left,
+    void const * p_right,
+    long i_len)
+{
+    int i_memcmp_result = -1;
+#if defined cv_have_libc_
+    size_t const i_memcmp_len = cv_cast_(size_t, i_len);
+    i_memcmp_result = memcmp(p_left, p_right, i_memcmp_len);
+#else /* #if defined cv_have_libc_ */
+    cv_unused_(p_left);
+    cv_unused_(p_right);
+    cv_unused_(i_len);
+#endif /* #if defined cv_have_libc_ */
+    return i_memcmp_result;
+}
+
 /* end-of-file: cv_runtime.c */

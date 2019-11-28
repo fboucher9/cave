@@ -34,6 +34,8 @@
 
 #include <cv_test_print.h>
 
+#include <cv_memory.h>
+
 static void cv_test_job(
     void * p_context)
 {
@@ -191,13 +193,99 @@ static cv_bool cv_test_main_cb(
 {
     cv_test_dump_options(p_options);
 
-    cv_test_heap_large();
+    {
+        cv_options_it o_options_it = cv_options_it_initializer_;
+        if (cv_options_it_init(&o_options_it, p_options))
+        {
+            cv_array o_string = cv_array_initializer_;
+            if (cv_options_it_next(&o_options_it, &o_string))
+            {
+                if (cv_options_it_next(&o_options_it, &o_string))
+                {
+                    static char const g_number[] =
+                    {
+                        'n',
+                        'u',
+                        'm',
+                        'b',
+                        'e',
+                        'r'
+                    };
 
-    cv_test_number();
+                    static char const g_heap_large[] =
+                    {
+                        'h',
+                        'e',
+                        'a',
+                        'p',
+                        '.',
+                        'l',
+                        'a',
+                        'r',
+                        'g',
+                        'e'
+                    };
 
-    cv_test_debug();
+                    static char const g_debug[] =
+                    {
+                        'd',
+                        'e',
+                        'b',
+                        'u',
+                        'g'
+                    };
 
-    cv_test_thread();
+                    static char const g_thread[] =
+                    {
+                        't',
+                        'h',
+                        'r',
+                        'e',
+                        'a',
+                        'd'
+                    };
+
+                    long const i_string_len =
+                        cv_array_char_count(
+                            &o_string);
+
+                    if (0 == cv_memory_compare(
+                            o_string.o_min.pc_void,
+                            i_string_len,
+                            g_number,
+                            cv_sizeof_(g_number)))
+                    {
+                        cv_test_number();
+                    }
+                    else if (0 == cv_memory_compare(
+                            o_string.o_min.pc_void,
+                            i_string_len,
+                            g_heap_large,
+                            cv_sizeof_(g_heap_large)))
+                    {
+                        cv_test_heap_large();
+                    }
+                    else if (0 == cv_memory_compare(
+                            o_string.o_min.pc_void,
+                            i_string_len,
+                            g_debug,
+                            cv_sizeof_(g_debug)))
+                    {
+                        cv_test_debug();
+                    }
+                    else if (0 == cv_memory_compare(
+                            o_string.o_min.pc_void,
+                            i_string_len,
+                            g_thread,
+                            cv_sizeof_(g_thread)))
+                    {
+                        cv_test_thread();
+                    }
+                }
+            }
+            cv_options_it_cleanup(&o_options_it);
+        }
+    }
 
     return cv_true;
 }

@@ -17,4 +17,10 @@ long cv_memory_find0(
     void const * p_src,
     long i_src_len);
 
+int cv_memory_compare(
+    void const * p_left,
+    long i_left_len,
+    void const * p_right,
+    long i_right_len);
+
 #endif /* #ifndef cv_memory_h_ */

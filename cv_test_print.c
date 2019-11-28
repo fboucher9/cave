@@ -17,7 +17,7 @@
 void cv_print_array(
     cv_array const * p_array)
 {
-    cv_file_std_out_write(
+    cv_file_std_print(
         p_array);
 }
 
@@ -25,7 +25,7 @@ void cv_print_array0(
     char const * p_array0,
     long i_array0_max_len)
 {
-    cv_file_std_out_write0(
+    cv_file_std_print_0(
         p_array0,
         i_array0_max_len);
 }
@@ -53,7 +53,7 @@ void cv_print_number(
                         cv_array_setup(&o_result,
                             c_buffer,
                             o_string_it.o_array.o_min.pc_void);
-                        cv_file_std_out_write(&o_result);
+                        cv_file_std_print(&o_result);
                         cv_array_cleanup(&o_result);
                     }
                 }
@@ -85,7 +85,7 @@ void cv_print_hex(
 
 void cv_print_nl(void)
 {
-    cv_file_std_out_write0("\n", 2);
+    cv_file_std_print_0("\n", 2);
 }
 
 /* end-of-file: cv_test_print.c */

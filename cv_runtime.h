@@ -31,6 +31,11 @@ void const * cv_runtime_memchr(
     unsigned char c_value,
     long i_src_len);
 
+int cv_runtime_memcmp(
+    void const * p_left,
+    void const * p_right,
+    long i_len);
+
 #endif /* #ifndef cv_runtime_h_ */
 
 /* end-of-file: cv_runtime.h */

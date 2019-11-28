@@ -66,15 +66,22 @@ cv_bool cv_array_setup0(
     {
         long const i_ref0_len = cv_memory_find0(p_ref0,
             i_ref0_max_len);
-        if (cv_array_setup(p_array,
-                p_ref0,
-                p_ref0 + i_ref0_len))
+        if (i_ref0_len >= 0)
         {
-            b_result = cv_true;
+            if (cv_array_setup(p_array,
+                    p_ref0,
+                    p_ref0 + i_ref0_len))
+            {
+                b_result = cv_true;
+            }
+            else
+            {
+                cv_debug_msg_("setup failed");
+            }
         }
         else
         {
-            cv_debug_msg_("setup failed");
+            cv_debug_msg_("not zero terminated");
         }
     }
     else

@@ -32,7 +32,7 @@ void cv_file_std_unload(void)
     g_cv_file_std_err.o_file.i_index = -1;
 }
 
-cv_bool cv_file_std_out_write(
+cv_bool cv_file_std_print(
     cv_array const * p_array)
 {
     cv_bool b_result = cv_true;
@@ -56,7 +56,7 @@ cv_bool cv_file_std_out_write(
     return b_result;
 }
 
-cv_bool cv_file_std_out_write0(
+cv_bool cv_file_std_print_0(
     char const * const p_msg0,
     long i_msg0_max_len)
 {
@@ -66,7 +66,7 @@ cv_bool cv_file_std_out_write0(
     {
         if (cv_array_setup0(&o_array, p_msg0, i_msg0_max_len))
         {
-            b_result = cv_file_std_out_write(&o_array);
+            b_result = cv_file_std_print(&o_array);
         }
         cv_array_cleanup(&o_array);
     }
