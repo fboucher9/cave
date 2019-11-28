@@ -108,6 +108,17 @@ int cv_memory_compare(
             i_left_len < i_right_len ? i_left_len : i_right_len;
         i_compare_result = cv_runtime_memcmp(
             p_left, p_right, i_compare_len);
+        if (0 == i_compare_result)
+        {
+            if (i_left_len > i_right_len)
+            {
+                i_compare_result = 1;
+            }
+            else
+            {
+                i_compare_result = -1;
+            }
+        }
     }
     else
     {
