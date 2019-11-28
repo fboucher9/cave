@@ -59,6 +59,19 @@ void cv_heap_pool_cleanup(
     {
         /* Detect leaks ... */
         /* Discard all free nodes */
+        {
+            cv_node_it o_node_it = cv_node_it_initializer_;
+            if (cv_node_it_init(&o_node_it, &p_this->o_free_list))
+            {
+                cv_heap_node_ptr o_ptr = cv_ptr_null_;
+                while (cv_node_it_first(&o_node_it, &o_ptr.o_node_ptr))
+                {
+                    cv_heap_node_cleanup(o_ptr.p_heap_node);
+                }
+                cv_node_it_cleanup(&o_node_it);
+            }
+        }
+
         cv_node_join(
             &p_this->o_free_list.o_node,
             &p_this->o_free_list.o_node);

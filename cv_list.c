@@ -14,6 +14,8 @@ cv_node_it modules.
 
 #include <cv_debug.h>
 
+#include <cv_sizeof.h>
+
 /*
 
 Function: cv_list_init()
@@ -34,6 +36,7 @@ cv_bool cv_list_init(
     cv_bool b_result = cv_false;
     if (p_this)
     {
+        cv_debug_init_(p_this, cv_sizeof_(*p_this));
         if (cv_node_init(
             &p_this->o_node))
         {
@@ -42,6 +45,10 @@ cv_bool cv_list_init(
         else
         {
             cv_debug_msg_("list init fail");
+        }
+        if (!b_result)
+        {
+            cv_debug_cleanup_(p_this, cv_sizeof_(*p_this));
         }
     }
     else
@@ -80,6 +87,8 @@ void cv_list_cleanup(
 
         cv_node_cleanup(
             &p_this->o_node);
+
+        cv_debug_cleanup_(p_this, cv_sizeof_(*p_this));
     }
     else
     {

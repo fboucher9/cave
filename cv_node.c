@@ -6,12 +6,15 @@
 
 #include <cv_debug.h>
 
+#include <cv_sizeof.h>
+
 cv_bool cv_node_init(
     cv_node * p_this)
 {
     cv_bool b_result = cv_false;
     if (p_this)
     {
+        cv_debug_init_(p_this, cv_sizeof_(*p_this));
         p_this->o_next.p_node = p_this;
         p_this->o_prev.p_node = p_this;
         b_result = cv_true;
@@ -31,6 +34,7 @@ void cv_node_cleanup(
         cv_node_join(p_this, p_this);
         p_this->o_next.p_node = cv_null_;
         p_this->o_prev.p_node = cv_null_;
+        cv_debug_cleanup_(p_this, cv_sizeof_(*p_this));
     }
     else
     {
