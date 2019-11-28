@@ -36,7 +36,7 @@ struct cv_file_disk_desc
 };
 
 #define cv_file_disk_desc_initializer_ { \
-    cv_array_initializer_, \
+    cv_array_null_, \
     0, \
     {0} }
 

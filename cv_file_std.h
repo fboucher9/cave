@@ -29,6 +29,8 @@ cv_bool cv_file_std_print_0(
     char const * const p_msg0,
     long i_msg0_max_len);
 
+cv_bool cv_file_std_print_nl(void);
+
 #endif /* #ifndef cv_file_std_h_ */
 
 /* end-of-file: cv_file_std.h */

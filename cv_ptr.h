@@ -15,6 +15,8 @@ union cv_ptr
 
 #define cv_ptr_null_ { cv_null_ }
 
+#define cv_ptr_initializer_(pc_void) { (pc_void) }
+
 #endif /* #ifndef cv_ptr_h_ */
 
 /* end-of-file: cv_ptr.h */

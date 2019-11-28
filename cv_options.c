@@ -100,13 +100,10 @@ static cv_bool cv_options_setup_cb(
     cv_bool b_result = cv_false;
     if (p_this && p_arg0)
     {
-        cv_array o_string = cv_array_initializer_;
-        if (cv_array_init(&o_string))
+        cv_array o_string = cv_array_null_;
+        if (cv_array_init_0(&o_string, p_arg0, i_arg0_max_len))
         {
-            if (cv_array_setup0(&o_string, p_arg0, i_arg0_max_len))
-            {
-                b_result = cv_options_add(p_this, &o_string);
-            }
+            b_result = cv_options_add(p_this, &o_string);
             cv_array_cleanup(&o_string);
         }
     }

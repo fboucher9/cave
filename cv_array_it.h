@@ -14,7 +14,7 @@ struct cv_array_it
     cv_array o_array;
 };
 
-#define cv_array_it_initializer_ { cv_array_initializer_ }
+#define cv_array_it_initializer_ { cv_array_null_ }
 
 cv_bool cv_array_it_init(
     cv_array_it * p_this,

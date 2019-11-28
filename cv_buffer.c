@@ -48,7 +48,7 @@ cv_bool cv_buffer_realloc(
     cv_bool b_result = cv_false;
     if (i_length)
     {
-        long const i_old_length = cv_buffer_char_count(p_this);
+        long const i_old_length = cv_buffer_len(p_this);
         if (i_length != i_old_length)
         {
             cv_buffer_cleanup(p_this);
@@ -56,7 +56,7 @@ cv_bool cv_buffer_realloc(
                 char * const p_array = cv_new_array_(char, i_length);
                 if (p_array)
                 {
-                    if (cv_array_setup(&p_this->o_array,
+                    if (cv_array_init_range(&p_this->o_array,
                             p_array,
                             p_array + i_length))
                     {
@@ -79,13 +79,13 @@ cv_bool cv_buffer_realloc(
 }
 
 /* Get length of buffer */
-long cv_buffer_char_count(
+long cv_buffer_len(
     cv_buffer const * p_this)
 {
     long i_len = 0;
     if (p_this)
     {
-        i_len = cv_array_char_count(
+        i_len = cv_array_len(
             &(p_this->o_array));
     }
     return i_len;

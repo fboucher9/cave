@@ -10,7 +10,7 @@
 void cv_print_array(
     cv_array const * p_array);
 
-void cv_print_array0(
+void cv_print_0(
     char const * p_array0,
     long i_array0_max_len);
 

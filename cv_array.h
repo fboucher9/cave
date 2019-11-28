@@ -21,25 +21,35 @@ struct cv_array
     cv_array_ptr o_max;
 };
 
-#define cv_array_initializer_ { cv_ptr_null_, cv_ptr_null_ }
+#define cv_array_null_ { cv_ptr_null_, cv_ptr_null_ }
+
+#define cv_array_initializer_(pc_min, pc_max) \
+{ \
+    cv_ptr_initializer_(pc_min), \
+    cv_ptr_initializer_(pc_max) \
+}
 
 cv_bool cv_array_init(
     cv_array * p_array);
 
-void cv_array_cleanup(
-    cv_array * p_array);
+cv_bool cv_array_init_ref(
+    cv_array * p_array,
+    cv_array const * p_ref);
 
-cv_bool cv_array_setup(
+cv_bool cv_array_init_range(
     cv_array * p_array,
     void const * p_ref_min,
     void const * p_ref_max);
 
-cv_bool cv_array_setup0(
+cv_bool cv_array_init_0(
     cv_array * p_array,
     char const * p_ref0,
     long i_ref0_max_len);
 
-long cv_array_char_count(
+void cv_array_cleanup(
+    cv_array * p_array);
+
+long cv_array_len(
     cv_array const * p_array);
 
 long cv_array_short_count(

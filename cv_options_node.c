@@ -48,7 +48,7 @@ static cv_bool cv_options_node_init_buf0(
     {
         if (cv_buffer_init(&p_this->o_buffer))
         {
-            long const i_array_len = cv_array_char_count(p_array);
+            long const i_array_len = cv_array_len(p_array);
             if (cv_buffer_realloc(&p_this->o_buffer, i_array_len))
             {
                 if (i_array_len)

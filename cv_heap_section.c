@@ -119,12 +119,12 @@ static cv_heap_section_node * cv_heap_section_node_create(
             if (cv_heap_section_node_init(o_ptr.p_heap_section_node,
                     p_desc))
             {
-                cv_array_setup(
+                cv_array_init_range(
                     &o_ptr.p_heap_section_node->o_allocation,
                     o_ptr.p_void,
                     o_ptr.pc_char + i_malloc_len);
 
-                cv_array_setup(
+                cv_array_init_range(
                     &o_ptr.p_heap_section_node->o_payload,
                     o_ptr.p_heap_section_node + 1,
                     o_ptr.pc_char + i_malloc_len);
@@ -171,7 +171,7 @@ cv_bool cv_heap_section_list_init(
         p_this->o_desc = *p_desc;
         cv_list_init(&p_this->o_list);
         {
-            cv_array o_null_array = cv_array_initializer_;
+            cv_array o_null_array = cv_array_null_;
             cv_array_it_init(&p_this->o_array_it, &o_null_array);
         }
         b_result = cv_true;

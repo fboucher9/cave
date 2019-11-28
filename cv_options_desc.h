@@ -16,7 +16,7 @@ struct cv_options_desc
     cv_array o_array;
 };
 
-#define cv_options_desc_initializer_ { cv_array_initializer_ }
+#define cv_options_desc_initializer_ { cv_array_null_ }
 
 cv_bool cv_options_desc_init(
     cv_options_desc * p_options_desc,

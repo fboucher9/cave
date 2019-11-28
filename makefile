@@ -14,6 +14,7 @@ cv_test_srcs = \
     cv_main.c \
     cv_array.c \
     cv_array_it.c \
+    cv_array_tool.c \
     cv_buffer.c \
     cv_string0.c \
     cv_string_it.c \

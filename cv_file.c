@@ -15,7 +15,7 @@ long cv_file_read(
     long i_result = -1;
     if (p_this && p_array)
     {
-        long const i_array_len = cv_array_char_count(p_array);
+        long const i_array_len = cv_array_len(p_array);
         if (i_array_len >= 0)
         {
 #if defined cv_have_libc_
@@ -41,7 +41,7 @@ long cv_file_write(
     long i_result = -1;
     if (p_this && p_array)
     {
-        long const i_array_len = cv_array_char_count(p_array);
+        long const i_array_len = cv_array_len(p_array);
         if (i_array_len >= 0)
         {
 #if defined cv_have_libc_

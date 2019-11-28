@@ -58,19 +58,19 @@ long cv_memory_copy(
     return i_copy_len;
 }
 
-long cv_memory_find0(
+long cv_memory_find_0(
     void const * p_src,
     long i_src_len)
 {
     long i_find_len = -1;
     if (p_src && i_src_len > 0)
     {
-        cv_array o_array = cv_array_initializer_;
+        cv_array o_array = cv_array_null_;
         o_array.o_min.pc_void = p_src;
         o_array.o_max.pc_void = cv_runtime_memchr(p_src, '\000', i_src_len);
         if (o_array.o_max.pc_void)
         {
-            i_find_len = cv_array_char_count(&o_array);
+            i_find_len = cv_array_len(&o_array);
         }
     }
     else

@@ -13,9 +13,8 @@ cv_bool cv_array_it_init(
     cv_bool b_result = cv_false;
     if (p_this && p_array)
     {
-        if (cv_array_init(&p_this->o_array))
+        if (cv_array_init_ref(&p_this->o_array, p_array))
         {
-            p_this->o_array = *p_array;
             b_result = cv_true;
         }
         else
@@ -161,7 +160,7 @@ cv_bool cv_array_it_read_next_array(
     cv_bool b_result = cv_false;
     if (p_this && p_array)
     {
-        long const i_array_len = cv_array_char_count(p_array);
+        long const i_array_len = cv_array_len(p_array);
         if ((p_this->o_array.o_min.pc_uchar + i_array_len)
             <= p_this->o_array.o_max.pc_uchar)
         {
@@ -232,7 +231,7 @@ cv_bool cv_array_it_write_next_array(
     cv_bool b_result = cv_false;
     if (p_this && p_array)
     {
-        long const i_array_len = cv_array_char_count(p_array);
+        long const i_array_len = cv_array_len(p_array);
         if ((p_this->o_array.o_min.p_uchar + i_array_len)
             <= p_this->o_array.o_max.p_uchar)
         {

@@ -30,7 +30,7 @@ cv_bool cv_string0_init(
     if (p_this)
     {
         /* Get length of string */
-        long const i_length = p_string ? cv_array_char_count(p_string) : 0;
+        long const i_length = p_string ? cv_array_len(p_string) : 0;
         if (cv_buffer_init(
                 &p_this->o_buffer))
         {
@@ -82,7 +82,7 @@ long cv_string0_len(
     long i_len = 0;
     if (p_this)
     {
-        i_len = cv_buffer_char_count(&p_this->o_buffer);
+        i_len = cv_buffer_len(&p_this->o_buffer);
         if (i_len > 0)
         {
             i_len --;

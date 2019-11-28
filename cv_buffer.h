@@ -14,7 +14,7 @@ struct cv_buffer
     cv_array o_array;
 };
 
-#define cv_buffer_initializer_ { cv_array_initializer_ }
+#define cv_buffer_initializer_ { cv_array_null_ }
 
 cv_bool cv_buffer_init(
     cv_buffer * p_this);
@@ -26,7 +26,7 @@ cv_bool cv_buffer_realloc(
     cv_buffer * p_this,
     long i_length);
 
-long cv_buffer_char_count(
+long cv_buffer_len(
     cv_buffer const * p_this);
 
 #endif /* #ifndef cv_buffer_h_ */

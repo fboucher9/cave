@@ -31,6 +31,9 @@ struct cv_file_poll
 
 };
 
+#define cv_file_poll_initializer_ \
+{ cv_null_, { cv_null_ }, 0, 0 }
+
 cv_bool cv_file_poll_dispatch(
     cv_file_poll * p_poll_min,
     cv_file_poll * p_poll_max,

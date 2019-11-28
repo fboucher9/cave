@@ -12,14 +12,11 @@ cv_bool cv_options_desc_init(
     cv_bool b_result = cv_false;
     if (p_options_desc)
     {
-        if (cv_array_init(&p_options_desc->o_array))
+        if (cv_array_init_range(&p_options_desc->o_array,
+                p_args_min,
+                p_args_max))
         {
-            if (cv_array_setup(&p_options_desc->o_array,
-                    p_args_min,
-                    p_args_max))
-            {
-                b_result = cv_true;
-            }
+            b_result = cv_true;
         }
     }
     return b_result;

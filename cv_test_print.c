@@ -21,7 +21,7 @@ void cv_print_array(
         p_array);
 }
 
-void cv_print_array0(
+void cv_print_0(
     char const * p_array0,
     long i_array0_max_len)
 {
@@ -34,31 +34,24 @@ void cv_print_number(
     cv_number_desc const * p_desc)
 {
     char c_buffer[64u];
-    cv_array o_buffer = cv_array_initializer_;
-    if (cv_array_init(&o_buffer))
+    cv_array o_buffer = cv_array_null_;
+    if (cv_array_init_range(&o_buffer, c_buffer, c_buffer + sizeof(c_buffer)))
     {
-        cv_array_setup(&o_buffer,
-            c_buffer,
-            c_buffer + sizeof(c_buffer));
+        cv_string_it o_string_it = cv_string_it_initializer_;
+        if (cv_string_it_init(&o_string_it, &o_buffer))
         {
-            cv_string_it o_string_it = cv_string_it_initializer_;
-            if (cv_string_it_init(&o_string_it, &o_buffer))
+            if (cv_number_status_done ==
+                cv_number_enc_convert(p_desc, &o_string_it))
             {
-                if (cv_number_status_done ==
-                    cv_number_enc_convert(p_desc, &o_string_it))
+                cv_array o_result = cv_array_null_;
+                if (cv_array_init_range(&o_result, c_buffer,
+                        o_string_it.o_array.o_min.pc_void))
                 {
-                    cv_array o_result = cv_array_initializer_;
-                    if (cv_array_init(&o_result))
-                    {
-                        cv_array_setup(&o_result,
-                            c_buffer,
-                            o_string_it.o_array.o_min.pc_void);
-                        cv_file_std_print(&o_result);
-                        cv_array_cleanup(&o_result);
-                    }
+                    cv_file_std_print(&o_result);
+                    cv_array_cleanup(&o_result);
                 }
-                cv_string_it_cleanup(&o_string_it);
             }
+            cv_string_it_cleanup(&o_string_it);
         }
         cv_array_cleanup(&o_buffer);
     }
@@ -85,7 +78,7 @@ void cv_print_hex(
 
 void cv_print_nl(void)
 {
-    cv_file_std_print_0("\n", 2);
+    cv_file_std_print_nl();
 }
 
 /* end-of-file: cv_test_print.c */
