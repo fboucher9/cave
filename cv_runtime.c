@@ -48,7 +48,8 @@ void cv_runtime_printf(
 #if defined cv_have_libc_
     va_list o_arg_list;
     va_start(o_arg_list, p_format0);
-    vprintf(p_format0, o_arg_list);
+    vfprintf(stdout, p_format0, o_arg_list);
+    fflush(stdout);
     va_end(o_arg_list);
 #else /* #if defined cv_have_libc_ */
     cv_unused_(p_format0);

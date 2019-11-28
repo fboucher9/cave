@@ -80,8 +80,6 @@ static cv_bool cv_heap_section_node_init(
     {
         cv_node_init(&p_this->o_node);
         p_this->o_desc = *p_desc;
-        cv_array_init(&p_this->o_allocation);
-        cv_array_init(&p_this->o_payload);
         cv_node_join(&p_this->o_node,
             &p_desc->p_parent->o_list.o_node);
         b_result = cv_true;
@@ -99,6 +97,8 @@ static void cv_heap_section_node_cleanup(
     if (p_this)
     {
         cv_node_cleanup(&p_this->o_node);
+        cv_array_cleanup(&p_this->o_payload);
+        cv_array_cleanup(&p_this->o_allocation);
     }
     else
     {
@@ -119,10 +119,10 @@ static cv_heap_section_node * cv_heap_section_node_create(
             if (cv_heap_section_node_init(o_ptr.p_heap_section_node,
                     p_desc))
             {
-                cv_array_init_range(
+                cv_array_init_vector(
                     &o_ptr.p_heap_section_node->o_allocation,
                     o_ptr.p_void,
-                    o_ptr.pc_char + i_malloc_len);
+                    i_malloc_len);
 
                 cv_array_init_range(
                     &o_ptr.p_heap_section_node->o_payload,
@@ -152,8 +152,12 @@ static void cv_heap_section_node_destroy(
 {
     if (p_this)
     {
+        void * const p_allocation = p_this->o_allocation.o_min.p_void;
         cv_heap_section_node_cleanup(p_this);
-        cv_runtime_free(p_this->o_allocation.o_min.p_void);
+        if (p_allocation)
+        {
+            cv_runtime_free(p_allocation);
+        }
     }
     else
     {
@@ -169,12 +173,14 @@ cv_bool cv_heap_section_list_init(
     if (p_this && p_desc)
     {
         p_this->o_desc = *p_desc;
-        cv_list_init(&p_this->o_list);
+        if (cv_list_init(&p_this->o_list))
         {
             cv_array o_null_array = cv_array_null_;
-            cv_array_it_init(&p_this->o_array_it, &o_null_array);
+            if (cv_array_it_init(&p_this->o_array_it, &o_null_array))
+            {
+                b_result = cv_true;
+            }
         }
-        b_result = cv_true;
     }
     else
     {
@@ -198,6 +204,10 @@ void cv_heap_section_list_cleanup(
                 cv_heap_section_node_destroy(o_ptr.p_heap_section_node);
             }
         }
+
+        cv_list_cleanup(&p_this->o_list);
+
+        cv_array_it_cleanup(&p_this->o_array_it);
     }
     else
     {
@@ -224,6 +234,7 @@ static cv_bool cv_heap_section_list_grow(
         if (o_ptr.p_heap_section_node)
         {
             /* Setup array iterator to new buffer */
+            cv_array_it_cleanup(&p_this->o_array_it);
             if (cv_array_it_init(&p_this->o_array_it,
                 &o_ptr.p_heap_section_node->o_payload))
             {

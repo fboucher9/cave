@@ -32,23 +32,19 @@ cv_bool cv_string0_init(
         /* Get length of string */
         long const i_length = p_string ? cv_array_len(p_string) : 0;
         if (cv_buffer_init(
-                &p_this->o_buffer))
+                &p_this->o_buffer,
+                i_length + 1))
         {
-            if (cv_buffer_realloc(
-                    &p_this->o_buffer,
-                    i_length + 1))
+            if (i_length)
             {
-                if (i_length)
-                {
-                    cv_memory_copy(
-                        p_this->o_buffer.o_array.o_min.p_void,
-                        i_length,
-                        p_string->o_min.pc_void,
-                        i_length);
-                }
-                p_this->o_buffer.o_array.o_min.p_char[i_length] = '\000';
-                b_result = cv_true;
+                cv_memory_copy(
+                    p_this->o_buffer.o_array.o_min.p_void,
+                    i_length,
+                    p_string->o_min.pc_void,
+                    i_length);
             }
+            p_this->o_buffer.o_array.o_min.p_char[i_length] = '\000';
+            b_result = cv_true;
         }
     }
     return b_result;

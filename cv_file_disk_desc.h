@@ -15,6 +15,8 @@
 
 enum cv_file_disk_flag
 {
+    cv_file_disk_flag_invalid = 0,
+
     cv_file_disk_flag_read = 1,
 
     cv_file_disk_flag_write = 2,

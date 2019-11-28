@@ -86,7 +86,7 @@ static void cv_test_poll_stdin(void)
 {
     static char g_buf[80u];
     cv_array o_string = cv_array_null_;
-    if (cv_array_init_range(&o_string, g_buf, g_buf + sizeof(g_buf)))
+    if (cv_array_init_vector(&o_string, g_buf, cv_sizeof_(g_buf)))
     {
         cv_file_poll o_poll_stdin = cv_file_poll_initializer_;
         o_poll_stdin.p_file = &g_cv_file_std_in.o_file;
@@ -198,7 +198,7 @@ static void cv_test_stdin(void)
         {
             cv_array o_string = cv_array_null_;
             unsigned char a_buf[1u];
-            if (cv_array_init_range(&o_string, a_buf, a_buf+sizeof(a_buf)))
+            if (cv_array_init_vector(&o_string, a_buf, cv_sizeof_(a_buf)))
             {
                 long const i_file_read_result =
                     cv_file_read(&g_cv_file_std_in.o_file,
@@ -362,15 +362,19 @@ static int cv_test_main(
     char const * const * argv)
 {
     int i_result = 1;
-    cv_options * p_options = cv_main_init(argc, argv);
-    if (p_options)
+    cv_debug_init_(cv_null_, 0);
     {
-        if (cv_test_main_cb(p_options))
+        cv_options * p_options = cv_main_init(argc, argv);
+        if (p_options)
         {
-            i_result = 0;
+            if (cv_test_main_cb(p_options))
+            {
+                i_result = 0;
+            }
+            cv_main_cleanup(p_options);
         }
-        cv_main_cleanup(p_options);
     }
+    cv_debug_cleanup_(cv_null_, 0);
     return i_result;
 }
 

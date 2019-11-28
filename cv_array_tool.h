@@ -20,4 +20,11 @@ cv_bool cv_array_compare(
     cv_array const * p_left,
     cv_array const * p_right);
 
+cv_bool cv_array_zero(
+    cv_array const * p_this);
+
+cv_bool cv_array_fill(
+    cv_array const * p_this,
+    unsigned char c_value);
+
 #endif /* #ifndef cv_array_tool_h_ */

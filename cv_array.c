@@ -6,15 +6,19 @@
 
 #include <cv_debug.h>
 
+#include <cv_sizeof.h>
+
 cv_bool cv_array_init(
-    cv_array * p_array)
+    cv_array * p_this)
 {
     cv_bool b_result = cv_false;
-    if (p_array)
+    if (p_this)
     {
-        p_array->o_min.pc_void = cv_null_;
-        p_array->o_max.pc_void = cv_null_;
-        b_result = cv_true;
+        if (cv_array_init_range(p_this,
+                cv_null_, cv_null_))
+        {
+            b_result = cv_true;
+        }
     }
     else
     {
@@ -24,14 +28,42 @@ cv_bool cv_array_init(
 }
 
 cv_bool cv_array_init_ref(
-    cv_array * p_array,
+    cv_array * p_this,
     cv_array const * p_ref)
 {
     cv_bool b_result = cv_false;
-    if (p_array && p_ref)
+    if (p_this && p_ref)
     {
-        *p_array = *p_ref;
-        b_result = cv_true;
+        if (cv_array_init_range(p_this,
+                p_ref->o_min.pc_void,
+                p_ref->o_max.pc_void))
+        {
+            b_result = cv_true;
+        }
+    }
+    else
+    {
+        cv_debug_msg_("null ptr");
+    }
+    return b_result;
+}
+
+cv_bool cv_array_init_vector(
+    cv_array * p_this,
+    void const * p_buf,
+    long i_buf_len)
+{
+    cv_bool b_result = cv_false;
+    if (p_this)
+    {
+        cv_array_ptr o_buf_ptr = cv_ptr_null_;
+        o_buf_ptr.pc_void = p_buf;
+        if (cv_array_init_range(p_this,
+                o_buf_ptr.pc_char,
+                o_buf_ptr.pc_char + i_buf_len))
+        {
+            b_result = cv_true;
+        }
     }
     else
     {
@@ -41,12 +73,13 @@ cv_bool cv_array_init_ref(
 }
 
 void cv_array_cleanup(
-    cv_array * p_array)
+    cv_array * p_this)
 {
-    if (p_array)
+    if (p_this)
     {
-        p_array->o_min.pc_void = cv_null_;
-        p_array->o_max.pc_void = cv_null_;
+        p_this->o_min.pc_void = cv_null_;
+        p_this->o_max.pc_void = cv_null_;
+        cv_debug_cleanup_(p_this, cv_sizeof_(*p_this));
     }
     else
     {
@@ -55,15 +88,16 @@ void cv_array_cleanup(
 }
 
 cv_bool cv_array_init_range(
-    cv_array * p_array,
+    cv_array * p_this,
     void const * p_ref_min,
     void const * p_ref_max)
 {
     cv_bool b_result = cv_false;
-    if (p_array)
+    if (p_this)
     {
-        p_array->o_min.pc_void = p_ref_min;
-        p_array->o_max.pc_void = p_ref_max;
+        cv_debug_init_(p_this, cv_sizeof_(*p_this));
+        p_this->o_min.pc_void = p_ref_min;
+        p_this->o_max.pc_void = p_ref_max;
         b_result = cv_true;
     }
     else
@@ -74,18 +108,18 @@ cv_bool cv_array_init_range(
 }
 
 cv_bool cv_array_init_0(
-    cv_array * p_array,
+    cv_array * p_this,
     char const * p_ref0,
     long i_ref0_max_len)
 {
     cv_bool b_result = cv_false;
-    if (p_array && p_ref0 && i_ref0_max_len)
+    if (p_this && p_ref0 && i_ref0_max_len)
     {
         long const i_ref0_len = cv_memory_find_0(p_ref0,
             i_ref0_max_len);
         if (i_ref0_len >= 0)
         {
-            if (cv_array_init_range(p_array,
+            if (cv_array_init_range(p_this,
                     p_ref0,
                     p_ref0 + i_ref0_len))
             {
@@ -109,99 +143,14 @@ cv_bool cv_array_init_0(
 }
 
 long cv_array_len(
-    cv_array const * p_array)
+    cv_array const * p_this)
 {
     long i_count = 0;
-    if (p_array)
+    if (p_this)
     {
         i_count = ((
-            p_array->o_max.pc_char
-            - p_array->o_min.pc_char) & 0x7FFFFFFFL);
-    }
-    else
-    {
-        cv_debug_msg_("null ptr");
-    }
-    return i_count;
-}
-
-long cv_array_short_count(
-    cv_array const * p_array)
-{
-    long i_count = 0;
-    if (p_array)
-    {
-        i_count = ((
-            p_array->o_max.pc_short
-            - p_array->o_min.pc_short) & 0x7FFFFFFFL);
-    }
-    else
-    {
-        cv_debug_msg_("null ptr");
-    }
-    return i_count;
-}
-
-long cv_array_int_count(
-    cv_array const * p_array)
-{
-    long i_count = 0;
-    if (p_array)
-    {
-        i_count = ((
-            p_array->o_max.pc_int
-            - p_array->o_min.pc_int) & 0x7FFFFFFFL);
-    }
-    else
-    {
-        cv_debug_msg_("null ptr");
-    }
-    return i_count;
-}
-
-long cv_array_long_count(
-    cv_array const * p_array)
-{
-    long i_count = 0;
-    if (p_array)
-    {
-        i_count = ((
-            p_array->o_max.pc_long
-            - p_array->o_min.pc_long) & 0x7FFFFFFFL);
-    }
-    else
-    {
-        cv_debug_msg_("null ptr");
-    }
-    return i_count;
-}
-
-long cv_array_ll_count(
-    cv_array const * p_array)
-{
-    long i_count = 0;
-    if (p_array)
-    {
-        i_count = ((
-            p_array->o_max.pc_ll
-            - p_array->o_min.pc_ll) & 0x7FFFFFFFL);
-    }
-    else
-    {
-        cv_debug_msg_("null ptr");
-    }
-    return i_count;
-}
-
-long cv_array_ptr_count(
-    cv_array const * p_array)
-{
-    long i_count = 0;
-    if (p_array)
-    {
-        i_count = ((
-            p_array->o_max.ppc_void
-            - p_array->o_min.ppc_void) & 0x7FFFFFFFL);
+            p_this->o_max.pc_char
+            - p_this->o_min.pc_char) & 0x7FFFFFFFL);
     }
     else
     {

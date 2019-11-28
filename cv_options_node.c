@@ -16,6 +16,8 @@
 
 #include <cv_sizeof.h>
 
+#include <cv_debug.h>
+
 static cv_bool cv_options_node_init_node(
     cv_options_node * p_this,
     cv_list * p_parent)
@@ -46,21 +48,18 @@ static cv_bool cv_options_node_init_buf0(
     cv_bool b_result = cv_false;
     if (p_this && p_array)
     {
-        if (cv_buffer_init(&p_this->o_buffer))
+        long const i_array_len = cv_array_len(p_array);
+        if (cv_buffer_init(&p_this->o_buffer, i_array_len))
         {
-            long const i_array_len = cv_array_len(p_array);
-            if (cv_buffer_realloc(&p_this->o_buffer, i_array_len))
+            if (i_array_len)
             {
-                if (i_array_len)
-                {
-                    cv_memory_copy(
-                        p_this->o_buffer.o_array.o_min.p_void,
-                        i_array_len,
-                        p_array->o_min.pc_void,
-                        i_array_len);
-                }
-                b_result = cv_true;
+                cv_memory_copy(
+                    p_this->o_buffer.o_array.o_min.p_void,
+                    i_array_len,
+                    p_array->o_min.pc_void,
+                    i_array_len);
             }
+            b_result = cv_true;
         }
     }
     return b_result;
@@ -80,29 +79,34 @@ static cv_bool cv_options_node_init(
     cv_options_node_desc const * p_desc)
 {
     cv_bool b_result = cv_false;
-    if (p_this)
+    if (p_this && p_desc)
     {
-        cv_memory_zero(p_this, cv_sizeof_(cv_options_node));
-        if (p_desc)
+        cv_debug_init_(p_this, cv_sizeof_(*p_this));
+        if (cv_options_node_init_node(p_this, p_desc->p_parent))
         {
-            if (cv_options_node_init_node(p_this, p_desc->p_parent))
+            if (cv_options_node_init_buf0(p_this, p_desc->p_array))
             {
-                if (cv_options_node_init_buf0(p_this, p_desc->p_array))
-                {
-                    b_result = cv_true;
+                b_result = cv_true;
 #if 0
-                    if (!b_result)
-                    {
-                        cv_options_node_cleanup_buf0(p_this);
-                    }
-#endif
-                }
                 if (!b_result)
                 {
-                    cv_options_node_cleanup_node(p_this);
+                    cv_options_node_cleanup_buf0(p_this);
                 }
+#endif
+            }
+            if (!b_result)
+            {
+                cv_options_node_cleanup_node(p_this);
             }
         }
+        if (!b_result)
+        {
+            cv_debug_cleanup_(p_this, cv_sizeof_(*p_this));
+        }
+    }
+    else
+    {
+        cv_debug_msg_("null ptr");
     }
     return b_result;
 }
@@ -114,6 +118,11 @@ static void cv_options_node_cleanup(
     {
         cv_options_node_cleanup_buf0(p_this);
         cv_options_node_cleanup_node(p_this);
+        cv_debug_cleanup_(p_this, cv_sizeof_(*p_this));
+    }
+    else
+    {
+        cv_debug_msg_("null ptr");
     }
 }
 
@@ -131,11 +140,21 @@ cv_options_node * cv_options_node_create(
             }
             else
             {
+                cv_debug_msg_("failed init");
                 cv_options_pool_free(p_this);
                 p_this = cv_null_;
             }
         }
+        else
+        {
+            cv_debug_msg_("out of memory");
+        }
     }
+    else
+    {
+        cv_debug_msg_("null ptr");
+    }
+
     return p_this;
 }
 

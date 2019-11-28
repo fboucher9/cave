@@ -7,6 +7,11 @@ void cv_memory_zero(
     void * p_buf,
     long i_buf_len);
 
+void cv_memory_fill(
+    void * p_buf,
+    long i_buf_len,
+    unsigned char c_value);
+
 long cv_memory_copy(
     void * p_dst,
     long i_dst_len,

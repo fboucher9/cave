@@ -28,6 +28,8 @@
 
 #include <cv_array_it.h>
 
+#include <cv_debug.h>
+
 cv_bool cv_options_load(void)
 {
     cv_bool b_result = cv_false;
@@ -72,6 +74,7 @@ void cv_options_cleanup(
     {
         cv_options_cleanup_list(p_this);
         cv_list_cleanup(&p_this->o_list);
+        cv_debug_cleanup_(p_this, cv_sizeof_(*p_this));
     }
 }
 
@@ -85,9 +88,15 @@ cv_bool cv_options_init(
     cv_bool b_result = cv_false;
     if (p_this)
     {
-        cv_memory_zero(p_this, cv_sizeof_(cv_options));
-        cv_list_init(&p_this->o_list);
-        b_result = cv_true;
+        cv_debug_init_(p_this, cv_sizeof_(*p_this));
+        if (cv_list_init(&p_this->o_list))
+        {
+            b_result = cv_true;
+        }
+        if (!b_result)
+        {
+            cv_debug_cleanup_(p_this, cv_sizeof_(*p_this));
+        }
     }
     return b_result;
 }

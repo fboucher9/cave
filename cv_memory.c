@@ -28,6 +28,21 @@ void cv_memory_zero(
     }
 }
 
+void cv_memory_fill(
+    void * p_buf,
+    long i_buf_len,
+    unsigned char c_value)
+{
+    if (p_buf && i_buf_len)
+    {
+        cv_runtime_memset(p_buf, c_value, i_buf_len);
+    }
+    else
+    {
+        cv_debug_msg_("invalid param");
+    }
+}
+
 long cv_memory_copy(
     void * p_dst,
     long i_dst_len,

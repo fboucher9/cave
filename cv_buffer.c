@@ -6,19 +6,62 @@
 
 #include <cv_null.h>
 
+#include <cv_debug.h>
+
+static cv_bool cv_buffer_realloc(
+    cv_buffer * p_this,
+    long i_length)
+{
+    cv_bool b_result = cv_false;
+    if (p_this && i_length)
+    {
+        char * const p_array = cv_new_array_(char, i_length);
+        if (p_array)
+        {
+            if (cv_array_init_vector(&p_this->o_array,
+                    p_array,
+                    i_length))
+            {
+                b_result = cv_true;
+            }
+        }
+        else
+        {
+            cv_debug_msg_("out of memory");
+        }
+    }
+    else
+    {
+        cv_debug_msg_("null ptr");
+    }
+    return b_result;
+}
+
 /*
 
 */
 cv_bool cv_buffer_init(
-    cv_buffer * p_this)
+    cv_buffer * p_this,
+    long i_length)
 {
     cv_bool b_result = cv_false;
-    if (p_this)
+    if (p_this && i_length)
     {
-        if (cv_array_init(&p_this->o_array))
+        cv_debug_init(p_this, cv_sizeof_(*p_this));
+
+        if (cv_buffer_realloc(p_this, i_length))
         {
             b_result = cv_true;
         }
+
+        if (!b_result)
+        {
+            cv_debug_cleanup_(p_this, cv_sizeof_(*p_this));
+        }
+    }
+    else
+    {
+        cv_debug_msg_("null ptr");
     }
     return b_result;
 } /* _init() */
@@ -36,47 +79,11 @@ void cv_buffer_cleanup(
         if (p_this->o_array.o_min.pc_void)
         {
             cv_delete_(p_this->o_array.o_min.p_void);
-            cv_array_cleanup(&p_this->o_array);
         }
+        cv_array_cleanup(&p_this->o_array);
+        cv_debug_cleanup_(p_this, cv_sizeof_(*p_this));
     }
 } /* _cleanup() */
-
-cv_bool cv_buffer_realloc(
-    cv_buffer * p_this,
-    long i_length)
-{
-    cv_bool b_result = cv_false;
-    if (i_length)
-    {
-        long const i_old_length = cv_buffer_len(p_this);
-        if (i_length != i_old_length)
-        {
-            cv_buffer_cleanup(p_this);
-            {
-                char * const p_array = cv_new_array_(char, i_length);
-                if (p_array)
-                {
-                    if (cv_array_init_range(&p_this->o_array,
-                            p_array,
-                            p_array + i_length))
-                    {
-                        b_result = cv_true;
-                    }
-                }
-            }
-        }
-        else
-        {
-            b_result = cv_true;
-        }
-    }
-    else
-    {
-        cv_buffer_cleanup(p_this);
-        b_result = cv_true;
-    }
-    return b_result;
-}
 
 /* Get length of buffer */
 long cv_buffer_len(

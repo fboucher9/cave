@@ -4,6 +4,10 @@
 
 #include <cv_null.h>
 
+#include <cv_debug.h>
+
+#include <cv_sizeof.h>
+
 cv_bool cv_options_desc_init(
     cv_options_desc * p_options_desc,
     char const * const * p_args_min,
@@ -12,11 +16,16 @@ cv_bool cv_options_desc_init(
     cv_bool b_result = cv_false;
     if (p_options_desc)
     {
+        cv_debug_init_(p_options_desc, cv_sizeof_(*p_options_desc));
         if (cv_array_init_range(&p_options_desc->o_array,
                 p_args_min,
                 p_args_max))
         {
             b_result = cv_true;
+        }
+        if (!b_result)
+        {
+            cv_debug_cleanup_(p_options_desc, cv_sizeof_(*p_options_desc));
         }
     }
     return b_result;
@@ -28,6 +37,7 @@ void cv_options_desc_cleanup(
     if (p_options_desc)
     {
         cv_array_cleanup(&p_options_desc->o_array);
+        cv_debug_cleanup_(p_options_desc, cv_sizeof_(*p_options_desc));
     }
 }
 

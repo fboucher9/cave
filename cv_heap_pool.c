@@ -22,14 +22,16 @@
 
 #include <cv_null.h>
 
+#include <cv_debug.h>
+
 cv_bool cv_heap_pool_init(
     cv_heap_pool * p_this,
     long i_len)
 {
     cv_bool b_result = cv_false;
-    if (p_this)
+    if (p_this && i_len)
     {
-        cv_memory_zero(p_this, cv_sizeof_(cv_heap_pool));
+        cv_debug_init_(p_this, cv_sizeof_(*p_this));
         p_this->p_mutex = cv_mutex_mgr_acquire();
         if (p_this->p_mutex)
         {
@@ -38,10 +40,13 @@ cv_bool cv_heap_pool_init(
                 if (cv_list_init(&p_this->o_free_list))
                 {
                     p_this->i_len = i_len;
-
                     b_result = cv_true;
                 }
             }
+        }
+        if (!b_result)
+        {
+            cv_debug_cleanup_(p_this, cv_sizeof_(*p_this));
         }
     }
     return b_result;
@@ -64,6 +69,7 @@ void cv_heap_pool_cleanup(
             cv_mutex_mgr_release(p_this->p_mutex);
             p_this->p_mutex = cv_null_;
         }
+        cv_debug_cleanup_(p_this, cv_sizeof_(*p_this));
     }
 }
 

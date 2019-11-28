@@ -46,25 +46,15 @@ cv_bool cv_array_init_0(
     char const * p_ref0,
     long i_ref0_max_len);
 
+cv_bool cv_array_init_vector(
+    cv_array * p_array,
+    void const * p_buf,
+    long i_buf_len);
+
 void cv_array_cleanup(
     cv_array * p_array);
 
 long cv_array_len(
-    cv_array const * p_array);
-
-long cv_array_short_count(
-    cv_array const * p_array);
-
-long cv_array_int_count(
-    cv_array const * p_array);
-
-long cv_array_long_count(
-    cv_array const * p_array);
-
-long cv_array_ll_count(
-    cv_array const * p_array);
-
-long cv_array_ptr_count(
     cv_array const * p_array);
 
 #endif /* #ifndef cv_array_h_ */

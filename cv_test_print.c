@@ -14,6 +14,8 @@
 
 #include <cv_string_it.h>
 
+#include <cv_sizeof.h>
+
 void cv_print_array(
     cv_array const * p_array)
 {
@@ -35,7 +37,7 @@ void cv_print_number(
 {
     char c_buffer[64u];
     cv_array o_buffer = cv_array_null_;
-    if (cv_array_init_range(&o_buffer, c_buffer, c_buffer + sizeof(c_buffer)))
+    if (cv_array_init_vector(&o_buffer, c_buffer, cv_sizeof_(c_buffer)))
     {
         cv_string_it o_string_it = cv_string_it_initializer_;
         if (cv_string_it_init(&o_string_it, &o_buffer))
