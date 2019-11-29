@@ -188,7 +188,7 @@ void cv_heap_section_list_cleanup(
     {
         /* Destroy all nodes */
         cv_node_it o_node_it = cv_node_it_initializer_;
-        if (cv_node_it_init(&o_node_it, &p_this->o_list))
+        cv_node_it_init(&o_node_it, &p_this->o_list);
         {
             cv_heap_section_ptr o_ptr = cv_ptr_null_;
             while (cv_node_it_first(&o_node_it, &o_ptr.o_node_ptr))
@@ -196,6 +196,7 @@ void cv_heap_section_list_cleanup(
                 cv_heap_section_node_destroy(o_ptr.p_heap_section_node);
             }
         }
+        cv_node_it_cleanup(&o_node_it);
 
         cv_list_cleanup(&p_this->o_list);
 

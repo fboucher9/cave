@@ -70,6 +70,7 @@ cv_profile_cflags = \
 cv_defines = \
     -D _DEFAULT_SOURCE \
     -D cv_debug_ \
+    -D cv_linux_ \
     -D cv_have_libc_ \
     -D cv_have_pthread_ \
 

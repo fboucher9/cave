@@ -47,7 +47,7 @@ void cv_heap_large_unload(void)
         /* Free all items ... */
         {
             cv_node_it o_node_it = cv_node_it_initializer_;
-            if (cv_node_it_init(&o_node_it, &g_heap_large_free_list))
+            cv_node_it_init(&o_node_it, &g_heap_large_free_list);
             {
                 cv_heap_node_ptr o_heap_ptr = cv_ptr_null_;
                 while (cv_node_it_first(&o_node_it, &o_heap_ptr.o_node_ptr))
@@ -59,8 +59,8 @@ void cv_heap_large_unload(void)
                     /* Free memory */
                     cv_runtime_free(o_heap_ptr.p_void);
                 }
-                cv_node_it_cleanup(&o_node_it);
             }
+            cv_node_it_cleanup(&o_node_it);
         }
         cv_list_cleanup(&g_heap_large_used_list);
         cv_list_cleanup(&g_heap_large_free_list);
@@ -81,7 +81,7 @@ static cv_heap_node * cv_heap_large_find_existing(
 {
     cv_heap_node_ptr o_heap_ptr = cv_ptr_null_;
     cv_node_it o_free_it = cv_node_it_initializer_;
-    if (cv_node_it_init(&o_free_it, &g_heap_large_free_list))
+    cv_node_it_init(&o_free_it, &g_heap_large_free_list);
     {
         cv_bool b_found_existing = cv_false;
         while (!b_found_existing &&
@@ -93,8 +93,8 @@ static cv_heap_node * cv_heap_large_find_existing(
                 b_found_existing = 1;
             }
         }
-        cv_node_it_cleanup(&o_free_it);
     }
+    cv_node_it_cleanup(&o_free_it);
     return o_heap_ptr.p_heap_node;
 }
 

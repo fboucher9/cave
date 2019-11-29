@@ -48,10 +48,12 @@ void cv_options_unload(void)
 static void cv_options_cleanup_list(
     cv_options * p_this)
 {
-    if (p_this)
+    cv_debug_assert_(
+        !!p_this,
+        "null ptr");
     {
-        cv_node_it o_node_it;
-        if (cv_node_it_init(&o_node_it, &p_this->o_list))
+        cv_node_it o_node_it = cv_node_it_initializer_;
+        cv_node_it_init(&o_node_it, &p_this->o_list);
         {
             cv_options_node_ptr o_options_node_ptr;
             while (cv_node_it_first(&o_node_it,
@@ -60,8 +62,8 @@ static void cv_options_cleanup_list(
                 cv_options_node_destroy(
                     o_options_node_ptr.p_options_node);
             }
-            cv_node_it_cleanup(&o_node_it);
         }
+        cv_node_it_cleanup(&o_node_it);
     }
 }
 

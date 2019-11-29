@@ -57,15 +57,15 @@ void cv_heap_pool_cleanup(
         /* Discard all free nodes */
         {
             cv_node_it o_node_it = cv_node_it_initializer_;
-            if (cv_node_it_init(&o_node_it, &p_this->o_free_list))
+            cv_node_it_init(&o_node_it, &p_this->o_free_list);
             {
                 cv_heap_node_ptr o_ptr = cv_ptr_null_;
                 while (cv_node_it_first(&o_node_it, &o_ptr.o_node_ptr))
                 {
                     cv_heap_node_cleanup(o_ptr.p_heap_node);
                 }
-                cv_node_it_cleanup(&o_node_it);
             }
+            cv_node_it_cleanup(&o_node_it);
         }
 
         cv_node_join(
@@ -91,7 +91,7 @@ static void * cv_heap_pool_alloc_cb(
     {
         /* Look for free compatible item */
         cv_heap_it o_heap_it = cv_heap_it_initializer_;
-        if (cv_heap_it_init(&o_heap_it, &p_this->o_free_list))
+        cv_heap_it_init(&o_heap_it, &p_this->o_free_list);
         {
             cv_heap_node_ptr o_heap_ptr = cv_ptr_null_;
             if (cv_heap_it_next(&o_heap_it, &o_heap_ptr))
@@ -119,8 +119,8 @@ static void * cv_heap_pool_alloc_cb(
                 p_result = cv_heap_node_to_payload(
                     o_heap_ptr.p_heap_node);
             }
-            cv_heap_it_cleanup(&o_heap_it);
         }
+        cv_heap_it_cleanup(&o_heap_it);
     }
     return p_result;
 }

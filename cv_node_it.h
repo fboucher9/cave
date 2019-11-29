@@ -25,7 +25,7 @@ struct cv_node_it
 
 #define cv_node_it_initializer_ { cv_ptr_null_, cv_ptr_null_ }
 
-cv_bool cv_node_it_init(
+void cv_node_it_init(
     cv_node_it * p_this,
     cv_list const * p_list);
 

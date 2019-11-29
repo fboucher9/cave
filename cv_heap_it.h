@@ -16,7 +16,7 @@ struct cv_heap_it
 
 #define cv_heap_it_initializer_ { cv_node_it_initializer_ }
 
-cv_bool cv_heap_it_init(
+void cv_heap_it_init(
     cv_heap_it * p_this,
     cv_list const * p_list);
 

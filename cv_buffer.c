@@ -8,6 +8,8 @@
 
 #include <cv_debug.h>
 
+#include <cv_sizeof.h>
+
 static cv_bool cv_buffer_realloc(
     cv_buffer * p_this,
     long i_length)
@@ -17,11 +19,12 @@ static cv_bool cv_buffer_realloc(
         p_this && i_length,
         "invalid param");
     {
-        char * const p_array = cv_new_array_(char, i_length);
-        if (p_array)
+        cv_array_ptr o_array_ptr = cv_ptr_null_;
+        o_array_ptr.p_void = cv_heap_alloc(i_length);
+        if (o_array_ptr.p_void)
         {
             cv_array_init_vector(&p_this->o_array,
-                    p_array,
+                    o_array_ptr.p_void,
                     i_length);
             b_result = cv_true;
         }
@@ -74,7 +77,7 @@ void cv_buffer_cleanup(
     {
         if (p_this->o_array.o_min.pc_void)
         {
-            cv_delete_(p_this->o_array.o_min.p_void);
+            cv_heap_free(p_this->o_array.o_min.p_void);
         }
         cv_array_cleanup(&p_this->o_array);
         cv_debug_cleanup_(p_this, cv_sizeof_(*p_this));

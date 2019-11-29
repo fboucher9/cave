@@ -4,6 +4,8 @@
 
 #include <cv_thread_impl.h>
 
+#include <cv_thread_ptr.h>
+
 #include <cv_heap.h>
 
 #include <cv_memory.h>
@@ -23,29 +25,28 @@ cv_thread * cv_thread_create(
     cv_thread_desc const * p_thread_desc)
 {
     cv_thread * p_result = cv_null_;
-    if (p_thread_desc)
+    cv_debug_assert_(
+        !!p_thread_desc,
+        "invalid param");
     {
-        cv_thread * const p_this = cv_new_(cv_thread);
-        if (p_this)
+        cv_thread_ptr o_thread_ptr = cv_ptr_null_;
+        o_thread_ptr.p_void = cv_heap_alloc(cv_sizeof_(cv_thread));
+        if (o_thread_ptr.p_void)
         {
-            if (cv_thread_init(p_this, p_thread_desc))
+            if (cv_thread_init(o_thread_ptr.p_thread, p_thread_desc))
             {
-                p_result = p_this;
+                p_result = o_thread_ptr.p_thread;
             }
             else
             {
                 cv_debug_msg_("failed init");
-                cv_delete_(p_this);
+                cv_heap_free(o_thread_ptr.p_void);
             }
         }
         else
         {
             cv_debug_msg_("out of memory");
         }
-    }
-    else
-    {
-        cv_debug_msg_("invalid param");
     }
     return p_result;
 }
@@ -54,6 +55,6 @@ void cv_thread_destroy(
     cv_thread * p_this)
 {
     cv_thread_cleanup(p_this);
-    cv_delete_(p_this);
+    cv_heap_free(p_this);
 }
 

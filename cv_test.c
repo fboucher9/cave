@@ -40,6 +40,8 @@
 
 #include <cv_file_test.h>
 
+#include <cv_sizeof.h>
+
 static void cv_test_job(
     void * p_context)
 {
@@ -63,9 +65,9 @@ static void cv_test_dump_options(
     cv_options const * p_options)
 {
     cv_options_it o_options_it = cv_options_it_initializer_;
-    if (cv_options_it_init(
+    cv_options_it_init(
             &o_options_it,
-            p_options))
+            p_options);
     {
         cv_array o_cur;
         while (cv_options_it_next(&o_options_it, &o_cur))
@@ -75,8 +77,8 @@ static void cv_test_dump_options(
             cv_print_0("]", 80);
             cv_print_nl();
         }
-        cv_options_it_cleanup(&o_options_it);
     }
+    cv_options_it_cleanup(&o_options_it);
 }
 
 static void cv_test_debug(void)
@@ -238,7 +240,7 @@ static cv_bool cv_test_main_cb(
 
     {
         cv_options_it o_options_it = cv_options_it_initializer_;
-        if (cv_options_it_init(&o_options_it, p_options))
+        cv_options_it_init(&o_options_it, p_options);
         {
             cv_array o_string = cv_array_null_;
             if (cv_options_it_next(&o_options_it, &o_string))
@@ -359,8 +361,8 @@ static cv_bool cv_test_main_cb(
                     cv_print_nl();
                 }
             }
-            cv_options_it_cleanup(&o_options_it);
         }
+        cv_options_it_cleanup(&o_options_it);
     }
 
     cv_print_0("goodbye.", 80);
