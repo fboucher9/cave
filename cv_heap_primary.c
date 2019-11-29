@@ -33,10 +33,9 @@ cv_bool cv_heap_primary_load(void)
 
     o_desc.i_grow_len = g_heap_primary_max;
 
-    if (cv_heap_section_list_init(&g_cv_heap_primary_section_list, &o_desc))
-    {
-        b_result = cv_true;
-    }
+    cv_heap_section_list_init(&g_cv_heap_primary_section_list, &o_desc);
+
+    b_result = cv_true;
 
     return b_result;
 }

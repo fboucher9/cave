@@ -16,7 +16,7 @@ struct cv_string_it
 
 #define cv_string_it_initializer_ { cv_array_null_ }
 
-cv_bool cv_string_it_init(
+void cv_string_it_init(
     cv_string_it * p_string_it,
     cv_array const * p_array);
 

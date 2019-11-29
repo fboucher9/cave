@@ -18,7 +18,7 @@ struct cv_options
 
 #define cv_options_initializer_ { cv_list_initializer_ }
 
-cv_bool cv_options_init(
+void cv_options_init(
     cv_options * p_this);
 
 void cv_options_cleanup(

@@ -165,34 +165,26 @@ static void cv_heap_section_node_destroy(
     }
 }
 
-cv_bool cv_heap_section_list_init(
+void cv_heap_section_list_init(
     cv_heap_section_list * p_this,
     cv_heap_section_desc const * p_desc)
 {
-    cv_bool b_result = cv_false;
-    if (p_this && p_desc)
+    cv_debug_assert_(
+        p_this && p_desc,
+        "null ptr");
     {
         p_this->o_desc = *p_desc;
-        if (cv_list_init(&p_this->o_list))
-        {
-            cv_array o_null_array = cv_array_null_;
-            if (cv_array_it_init(&p_this->o_array_it, &o_null_array))
-            {
-                b_result = cv_true;
-            }
-        }
+        cv_list_init(&p_this->o_list);
+        cv_array_it_init_vector(&p_this->o_array_it, cv_null_, 0);
     }
-    else
-    {
-        cv_debug_msg_("null ptr");
-    }
-    return b_result;
 }
 
 void cv_heap_section_list_cleanup(
     cv_heap_section_list * p_this)
 {
-    if (p_this)
+    cv_debug_assert_(
+        !!p_this,
+        "null ptr");
     {
         /* Destroy all nodes */
         cv_node_it o_node_it = cv_node_it_initializer_;
@@ -209,17 +201,15 @@ void cv_heap_section_list_cleanup(
 
         cv_array_it_cleanup(&p_this->o_array_it);
     }
-    else
-    {
-        cv_debug_msg_("null ptr");
-    }
 }
 
 static cv_bool cv_heap_section_list_grow(
     cv_heap_section_list * p_this)
 {
     cv_bool b_result = cv_false;
-    if (p_this)
+    cv_debug_assert_(
+        !!p_this,
+        "null ptr");
     {
         cv_heap_section_ptr o_ptr = cv_ptr_null_;
 
@@ -235,21 +225,10 @@ static cv_bool cv_heap_section_list_grow(
         {
             /* Setup array iterator to new buffer */
             cv_array_it_cleanup(&p_this->o_array_it);
-            if (cv_array_it_init(&p_this->o_array_it,
-                &o_ptr.p_heap_section_node->o_payload))
-            {
-                b_result = cv_true;
-            }
-            else
-            {
-                cv_heap_section_node_destroy(
-                    o_ptr.p_heap_section_node);
-            }
+            cv_array_it_init(&p_this->o_array_it,
+                &o_ptr.p_heap_section_node->o_payload);
+            b_result = cv_true;
         }
-    }
-    else
-    {
-        cv_debug_msg_("null ptr");
     }
     return b_result;
 }
@@ -259,47 +238,41 @@ void * cv_heap_section_list_alloc(
     long i_len)
 {
     cv_array_ptr o_data_ptr = cv_ptr_null_;
-    if (p_this)
+    cv_debug_assert_(
+        !!p_this,
+        "null ptr");
+    cv_debug_assert_(
+        i_len > 0,
+        "invalid len");
     {
-        if (i_len)
-        {
-            /* Align len */
-            long const i_aligned_len = cv_sizeof_align(i_len, 8);
+        /* Align len */
+        long const i_aligned_len = cv_sizeof_align(i_len, 8);
 
-            /* Check for grow */
-            if (cv_array_it_get_next_array(&p_this->o_array_it,
-                    i_aligned_len,
-                    &o_data_ptr))
-            {
-            }
-            else
-            {
-                if (cv_heap_section_list_grow(p_this))
-                {
-                    if (cv_array_it_get_next_array(&p_this->o_array_it,
-                            i_aligned_len,
-                            &o_data_ptr))
-                    {
-                    }
-                    else
-                    {
-                        cv_debug_msg_("too big");
-                    }
-                }
-                else
-                {
-                    cv_debug_msg_("grow fail");
-                }
-            }
+        /* Check for grow */
+        if (cv_array_it_get_next_array(&p_this->o_array_it,
+                i_aligned_len,
+                &o_data_ptr))
+        {
         }
         else
         {
-            cv_debug_msg_("zero len");
+            if (cv_heap_section_list_grow(p_this))
+            {
+                if (cv_array_it_get_next_array(&p_this->o_array_it,
+                        i_aligned_len,
+                        &o_data_ptr))
+                {
+                }
+                else
+                {
+                    cv_debug_msg_("too big");
+                }
+            }
+            else
+            {
+                cv_debug_msg_("grow fail");
+            }
         }
-    }
-    else
-    {
-        cv_debug_msg_("null ptr");
     }
     return o_data_ptr.p_void;
 }

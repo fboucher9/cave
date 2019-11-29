@@ -13,26 +13,22 @@ static cv_bool cv_buffer_realloc(
     long i_length)
 {
     cv_bool b_result = cv_false;
-    if (p_this && i_length)
+    cv_debug_assert_(
+        p_this && i_length,
+        "invalid param");
     {
         char * const p_array = cv_new_array_(char, i_length);
         if (p_array)
         {
-            if (cv_array_init_vector(&p_this->o_array,
+            cv_array_init_vector(&p_this->o_array,
                     p_array,
-                    i_length))
-            {
-                b_result = cv_true;
-            }
+                    i_length);
+            b_result = cv_true;
         }
         else
         {
             cv_debug_msg_("out of memory");
         }
-    }
-    else
-    {
-        cv_debug_msg_("null ptr");
     }
     return b_result;
 }
@@ -45,9 +41,11 @@ cv_bool cv_buffer_init(
     long i_length)
 {
     cv_bool b_result = cv_false;
-    if (p_this && i_length)
+    cv_debug_assert_(
+        p_this && i_length,
+        "invalid param");
     {
-        cv_debug_init(p_this, cv_sizeof_(*p_this));
+        cv_debug_init_(p_this, cv_sizeof_(*p_this));
 
         if (cv_buffer_realloc(p_this, i_length))
         {
@@ -58,10 +56,6 @@ cv_bool cv_buffer_init(
         {
             cv_debug_cleanup_(p_this, cv_sizeof_(*p_this));
         }
-    }
-    else
-    {
-        cv_debug_msg_("null ptr");
     }
     return b_result;
 } /* _init() */
@@ -74,7 +68,9 @@ Free resources allocated for cv_buffer object.
 void cv_buffer_cleanup(
     cv_buffer * p_this)
 {
-    if (p_this)
+    cv_debug_assert_(
+        !!p_this,
+        "null ptr");
     {
         if (p_this->o_array.o_min.pc_void)
         {
@@ -90,7 +86,9 @@ long cv_buffer_len(
     cv_buffer const * p_this)
 {
     long i_len = 0;
-    if (p_this)
+    cv_debug_assert_(
+        !!p_this,
+        "null ptr");
     {
         i_len = cv_array_len(
             &(p_this->o_array));

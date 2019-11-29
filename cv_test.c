@@ -88,7 +88,7 @@ static void cv_test_poll_stdin(void)
 {
     static char g_buf[80u];
     cv_array o_string = cv_array_null_;
-    if (cv_array_init_vector(&o_string, g_buf, cv_sizeof_(g_buf)))
+    cv_array_init_vector(&o_string, g_buf, cv_sizeof_(g_buf));
     {
         cv_file_poll o_poll_stdin = cv_file_poll_initializer_;
         o_poll_stdin.p_file = &g_cv_file_std_in.o_file;
@@ -105,9 +105,8 @@ static void cv_test_poll_stdin(void)
         {
             cv_debug_msg_("poll error");
         }
-
-        cv_array_cleanup(&o_string);
     }
+    cv_array_cleanup(&o_string);
 }
 
 static void cv_test_thread(void)
@@ -200,7 +199,7 @@ static void cv_test_stdin(void)
         {
             cv_array o_string = cv_array_null_;
             unsigned char a_buf[1u];
-            if (cv_array_init_vector(&o_string, a_buf, cv_sizeof_(a_buf)))
+            cv_array_init_vector(&o_string, a_buf, cv_sizeof_(a_buf));
             {
                 long const i_file_read_result =
                     cv_file_read(&g_cv_file_std_in.o_file,
@@ -220,12 +219,8 @@ static void cv_test_stdin(void)
                 {
                     b_continue = cv_false;
                 }
-                cv_array_cleanup(&o_string);
             }
-            else
-            {
-                b_continue = cv_false;
-            }
+            cv_array_cleanup(&o_string);
         }
     }
 

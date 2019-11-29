@@ -42,7 +42,7 @@ to null pointer values.
 #define cv_list_initializer_ { cv_node_initializer_ }
 
 /* see cv_list.c for more details. */
-cv_bool cv_list_init(
+void cv_list_init(
     cv_list * p_this);
 
 /* see cv_list.c for more details. */

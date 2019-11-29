@@ -14,24 +14,24 @@
 #include <execinfo.h>
 #endif /* #if defined cv_debug_verbose_ */
 
-void cv_debug_msg(
+void xx_debug_msg(
     char const * p_msg0)
 {
     cv_runtime_printf("*** ouch! %s ***\n",
         p_msg0);
 }
 
-void cv_debug_assert(
+void xx_debug_assert(
     cv_bool b_expr,
     char const * p_msg0)
 {
     if (!b_expr)
     {
-        cv_debug_break(p_msg0);
+        xx_debug_break(p_msg0);
     }
 }
 
-void cv_debug_break(
+void xx_debug_break(
     char const * p_msg0)
 {
     cv_runtime_printf("*** assert! %s ***\n",
@@ -56,7 +56,7 @@ static void cv_debug_verbose_trace(
 }
 #endif /* #if defined cv_debug_verbose_ */
 
-void cv_debug_init(
+void xx_debug_init(
     void * p_buf,
     long i_buf_len)
 {
@@ -75,7 +75,7 @@ void cv_debug_init(
 #endif /* #if defined cv_debug_verbose_ */
 }
 
-void cv_debug_cleanup(
+void xx_debug_cleanup(
     void * p_buf,
     long i_buf_len)
 {

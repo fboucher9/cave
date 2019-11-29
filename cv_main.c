@@ -25,23 +25,20 @@ cv_options * cv_main_init(
         /* load all plugins */
         if (cv_manager_load())
         {
-            if (cv_options_init(&g_cv_main_options))
+            cv_options_init(&g_cv_main_options);
             {
                 cv_options_desc o_options_desc = cv_options_desc_initializer_;
 
-                if (cv_options_desc_init(&o_options_desc,
+                cv_options_desc_init(&o_options_desc,
                         argv,
-                        argv + argc))
+                        argv + argc);
+                if (cv_options_setup(&g_cv_main_options, &o_options_desc))
                 {
-                    if (cv_options_setup(&g_cv_main_options, &o_options_desc))
-                    {
-                        g_cv_main_init_done = cv_true;
+                    g_cv_main_init_done = cv_true;
 
-                        p_options = & g_cv_main_options;
-                    }
-
-                    cv_options_desc_cleanup(&o_options_desc);
+                    p_options = & g_cv_main_options;
                 }
+                cv_options_desc_cleanup(&o_options_desc);
 
                 if (!p_options)
                 {

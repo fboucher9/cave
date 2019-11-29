@@ -4,27 +4,32 @@
 
 #include <cv_memory.h>
 
-cv_bool cv_string_it_init(
+#include <cv_debug.h>
+
+#include <cv_sizeof.h>
+
+void cv_string_it_init(
     cv_string_it * p_string_it,
     cv_array const * p_array)
 {
-    cv_bool b_result = cv_false;
-    if (p_string_it && p_array)
+    cv_debug_assert_(
+        p_string_it && p_array,
+        "null ptr");
     {
-        if (cv_array_init_ref(&p_string_it->o_array, p_array))
-        {
-            b_result = cv_true;
-        }
+        cv_debug_init_(p_string_it, cv_sizeof_(*p_string_it));
+        cv_array_init_ref(&p_string_it->o_array, p_array);
     }
-    return b_result;
 }
 
 void cv_string_it_cleanup(
     cv_string_it * p_string_it)
 {
-    if (p_string_it)
+    cv_debug_assert_ (
+        !!p_string_it,
+        "null ptr");
     {
         cv_array_cleanup(&p_string_it->o_array);
+        cv_debug_cleanup_(p_string_it, cv_sizeof_(*p_string_it));
     }
 }
 
@@ -33,7 +38,9 @@ cv_bool cv_string_it_write_char(
     unsigned char c_data)
 {
     cv_bool b_result = cv_false;
-    if (p_string_it)
+    cv_debug_assert_(
+        !!p_string_it,
+        "null ptr");
     {
         if (p_string_it->o_array.o_min.p_uchar !=
             p_string_it->o_array.o_max.p_uchar)

@@ -42,7 +42,7 @@ struct cv_file_disk_desc
     0, \
     {0} }
 
-cv_bool cv_file_disk_desc_init(
+void cv_file_disk_desc_init(
     cv_file_disk_desc * p_this);
 
 void cv_file_disk_desc_cleanup(

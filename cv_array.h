@@ -29,14 +29,14 @@ struct cv_array
     cv_ptr_initializer_(pc_max) \
 }
 
-cv_bool cv_array_init(
+void cv_array_init(
     cv_array * p_array);
 
-cv_bool cv_array_init_ref(
+void cv_array_init_ref(
     cv_array * p_array,
     cv_array const * p_ref);
 
-cv_bool cv_array_init_range(
+void cv_array_init_range(
     cv_array * p_array,
     void const * p_ref_min,
     void const * p_ref_max);
@@ -46,7 +46,7 @@ cv_bool cv_array_init_0(
     char const * p_ref0,
     long i_ref0_max_len);
 
-cv_bool cv_array_init_vector(
+void cv_array_init_vector(
     cv_array * p_array,
     void const * p_buf,
     long i_buf_len);

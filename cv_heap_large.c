@@ -31,14 +31,10 @@ cv_bool cv_heap_large_load(void)
     cv_bool b_result = cv_false;
     if (!g_heap_large_loaded)
     {
-        if (cv_list_init(&g_heap_large_used_list))
-        {
-            if (cv_list_init(&g_heap_large_free_list))
-            {
-                g_heap_large_loaded = cv_true;
-                b_result = cv_true;
-            }
-        }
+        cv_list_init(&g_heap_large_used_list);
+        cv_list_init(&g_heap_large_free_list);
+        g_heap_large_loaded = cv_true;
+        b_result = cv_true;
     }
     return b_result;
 }

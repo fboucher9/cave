@@ -75,7 +75,7 @@ struct cv_heap_section_list
 
 /* Functions: see cv_heap_section.c for more details */
 
-cv_bool cv_heap_section_list_init(
+void cv_heap_section_list_init(
     cv_heap_section_list * p_this,
     cv_heap_section_desc const * p_desc);
 

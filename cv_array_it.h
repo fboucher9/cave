@@ -16,9 +16,14 @@ struct cv_array_it
 
 #define cv_array_it_initializer_ { cv_array_null_ }
 
-cv_bool cv_array_it_init(
+void cv_array_it_init(
     cv_array_it * p_this,
     cv_array const * p_array);
+
+void cv_array_it_init_vector(
+    cv_array_it * p_this,
+    void const * p_buf,
+    long i_len);
 
 void cv_array_it_cleanup(
     cv_array_it * p_this);

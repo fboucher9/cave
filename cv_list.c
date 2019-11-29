@@ -30,32 +30,17 @@ Returns: boolean value
 Comments: The memory allocated for instance may be uninitialized.
 
 */
-cv_bool cv_list_init(
+void cv_list_init(
     cv_list * p_this)
 {
-    cv_bool b_result = cv_false;
-    if (p_this)
+    cv_debug_assert_(
+        !!p_this,
+        "null ptr");
     {
         cv_debug_init_(p_this, cv_sizeof_(*p_this));
-        if (cv_node_init(
-            &p_this->o_node))
-        {
-            b_result = cv_true;
-        }
-        else
-        {
-            cv_debug_msg_("list init fail");
-        }
-        if (!b_result)
-        {
-            cv_debug_cleanup_(p_this, cv_sizeof_(*p_this));
-        }
+        cv_node_init(
+            &p_this->o_node);
     }
-    else
-    {
-        cv_debug_msg_("list init null ptr");
-    }
-    return b_result;
 }
 
 /*
@@ -76,7 +61,9 @@ Comments: none.
 void cv_list_cleanup(
     cv_list * p_this)
 {
-    if (p_this)
+    cv_debug_assert_(
+        !!p_this,
+        "null ptr");
     {
         /* Assert if not already empty */
         if (p_this->o_node.o_next.p_node !=
@@ -89,10 +76,6 @@ void cv_list_cleanup(
             &p_this->o_node);
 
         cv_debug_cleanup_(p_this, cv_sizeof_(*p_this));
-    }
-    else
-    {
-        cv_debug_msg_("list cleanup null ptr");
     }
 }
 

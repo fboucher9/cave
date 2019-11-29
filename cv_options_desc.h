@@ -18,7 +18,7 @@ struct cv_options_desc
 
 #define cv_options_desc_initializer_ { cv_array_null_ }
 
-cv_bool cv_options_desc_init(
+void cv_options_desc_init(
     cv_options_desc * p_options_desc,
     char const * const * p_args_min,
     char const * const * p_args_max);

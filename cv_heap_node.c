@@ -14,31 +14,26 @@
 
 #include <cv_debug.h>
 
-cv_bool cv_heap_node_init(
+void cv_heap_node_init(
     cv_heap_node * p_this,
     long i_len)
 {
-    cv_bool b_result = cv_false;
-    if (p_this)
+    cv_debug_assert_(
+        !!p_this,
+        "null ptr");
     {
         cv_debug_init_(p_this, cv_sizeof_(cv_heap_node));
-        if (cv_node_init(&p_this->o_node))
-        {
-            p_this->i_len = i_len;
-            b_result = cv_true;
-        }
-        if (!b_result)
-        {
-            cv_debug_cleanup_(p_this, cv_sizeof_(*p_this));
-        }
+        cv_node_init(&p_this->o_node);
+        p_this->i_len = i_len;
     }
-    return b_result;
 }
 
 void cv_heap_node_cleanup(
     cv_heap_node * p_this)
 {
-    if (p_this)
+    cv_debug_assert_(
+        !!p_this,
+        "null ptr");
     {
         cv_node_cleanup(&p_this->o_node);
         cv_debug_cleanup_(p_this, cv_sizeof_(*p_this));
@@ -59,10 +54,8 @@ cv_heap_node * cv_heap_node_create(
 
         if (o_heap_ptr.o_node_ptr.p_void)
         {
-            if (cv_heap_node_init(o_heap_ptr.p_heap_node, i_len))
-            {
-                p_this = o_heap_ptr.p_heap_node;
-            }
+            cv_heap_node_init(o_heap_ptr.p_heap_node, i_len);
+            p_this = o_heap_ptr.p_heap_node;
         }
     }
     return p_this;

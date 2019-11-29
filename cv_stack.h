@@ -6,9 +6,9 @@
 /*
  *  Module: cv_stack.h
  *
- *  Description: Stack is a list of objects which are inserted into the list
- *      using a push, and removed from the list using a pop.  This is called
- *      a LIFO, or last in first out.
+ *  Stack is a list of objects which are inserted into the list using a push,
+ *  and removed from the list using a pop.  This is called a LIFO, or last in
+ *  first out.
  */
 
 #include <cv_stack_pred.h>
@@ -18,8 +18,7 @@
 /*
  *  Structure: cv_stack
  *
- *  Description: Representation of root element of stack or of each object
- *      within the stack.
+ *  Representation of root element of stack or of each object within the stack.
  */
 
 struct cv_stack

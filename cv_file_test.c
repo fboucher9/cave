@@ -35,12 +35,12 @@ static void cv_file_test_dump_buffer(
     long i_read_result)
 {
     cv_array o_read_result = cv_array_null_;
-    if (cv_array_init_vector(&o_read_result,
+    cv_array_init_vector(&o_read_result,
             a_read_buffer,
-            i_read_result))
+            i_read_result);
     {
         cv_array_it o_array_it = cv_array_it_initializer_;
-        if (cv_array_it_init(&o_array_it, &o_read_result))
+        cv_array_it_init(&o_array_it, &o_read_result);
         {
             unsigned char c_data = 0;
             while (cv_array_it_read_next_char(
@@ -51,17 +51,17 @@ static void cv_file_test_dump_buffer(
                 cv_print_hex(c_data);
                 cv_print_nl();
             }
-            cv_array_it_cleanup(&o_array_it);
         }
-        cv_array_cleanup(&o_read_result);
+        cv_array_it_cleanup(&o_array_it);
     }
+    cv_array_cleanup(&o_read_result);
 }
 
 /* */
 static void cv_file_test_disk_read(void)
 {
     cv_file_disk_desc o_desc = cv_file_disk_desc_initializer_;
-    if (cv_file_disk_desc_init(&o_desc))
+    cv_file_disk_desc_init(&o_desc);
     {
         static unsigned char const g_ref_input_bin_name[] =
         {
@@ -90,8 +90,8 @@ static void cv_file_test_disk_read(void)
                 {
                     unsigned char a_read_buffer[8u];
                     cv_array o_read_buffer = cv_array_null_;
-                    if (cv_array_init_vector(&o_read_buffer, a_read_buffer,
-                            cv_sizeof_(a_read_buffer)))
+                    cv_array_init_vector(&o_read_buffer, a_read_buffer,
+                            cv_sizeof_(a_read_buffer));
                     {
                         long const i_read_result = cv_file_read(
                             &o_file_disk.o_file,
@@ -106,20 +106,15 @@ static void cv_file_test_disk_read(void)
                         {
                             b_continue = cv_false;
                         }
-                        cv_array_cleanup(&o_read_buffer);
                     }
-                    else
-                    {
-                        b_continue = cv_false;
-                    }
+                    cv_array_cleanup(&o_read_buffer);
                 }
 
                 cv_file_disk_cleanup(&o_file_disk);
             }
         }
-
-        cv_file_disk_desc_cleanup(&o_desc);
     }
+    cv_file_disk_desc_cleanup(&o_desc);
 }
 
 /*

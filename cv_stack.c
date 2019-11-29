@@ -17,7 +17,7 @@
 
 
 /*
- *
+ *  Function: cv_stack_init()
  */
 
 void cv_stack_init(
@@ -33,7 +33,7 @@ void cv_stack_init(
 }
 
 /*
- *
+ *  Function: cv_stack_cleanup()
  */
 
 void cv_stack_cleanup(
@@ -52,7 +52,7 @@ void cv_stack_cleanup(
 }
 
 /*
- *
+ *  Function: cv_stack_push()
  */
 
 void cv_stack_push(
@@ -67,7 +67,7 @@ void cv_stack_push(
 }
 
 /*
- *
+ *  Function: cv_stack_pop()
  */
 
 cv_stack * cv_stack_pop(

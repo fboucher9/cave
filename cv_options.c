@@ -70,7 +70,9 @@ during entire lifetime of object.  */
 void cv_options_cleanup(
     cv_options * p_this)
 {
-    if (p_this)
+    cv_debug_assert_(
+        !!p_this,
+        "null ptr");
     {
         cv_options_cleanup_list(p_this);
         cv_list_cleanup(&p_this->o_list);
@@ -82,23 +84,16 @@ void cv_options_cleanup(
  *      Initialize instance of cv_options object using provided descriptor
  *      structure.  All strings are copied, using heap allocations.
  */
-cv_bool cv_options_init(
+void cv_options_init(
     cv_options * p_this)
 {
-    cv_bool b_result = cv_false;
-    if (p_this)
+    cv_debug_assert_(
+        !!p_this,
+        "null ptr");
     {
         cv_debug_init_(p_this, cv_sizeof_(*p_this));
-        if (cv_list_init(&p_this->o_list))
-        {
-            b_result = cv_true;
-        }
-        if (!b_result)
-        {
-            cv_debug_cleanup_(p_this, cv_sizeof_(*p_this));
-        }
+        cv_list_init(&p_this->o_list);
     }
-    return b_result;
 }
 
 static cv_bool cv_options_setup_cb(
@@ -127,7 +122,7 @@ cv_bool cv_options_setup(
     if (p_this && p_desc)
     {
         cv_array_it o_array_it = cv_array_it_initializer_;
-        if (cv_array_it_init(&o_array_it, &p_desc->o_array))
+        cv_array_it_init(&o_array_it, &p_desc->o_array);
         {
             cv_array_ptr o_array_ptr = cv_ptr_null_;
             b_result = cv_true;
@@ -137,8 +132,8 @@ cv_bool cv_options_setup(
                 char const * const p_arg0 = o_array_ptr.pc_char;
                 b_result = cv_options_setup_cb(p_this, p_arg0, 0x7FFFFFFFL);
             }
-            cv_array_it_cleanup(&o_array_it);
         }
+        cv_array_it_cleanup(&o_array_it);
     }
     return b_result;
 }

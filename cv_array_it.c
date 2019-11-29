@@ -8,30 +8,29 @@
 
 #include <cv_sizeof.h>
 
-cv_bool cv_array_it_init(
+void cv_array_it_init(
     cv_array_it * p_this,
     cv_array const * p_array)
 {
-    cv_bool b_result = cv_false;
     cv_debug_assert_(
         p_this && p_array,
         "null ptr");
     {
         cv_debug_init_(p_this, cv_sizeof_(*p_this));
-        if (cv_array_init_ref(&p_this->o_array, p_array))
-        {
-            b_result = cv_true;
-        }
-        else
-        {
-            cv_debug_break_("failed init");
-        }
-        if (!b_result)
-        {
-            cv_debug_cleanup_(p_this, cv_sizeof_(*p_this));
-        }
+        cv_array_init_ref(&p_this->o_array, p_array);
     }
-    return b_result;
+}
+
+void cv_array_it_init_vector(
+    cv_array_it * p_this,
+    void const * p_buf,
+    long i_len)
+{
+    cv_debug_assert_(
+        !!p_this,
+        "null ptr");
+    cv_debug_init_(p_this, cv_sizeof_(*p_this));
+    cv_array_init_vector(&p_this->o_array, p_buf, i_len);
 }
 
 void cv_array_it_cleanup(

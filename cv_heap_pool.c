@@ -35,14 +35,10 @@ cv_bool cv_heap_pool_init(
         p_this->p_mutex = cv_mutex_mgr_acquire();
         if (p_this->p_mutex)
         {
-            if (cv_list_init(&p_this->o_used_list))
-            {
-                if (cv_list_init(&p_this->o_free_list))
-                {
-                    p_this->i_len = i_len;
-                    b_result = cv_true;
-                }
-            }
+            cv_list_init(&p_this->o_used_list);
+            cv_list_init(&p_this->o_free_list);
+            p_this->i_len = i_len;
+            b_result = cv_true;
         }
         if (!b_result)
         {

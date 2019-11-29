@@ -21,7 +21,7 @@ struct cv_heap_node
     /* payload follows ... */
 };
 
-cv_bool cv_heap_node_init(
+void cv_heap_node_init(
     cv_heap_node * p_this,
     long i_len);
 
