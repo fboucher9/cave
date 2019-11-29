@@ -114,7 +114,7 @@ int cv_memory_compare(
             {
                 i_compare_result = 1;
             }
-            else
+            else if (i_left_len < i_right_len)
             {
                 i_compare_result = -1;
             }

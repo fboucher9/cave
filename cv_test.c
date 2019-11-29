@@ -38,6 +38,8 @@
 
 #include <cv_memory.h>
 
+#include <cv_file_test.h>
+
 static void cv_test_job(
     void * p_context)
 {
@@ -300,6 +302,14 @@ static cv_bool cv_test_main_cb(
                         'n'
                     };
 
+                    static char const g_file_text[] =
+                    {
+                        'f',
+                        'i',
+                        'l',
+                        'e'
+                    };
+
                     static cv_array const g_number_array =
                         cv_array_text_initializer_(g_number_text);
 
@@ -314,6 +324,9 @@ static cv_bool cv_test_main_cb(
 
                     static cv_array const g_stdin_array =
                         cv_array_text_initializer_(g_stdin_text);
+
+                    static cv_array const g_file_array =
+                        cv_array_text_initializer_(g_file_text);
 
                     if (cv_array_compare(&o_string, &g_number_array))
                     {
@@ -334,6 +347,10 @@ static cv_bool cv_test_main_cb(
                     else if (cv_array_compare(&o_string, &g_stdin_array))
                     {
                         cv_test_stdin();
+                    }
+                    else if (cv_array_compare(&o_string, &g_file_array))
+                    {
+                        cv_file_test();
                     }
                     else
                     {

@@ -6,25 +6,30 @@
 
 #include <cv_debug.h>
 
+#include <cv_sizeof.h>
+
 cv_bool cv_array_it_init(
     cv_array_it * p_this,
     cv_array const * p_array)
 {
     cv_bool b_result = cv_false;
-    if (p_this && p_array)
+    cv_debug_assert_(
+        p_this && p_array,
+        "null ptr");
     {
+        cv_debug_init_(p_this, cv_sizeof_(*p_this));
         if (cv_array_init_ref(&p_this->o_array, p_array))
         {
             b_result = cv_true;
         }
         else
         {
-            cv_debug_msg_("failed init");
+            cv_debug_break_("failed init");
         }
-    }
-    else
-    {
-        cv_debug_msg_("null ptr");
+        if (!b_result)
+        {
+            cv_debug_cleanup_(p_this, cv_sizeof_(*p_this));
+        }
     }
     return b_result;
 }
@@ -32,13 +37,12 @@ cv_bool cv_array_it_init(
 void cv_array_it_cleanup(
     cv_array_it * p_this)
 {
-    if (p_this)
+    cv_debug_assert_(
+        !!p_this,
+        "null ptr");
     {
         cv_array_cleanup(&p_this->o_array);
-    }
-    else
-    {
-        cv_debug_msg_("null ptr");
+        cv_debug_cleanup_(p_this, cv_sizeof_(*p_this));
     }
 }
 
@@ -47,7 +51,9 @@ cv_bool cv_array_it_get_next_char(
     cv_array_ptr * r_value)
 {
     cv_bool b_result = cv_false;
-    if (p_this && r_value)
+    cv_debug_assert_(
+        p_this && r_value,
+        "null ptr");
     {
         if (p_this->o_array.o_min.pc_uchar !=
             p_this->o_array.o_max.pc_uchar)
@@ -57,10 +63,6 @@ cv_bool cv_array_it_get_next_char(
             b_result = cv_true;
         }
     }
-    else
-    {
-        cv_debug_msg_("null ptr");
-    }
     return b_result;
 }
 
@@ -69,7 +71,9 @@ cv_bool cv_array_it_get_next_ptr(
     cv_array_ptr * r_value)
 {
     cv_bool b_result = cv_false;
-    if (p_this && r_value)
+    cv_debug_assert_(
+        p_this && r_value,
+        "null ptr");
     {
         if (p_this->o_array.o_min.pcpc_void <
             p_this->o_array.o_max.pcpc_void)
@@ -78,10 +82,6 @@ cv_bool cv_array_it_get_next_ptr(
             p_this->o_array.o_min.pcpc_void ++;
             b_result = cv_true;
         }
-    }
-    else
-    {
-        cv_debug_msg_("null ptr");
     }
     return b_result;
 }
@@ -92,7 +92,9 @@ cv_bool cv_array_it_get_next_array(
     cv_array_ptr * r_value)
 {
     cv_bool b_result = cv_false;
-    if (p_this && i_array_len && r_value)
+    cv_debug_assert_(
+        p_this && i_array_len && r_value,
+        "null ptr");
     {
         if ((p_this->o_array.o_min.pc_uchar + i_array_len)
             <= p_this->o_array.o_max.pc_uchar)
@@ -102,10 +104,6 @@ cv_bool cv_array_it_get_next_array(
             b_result = cv_true;
         }
     }
-    else
-    {
-        cv_debug_msg_("null ptr");
-    }
     return b_result;
 }
 
@@ -114,7 +112,9 @@ cv_bool cv_array_it_read_next_char(
     unsigned char * r_value)
 {
     cv_bool b_result = cv_false;
-    if (p_this && r_value)
+    cv_debug_assert_(
+        p_this && r_value,
+        "null ptr");
     {
         if (p_this->o_array.o_min.pc_uchar !=
             p_this->o_array.o_max.pc_uchar)
@@ -124,10 +124,6 @@ cv_bool cv_array_it_read_next_char(
             b_result = cv_true;
         }
     }
-    else
-    {
-        cv_debug_msg_("null ptr");
-    }
     return b_result;
 }
 
@@ -136,7 +132,9 @@ cv_bool cv_array_it_read_next_ptr(
     void const * * r_value)
 {
     cv_bool b_result = cv_false;
-    if (p_this && r_value)
+    cv_debug_assert_(
+        p_this && r_value,
+        "null ptr");
     {
         if (p_this->o_array.o_min.pcpc_void <
             p_this->o_array.o_max.pcpc_void)
@@ -146,10 +144,6 @@ cv_bool cv_array_it_read_next_ptr(
             b_result = cv_true;
         }
     }
-    else
-    {
-        cv_debug_msg_("null ptr");
-    }
     return b_result;
 }
 
@@ -158,7 +152,9 @@ cv_bool cv_array_it_read_next_array(
     cv_array const * p_array)
 {
     cv_bool b_result = cv_false;
-    if (p_this && p_array)
+    cv_debug_assert_(
+        p_this && p_array,
+        "null ptr");
     {
         long const i_array_len = cv_array_len(p_array);
         if ((p_this->o_array.o_min.pc_uchar + i_array_len)
@@ -173,10 +169,6 @@ cv_bool cv_array_it_read_next_array(
             b_result = cv_true;
         }
     }
-    else
-    {
-        cv_debug_msg_("null ptr");
-    }
     return b_result;
 }
 
@@ -185,7 +177,9 @@ cv_bool cv_array_it_write_next_char(
     unsigned char c_data)
 {
     cv_bool b_result = cv_false;
-    if (p_this)
+    cv_debug_assert_(
+        !!p_this,
+        "null ptr");
     {
         if (p_this->o_array.o_min.p_uchar !=
             p_this->o_array.o_max.p_uchar)
@@ -195,10 +189,6 @@ cv_bool cv_array_it_write_next_char(
             b_result = cv_true;
         }
     }
-    else
-    {
-        cv_debug_msg_("null ptr");
-    }
     return b_result;
 }
 
@@ -207,7 +197,9 @@ cv_bool cv_array_it_write_next_ptr(
     void const * pc_void)
 {
     cv_bool b_result = cv_false;
-    if (p_this)
+    cv_debug_assert_(
+        !!p_this,
+        "null ptr");
     {
         if (p_this->o_array.o_min.ppc_void !=
             p_this->o_array.o_max.ppc_void)
@@ -217,10 +209,6 @@ cv_bool cv_array_it_write_next_ptr(
             b_result = cv_true;
         }
     }
-    else
-    {
-        cv_debug_msg_("null ptr");
-    }
     return b_result;
 }
 
@@ -229,7 +217,9 @@ cv_bool cv_array_it_write_next_array(
     cv_array const * p_array)
 {
     cv_bool b_result = cv_false;
-    if (p_this && p_array)
+    cv_debug_assert_(
+        p_this && p_array,
+        "null ptr");
     {
         long const i_array_len = cv_array_len(p_array);
         if ((p_this->o_array.o_min.p_uchar + i_array_len)
@@ -243,10 +233,6 @@ cv_bool cv_array_it_write_next_array(
             p_this->o_array.o_min.p_uchar += i_array_len;
             b_result = cv_true;
         }
-    }
-    else
-    {
-        cv_debug_msg_("null ptr");
     }
     return b_result;
 }
