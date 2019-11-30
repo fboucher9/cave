@@ -38,35 +38,20 @@ static long g_heap_count = 0L;
 cv_bool cv_heap_load(void)
 {
     cv_bool b_result = cv_false;
-    if (!g_heap_loaded)
-    {
-        if (cv_heap_primary_load())
-        {
-            if (cv_heap_small_load())
-            {
-                if (cv_heap_large_load())
-                {
-                    g_heap_loaded = cv_true;
-                    b_result = cv_true;
-                }
-                else
-                {
-                    cv_debug_msg_("heap load large fail");
-                }
+    cv_debug_assert_(!g_heap_loaded, "already loaded");
+    if (cv_heap_primary_load()) {
+        if (cv_heap_small_load()) {
+            if (cv_heap_large_load()) {
+                g_heap_loaded = cv_true;
+                b_result = cv_true;
+            } else {
+                cv_debug_msg_("heap load large fail");
             }
-            else
-            {
-                cv_debug_msg_("heap load small fail");
-            }
+        } else {
+            cv_debug_msg_("heap load small fail");
         }
-        else
-        {
-            cv_debug_msg_("heap load primary fail");
-        }
-    }
-    else
-    {
-        cv_debug_msg_("heap already loaded");
+    } else {
+        cv_debug_msg_("heap load primary fail");
     }
     return b_result;
 }
@@ -88,49 +73,33 @@ may occur.  The sub modules will produce correct leak reports.
 */
 void cv_heap_unload(void)
 {
-    if (g_heap_loaded)
-    {
-        cv_runtime_printf("*** %ld leaks detected ***\n",
-            g_heap_count);
-        cv_heap_large_unload();
-        cv_heap_small_unload();
-        cv_heap_primary_unload();
-        g_heap_loaded = cv_false;
-    }
-    else
-    {
-        cv_debug_msg_("heap already unloaded");
-    }
+    cv_debug_assert_(g_heap_loaded, "already unloaded");
+    cv_runtime_printf("*** %ld leaks detected ***\n",
+        g_heap_count);
+    cv_heap_large_unload();
+    cv_heap_small_unload();
+    cv_heap_primary_unload();
+    g_heap_loaded = cv_false;
 }
 
 void * cv_heap_alloc(
     long i_buffer_length)
 {
     void * p_buffer = cv_null_;
-
-    if (g_heap_loaded && i_buffer_length)
-    {
-        if (i_buffer_length <= cv_heap_small_max_len_)
-        {
+    cv_debug_assert_(g_heap_loaded, "not loaded");
+    if (i_buffer_length) {
+        if (i_buffer_length <= cv_heap_small_max_len_) {
             p_buffer = cv_heap_small_alloc(i_buffer_length);
-        }
-        else
-        {
+        } else {
             p_buffer = cv_heap_large_alloc(i_buffer_length);
         }
-
-        if (p_buffer)
-        {
+        if (p_buffer) {
             g_heap_count ++;
-        }
-        else
-        {
+        } else {
             cv_debug_msg_("out of memory");
         }
-    }
-    else
-    {
-        cv_debug_msg_("heap alloc invalid");
+    } else {
+        cv_debug_msg_("zero len");
     }
     return p_buffer;
 }
@@ -138,27 +107,19 @@ void * cv_heap_alloc(
 void cv_heap_free(
     void * p_buffer)
 {
-    if (g_heap_loaded && p_buffer)
-    {
+    cv_debug_assert_(g_heap_loaded, "not loaded");
+    if (p_buffer) {
         cv_heap_node const * const p_heap_node =
             cv_heap_node_from_payload(p_buffer);
-
         long const i_buffer_length = p_heap_node->i_len;
-
-        if (i_buffer_length <= cv_heap_small_max_len_)
-        {
+        if (i_buffer_length <= cv_heap_small_max_len_) {
             cv_heap_small_free(p_buffer);
-        }
-        else
-        {
+        } else {
             cv_heap_large_free(p_buffer);
         }
-
         g_heap_count --;
-    }
-    else
-    {
-        cv_debug_msg_("heap free invalid");
+    } else {
+        cv_debug_msg_("null ptr");
     }
 }
 

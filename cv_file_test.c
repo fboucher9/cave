@@ -45,8 +45,7 @@ static void cv_file_test_dump_buffer(
             unsigned char c_data = 0;
             while (cv_array_it_read_next_char(
                     &o_array_it,
-                    &c_data))
-            {
+                    &c_data)) {
                 cv_print_0("0x", 80);
                 cv_print_hex(c_data);
                 cv_print_nl();
@@ -63,8 +62,7 @@ static void cv_file_test_disk_read(void)
     cv_file_disk_desc o_desc = cv_file_disk_desc_initializer_;
     cv_file_disk_desc_init(&o_desc);
     {
-        static unsigned char const g_ref_input_bin_name[] =
-        {
+        static unsigned char const g_ref_input_bin_name[] = {
             'i',
             'n',
             'p',
@@ -83,11 +81,9 @@ static void cv_file_test_disk_read(void)
 
         {
             cv_file_disk o_file_disk = cv_file_disk_initializer_;
-            if (cv_file_disk_init(&o_file_disk, &o_desc))
-            {
+            if (cv_file_disk_init(&o_file_disk, &o_desc)) {
                 cv_bool b_continue = cv_true;
-                while (b_continue)
-                {
+                while (b_continue) {
                     unsigned char a_read_buffer[8u];
                     cv_array o_read_buffer = cv_array_null_;
                     cv_array_init_vector(&o_read_buffer, a_read_buffer,
@@ -96,20 +92,16 @@ static void cv_file_test_disk_read(void)
                         long const i_read_result = cv_file_read(
                             &o_file_disk.o_file,
                             &o_read_buffer);
-                        if (i_read_result > 0)
-                        {
+                        if (i_read_result > 0) {
                             cv_file_test_dump_buffer(
                                 a_read_buffer,
                                 i_read_result);
-                        }
-                        else
-                        {
+                        } else {
                             b_continue = cv_false;
                         }
                     }
                     cv_array_cleanup(&o_read_buffer);
                 }
-
                 cv_file_disk_cleanup(&o_file_disk);
             }
         }

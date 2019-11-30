@@ -27,17 +27,10 @@ static long g_heap_primary_max = (1024L * 1024L);
 
 cv_bool cv_heap_primary_load(void)
 {
-    cv_bool b_result = cv_false;
-
     cv_heap_section_desc o_desc = cv_heap_section_desc_initializer_;
-
     o_desc.i_grow_len = g_heap_primary_max;
-
     cv_heap_section_list_init(&g_cv_heap_primary_section_list, &o_desc);
-
-    b_result = cv_true;
-
-    return b_result;
+    return cv_true;
 }
 
 void cv_heap_primary_unload(void)
@@ -59,10 +52,8 @@ static void * cv_heap_primary_alloc_cb(
     long i_count)
 {
     void * p_buffer = cv_null_;
-
     p_buffer = cv_heap_section_list_alloc(&g_cv_heap_primary_section_list,
         i_count);
-
     return p_buffer;
 }
 
@@ -70,15 +61,10 @@ void * cv_heap_primary_alloc(
     long i_count)
 {
     void * p_buffer = cv_null_;
-
-    if ((i_count > 0) && (i_count <= g_heap_primary_max))
-    {
+    if ((i_count > 0) && (i_count <= g_heap_primary_max)) {
         cv_heap_primary_lock();
-
         p_buffer = cv_heap_primary_alloc_cb(i_count);
-
         cv_heap_primary_unlock();
     }
-
     return p_buffer;
 }

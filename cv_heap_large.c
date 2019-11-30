@@ -20,6 +20,8 @@
 
 #include <cv_runtime.h>
 
+#include <cv_debug.h>
+
 static cv_bool g_heap_large_loaded = cv_false;
 
 static cv_list_root g_heap_large_used_list = cv_list_root_initializer_;
@@ -28,44 +30,36 @@ static cv_list_root g_heap_large_free_list = cv_list_root_initializer_;
 
 cv_bool cv_heap_large_load(void)
 {
-    cv_bool b_result = cv_false;
-    if (!g_heap_large_loaded)
-    {
-        cv_list_root_init(&g_heap_large_used_list);
-        cv_list_root_init(&g_heap_large_free_list);
-        g_heap_large_loaded = cv_true;
-        b_result = cv_true;
-    }
-    return b_result;
+    cv_debug_assert_(!g_heap_large_loaded, "already loaded");
+    cv_list_root_init(&g_heap_large_used_list);
+    cv_list_root_init(&g_heap_large_free_list);
+    g_heap_large_loaded = cv_true;
+    return cv_true;
 }
 
 void cv_heap_large_unload(void)
 {
-    if (g_heap_large_loaded)
+    cv_debug_assert_(g_heap_large_loaded, "already unloaded");
+    /* Detect leaks */
+    /* Free all items ... */
     {
-        /* Detect leaks */
-        /* Free all items ... */
+        cv_list_it o_list_it = cv_list_it_initializer_;
+        cv_list_it_init(&o_list_it, &g_heap_large_free_list);
         {
-            cv_list_it o_list_it = cv_list_it_initializer_;
-            cv_list_it_init(&o_list_it, &g_heap_large_free_list);
-            {
-                cv_heap_node_ptr o_heap_ptr = cv_ptr_null_;
-                while (cv_list_it_first(&o_list_it, &o_heap_ptr.o_list_ptr))
-                {
-                    /* Detach from free list */
-                    cv_list_join(
-                        o_heap_ptr.o_list_ptr.p_node,
-                        o_heap_ptr.o_list_ptr.p_node);
-                    /* Free memory */
-                    cv_runtime_free(o_heap_ptr.p_void);
-                }
+            cv_heap_node_ptr o_heap_ptr = cv_ptr_null_;
+            while (cv_list_it_first(&o_list_it, &o_heap_ptr.o_list_ptr)) {
+                /* Detach from free list */
+                cv_list_join( o_heap_ptr.o_list_ptr.p_node,
+                    o_heap_ptr.o_list_ptr.p_node);
+                /* Free memory */
+                cv_runtime_free(o_heap_ptr.p_void);
             }
-            cv_list_it_cleanup(&o_list_it);
         }
-        cv_list_root_cleanup(&g_heap_large_used_list);
-        cv_list_root_cleanup(&g_heap_large_free_list);
-        g_heap_large_loaded = cv_false;
+        cv_list_it_cleanup(&o_list_it);
     }
+    cv_list_root_cleanup(&g_heap_large_used_list);
+    cv_list_root_cleanup(&g_heap_large_free_list);
+    g_heap_large_loaded = cv_false;
 }
 
 static long cv_heap_large_align(
@@ -85,11 +79,9 @@ static cv_heap_node * cv_heap_large_find_existing(
     {
         cv_bool b_found_existing = cv_false;
         while (!b_found_existing &&
-            cv_list_it_next(&o_free_it, &o_heap_ptr.o_list_ptr))
-        {
+            cv_list_it_next(&o_free_it, &o_heap_ptr.o_list_ptr)) {
             if (i_aligned_len == cv_heap_large_align(
-                    o_heap_ptr.p_heap_node->i_len))
-            {
+                    o_heap_ptr.p_heap_node->i_len)) {
                 b_found_existing = 1;
             }
         }
@@ -103,31 +95,25 @@ static void * cv_heap_large_alloc_cb(
 {
     void * p_result = cv_null_;
 
-    if (i_len > 0)
-    {
+    if (i_len > 0) {
         long const i_aligned_len = cv_heap_large_align(i_len);
         cv_heap_node_ptr o_heap_ptr = cv_ptr_null_;
         /* Look for free node */
         o_heap_ptr.p_heap_node = cv_heap_large_find_existing(
             i_aligned_len);
-        if (o_heap_ptr.p_heap_node)
-        {
+        if (o_heap_ptr.p_heap_node) {
             /* Detach from free list */
             cv_list_join( o_heap_ptr.o_list_ptr.p_node,
                 o_heap_ptr.o_list_ptr.p_node);
             /* See actual length */
             o_heap_ptr.p_heap_node->i_len = i_len;
-        }
-        else
-        {
+        } else {
             o_heap_ptr.p_void = cv_runtime_malloc(i_aligned_len);
-            if (o_heap_ptr.p_void)
-            {
+            if (o_heap_ptr.p_void) {
                 cv_heap_node_init( o_heap_ptr.p_heap_node, i_len);
             }
         }
-        if (o_heap_ptr.p_void)
-        {
+        if (o_heap_ptr.p_void) {
             /* Attach to used list */
             cv_list_join( o_heap_ptr.o_list_ptr.p_node,
                 & g_heap_large_used_list.o_node);
@@ -140,8 +126,7 @@ static void * cv_heap_large_alloc_cb(
 static void cv_heap_large_free_cb(
     void * p_buf)
 {
-    if (p_buf)
-    {
+    if (p_buf) {
         cv_heap_node_ptr o_heap_ptr = cv_ptr_null_;
         o_heap_ptr.p_heap_node = cv_heap_node_from_payload(p_buf);
         /* Detach from used list */
@@ -157,8 +142,8 @@ void * cv_heap_large_alloc(
     long i_len)
 {
     void * p_result = cv_null_;
-    if (g_heap_large_loaded && (i_len > 4096))
-    {
+    cv_debug_assert_(g_heap_large_loaded, "not loaded");
+    if (i_len > 4096) {
         cv_mutex_lock(&cv_heap_large_mutex);
         p_result = cv_heap_large_alloc_cb(i_len);
         cv_mutex_unlock(&cv_heap_large_mutex);
@@ -169,8 +154,8 @@ void * cv_heap_large_alloc(
 void cv_heap_large_free(
     void * p_buf)
 {
-    if (g_heap_large_loaded && p_buf)
-    {
+    cv_debug_assert_(g_heap_large_loaded, "not loaded");
+    if (p_buf) {
         cv_mutex_lock(&cv_heap_large_mutex);
         cv_heap_large_free_cb(p_buf);
         cv_mutex_unlock(&cv_heap_large_mutex);

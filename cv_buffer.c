@@ -15,21 +15,15 @@ static cv_bool cv_buffer_realloc(
     long i_length)
 {
     cv_bool b_result = cv_false;
-    cv_debug_assert_(
-        p_this && i_length,
-        "invalid param");
+    cv_debug_assert_( p_this && i_length, "invalid param");
     {
         cv_array_ptr o_array_ptr = cv_ptr_null_;
         o_array_ptr.p_void = cv_heap_alloc(i_length);
-        if (o_array_ptr.p_void)
-        {
+        if (o_array_ptr.p_void) {
             cv_array_init_vector(&p_this->o_array,
-                    o_array_ptr.p_void,
-                    i_length);
+                o_array_ptr.p_void, i_length);
             b_result = cv_true;
-        }
-        else
-        {
+        } else {
             cv_debug_msg_("out of memory");
         }
     }
@@ -44,19 +38,13 @@ cv_bool cv_buffer_init(
     long i_length)
 {
     cv_bool b_result = cv_false;
-    cv_debug_assert_(
-        p_this && i_length,
-        "invalid param");
+    cv_debug_assert_( p_this && i_length, "invalid param");
     {
         cv_debug_init_(p_this, cv_sizeof_(*p_this));
-
-        if (cv_buffer_realloc(p_this, i_length))
-        {
+        if (cv_buffer_realloc(p_this, i_length)) {
             b_result = cv_true;
         }
-
-        if (!b_result)
-        {
+        if (!b_result) {
             cv_debug_cleanup_(p_this, cv_sizeof_(*p_this));
         }
     }
@@ -71,17 +59,12 @@ Free resources allocated for cv_buffer object.
 void cv_buffer_cleanup(
     cv_buffer * p_this)
 {
-    cv_debug_assert_(
-        !!p_this,
-        "null ptr");
-    {
-        if (p_this->o_array.o_min.pc_void)
-        {
-            cv_heap_free(p_this->o_array.o_min.p_void);
-        }
-        cv_array_cleanup(&p_this->o_array);
-        cv_debug_cleanup_(p_this, cv_sizeof_(*p_this));
+    cv_debug_assert_( !!p_this, "null ptr");
+    if (p_this->o_array.o_min.pc_void) {
+        cv_heap_free(p_this->o_array.o_min.p_void);
     }
+    cv_array_cleanup(&p_this->o_array);
+    cv_debug_cleanup_(p_this, cv_sizeof_(*p_this));
 } /* _cleanup() */
 
 /* Get length of buffer */
@@ -89,13 +72,8 @@ long cv_buffer_len(
     cv_buffer const * p_this)
 {
     long i_len = 0;
-    cv_debug_assert_(
-        !!p_this,
-        "null ptr");
-    {
-        i_len = cv_array_len(
-            &(p_this->o_array));
-    }
+    cv_debug_assert_( !!p_this, "null ptr");
+    i_len = cv_array_len( &p_this->o_array);
     return i_len;
 }
 

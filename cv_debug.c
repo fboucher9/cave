@@ -25,8 +25,7 @@ void xx_debug_assert(
     cv_bool b_expr,
     char const * p_msg0)
 {
-    if (!b_expr)
-    {
+    if (!b_expr) {
         xx_debug_break(p_msg0);
     }
 }
@@ -60,8 +59,7 @@ void xx_debug_init(
     void * p_buf,
     long i_buf_len)
 {
-    if (p_buf && i_buf_len)
-    {
+    if (p_buf && i_buf_len) {
         cv_array o_array = cv_array_null_;
         o_array.o_min.p_void = p_buf;
         o_array.o_max.p_char = o_array.o_min.p_char + i_buf_len;
@@ -83,17 +81,14 @@ void xx_debug_cleanup(
 #if defined cv_debug_verbose_
     cv_debug_verbose_trace("cv_debug_cleanup");
 #endif
-    if (p_buf && i_buf_len)
-    {
+    if (p_buf && i_buf_len) {
         cv_array o_array = cv_array_null_;
         o_array.o_min.p_void = p_buf;
         o_array.o_max.p_char = o_array.o_min.p_char + i_buf_len;
         cv_array_fill(
             &o_array,
             0xcd);
-    }
-    else
-    {
+    } else {
         cv_runtime_printf("*** %ld cleanup remain ***\n",
             g_init_count);
     }
