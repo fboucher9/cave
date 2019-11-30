@@ -22,8 +22,6 @@
 
 #include <cv_sizeof.h>
 
-#include <cv_memory.h>
-
 #include <cv_array.h>
 
 #include <cv_array_it.h>

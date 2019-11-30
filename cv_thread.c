@@ -8,8 +8,6 @@
 
 #include <cv_heap.h>
 
-#include <cv_memory.h>
-
 #include <cv_null.h>
 
 #include <cv_sizeof.h>

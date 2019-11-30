@@ -6,8 +6,6 @@
 
 #include <cv_array_tool.h>
 
-#include <cv_memory.h>
-
 cv_file_std g_cv_file_std_in = cv_file_std_initializer_;
 
 cv_file_std g_cv_file_std_out = cv_file_std_initializer_;

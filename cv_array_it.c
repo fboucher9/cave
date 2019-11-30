@@ -2,7 +2,7 @@
 
 #include <cv_array_it.h>
 
-#include <cv_memory.h>
+#include <cv_array_tool.h>
 
 #include <cv_debug.h>
 
@@ -159,11 +159,9 @@ cv_bool cv_array_it_read_next_array(
         if ((p_this->o_array.o_min.pc_uchar + i_array_len)
             <= p_this->o_array.o_max.pc_uchar)
         {
-            cv_memory_copy(
-                p_array->o_min.p_void,
-                i_array_len,
-                p_this->o_array.o_min.pc_void,
-                i_array_len);
+            cv_array_copy(
+                p_array,
+                &p_this->o_array);
             p_this->o_array.o_min.pc_uchar += i_array_len;
             b_result = cv_true;
         }
@@ -224,11 +222,9 @@ cv_bool cv_array_it_write_next_array(
         if ((p_this->o_array.o_min.p_uchar + i_array_len)
             <= p_this->o_array.o_max.p_uchar)
         {
-            cv_memory_copy(
-                p_this->o_array.o_min.p_void,
-                i_array_len,
-                p_array->o_min.pc_void,
-                i_array_len);
+            cv_array_copy(
+                &p_this->o_array,
+                p_array);
             p_this->o_array.o_min.p_uchar += i_array_len;
             b_result = cv_true;
         }
