@@ -8,6 +8,8 @@
 
 #include <cv_sizeof.h>
 
+#include <cv_limits.h>
+
 void cv_array_init(
     cv_array * p_this)
 {
@@ -111,7 +113,7 @@ long cv_array_len(
     {
         i_count = ((
             p_this->o_max.pc_char
-            - p_this->o_min.pc_char) & 0x7FFFFFFFL);
+            - p_this->o_min.pc_char) & cv_signed_long_max_);
     }
     return i_count;
 }

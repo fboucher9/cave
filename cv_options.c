@@ -30,6 +30,8 @@
 
 #include <cv_debug.h>
 
+#include <cv_limits.h>
+
 cv_bool cv_options_load(void)
 {
     cv_bool b_result = cv_false;
@@ -134,7 +136,8 @@ cv_bool cv_options_setup(
                     &o_array_ptr.pc_void))
             {
                 char const * const p_arg0 = o_array_ptr.pc_char;
-                b_result = cv_options_setup_cb(p_this, p_arg0, 0x7fffffffL);
+                b_result = cv_options_setup_cb(p_this, p_arg0,
+                    cv_signed_long_max_);
             }
         }
         cv_array_it_cleanup(&o_array_it);

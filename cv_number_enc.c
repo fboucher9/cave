@@ -14,6 +14,8 @@
 
 #include <cv_memory.h>
 
+#include <cv_limits.h>
+
 enum cv_number_machine
 {
     cv_number_machine_invalid = 0,
@@ -164,7 +166,8 @@ cv_bool cv_number_enc_init(
                 {
                     p_this->o_desc.o_format.i_digits =
                         (
-                            p_this->o_desc.o_format.i_precision + 1) & 0x7FFF;
+                            p_this->o_desc.o_format.i_precision + 1) &
+                        cv_signed_short_max_;
                 }
 
                 p_this->b_dot = 1;
@@ -173,7 +176,7 @@ cv_bool cv_number_enc_init(
                     p_this->i_before_zero = 1;
                     p_this->i_after_zero = (
                             p_this->o_desc.o_format.i_precision
-                            - p_this->i_digit_count) & 0x7FFF;
+                            - p_this->i_digit_count) & cv_signed_short_max_;
                 }
                 else
                 {
@@ -181,7 +184,8 @@ cv_bool cv_number_enc_init(
                     {
                         p_this->i_before_zero = (
                                 p_this->o_desc.o_format.i_digits
-                                - p_this->i_digit_count) & 0x7FFF;
+                                - p_this->i_digit_count) &
+                            cv_signed_short_max_;
                     }
                 }
             }
@@ -191,21 +195,21 @@ cv_bool cv_number_enc_init(
                 {
                     p_this->i_before_zero = ((
                             p_this->o_desc.o_format.i_digits
-                            - p_this->i_digit_count) & 0x7FFF);
+                            - p_this->i_digit_count) & cv_signed_short_max_);
                 }
             }
             i_width = ((p_this->i_digit_count +
                     p_this->i_before_zero +
                     p_this->b_dot +
                     p_this->i_after_zero +
-                    p_this->b_sign) & 0x7FFF);
+                    p_this->b_sign) & cv_signed_short_max_);
             if (p_this->o_desc.o_format.i_flags & cv_number_flag_left)
             {
                 if (p_this->o_desc.o_format.i_width > i_width)
                 {
                     p_this->i_after_space = ((
                             p_this->o_desc.o_format.i_width
-                            - i_width) & 0x7FFF);
+                            - i_width) & cv_signed_short_max_);
                 }
             }
             else if (p_this->o_desc.o_format.i_flags & cv_number_flag_center)
@@ -214,11 +218,11 @@ cv_bool cv_number_enc_init(
                 {
                     p_this->i_before_space = (((
                             p_this->o_desc.o_format.i_width
-                            - i_width + 1) / 2) & 0x7FFF);
+                            - i_width + 1) / 2) & cv_signed_short_max_);
                     p_this->i_after_space = ((
                         p_this->o_desc.o_format.i_width
                         - i_width
-                        - p_this->i_before_space) & 0x7FFF);
+                        - p_this->i_before_space) & cv_signed_short_max_);
                 }
             }
             else
@@ -227,7 +231,7 @@ cv_bool cv_number_enc_init(
                 {
                     p_this->i_before_space = ((
                             p_this->o_desc.o_format.i_width
-                            - i_width) & 0x7FFF);
+                            - i_width) & cv_signed_short_max_);
                 }
             }
             p_this->i_state = cv_number_machine_before_space;
