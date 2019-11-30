@@ -67,8 +67,7 @@ void cv_runtime_memset(
 #else /* #if defined cv_have_libc_ */
     unsigned char * p_buf_it = cv_cast_(unsigned char *, p_buf);
     unsigned char * const p_buf_end = p_buf_it + i_buf_len;
-    while (p_buf_it < p_buf_end)
-    {
+    while (p_buf_it < p_buf_end) {
         *p_buf_it = c_value;
         p_buf_it ++;
     }
@@ -87,8 +86,7 @@ void cv_runtime_memcpy(
     char * p_dst_it = cv_cast_(char *, p_dst);
     char const * p_src_it = cv_cast_(char const *, p_src);
     long i_remain = i_copy_len;
-    while (i_remain > 0)
-    {
+    while (i_remain > 0) {
         *p_dst_it = *p_src_it;
         p_dst_it ++;
         p_src_it ++;
@@ -110,15 +108,11 @@ void const * cv_runtime_memchr(
     cv_bool b_found = cv_false;
     unsigned char const * p_src_it = cv_cast_(unsigned char const *, p_src);
     unsigned char const * p_src_end = p_src_it + i_src_len;
-    while (!b_found && (p_src_it < p_src_end))
-    {
-        if (c_value == *p_src_it)
-        {
+    while (!b_found && (p_src_it < p_src_end)) {
+        if (c_value == *p_src_it) {
             p_memchr_result = cv_cast_(void const *, p_src_it);
             b_found = cv_true;
-        }
-        else
-        {
+        } else {
             p_src_it ++;
         }
     }

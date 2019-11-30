@@ -56,4 +56,8 @@ long cv_linux_write(
     return i_result;
 }
 
+#else /* #if defined cv_linux_ */
+
+typedef void cv_avoid_empty_unit;
+
 #endif /* #if defined cv_linux_ */

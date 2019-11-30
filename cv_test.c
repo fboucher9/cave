@@ -54,8 +54,7 @@ static void cv_test_heap_large(void)
 {
     /* Test large allocation */
     void * const p_large = cv_heap_alloc(64 * 1024);
-    if (p_large)
-    {
+    if (p_large) {
         cv_heap_free(p_large);
     }
 }
@@ -65,13 +64,10 @@ static void cv_test_dump_options(
     cv_options const * p_options)
 {
     cv_options_it o_options_it = cv_options_it_initializer_;
-    cv_options_it_init(
-            &o_options_it,
-            p_options);
+    cv_options_it_init( &o_options_it, p_options);
     {
         cv_array o_cur;
-        while (cv_options_it_next(&o_options_it, &o_cur))
-        {
+        while (cv_options_it_next(&o_options_it, &o_cur)) {
             cv_print_0("option = [", 80);
             cv_print_array(&o_cur);
             cv_print_0("]", 80);
@@ -93,18 +89,16 @@ static void cv_test_poll_stdin(void)
     cv_array_init_vector(&o_string, g_buf, cv_sizeof_(g_buf));
     {
         cv_file_poll o_poll_stdin = cv_file_poll_initializer_;
-        o_poll_stdin.p_file = &g_cv_file_std_in.o_file;
+        cv_file_std const * p_std_in = cv_file_std_in();
+        o_poll_stdin.p_file = &p_std_in->o_file;
         o_poll_stdin.i_flags_in = cv_file_poll_flag_read;
         o_poll_stdin.i_flags_out = 0;
         if (cv_file_poll_dispatch(&o_poll_stdin,
-                &o_poll_stdin + 1, cv_null_))
-        {
+                &o_poll_stdin + 1, cv_null_)) {
             long const i_file_read_result =
-                cv_file_read(&g_cv_file_std_in.o_file, &o_string);
+                cv_file_read(&p_std_in->o_file, &o_string);
             cv_unused_(i_file_read_result);
-        }
-        else
-        {
+        } else {
             cv_debug_msg_("poll error");
         }
     }
@@ -114,14 +108,12 @@ static void cv_test_poll_stdin(void)
 static void cv_test_thread(void)
 {
     cv_thread_desc o_desc;
-    if (cv_thread_desc_init(&o_desc))
-    {
+    if (cv_thread_desc_init(&o_desc)) {
         o_desc.p_func = & cv_test_job;
         o_desc.p_name0 = "job";
         {
             cv_thread * const p_thread = cv_thread_create(&o_desc);
-            if (p_thread)
-            {
+            if (p_thread) {
                 cv_test_poll_stdin();
                 cv_thread_destroy(p_thread);
             }
@@ -197,17 +189,16 @@ static void cv_test_stdin(void)
 
     {
         cv_bool b_continue = cv_true;
-        while (b_continue)
-        {
+        while (b_continue) {
             cv_array o_string = cv_array_null_;
             unsigned char a_buf[1u];
             cv_array_init_vector(&o_string, a_buf, cv_sizeof_(a_buf));
             {
+                cv_file_std const * p_std_in = cv_file_std_in();
                 long const i_file_read_result =
-                    cv_file_read(&g_cv_file_std_in.o_file,
+                    cv_file_read(&p_std_in->o_file,
                         &o_string);
-                if (i_file_read_result > 0)
-                {
+                if (i_file_read_result > 0) {
                     cv_number_desc o_number_desc = cv_number_desc_initializer_;
                     o_number_desc.o_data.i_unsigned = a_buf[0u];
                     o_number_desc.o_format.i_flags = cv_number_flag_unsigned
@@ -216,9 +207,7 @@ static void cv_test_stdin(void)
                     cv_print_0("0x", 80);
                     cv_print_number(&o_number_desc);
                     cv_print_nl();
-                }
-                else
-                {
+                } else {
                     b_continue = cv_false;
                 }
             }
@@ -243,68 +232,30 @@ static cv_bool cv_test_main_cb(
         cv_options_it_init(&o_options_it, p_options);
         {
             cv_array o_string = cv_array_null_;
-            if (cv_options_it_next(&o_options_it, &o_string))
-            {
-                if (cv_options_it_next(&o_options_it, &o_string))
-                {
-                    static char const g_number_text[] =
-                    {
-                        'n',
-                        'u',
-                        'm',
-                        'b',
-                        'e',
-                        'r'
+            if (cv_options_it_next(&o_options_it, &o_string)) {
+                if (cv_options_it_next(&o_options_it, &o_string)) {
+                    static char const g_number_text[] = {
+                        'n', 'u', 'm', 'b', 'e', 'r'
                     };
 
-                    static char const g_heap_large_text[] =
-                    {
-                        'h',
-                        'e',
-                        'a',
-                        'p',
-                        '.',
-                        'l',
-                        'a',
-                        'r',
-                        'g',
-                        'e'
+                    static char const g_heap_large_text[] = {
+                        'h', 'e', 'a', 'p', '.', 'l', 'a', 'r', 'g', 'e'
                     };
 
-                    static char const g_debug_text[] =
-                    {
-                        'd',
-                        'e',
-                        'b',
-                        'u',
-                        'g'
+                    static char const g_debug_text[] = {
+                        'd', 'e', 'b', 'u', 'g'
                     };
 
-                    static char const g_thread_text[] =
-                    {
-                        't',
-                        'h',
-                        'r',
-                        'e',
-                        'a',
-                        'd'
+                    static char const g_thread_text[] = {
+                        't', 'h', 'r', 'e', 'a', 'd'
                     };
 
-                    static char const g_stdin_text[] =
-                    {
-                        's',
-                        't',
-                        'd',
-                        'i',
-                        'n'
+                    static char const g_stdin_text[] = {
+                        's', 't', 'd', 'i', 'n'
                     };
 
-                    static char const g_file_text[] =
-                    {
-                        'f',
-                        'i',
-                        'l',
-                        'e'
+                    static char const g_file_text[] = {
+                        'f', 'i', 'l', 'e'
                     };
 
                     static cv_array const g_number_array =
@@ -325,38 +276,23 @@ static cv_bool cv_test_main_cb(
                     static cv_array const g_file_array =
                         cv_array_text_initializer_(g_file_text);
 
-                    if (cv_array_compare(&o_string, &g_number_array))
-                    {
+                    if (cv_array_compare(&o_string, &g_number_array)) {
                         cv_test_number();
-                    }
-                    else if (cv_array_compare(&o_string, &g_heap_large_array))
-                    {
+                    } else if (cv_array_compare(&o_string, &g_heap_large_array)) {
                         cv_test_heap_large();
-                    }
-                    else if (cv_array_compare(&o_string, &g_debug_array))
-                    {
+                    } else if (cv_array_compare(&o_string, &g_debug_array)) {
                         cv_test_debug();
-                    }
-                    else if (cv_array_compare(&o_string, &g_thread_array))
-                    {
+                    } else if (cv_array_compare(&o_string, &g_thread_array)) {
                         cv_test_thread();
-                    }
-                    else if (cv_array_compare(&o_string, &g_stdin_array))
-                    {
+                    } else if (cv_array_compare(&o_string, &g_stdin_array)) {
                         cv_test_stdin();
-                    }
-                    else if (cv_array_compare(&o_string, &g_file_array))
-                    {
+                    } else if (cv_array_compare(&o_string, &g_file_array)) {
                         cv_file_test();
-                    }
-                    else
-                    {
+                    } else {
                         cv_print_0("invalid command", 80);
                         cv_print_nl();
                     }
-                }
-                else
-                {
+                } else {
                     cv_print_0("missing command", 80);
                     cv_print_nl();
                 }
@@ -379,10 +315,8 @@ static int cv_test_main(
     cv_debug_init_(cv_null_, 0);
     {
         cv_options * p_options = cv_main_init(argc, argv);
-        if (p_options)
-        {
-            if (cv_test_main_cb(p_options))
-            {
+        if (p_options) {
+            if (cv_test_main_cb(p_options)) {
                 i_result = 0;
             }
             cv_main_cleanup(p_options);

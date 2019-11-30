@@ -18,12 +18,9 @@ void cv_memory_zero(
     void * p_buf,
     long i_buf_len)
 {
-    if (p_buf && i_buf_len)
-    {
+    if (p_buf && i_buf_len) {
         cv_runtime_memset(p_buf, 0, i_buf_len);
-    }
-    else
-    {
+    } else {
         cv_debug_msg_("invalid param");
     }
 }
@@ -33,12 +30,9 @@ void cv_memory_fill(
     long i_buf_len,
     unsigned char c_value)
 {
-    if (p_buf && i_buf_len)
-    {
+    if (p_buf && i_buf_len) {
         cv_runtime_memset(p_buf, c_value, i_buf_len);
-    }
-    else
-    {
+    } else {
         cv_debug_msg_("invalid param");
     }
 }
@@ -50,24 +44,18 @@ long cv_memory_copy(
     long i_src_len)
 {
     long i_copy_len = 0;
-    if (p_dst && p_src)
-    {
+    if (p_dst && p_src) {
         i_copy_len =
             (i_src_len < i_dst_len)
             ? i_src_len
             : i_dst_len;
-        if (i_copy_len > 0)
-        {
+        if (i_copy_len > 0) {
             cv_runtime_memcpy(p_dst, p_src, i_copy_len);
-        }
-        else
-        {
+        } else {
             cv_debug_msg_("zero copy length");
             i_copy_len = 0;
         }
-    }
-    else
-    {
+    } else {
         cv_debug_msg_("invalid param");
     }
     return i_copy_len;
@@ -78,18 +66,14 @@ long cv_memory_find_0(
     long i_src_len)
 {
     long i_find_len = -1;
-    if (p_src && i_src_len > 0)
-    {
+    if (p_src && i_src_len > 0) {
         cv_array o_array = cv_array_null_;
         o_array.o_min.pc_void = p_src;
         o_array.o_max.pc_void = cv_runtime_memchr(p_src, '\000', i_src_len);
-        if (o_array.o_max.pc_void)
-        {
+        if (o_array.o_max.pc_void) {
             i_find_len = cv_array_len(&o_array);
         }
-    }
-    else
-    {
+    } else {
         cv_debug_msg_("invalid param");
     }
     return i_find_len;
@@ -102,26 +86,19 @@ int cv_memory_compare(
     long i_right_len)
 {
     int i_compare_result = -1;
-    if (p_left && p_right)
-    {
+    if (p_left && p_right) {
         long const i_compare_len =
             i_left_len < i_right_len ? i_left_len : i_right_len;
         i_compare_result = cv_runtime_memcmp(
             p_left, p_right, i_compare_len);
-        if (0 == i_compare_result)
-        {
-            if (i_left_len > i_right_len)
-            {
+        if (0 == i_compare_result) {
+            if (i_left_len > i_right_len) {
                 i_compare_result = 1;
-            }
-            else if (i_left_len < i_right_len)
-            {
+            } else if (i_left_len < i_right_len) {
                 i_compare_result = -1;
             }
         }
-    }
-    else
-    {
+    } else {
         cv_debug_msg_("invalid param");
     }
     return i_compare_result;

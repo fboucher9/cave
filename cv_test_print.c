@@ -19,17 +19,14 @@
 void cv_print_array(
     cv_array const * p_array)
 {
-    cv_file_std_print(
-        p_array);
+    cv_file_std_print( p_array);
 }
 
 void cv_print_0(
     char const * p_array0,
     long i_array0_max_len)
 {
-    cv_file_std_print_0(
-        p_array0,
-        i_array0_max_len);
+    cv_file_std_print_0( p_array0, i_array0_max_len);
 }
 
 void cv_print_number(
@@ -42,8 +39,7 @@ void cv_print_number(
         cv_string_it o_string_it = cv_string_it_initializer_;
         cv_string_it_init(&o_string_it, &o_buffer);
         if (cv_number_status_done ==
-            cv_number_enc_convert(p_desc, &o_string_it))
-        {
+            cv_number_enc_convert(p_desc, &o_string_it)) {
             cv_array o_result = cv_array_null_;
             cv_array_init_range(&o_result, c_buffer,
                     o_string_it.o_array.o_min.pc_void);

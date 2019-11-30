@@ -12,15 +12,15 @@ struct cv_file_std
 
 #define cv_file_std_initializer_ { cv_file_initializer_ }
 
-extern cv_file_std g_cv_file_std_in;
-
-extern cv_file_std g_cv_file_std_out;
-
-extern cv_file_std g_cv_file_std_err;
-
 cv_bool cv_file_std_load(void);
 
 void cv_file_std_unload(void);
+
+cv_file_std const * cv_file_std_in(void);
+
+cv_file_std const * cv_file_std_out(void);
+
+cv_file_std const * cv_file_std_err(void);
 
 cv_bool cv_file_std_print(
     cv_array const * p_array);

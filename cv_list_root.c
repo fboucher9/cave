@@ -33,14 +33,9 @@ Comments: The memory allocated for instance may be uninitialized.
 void cv_list_root_init(
     cv_list_root * p_this)
 {
-    cv_debug_assert_(
-        !!p_this,
-        "null ptr");
-    {
-        cv_debug_init_(p_this, cv_sizeof_(*p_this));
-        cv_list_node_init(
-            &p_this->o_node);
-    }
+    cv_debug_assert_( !!p_this, "null ptr");
+    cv_debug_init_(p_this, cv_sizeof_(*p_this));
+    cv_list_node_init( &p_this->o_node);
 }
 
 /*
@@ -61,22 +56,13 @@ Comments: none.
 void cv_list_root_cleanup(
     cv_list_root * p_this)
 {
-    cv_debug_assert_(
-        !!p_this,
-        "null ptr");
-    {
-        /* Assert if not already empty */
-        if (p_this->o_node.o_next.p_node !=
-            &p_this->o_node)
-        {
-            cv_debug_msg_("list cleanup not empty");
-        }
-
-        cv_list_node_cleanup(
-            &p_this->o_node);
-
-        cv_debug_cleanup_(p_this, cv_sizeof_(*p_this));
+    cv_debug_assert_( !!p_this, "null ptr");
+    /* Assert if not already empty */
+    if (p_this->o_node.o_next.p_node != &p_this->o_node) {
+        cv_debug_msg_("list cleanup not empty");
     }
+    cv_list_node_cleanup( &p_this->o_node);
+    cv_debug_cleanup_(p_this, cv_sizeof_(*p_this));
 }
 
 /* end-of-file: cv_list_root.c */

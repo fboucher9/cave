@@ -24,14 +24,10 @@ Description: None.
 cv_bool cv_manager_load(void)
 {
     cv_bool b_result = cv_false;
-    if (cv_heap_load())
-    {
-        if (cv_mutex_load())
-        {
-            if (cv_options_load())
-            {
-                if (cv_file_std_load())
-                {
+    if (cv_heap_load()) {
+        if (cv_mutex_load()) {
+            if (cv_options_load()) {
+                if (cv_file_std_load()) {
                     b_result = cv_true;
                 }
             }
@@ -43,11 +39,8 @@ cv_bool cv_manager_load(void)
 void cv_manager_unload(void)
 {
     cv_file_std_unload();
-
     cv_options_unload();
-
     cv_mutex_unload();
-
     cv_heap_unload();
 }
 

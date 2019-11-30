@@ -20,7 +20,7 @@
 
 #include <cv_heap_section.h>
 
-static cv_heap_section_list g_cv_heap_primary_section_list =
+static cv_heap_section_list g_heap_primary_section_list =
 cv_heap_section_list_initializer_;
 
 static long g_heap_primary_max = (1024L * 1024L);
@@ -29,13 +29,13 @@ cv_bool cv_heap_primary_load(void)
 {
     cv_heap_section_desc o_desc = cv_heap_section_desc_initializer_;
     o_desc.i_grow_len = g_heap_primary_max;
-    cv_heap_section_list_init(&g_cv_heap_primary_section_list, &o_desc);
+    cv_heap_section_list_init(&g_heap_primary_section_list, &o_desc);
     return cv_true;
 }
 
 void cv_heap_primary_unload(void)
 {
-    cv_heap_section_list_cleanup(&g_cv_heap_primary_section_list);
+    cv_heap_section_list_cleanup(&g_heap_primary_section_list);
 }
 
 static void cv_heap_primary_lock(void)
@@ -52,7 +52,7 @@ static void * cv_heap_primary_alloc_cb(
     long i_count)
 {
     void * p_buffer = cv_null_;
-    p_buffer = cv_heap_section_list_alloc(&g_cv_heap_primary_section_list,
+    p_buffer = cv_heap_section_list_alloc(&g_heap_primary_section_list,
         i_count);
     return p_buffer;
 }

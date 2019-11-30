@@ -21,20 +21,15 @@ static void * cv_thread_start(
     cv_thread_ptr o_context_ptr = cv_ptr_null_;
     o_context_ptr.p_void = p_void;
 
-    cv_debug_assert_(
-        !!p_void,
-        "null ptr");
+    cv_debug_assert_( !!p_void, "null ptr");
 
     {
         cv_thread_desc const * const p_desc =
             &(o_context_ptr.p_thread->o_desc);
 
-        cv_debug_assert_(
-            p_desc && p_desc->p_func,
-            "invalid desc");
+        cv_debug_assert_( p_desc && p_desc->p_func, "invalid desc");
 
-        (*(p_desc->p_func))(
-            p_desc->p_context);
+        (*(p_desc->p_func))( p_desc->p_context);
     }
 
     return p_void;
@@ -46,9 +41,7 @@ cv_bool cv_thread_init(
     cv_thread_desc const * p_thread_desc)
 {
     cv_bool b_result = cv_false;
-    cv_debug_assert_(
-        p_this && p_thread_desc,
-        "null ptr");
+    cv_debug_assert_( p_this && p_thread_desc, "null ptr");
     {
         cv_debug_init_(p_this, cv_sizeof_(*p_this));
         cv_memory_zero(p_this, cv_sizeof_(cv_thread));
@@ -62,17 +55,13 @@ cv_bool cv_thread_init(
                 & cv_thread_start,
                 p_this);
 #endif /* #if defined cv_have_pthread_ */
-            if (0 == i_pthread_result)
-            {
+            if (0 == i_pthread_result) {
                 b_result = cv_true;
-            }
-            else
-            {
+            } else {
                 cv_debug_msg_("failed pthread_create");
             }
         }
-        if (!b_result)
-        {
+        if (!b_result) {
             cv_debug_cleanup_(p_this, cv_sizeof_(*p_this));
         }
     }
@@ -82,9 +71,7 @@ cv_bool cv_thread_init(
 void cv_thread_cleanup(
     cv_thread * p_this)
 {
-    cv_debug_assert_(
-        !!p_this,
-        "null ptr");
+    cv_debug_assert_( !!p_this, "null ptr");
     {
         /* check detach flag */
         int i_pthread_result = 0;
@@ -93,11 +80,8 @@ void cv_thread_cleanup(
         i_pthread_result = pthread_join(p_this->u.o_handle, &p_result);
 #endif /* #if defined cv_have_pthread_ */
         cv_unused_(p_result);
-        if (0 == i_pthread_result)
-        {
-        }
-        else
-        {
+        if (0 == i_pthread_result) {
+        } else {
             cv_debug_msg_("failed pthread_join");
         }
         cv_debug_cleanup_(p_this, cv_sizeof_(*p_this));
