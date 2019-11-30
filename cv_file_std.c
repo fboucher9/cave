@@ -64,11 +64,9 @@ cv_bool cv_file_std_print_0(
 {
     cv_bool b_result = cv_false;
     cv_array o_array = cv_array_null_;
-    if (cv_array_init_0(&o_array, p_msg0, i_msg0_max_len))
-    {
-        b_result = cv_file_std_print(&o_array);
-        cv_array_cleanup(&o_array);
-    }
+    cv_array_init_0(&o_array, p_msg0, i_msg0_max_len);
+    b_result = cv_file_std_print(&o_array);
+    cv_array_cleanup(&o_array);
     return b_result;
 }
 

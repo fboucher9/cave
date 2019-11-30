@@ -5,13 +5,13 @@
 
 #include <cv_heap_pred.h>
 
-#include <cv_node.h>
+#include <cv_list_node.h>
 
 #include <cv_bool.h>
 
 struct cv_heap_node
 {
-    cv_node o_node;
+    cv_list_node o_node;
     /* -- */
     char const * a_stack[4u];
     /* -- */

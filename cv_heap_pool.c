@@ -35,8 +35,8 @@ cv_bool cv_heap_pool_init(
         p_this->p_mutex = cv_mutex_mgr_acquire();
         if (p_this->p_mutex)
         {
-            cv_list_init(&p_this->o_used_list);
-            cv_list_init(&p_this->o_free_list);
+            cv_list_root_init(&p_this->o_used_list);
+            cv_list_root_init(&p_this->o_free_list);
             p_this->i_len = i_len;
             b_result = cv_true;
         }
@@ -56,23 +56,23 @@ void cv_heap_pool_cleanup(
         /* Detect leaks ... */
         /* Discard all free nodes */
         {
-            cv_node_it o_node_it = cv_node_it_initializer_;
-            cv_node_it_init(&o_node_it, &p_this->o_free_list);
+            cv_list_it o_list_it = cv_list_it_initializer_;
+            cv_list_it_init(&o_list_it, &p_this->o_free_list);
             {
                 cv_heap_node_ptr o_ptr = cv_ptr_null_;
-                while (cv_node_it_first(&o_node_it, &o_ptr.o_node_ptr))
+                while (cv_list_it_first(&o_list_it, &o_ptr.o_list_ptr))
                 {
                     cv_heap_node_cleanup(o_ptr.p_heap_node);
                 }
             }
-            cv_node_it_cleanup(&o_node_it);
+            cv_list_it_cleanup(&o_list_it);
         }
 
-        cv_node_join(
+        cv_list_join(
             &p_this->o_free_list.o_node,
             &p_this->o_free_list.o_node);
-        cv_list_cleanup(&p_this->o_used_list);
-        cv_list_cleanup(&p_this->o_free_list);
+        cv_list_root_cleanup(&p_this->o_used_list);
+        cv_list_root_cleanup(&p_this->o_free_list);
         if (p_this->p_mutex)
         {
             cv_mutex_mgr_release(p_this->p_mutex);
@@ -97,9 +97,9 @@ static void * cv_heap_pool_alloc_cb(
             if (cv_heap_it_next(&o_heap_it, &o_heap_ptr))
             {
                 /* Detach from free list */
-                cv_node_join(
-                    o_heap_ptr.o_node_ptr.p_node,
-                    o_heap_ptr.o_node_ptr.p_node);
+                cv_list_join(
+                    o_heap_ptr.o_list_ptr.p_node,
+                    o_heap_ptr.o_list_ptr.p_node);
             }
             else
             {
@@ -110,8 +110,8 @@ static void * cv_heap_pool_alloc_cb(
             if (o_heap_ptr.p_heap_node)
             {
                 /* Attach to used list */
-                cv_node_join(
-                    o_heap_ptr.o_node_ptr.p_node,
+                cv_list_join(
+                    o_heap_ptr.o_list_ptr.p_node,
                     &p_this->o_used_list.o_node);
                 /* Set actual len */
                 o_heap_ptr.p_heap_node->i_len = i_len;
@@ -153,11 +153,11 @@ void cv_heap_pool_free(
                 cv_heap_node_from_payload(p_buf);
 
             /* Detach from used list */
-            cv_node_join(
+            cv_list_join(
                 &p_heap_node->o_node,
                 &p_heap_node->o_node);
             /* Attach to free list */
-            cv_node_join(
+            cv_list_join(
                 &p_heap_node->o_node,
                 &p_this->o_free_list.o_node);
         }

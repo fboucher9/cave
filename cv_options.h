@@ -9,14 +9,14 @@
 
 #include <cv_options_desc.h>
 
-#include <cv_list.h>
+#include <cv_list_root.h>
 
 struct cv_options
 {
-    cv_list o_list;
+    cv_list_root o_list;
 };
 
-#define cv_options_initializer_ { cv_list_initializer_ }
+#define cv_options_initializer_ { cv_list_root_initializer_ }
 
 void cv_options_init(
     cv_options * p_this);

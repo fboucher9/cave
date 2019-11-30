@@ -8,11 +8,11 @@
 
 #include <cv_mutex_mgr.h>
 
-#include <cv_list.h>
+#include <cv_list_root.h>
 
-#include <cv_node.h>
+#include <cv_list_node.h>
 
-#include <cv_node_it.h>
+#include <cv_list_it.h>
 
 #include <cv_runtime.h>
 

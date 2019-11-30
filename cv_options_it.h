@@ -5,16 +5,16 @@
 
 #include <cv_options_pred.h>
 
-#include <cv_node_it.h>
+#include <cv_list_it.h>
 
 #include <cv_array_pred.h>
 
 struct cv_options_it
 {
-    cv_node_it o_node_it;
+    cv_list_it o_list_it;
 };
 
-#define cv_options_it_initializer_ { cv_node_it_initializer_ }
+#define cv_options_it_initializer_ { cv_list_it_initializer_ }
 
 void cv_options_it_init(
     cv_options_it * p_this,

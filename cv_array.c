@@ -80,31 +80,25 @@ void cv_array_init_range(
     p_this->o_max.pc_void = p_ref_max;
 }
 
-cv_bool cv_array_init_0(
+void cv_array_init_0(
     cv_array * p_this,
     char const * p_ref0,
     long i_ref0_max_len)
 {
-    cv_bool b_result = cv_false;
     cv_debug_assert_(
         p_this && p_ref0 && i_ref0_max_len,
         "invalid param");
     {
-        long const i_ref0_len = cv_memory_find_0(p_ref0,
+        long i_ref0_len = cv_memory_find_0(p_ref0,
             i_ref0_max_len);
-        if (i_ref0_len >= 0)
+        if (i_ref0_len < 0)
         {
-            cv_array_init_range(p_this,
-                    p_ref0,
-                    p_ref0 + i_ref0_len);
-            b_result = cv_true;
+            i_ref0_len = 0;
         }
-        else
-        {
-            cv_debug_msg_("not zero terminated");
-        }
+        cv_array_init_range(p_this,
+                p_ref0,
+                p_ref0 + i_ref0_len);
     }
-    return b_result;
 }
 
 long cv_array_len(

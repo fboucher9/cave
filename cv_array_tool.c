@@ -29,30 +29,26 @@ cv_bool cv_array_compare(
     return b_result;
 }
 
-cv_bool cv_array_zero(
+void cv_array_zero(
     cv_array const * p_this)
 {
-    cv_bool b_result = cv_false;
-    if (p_this)
+    cv_debug_assert_(
+        !!p_this,
+        "null ptr");
     {
         cv_memory_zero(
             p_this->o_min.p_void,
             cv_array_len(p_this));
-        b_result = cv_true;
     }
-    else
-    {
-        cv_debug_msg_("null ptr");
-    }
-    return b_result;
 }
 
-cv_bool cv_array_fill(
+void cv_array_fill(
     cv_array const * p_this,
     unsigned char c_value)
 {
-    cv_bool b_result = cv_false;
-    if (p_this)
+    cv_debug_assert_(
+        !!p_this,
+        "null ptr");
     {
         if (!c_value)
         {
@@ -63,12 +59,29 @@ cv_bool cv_array_fill(
             p_this->o_min.p_void,
             cv_array_len(p_this),
             c_value);
-        b_result = cv_true;
     }
-    else
+}
+
+void cv_array_copy(
+    cv_array const * p_dst,
+    cv_array const * p_src)
+{
+    cv_debug_assert_(
+        p_dst && p_src,
+        "null ptr");
     {
-        cv_debug_msg_("null ptr");
+        long const i_dst_len = cv_array_len(p_dst);
+        long const i_src_len = cv_array_len(p_src);
+        long const i_copy_len = (i_dst_len < i_src_len)
+            ? i_dst_len : i_src_len;
+        if (i_copy_len > 0)
+        {
+            cv_memory_copy(
+                p_dst->o_min.p_void,
+                i_copy_len,
+                p_src->o_min.pc_void,
+                i_copy_len);
+        }
     }
-    return b_result;
 }
 

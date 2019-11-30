@@ -15,6 +15,8 @@
 
 #include <cv_stack_ptr.h>
 
+#include <cv_bool.h>
+
 /*
  *  Structure: cv_stack
  *
@@ -38,8 +40,9 @@ void cv_stack_push(
     cv_stack * p_this,
     cv_stack * p_object);
 
-cv_stack * cv_stack_pop(
-    cv_stack * p_this);
+cv_bool cv_stack_pop(
+    cv_stack * p_this,
+    cv_stack_ptr * r_value);
 
 #endif /* #ifndef cv_stack_h_ */
 

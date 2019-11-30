@@ -14,7 +14,7 @@
 
 #include <cv_options_pool.h>
 
-#include <cv_node_it.h>
+#include <cv_list_it.h>
 
 #include <cv_heap.h>
 
@@ -52,18 +52,18 @@ static void cv_options_cleanup_list(
         !!p_this,
         "null ptr");
     {
-        cv_node_it o_node_it = cv_node_it_initializer_;
-        cv_node_it_init(&o_node_it, &p_this->o_list);
+        cv_list_it o_list_it = cv_list_it_initializer_;
+        cv_list_it_init(&o_list_it, &p_this->o_list);
         {
             cv_options_node_ptr o_options_node_ptr;
-            while (cv_node_it_first(&o_node_it,
-                    &o_options_node_ptr.o_node_ptr))
+            while (cv_list_it_first(&o_list_it,
+                    &o_options_node_ptr.o_list_ptr))
             {
                 cv_options_node_destroy(
                     o_options_node_ptr.p_options_node);
             }
         }
-        cv_node_it_cleanup(&o_node_it);
+        cv_list_it_cleanup(&o_list_it);
     }
 }
 
@@ -77,7 +77,7 @@ void cv_options_cleanup(
         "null ptr");
     {
         cv_options_cleanup_list(p_this);
-        cv_list_cleanup(&p_this->o_list);
+        cv_list_root_cleanup(&p_this->o_list);
         cv_debug_cleanup_(p_this, cv_sizeof_(*p_this));
     }
 }
@@ -94,7 +94,7 @@ void cv_options_init(
         "null ptr");
     {
         cv_debug_init_(p_this, cv_sizeof_(*p_this));
-        cv_list_init(&p_this->o_list);
+        cv_list_root_init(&p_this->o_list);
     }
 }
 
@@ -104,14 +104,14 @@ static cv_bool cv_options_setup_cb(
     long i_arg0_max_len)
 {
     cv_bool b_result = cv_false;
-    if (p_this && p_arg0)
+    cv_debug_assert_(
+        p_this && p_arg0,
+        "null ptr");
     {
         cv_array o_string = cv_array_null_;
-        if (cv_array_init_0(&o_string, p_arg0, i_arg0_max_len))
-        {
-            b_result = cv_options_add(p_this, &o_string);
-            cv_array_cleanup(&o_string);
-        }
+        cv_array_init_0(&o_string, p_arg0, i_arg0_max_len);
+        b_result = cv_options_add(p_this, &o_string);
+        cv_array_cleanup(&o_string);
     }
     return b_result;
 }
@@ -121,7 +121,9 @@ cv_bool cv_options_setup(
     cv_options_desc const * p_desc)
 {
     cv_bool b_result = cv_false;
-    if (p_this && p_desc)
+    cv_debug_assert_(
+        p_this && p_desc,
+        "null ptr");
     {
         cv_array_it o_array_it = cv_array_it_initializer_;
         cv_array_it_init(&o_array_it, &p_desc->o_array);
@@ -132,7 +134,7 @@ cv_bool cv_options_setup(
                     &o_array_ptr.pc_void))
             {
                 char const * const p_arg0 = o_array_ptr.pc_char;
-                b_result = cv_options_setup_cb(p_this, p_arg0, 0x7FFFFFFFL);
+                b_result = cv_options_setup_cb(p_this, p_arg0, 0x7fffffffL);
             }
         }
         cv_array_it_cleanup(&o_array_it);
@@ -145,18 +147,22 @@ cv_bool cv_options_add(
     cv_array const * p_array)
 {
     cv_bool b_result = cv_false;
-    if (p_this && p_array)
+    cv_debug_assert_(
+        p_this && p_array,
+        "null ptr");
     {
-        cv_options_node * p_options_node = cv_null_;
         cv_options_node_desc o_options_node_desc =
             cv_options_node_desc_initializer_;
-        o_options_node_desc.p_parent = &p_this->o_list;
-        o_options_node_desc.p_array = p_array;
-        p_options_node = cv_options_node_create(
-            &o_options_node_desc);
-        if (p_options_node)
+        o_options_node_desc.o_array = *p_array;
         {
-            b_result = cv_true;
+            cv_options_node * p_options_node = cv_null_;
+            p_options_node = cv_options_node_create(
+                &o_options_node_desc);
+            if (p_options_node)
+            {
+                cv_list_join(&p_options_node->o_node, &p_this->o_list.o_node);
+                b_result = cv_true;
+            }
         }
     }
     return b_result;

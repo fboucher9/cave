@@ -12,24 +12,23 @@
 
 #include <cv_memory.h>
 
-#include <cv_list.h>
+#include <cv_list_root.h>
 
 #include <cv_sizeof.h>
 
 #include <cv_debug.h>
 
-static cv_bool cv_options_node_init_node(
-    cv_options_node * p_this,
-    cv_list * p_parent)
+#include <cv_array_tool.h>
+
+static void cv_options_node_init_node(
+    cv_options_node * p_this)
 {
-    cv_bool b_result = cv_false;
-    if (p_this && p_parent)
+    cv_debug_assert_(
+        !!p_this,
+        "null ptr");
     {
-        cv_node_init(&(p_this->o_node));
-        cv_node_join(&(p_this->o_node), &p_parent->o_node);
-        b_result = cv_true;
+        cv_list_node_init(&(p_this->o_node));
     }
-    return b_result;
 }
 
 static void cv_options_node_cleanup_node(
@@ -37,28 +36,26 @@ static void cv_options_node_cleanup_node(
 {
     if (p_this)
     {
-        cv_node_cleanup(&(p_this->o_node));
+        cv_list_node_cleanup(&(p_this->o_node));
     }
 }
 
-static cv_bool cv_options_node_init_buf0(
+static cv_bool cv_options_node_init_buffer(
     cv_options_node * p_this,
     cv_array const * p_array)
 {
     cv_bool b_result = cv_false;
-    if (p_this && p_array)
+    cv_debug_assert_(
+        p_this && p_array,
+        "null ptr");
     {
         long const i_array_len = cv_array_len(p_array);
         if (cv_buffer_init(&p_this->o_buffer, i_array_len))
         {
-            if (i_array_len)
-            {
-                cv_memory_copy(
-                    p_this->o_buffer.o_array.o_min.p_void,
-                    i_array_len,
-                    p_array->o_min.pc_void,
-                    i_array_len);
-            }
+            cv_array_copy(
+                &p_this->o_buffer.o_array,
+                p_array);
+
             b_result = cv_true;
         }
     }
@@ -79,34 +76,27 @@ static cv_bool cv_options_node_init(
     cv_options_node_desc const * p_desc)
 {
     cv_bool b_result = cv_false;
-    if (p_this && p_desc)
+    cv_debug_assert_(
+        p_this && p_desc,
+        "null ptr");
     {
         cv_debug_init_(p_this, cv_sizeof_(*p_this));
-        if (cv_options_node_init_node(p_this, p_desc->p_parent))
+        cv_options_node_init_node(p_this);
+        if (cv_options_node_init_buffer(p_this, &p_desc->o_array))
         {
-            if (cv_options_node_init_buf0(p_this, p_desc->p_array))
-            {
-                b_result = cv_true;
+            b_result = cv_true;
 #if 0
-                if (!b_result)
-                {
-                    cv_options_node_cleanup_buf0(p_this);
-                }
-#endif
-            }
             if (!b_result)
             {
-                cv_options_node_cleanup_node(p_this);
+                cv_options_node_cleanup_buf0(p_this);
             }
+#endif
         }
         if (!b_result)
         {
+            cv_options_node_cleanup_node(p_this);
             cv_debug_cleanup_(p_this, cv_sizeof_(*p_this));
         }
-    }
-    else
-    {
-        cv_debug_msg_("null ptr");
     }
     return b_result;
 }

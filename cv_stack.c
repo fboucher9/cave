@@ -70,19 +70,24 @@ void cv_stack_push(
  *  Function: cv_stack_pop()
  */
 
-cv_stack * cv_stack_pop(
-    cv_stack * p_this)
+cv_bool cv_stack_pop(
+    cv_stack * p_this,
+    cv_stack_ptr * r_value)
 {
-    cv_stack * p_result = cv_null_;
+    cv_bool b_result = cv_false;
     cv_debug_assert_(
-        !!p_this,
+        p_this && r_value,
         "null ptr");
-    p_result = p_this->o_next.p_stack;
-    if (p_result)
     {
-        p_this->o_next = p_result->o_next;
+        cv_stack_ptr o_next = p_this->o_next;
+        if (o_next.p_stack)
+        {
+            p_this->o_next = o_next.p_stack->o_next;
+            *r_value = o_next;
+            b_result = cv_true;
+        }
     }
-    return p_result;
+    return b_result;
 }
 
 /* end-of-file: cv_stack.c */

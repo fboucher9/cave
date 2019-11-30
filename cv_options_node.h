@@ -5,19 +5,19 @@
 
 #include <cv_options_pred.h>
 
-#include <cv_node.h>
+#include <cv_list_node.h>
 
 #include <cv_buffer.h>
 
 struct cv_options_node
 {
-    cv_node o_node;
+    cv_list_node o_node;
     /* -- */
     cv_buffer o_buffer;
 };
 
 #define cv_options_node_initializer_ \
-{ cv_node_initializer_, cv_buffer_initializer_ }
+{ cv_list_node_initializer_, cv_buffer_initializer_ }
 
 cv_options_node * cv_options_node_create(
     cv_options_node_desc const * p_desc);

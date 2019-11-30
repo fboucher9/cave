@@ -5,20 +5,13 @@
 
 #include <cv_options_pred.h>
 
-#include <cv_list_pred.h>
-
-#include <cv_array_pred.h>
-
-#include <cv_null.h>
+#include <cv_array.h>
 
 struct cv_options_node_desc
 {
-    cv_list * p_parent;
-
-    cv_array const * p_array;
-
+    cv_array o_array;
 };
 
-#define cv_options_node_desc_initializer_ { cv_null_, cv_null_ }
+#define cv_options_node_desc_initializer_ { cv_array_null_ }
 
 #endif /* #ifndef cv_options_node_desc_h_ */

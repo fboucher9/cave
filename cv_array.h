@@ -41,7 +41,7 @@ void cv_array_init_range(
     void const * p_ref_min,
     void const * p_ref_max);
 
-cv_bool cv_array_init_0(
+void cv_array_init_0(
     cv_array * p_array,
     char const * p_ref0,
     long i_ref0_max_len);

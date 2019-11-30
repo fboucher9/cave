@@ -29,6 +29,8 @@ are thread-safe.
 
 #include <cv_debug.h>
 
+#include <cv_runtime.h>
+
 static cv_bool g_heap_loaded = cv_false;
 
 static long g_heap_count = 0L;
@@ -88,10 +90,8 @@ void cv_heap_unload(void)
 {
     if (g_heap_loaded)
     {
-        if (g_heap_count)
-        {
-            cv_debug_msg_("leaks detected");
-        }
+        cv_runtime_printf("*** %ld leaks detected ***\n",
+            g_heap_count);
         cv_heap_large_unload();
         cv_heap_small_unload();
         cv_heap_primary_unload();

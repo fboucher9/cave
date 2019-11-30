@@ -7,7 +7,7 @@
 
 #include <cv_mutex_pred.h>
 
-#include <cv_list.h>
+#include <cv_list_root.h>
 
 #include <cv_null.h>
 
@@ -24,9 +24,9 @@ struct cv_heap_pool
     cv_mutex * p_mutex; /* safety first */
     void * pv_padding[1u];
     /* -- */
-    cv_list o_used_list; /* list of allocations */
+    cv_list_root o_used_list; /* list of allocations */
     /* -- */
-    cv_list o_free_list; /* list of unused */
+    cv_list_root o_free_list; /* list of unused */
     /* -- */
     long i_len;
     long l_padding[1u];
@@ -35,8 +35,8 @@ struct cv_heap_pool
 #define cv_heap_pool_initializer_ { \
     cv_null_, \
     { 0 }, \
-    cv_list_initializer_, \
-    cv_list_initializer_, \
+    cv_list_root_initializer_, \
+    cv_list_root_initializer_, \
     0, \
     { 0 }
 

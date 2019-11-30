@@ -8,7 +8,7 @@
 
 #include <cv_sizeof.h>
 
-#include <cv_node_it.h>
+#include <cv_list_it.h>
 
 #include <cv_array.h>
 
@@ -29,7 +29,7 @@ union cv_heap_section_ptr
     char * p_char;
     cv_heap_section_node const * pc_heap_section_node;
     cv_heap_section_node * p_heap_section_node;
-    cv_node_ptr o_node_ptr;
+    cv_list_ptr o_list_ptr;
 };
 
 struct cv_heap_section_node_desc
@@ -51,7 +51,7 @@ struct cv_heap_section_node_desc
 
 struct cv_heap_section_node
 {
-    cv_node o_node;
+    cv_list_node o_node;
     /* -- */
     cv_heap_section_node_desc o_desc;
     /* -- */
@@ -78,9 +78,9 @@ static cv_bool cv_heap_section_node_init(
     cv_bool b_result = cv_false;
     if (p_this && p_desc)
     {
-        cv_node_init(&p_this->o_node);
+        cv_list_node_init(&p_this->o_node);
         p_this->o_desc = *p_desc;
-        cv_node_join(&p_this->o_node,
+        cv_list_join(&p_this->o_node,
             &p_desc->p_parent->o_list.o_node);
         b_result = cv_true;
     }
@@ -96,7 +96,7 @@ static void cv_heap_section_node_cleanup(
 {
     if (p_this)
     {
-        cv_node_cleanup(&p_this->o_node);
+        cv_list_node_cleanup(&p_this->o_node);
         cv_array_cleanup(&p_this->o_payload);
         cv_array_cleanup(&p_this->o_allocation);
     }
@@ -174,7 +174,7 @@ void cv_heap_section_list_init(
         "null ptr");
     {
         p_this->o_desc = *p_desc;
-        cv_list_init(&p_this->o_list);
+        cv_list_root_init(&p_this->o_list);
         cv_array_it_init_vector(&p_this->o_array_it, cv_null_, 0);
     }
 }
@@ -187,18 +187,18 @@ void cv_heap_section_list_cleanup(
         "null ptr");
     {
         /* Destroy all nodes */
-        cv_node_it o_node_it = cv_node_it_initializer_;
-        cv_node_it_init(&o_node_it, &p_this->o_list);
+        cv_list_it o_list_it = cv_list_it_initializer_;
+        cv_list_it_init(&o_list_it, &p_this->o_list);
         {
             cv_heap_section_ptr o_ptr = cv_ptr_null_;
-            while (cv_node_it_first(&o_node_it, &o_ptr.o_node_ptr))
+            while (cv_list_it_first(&o_list_it, &o_ptr.o_list_ptr))
             {
                 cv_heap_section_node_destroy(o_ptr.p_heap_section_node);
             }
         }
-        cv_node_it_cleanup(&o_node_it);
+        cv_list_it_cleanup(&o_list_it);
 
-        cv_list_cleanup(&p_this->o_list);
+        cv_list_root_cleanup(&p_this->o_list);
 
         cv_array_it_cleanup(&p_this->o_array_it);
     }

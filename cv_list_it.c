@@ -1,10 +1,10 @@
 /* See LICENSE for license details */
 
-#include <cv_node_it.h>
+#include <cv_list_it.h>
 
-#include <cv_node.h>
+#include <cv_list_node.h>
 
-#include <cv_list.h>
+#include <cv_list_root.h>
 
 #include <cv_debug.h>
 
@@ -12,9 +12,9 @@
 
 #include <cv_null.h>
 
-void cv_node_it_init(
-    cv_node_it * p_this,
-    cv_list const * p_list)
+void cv_list_it_init(
+    cv_list_it * p_this,
+    cv_list_root const * p_list)
 {
     cv_debug_assert_(
         p_this && p_list,
@@ -26,8 +26,8 @@ void cv_node_it_init(
     }
 }
 
-void cv_node_it_cleanup(
-    cv_node_it * p_this)
+void cv_list_it_cleanup(
+    cv_list_it * p_this)
 {
     cv_debug_assert_(
         !!p_this,
@@ -39,35 +39,35 @@ void cv_node_it_cleanup(
     }
 }
 
-cv_bool cv_node_it_first(
-    cv_node_it * p_this,
-    cv_node_ptr * r_cur)
+cv_bool cv_list_it_first(
+    cv_list_it * p_this,
+    cv_list_ptr * r_cur)
 {
     cv_bool b_result = cv_false;
     cv_debug_assert_(!!p_this, "null ptr");
     {
         p_this->o_cur = p_this->o_list;
-        b_result = cv_node_it_next(p_this, r_cur);
+        b_result = cv_list_it_next(p_this, r_cur);
     }
     return b_result;
 }
 
-cv_bool cv_node_it_last(
-    cv_node_it * p_this,
-    cv_node_ptr * r_cur)
+cv_bool cv_list_it_last(
+    cv_list_it * p_this,
+    cv_list_ptr * r_cur)
 {
     cv_bool b_result = cv_false;
     cv_debug_assert_(!!p_this, "null ptr");
     {
         p_this->o_cur = p_this->o_list;
-        b_result = cv_node_it_prev(p_this, r_cur);
+        b_result = cv_list_it_prev(p_this, r_cur);
     }
     return b_result;
 }
 
-static cv_bool cv_node_it_cur(
-    cv_node_it const * p_this,
-    cv_node_ptr * r_cur)
+static cv_bool cv_list_it_cur(
+    cv_list_it const * p_this,
+    cv_list_ptr * r_cur)
 {
     cv_bool b_result = cv_false;
     cv_debug_assert_(
@@ -84,9 +84,9 @@ static cv_bool cv_node_it_cur(
     return b_result;
 }
 
-cv_bool cv_node_it_next(
-    cv_node_it * p_this,
-    cv_node_ptr * r_cur)
+cv_bool cv_list_it_next(
+    cv_list_it * p_this,
+    cv_list_ptr * r_cur)
 {
     cv_bool b_result = cv_false;
     cv_debug_assert_(
@@ -94,14 +94,14 @@ cv_bool cv_node_it_next(
         "null ptr");
     {
         p_this->o_cur = p_this->o_cur.pc_node->o_next;
-        b_result = cv_node_it_cur(p_this, r_cur);
+        b_result = cv_list_it_cur(p_this, r_cur);
     }
     return b_result;
 }
 
-cv_bool cv_node_it_prev(
-    cv_node_it * p_this,
-    cv_node_ptr * r_cur)
+cv_bool cv_list_it_prev(
+    cv_list_it * p_this,
+    cv_list_ptr * r_cur)
 {
     cv_bool b_result = cv_false;
     cv_debug_assert_(
@@ -109,7 +109,7 @@ cv_bool cv_node_it_prev(
         "null ptr");
     {
         p_this->o_cur = p_this->o_cur.pc_node->o_prev;
-        b_result = cv_node_it_cur(p_this, r_cur);
+        b_result = cv_list_it_cur(p_this, r_cur);
     }
     return b_result;
 }

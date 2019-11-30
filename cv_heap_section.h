@@ -21,7 +21,7 @@ than largest allocation.
 
 #include <cv_heap_pred.h>
 
-#include <cv_list.h>
+#include <cv_list_root.h>
 
 #include <cv_array_it.h>
 
@@ -60,7 +60,7 @@ struct cv_heap_section_list
 {
     cv_heap_section_desc o_desc;
     /* -- */
-    cv_list o_list;
+    cv_list_root o_list;
     /* -- */
     cv_array_it o_array_it;
 };
@@ -69,7 +69,7 @@ struct cv_heap_section_list
 #define cv_heap_section_list_initializer_ \
 { \
     cv_heap_section_desc_initializer_, \
-    cv_list_initializer_, \
+    cv_list_root_initializer_, \
     cv_array_it_initializer_ \
 }
 

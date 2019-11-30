@@ -13,6 +13,8 @@
 
 #include <cv_stack_ptr.h>
 
+#include <cv_bool.h>
+
 struct cv_stack_it
 {
     cv_stack_ptr o_cur;
@@ -26,6 +28,10 @@ void cv_stack_it_init(
 
 void cv_stack_it_cleanup(
     cv_stack_it * p_this);
+
+cv_bool cv_stack_it_next(
+    cv_stack_it * p_this,
+    cv_stack_ptr * r_cur);
 
 #endif /* #ifndef cv_stack_it_h_ */
 

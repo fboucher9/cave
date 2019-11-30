@@ -41,9 +41,9 @@ cv_test_srcs = \
     cv_memory.c \
     cv_number_enc.c \
     cv_clock.c \
-    cv_node.c \
-    cv_node_it.c \
-    cv_list.c \
+    cv_list_node.c \
+    cv_list_it.c \
+    cv_list_root.c \
     cv_stack.c \
     cv_mutex.c \
     cv_mutex_pool.c \
