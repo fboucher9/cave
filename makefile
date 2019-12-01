@@ -63,6 +63,10 @@ cv_test_objs = $(addsuffix .o,$(cv_test_srcs))
 
 cv_test_objs_abs = $(addprefix $(cv_dst_path)/.obj/,$(cv_test_objs))
 
+cv_test_deps = $(addsuffix .d,$(cv_test_srcs))
+
+cv_test_deps_abs = $(addprefix $(cv_dst_path)/.obj/,$(cv_test_deps))
+
 cv_profile_cflags = \
     -pg \
     -ftest-coverage \
@@ -156,7 +160,7 @@ $(cv_test_objs_abs) : $(cv_src_path)/makefile
 $(cv_dst_path)/.obj/%.c.o : $(cv_src_path)/%.c
 	@echo compiling $(notdir $<)
 	$(cv_verbose)mkdir -p $(cv_dst_path)/.obj
-	$(cv_verbose)echo -c -m32 -x c -o $@ $(cv_cflags) $(cv_defines) $(cv_includes) $< -MT $@ -MMD -MP -MF $@.d > $@.cmd
+	$(cv_verbose)echo -c -m32 -x c -o $@ $(cv_cflags) $(cv_defines) $(cv_includes) $< -MMD > $@.cmd
 	$(cv_verbose)gcc @$@.cmd
 
 $(cv_dst_path)/test.m64.exe : $(cv_src_path)/makefile $(cv_test_srcs_abs)
@@ -174,4 +178,4 @@ $(cv_dst_path)/test.clangxx.exe : $(cv_src_path)/makefile $(cv_test_srcs_abs)
 $(cv_dst_path)/test.bare.exe : $(cv_src_path)/makefile $(cv_test_srcs_abs)
 	gcc -x c -o $(cv_dst_path)/test.bare.exe -I . -D cv_debug_ -ansi -pedantic -nostdinc -Wall -Wextra -fno-stack-protector $(cv_test_srcs_abs) -nodefaultlibs -nostartfiles
 
-include $(wildcard $(cv_dst_path)/.obj/*.d)
+-include $(cv_test_deps_abs)
