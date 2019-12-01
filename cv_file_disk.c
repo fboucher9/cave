@@ -14,42 +14,36 @@
 
 #include <cv_debug.h>
 
-#if defined cv_have_libc_
-#include <unistd.h>
+#if defined cv_linux_
+#include <cv_linux.h>
+#endif /* #if defined cv_linux_ */
 
-#include <sys/types.h>
-
-#include <sys/stat.h>
-
-#include <fcntl.h>
-#endif /* #if defined cv_have_libc_ */
-
-#if defined cv_have_libc_
+#if defined cv_linux_
 static int cv_file_disk_convert_flags(
     cv_file_disk_desc const * p_desc)
 {
-    int i_open_flags = O_CLOEXEC | O_NONBLOCK;
+    int i_open_flags = cv_linux_flag_cloexec | cv_linux_flag_nonblock;
     if (cv_file_disk_flag_read ==
         (p_desc->i_flags & (cv_file_disk_flag_read |
             cv_file_disk_flag_write))) {
-        i_open_flags |= O_RDONLY;
+        i_open_flags |= cv_linux_flag_rdonly;
     } else if (
         cv_file_disk_flag_write ==
         (p_desc->i_flags & (cv_file_disk_flag_read |
             cv_file_disk_flag_write))) {
-        i_open_flags |= O_WRONLY | O_CREAT;
+        i_open_flags |= cv_linux_flag_wronly | cv_linux_flag_creat;
     } else if (
         (cv_file_disk_flag_read | cv_file_disk_flag_write) ==
         (p_desc->i_flags & (cv_file_disk_flag_read |
             cv_file_disk_flag_write))) {
-        i_open_flags |= O_RDWR | O_CREAT;
+        i_open_flags |= cv_linux_flag_rdwr | cv_linux_flag_creat;
     }
     if (cv_file_disk_flag_append & p_desc->i_flags) {
-        i_open_flags |= O_APPEND;
+        i_open_flags |= cv_linux_flag_append;
     }
     return i_open_flags;
 }
-#endif /* #if defined cv_have_libc_ */
+#endif /* #if defined cv_linux_ */
 
 cv_bool cv_file_disk_init(
     cv_file_disk * p_this,
@@ -66,18 +60,22 @@ cv_bool cv_file_disk_init(
             char const * const p_open_pathname =
                 cv_string0_get(&o_name0);
 
-#if defined cv_have_libc_
+#if defined cv_linux_
             int const i_open_flags =
                 cv_file_disk_convert_flags(p_desc);
 
-            mode_t const i_open_mode =
-                S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH;
+            /* S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH; */
+            int const i_open_mode =
+                cv_linux_mode_user_read |
+                cv_linux_mode_user_write |
+                cv_linux_mode_group_read |
+                cv_linux_mode_other_read;
 
-            p_this->o_file.i_index = open(p_open_pathname, i_open_flags,
+            p_this->o_file.i_index = cv_linux_open(p_open_pathname, i_open_flags,
                 i_open_mode);
-#else /* #if defined cv_have_libc_ */
+#else /* #if defined cv_linux_ */
             cv_unused_(p_open_pathname);
-#endif /* #if defined cv_have_libc_ */
+#endif /* #if defined cv_linux_ */
 
             if (p_this->o_file.i_index >= 0) {
                 b_result = cv_true;
@@ -97,7 +95,7 @@ void cv_file_disk_cleanup(
     if (p_this->o_file.i_index >= 0)
     {
 #if defined cv_have_libc_
-        close(p_this->o_file.i_index);
+        cv_linux_close(p_this->o_file.i_index);
 #endif /* #if defined cv_have_libc_ */
         p_this->o_file.i_index = -1;
     }
