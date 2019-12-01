@@ -4,31 +4,20 @@
 #define cv_file_poll_h_
 
 #include <cv_file_pred.h>
-
 #include <cv_clock_pred.h>
-
 #include <cv_bool.h>
 
-enum cv_file_poll_flag
-{
+enum cv_file_poll_flag {
     cv_file_poll_flag_read = 1,
-
     cv_file_poll_flag_write = 2
-
 };
 
-struct cv_file_poll
-{
+struct cv_file_poll {
     cv_file const * p_file;
-
     void * pv_padding[1u];
-
     /* -- */
-
     long i_flags_in;
-
     long i_flags_out;
-
 };
 
 #define cv_file_poll_initializer_ \
