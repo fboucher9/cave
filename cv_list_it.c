@@ -60,8 +60,7 @@ static cv_bool cv_list_it_cur(
     cv_bool b_result = cv_false;
     cv_debug_assert_( p_this && r_cur, "null ptr");
     r_cur->p_void = cv_null_;
-    if (p_this->o_cur.pc_node != p_this->o_list.pc_node)
-    {
+    if (p_this->o_cur.pc_node != p_this->o_list.pc_node) {
         *r_cur = p_this->o_cur;
         b_result = cv_true;
     }
