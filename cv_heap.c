@@ -68,6 +68,7 @@ static void cv_heap_print_leak_report(void)
     {
         cv_number_desc o_desc = cv_number_desc_initializer_;
         o_desc.o_data.i_signed = g_heap_count;
+        o_desc.o_format = cv_number_format_dec;
         cv_file_print_number(p_std_err, &o_desc);
     }
     {

@@ -40,7 +40,7 @@ void cv_print_dec(
 {
     cv_number_desc o_desc = cv_number_desc_initializer_;
     o_desc.o_data.i_signed = i_number;
-    o_desc.o_format.i_flags = 0;
+    o_desc.o_format = cv_number_format_dec;
     cv_print_number(&o_desc);
 }
 
@@ -49,8 +49,7 @@ void cv_print_hex(
 {
     cv_number_desc o_desc = cv_number_desc_initializer_;
     o_desc.o_data.i_unsigned = i_number;
-    o_desc.o_format.i_flags = cv_number_flag_unsigned
-        | cv_number_flag_hexadecimal;
+    o_desc.o_format = cv_number_format_hex;
     cv_print_number(&o_desc);
 }
 

@@ -40,6 +40,7 @@ cv_test_srcs = \
     cv_thread.c \
     cv_thread_impl.c \
     cv_memory.c \
+    cv_number_desc.c \
     cv_number_enc.c \
     cv_clock.c \
     cv_list_node.c \
