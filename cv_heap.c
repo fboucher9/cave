@@ -12,24 +12,19 @@ are thread-safe.
 */
 
 #include <cv_heap.h>
-
 #include <cv_heap_plugin.h>
-
 #include <cv_heap_small.h>
-
 #include <cv_heap_large.h>
-
 #include <cv_heap_node.h>
-
 #include <cv_heap_node_ptr.h>
-
 #include <cv_heap_primary.h>
-
 #include <cv_null.h>
-
 #include <cv_debug.h>
-
-#include <cv_runtime.h>
+#include <cv_file_print.h>
+#include <cv_file_std.h>
+#include <cv_array.h>
+#include <cv_array_tool.h>
+#include <cv_number_desc.h>
 
 static cv_bool g_heap_loaded = cv_false;
 
@@ -57,6 +52,37 @@ cv_bool cv_heap_load(void)
 }
 
 /*
+ *
+ */
+
+static void cv_heap_print_leak_report(void)
+{
+    cv_file const * const p_std_err = cv_file_std_err();
+    {
+        static unsigned char a_report_prefix[] = {
+            '*', '*', '*', ' ' };
+        static cv_array const g_report_prefix =
+            cv_array_text_initializer_(a_report_prefix);
+        cv_file_print_array(p_std_err, &g_report_prefix);
+    }
+    {
+        cv_number_desc o_desc = cv_number_desc_initializer_;
+        o_desc.o_data.i_signed = g_heap_count;
+        cv_file_print_number(p_std_err, &o_desc);
+    }
+    {
+        static unsigned char a_report_suffix[] = {
+            ' ', 'l', 'e', 'a', 'k', 's', ' ', 'd',
+            'e', 't', 'e', 'c', 't', 'e', 'd', ' ',
+            '*', '*', '*' };
+        static cv_array const g_report_suffix =
+            cv_array_text_initializer_(a_report_suffix);
+        cv_file_print_array(p_std_err, &g_report_suffix);
+    }
+    cv_file_print_nl(p_std_err);
+}
+
+/*
 
 Function: cv_heap_unload()
 
@@ -74,8 +100,7 @@ may occur.  The sub modules will produce correct leak reports.
 void cv_heap_unload(void)
 {
     cv_debug_assert_(g_heap_loaded, "already unloaded");
-    cv_runtime_printf("*** %ld leaks detected ***\n",
-        g_heap_count);
+    cv_heap_print_leak_report();
     cv_heap_large_unload();
     cv_heap_small_unload();
     cv_heap_primary_unload();
@@ -87,7 +112,7 @@ void * cv_heap_alloc(
 {
     void * p_buffer = cv_null_;
     cv_debug_assert_(g_heap_loaded, "not loaded");
-    if (i_buffer_length) {
+    if (i_buffer_length > 0) {
         if (i_buffer_length <= cv_heap_small_max_len_) {
             p_buffer = cv_heap_small_alloc(i_buffer_length);
         } else {

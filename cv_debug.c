@@ -82,12 +82,7 @@ void xx_debug_cleanup(
     cv_debug_verbose_trace("cv_debug_cleanup");
 #endif
     if (p_buf && i_buf_len) {
-        cv_array o_array = cv_array_null_;
-        o_array.o_min.p_void = p_buf;
-        o_array.o_max.p_char = o_array.o_min.p_char + i_buf_len;
-        cv_array_fill(
-            &o_array,
-            0xcd);
+        cv_runtime_memset(p_buf, 0xcd, i_buf_len);
     } else {
         cv_runtime_printf("*** %ld cleanup remain ***\n",
             g_init_count);
