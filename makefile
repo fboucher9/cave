@@ -9,6 +9,7 @@ cv_src_path ?= .
 cv_dst_path ?= .
 
 cv_test_srcs = \
+    cv_test_os.c \
     cv_test.c \
     cv_test_print.c \
     cv_main.c \
@@ -45,6 +46,8 @@ cv_test_srcs = \
     cv_list_it.c \
     cv_list_root.c \
     cv_stack.c \
+    cv_stack_it.c \
+    cv_stack_test.c \
     cv_mutex.c \
     cv_mutex_pool.c \
     cv_mutex_mgr.c \
@@ -53,6 +56,7 @@ cv_test_srcs = \
     cv_file_disk_desc.c \
     cv_file_disk.c \
     cv_file_poll.c \
+    cv_file_print.c \
     cv_file_test.c \
     cv_runtime.c \
     cv_linux.c \

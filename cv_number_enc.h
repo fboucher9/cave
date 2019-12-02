@@ -23,6 +23,8 @@ structure instead of a format string.
 
 #include <cv_number_desc.h>
 
+#include <cv_array_pred.h>
+
 struct cv_number_enc {
     cv_number_desc o_desc;
     /* -- */
@@ -66,7 +68,8 @@ cv_number_status cv_number_enc_read(
 /* all-in-one service */
 cv_number_status cv_number_enc_convert(
     cv_number_desc const * p_desc,
-    cv_string_it * p_string_it);
+    cv_array const * p_input_array,
+    cv_array * p_output_array);
 
 #endif /* #ifndef cv_number_enc_h_ */
 

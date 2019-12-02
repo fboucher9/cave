@@ -305,16 +305,26 @@ cv_number_status cv_number_enc_read(
 /* all-in-one service */
 cv_number_status cv_number_enc_convert(
     cv_number_desc const * p_desc,
-    cv_string_it * p_string_it)
+    cv_array const * p_input_buffer,
+    cv_array * p_output_buffer)
 {
     cv_number_status e_status = cv_number_status_fail;
-    cv_debug_assert_(p_desc && p_string_it, "null ptr");
+    cv_debug_assert_(p_desc && p_input_buffer && p_output_buffer, "null ptr");
     {
-        cv_number_enc o_number_enc = cv_number_enc_initializer_;
-        if (cv_number_enc_init(&o_number_enc, p_desc)) {
-            e_status = cv_number_enc_read(&o_number_enc, p_string_it);
-            cv_number_enc_cleanup(&o_number_enc);
+        cv_string_it o_string_it = cv_string_it_initializer_;
+        cv_string_it_init(&o_string_it, p_input_buffer);
+        {
+            cv_number_enc o_number_enc = cv_number_enc_initializer_;
+            if (cv_number_enc_init(&o_number_enc, p_desc)) {
+                e_status = cv_number_enc_read(&o_number_enc, &o_string_it);
+                if (cv_number_status_done == e_status) {
+                    p_output_buffer->o_min = p_input_buffer->o_min;
+                    p_output_buffer->o_max = o_string_it.o_array.o_min;
+                }
+                cv_number_enc_cleanup(&o_number_enc);
+            }
         }
+        cv_string_it_cleanup(&o_string_it);
     }
     return e_status;
 }

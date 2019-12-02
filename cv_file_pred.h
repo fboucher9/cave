@@ -13,9 +13,6 @@ typedef struct cv_file_disk_desc cv_file_disk_desc;
 typedef struct cv_file_disk cv_file_disk;
 
 /* Predefine */
-typedef struct cv_file_std cv_file_std;
-
-/* Predefine */
 typedef struct cv_file_poll cv_file_poll;
 
 #endif /* #ifndef cv_file_pred_h_ */

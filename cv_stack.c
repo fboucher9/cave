@@ -69,6 +69,7 @@ cv_bool cv_stack_pop(
         cv_stack_ptr o_next = p_this->o_next;
         if (o_next.p_stack) {
             p_this->o_next = o_next.p_stack->o_next;
+            o_next.p_stack->o_next.p_stack = cv_null_;
             *r_value = o_next;
             b_result = cv_true;
         }

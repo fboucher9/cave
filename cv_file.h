@@ -25,18 +25,24 @@ Windows, the WaitForSingleObject function is used.
 
 union cv_file
 {
-    /* Alignment to 64-bits */
-    cv_sll ll_align;
-
-    /* Storage for FILE* or for Windows HANDLE */
-    void * p_void;
-
+#if defined cv_linux_
     /* Storage for POSIX file descriptor */
     int i_index;
+#else /* #if defined cv_linux_ */
+    /* Storage for FILE* or for Windows HANDLE */
+    void * p_void;
+#endif /* #if defined cv_linux_ */
+
+    /* Alignment to 64-bits */
+    cv_sll ll_align;
 
 };
 
 #define cv_file_initializer_ { -1 }
+
+#if defined cv_linux_
+#define cv_file_linux_initializer_(value) { (value) }
+#endif /* #if defined cv_linux_ */
 
 /* Compile-time verification of cv_file handle */
 typedef char cv_verify_sizeof_file [

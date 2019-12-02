@@ -10,17 +10,14 @@
  */
 
 #include <cv_stack_pred.h>
-
 #include <cv_stack_ptr.h>
-
 #include <cv_bool.h>
 
-struct cv_stack_it
-{
+struct cv_stack_it {
     cv_stack_ptr o_cur;
 };
 
-#define cv_stack_it_initializer { cv_ptr_null_ }
+#define cv_stack_it_initializer_ { cv_ptr_null_ }
 
 void cv_stack_it_init(
     cv_stack_it * p_this,

@@ -3,8 +3,11 @@
 #ifndef cv_number_desc_h_
 #define cv_number_desc_h_
 
+#include <cv_types.h>
+
 union cv_number_data
 {
+    cv_sll ll_align;
     signed long i_signed;
     unsigned long i_unsigned;
 };

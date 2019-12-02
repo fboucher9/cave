@@ -26,9 +26,10 @@
 struct cv_stack
 {
     cv_stack_ptr o_next;
+    void * pv_padding[1u];
 };
 
-#define cv_stack_initializer_ { cv_ptr_null_ }
+#define cv_stack_initializer_ { cv_ptr_null_, { cv_null_ } }
 
 void cv_stack_init(
     cv_stack * p_this);
