@@ -25,7 +25,7 @@ struct cv_file_poll {
 
 cv_bool cv_file_poll_dispatch(
     cv_file_poll * p_poll_min,
-    cv_file_poll * p_poll_max,
+    long i_count,
     cv_clock const * p_timeout);
 
 #endif /* #ifndef cv_file_poll_h_ */

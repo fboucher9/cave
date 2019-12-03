@@ -38,10 +38,11 @@ union cv_file
 
 };
 
-#define cv_file_initializer_ { -1 }
 
 #if defined cv_linux_
-#define cv_file_linux_initializer_(value) { (value) }
+#define cv_file_initializer_ { -1 }
+#else /* #if defined cv_linux_ */
+#define cv_file_initializer_ { cv_null_ }
 #endif /* #if defined cv_linux_ */
 
 /* Compile-time verification of cv_file handle */
@@ -50,6 +51,12 @@ typedef char cv_verify_sizeof_file [
     && (sizeof(cv_file) >= sizeof(int))
     && (sizeof(cv_file) >= sizeof(void *))
     ? 1 : -1 ];
+
+void cv_file_init(
+    cv_file * p_this);
+
+void cv_file_cleanup(
+    cv_file * p_this);
 
 long cv_file_read(
     cv_file const * p_this,

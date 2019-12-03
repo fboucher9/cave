@@ -144,14 +144,18 @@ cv_cflags = \
 
 cv_verbose ?= @
 
-.PHONY : test all bare
+.PHONY : test all clang mingw bare
 test : $(cv_dst_path)/test.exe
 
 all : $(cv_dst_path)/test.exe
 all : $(cv_dst_path)/test.m64.exe
 all : $(cv_dst_path)/test.cxx.exe
-all : $(cv_dst_path)/test.clang.exe
-all : $(cv_dst_path)/test.clangxx.exe
+all : clang
+clang : $(cv_dst_path)/test.clang.exe
+clang : $(cv_dst_path)/test.clangxx.exe
+all : mingw
+mingw : $(cv_dst_path)/test.mingw.exe
+mingw : $(cv_dst_path)/test.mingwxx.exe
 all : bare
 bare : $(cv_dst_path)/test.bare.exe
 
@@ -172,7 +176,13 @@ $(cv_dst_path)/test.m64.exe : $(cv_src_path)/makefile $(cv_test_srcs_abs)
 	gcc -m64 -x c -o $(cv_dst_path)/test.m64.exe $(cv_cflags) $(cv_defines) $(cv_includes) $(cv_test_srcs_abs) -lpthread
 
 $(cv_dst_path)/test.cxx.exe : $(cv_src_path)/makefile $(cv_test_srcs_abs)
-	gcc -x c++ -o $(cv_dst_path)/test.cxx.exe -fno-rtti -fno-exceptions -Wold-style-cast $(cv_cflags) $(cv_defines) $(cv_includes) $(cv_test_srcs_abs) -lpthread
+	g++ -x c++ -o $(cv_dst_path)/test.cxx.exe -fno-rtti -fno-exceptions -Wold-style-cast $(cv_cflags) $(cv_defines) $(cv_includes) $(cv_test_srcs_abs) -lpthread
+
+$(cv_dst_path)/test.mingw.exe : $(cv_src_path)/makefile $(cv_test_srcs_abs)
+	i686-w64-mingw32-gcc -x c -o $(cv_dst_path)/test.mingw.exe $(cv_cflags) -D cv_debug_ -D cv_windows_ -D cv_have_libc_ $(cv_includes) $(cv_test_srcs_abs) -lpthread
+
+$(cv_dst_path)/test.mingwxx.exe : $(cv_src_path)/makefile $(cv_test_srcs_abs)
+	i686-w64-mingw32-g++ -x c++ -o $(cv_dst_path)/test.mingwxx.exe -fno-rtti -fno-exceptions -Wold-style-cast $(cv_cflags) -D cv_debug_ -D cv_windows_ -D cv_have_libc_ $(cv_includes) $(cv_test_srcs_abs) -lpthread
 
 $(cv_dst_path)/test.clang.exe : $(cv_src_path)/makefile $(cv_test_srcs_abs)
 	clang -x c -o $(cv_dst_path)/test.clang.exe -ansi -pedantic -Weverything $(cv_defines) $(cv_includes) $(cv_test_srcs_abs) -lpthread

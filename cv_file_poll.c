@@ -60,18 +60,17 @@ static void cv_file_poll_linux_return(
 
 static cv_bool cv_file_poll_linux_dispatch(
     cv_file_poll * p_poll_min,
-    cv_file_poll * p_poll_max,
+    long i_count,
     cv_clock const * p_timeout)
 {
     cv_bool b_result = cv_false;
     cv_unused_(p_timeout);
-    cv_debug_assert_(p_poll_min && p_poll_max, "null ptr");
+    cv_debug_assert_(p_poll_min && i_count > 0, "null ptr");
     {
-        long const i_count = cv_cast_(long, p_poll_max - p_poll_min);
         pollfd_ptr o_pollfd_ptr = cv_ptr_null_;
         struct pollfd a_pollfd[1u];
         long const i_pollfd_len = cv_sizeof_(struct pollfd) * i_count;
-        if (1 == i_count) {
+        if (1 >= i_count) {
             o_pollfd_ptr.p_pollfd = a_pollfd;
         } else {
             o_pollfd_ptr.p_void = cv_heap_alloc(i_pollfd_len);
@@ -92,7 +91,7 @@ static cv_bool cv_file_poll_linux_dispatch(
                 }
             }
         }
-        if (1 == i_count) {
+        if (1 >= i_count) {
         } else {
             if (o_pollfd_ptr.p_void) {
                 cv_heap_free(o_pollfd_ptr.p_void);
@@ -109,17 +108,20 @@ static cv_bool cv_file_poll_linux_dispatch(
 
 cv_bool cv_file_poll_dispatch(
     cv_file_poll * p_poll_min,
-    cv_file_poll * p_poll_max,
+    long i_count,
     cv_clock const * p_timeout)
 {
     cv_bool b_result = cv_false;
-    cv_debug_assert_(p_poll_min && p_poll_max, "null ptr");
+    cv_debug_assert_(p_poll_min && (i_count > 0), "null ptr");
 #if defined cv_linux_
     if (cv_file_poll_linux_dispatch(
-        p_poll_min, p_poll_max, p_timeout)) {
+        p_poll_min, i_count, p_timeout)) {
         b_result = cv_true;
     }
 #else /* #if defined cv_linux_ */
+    cv_unused_(p_poll_min);
+    cv_unused_(i_count);
+    cv_unused_(p_timeout);
     cv_debug_msg_("not implemented");
 #endif /* #if defined cv_linux_ */
     return b_result;

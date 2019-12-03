@@ -2,6 +2,8 @@
 
 #include <cv_test.h>
 
+#include <cv_null.h>
+
 #if defined cv_have_libc_
 
 int main(

@@ -77,7 +77,7 @@ static void cv_test_poll_stdin(void)
         o_poll_stdin.i_flags_in = cv_file_poll_flag_read;
         o_poll_stdin.i_flags_out = 0;
         if (cv_file_poll_dispatch(&o_poll_stdin,
-                &o_poll_stdin + 1, cv_null_)) {
+                1, cv_null_)) {
             long const i_file_read_result =
                 cv_file_read(p_std_in, &o_string);
             cv_unused_(i_file_read_result);
