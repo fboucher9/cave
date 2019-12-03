@@ -85,15 +85,19 @@ void cv_file_print_unsigned( cv_file const * p_file,
     cv_file_print_number(p_file, &o_desc);
 }
 
+static cv_array const * get_nl_array(void) {
+    static unsigned char a_text[] = { '\n' };
+    static cv_array const g_text = cv_array_text_initializer_(a_text);
+    return &g_text;
+}
+
 /*
  *
  */
 
 void cv_file_print_nl( cv_file const * p_file) {
-    static unsigned char g_nl_text[] = { '\n' };
-    static cv_array const g_nl_array = cv_array_text_initializer_(g_nl_text);
     cv_debug_assert_(!!p_file, "null ptr");
-    cv_file_print_array(p_file, &g_nl_array);
+    cv_file_print_array(p_file, get_nl_array());
 }
 
 /* end-of-file: cv_file_print.c */

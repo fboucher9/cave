@@ -40,11 +40,11 @@ void cv_print_unsigned( unsigned long i_number,
 }
 
 void cv_print_dec( long i_number) {
-    cv_print_signed(i_number, &cv_number_format_dec);
+    cv_print_signed(i_number, cv_number_format_dec());
 }
 
 void cv_print_hex( unsigned long i_number) {
-    cv_print_unsigned(i_number, &cv_number_format_hex);
+    cv_print_unsigned(i_number, cv_number_format_hex());
 }
 
 void cv_print_nl(void) {

@@ -40,11 +40,15 @@ struct cv_number_format {
 
 #define cv_number_format_initializer_ { 0, 0, 0, 0 }
 
-extern cv_number_format cv_number_format_dec;
-extern cv_number_format cv_number_format_hex;
-extern cv_number_format cv_number_format_hex2;
-extern cv_number_format cv_number_format_hex4;
-extern cv_number_format cv_number_format_hex8;
+cv_number_format const * cv_number_format_dec(void);
+
+cv_number_format const * cv_number_format_hex(void);
+
+cv_number_format const * cv_number_format_hex2(void);
+
+cv_number_format const * cv_number_format_hex4(void);
+
+cv_number_format const * cv_number_format_hex8(void);
 
 struct cv_number_desc
 {

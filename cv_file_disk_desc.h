@@ -19,14 +19,16 @@ enum cv_file_disk_mode {
 };
 
 struct cv_file_disk_desc {
-    cv_array o_name;
+    cv_array const * p_name;
+    void * pv_padding[1u];
     /* -- */
     int e_mode;
     int ai_padding[3u];
 };
 
 #define cv_file_disk_desc_initializer_ { \
-    cv_array_null_, \
+    cv_null_, \
+    { cv_null_ }, \
     0, \
     {0} }
 

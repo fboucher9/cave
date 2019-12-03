@@ -183,7 +183,7 @@ static void cv_test_stdin(void)
                         &o_string);
                 if (i_file_read_result > 0) {
                     cv_print_0("0x", 80);
-                    cv_print_unsigned(a_buf[0u], &cv_number_format_hex2);
+                    cv_print_unsigned(a_buf[0u], cv_number_format_hex2());
                     cv_print_nl();
                 } else {
                     b_continue = cv_false;

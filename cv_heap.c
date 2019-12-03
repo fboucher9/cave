@@ -51,6 +51,24 @@ cv_bool cv_heap_load(void)
     return b_result;
 }
 
+static cv_array const * report_prefix(void) {
+    static unsigned char a_text[] = {
+        '*', '*', '*', ' ' };
+    static cv_array const g_text =
+        cv_array_text_initializer_(a_text);
+    return &g_text;
+}
+
+static cv_array const * report_suffix(void) {
+    static unsigned char a_text[] = {
+        ' ', 'l', 'e', 'a', 'k', 's', ' ', 'd',
+        'e', 't', 'e', 'c', 't', 'e', 'd', ' ',
+        '*', '*', '*' };
+    static cv_array const g_text =
+        cv_array_text_initializer_(a_text);
+    return &g_text;
+}
+
 /*
  *
  */
@@ -58,23 +76,9 @@ cv_bool cv_heap_load(void)
 static void cv_heap_print_leak_report(void)
 {
     cv_file const * const p_std_err = cv_file_std_err();
-    {
-        static unsigned char a_report_prefix[] = {
-            '*', '*', '*', ' ' };
-        static cv_array const g_report_prefix =
-            cv_array_text_initializer_(a_report_prefix);
-        cv_file_print_array(p_std_err, &g_report_prefix);
-    }
-    cv_file_print_signed(p_std_err, g_heap_count, &cv_number_format_dec);
-    {
-        static unsigned char a_report_suffix[] = {
-            ' ', 'l', 'e', 'a', 'k', 's', ' ', 'd',
-            'e', 't', 'e', 'c', 't', 'e', 'd', ' ',
-            '*', '*', '*' };
-        static cv_array const g_report_suffix =
-            cv_array_text_initializer_(a_report_suffix);
-        cv_file_print_array(p_std_err, &g_report_suffix);
-    }
+    cv_file_print_array(p_std_err, report_prefix());
+    cv_file_print_signed(p_std_err, g_heap_count, cv_number_format_dec());
+    cv_file_print_array(p_std_err, report_suffix());
     cv_file_print_nl(p_std_err);
 }
 

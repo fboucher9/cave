@@ -27,7 +27,7 @@ cv_bool cv_file_disk_init(
     /* Setup call to open */
     {
         cv_string0 o_name0 = cv_string0_initializer_;
-        if (cv_string0_init(&o_name0, &p_desc->o_name)) {
+        if (cv_string0_init(&o_name0, p_desc->p_name)) {
             char const * const p_open_pathname =
                 cv_string0_get(&o_name0);
             if (p_desc->e_mode == cv_file_disk_mode_append) {

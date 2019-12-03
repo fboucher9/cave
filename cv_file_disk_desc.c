@@ -13,7 +13,7 @@ void cv_file_disk_desc_init(
 {
     cv_debug_assert_( !!p_this, "null ptr");
     cv_debug_init_( p_this, cv_sizeof_(*p_this));
-    cv_array_init( &p_this->o_name);
+    p_this->p_name = cv_null_;
     p_this->e_mode = cv_file_disk_mode_invalid;
 }
 
@@ -21,7 +21,7 @@ void cv_file_disk_desc_cleanup(
     cv_file_disk_desc * p_this)
 {
     cv_debug_assert_( !!p_this, "null ptr");
-    cv_array_cleanup(&p_this->o_name);
+    p_this->p_name = cv_null_;
     cv_debug_cleanup_( p_this, cv_sizeof_(*p_this));
 }
 
