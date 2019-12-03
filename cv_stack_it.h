@@ -12,9 +12,12 @@
 #include <cv_stack_pred.h>
 #include <cv_stack_ptr.h>
 #include <cv_bool.h>
+#include <cv_types.h>
 
-struct cv_stack_it {
+union cv_stack_it {
     cv_stack_ptr o_cur;
+    /* Align to 64-bit */
+    cv_sll ll_align;
 };
 
 #define cv_stack_it_initializer_ { cv_ptr_null_ }
