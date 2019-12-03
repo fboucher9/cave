@@ -63,6 +63,32 @@ void cv_file_print_number( cv_file const * p_file,
  *
  */
 
+void cv_file_print_signed( cv_file const * p_file,
+    signed long int i_number,
+    cv_number_format const * p_format) {
+    cv_number_desc o_desc = cv_number_desc_initializer_;
+    o_desc.o_data.i_signed = i_number;
+    o_desc.o_format = *(p_format);
+    cv_file_print_number(p_file, &o_desc);
+}
+
+/*
+ *
+ */
+
+void cv_file_print_unsigned( cv_file const * p_file,
+    unsigned long int i_number,
+    cv_number_format const * p_format) {
+    cv_number_desc o_desc = cv_number_desc_initializer_;
+    o_desc.o_data.i_unsigned = i_number;
+    o_desc.o_format = *(p_format);
+    cv_file_print_number(p_file, &o_desc);
+}
+
+/*
+ *
+ */
+
 void cv_file_print_nl( cv_file const * p_file) {
     static unsigned char g_nl_text[] = { '\n' };
     static cv_array const g_nl_array = cv_array_text_initializer_(g_nl_text);

@@ -13,6 +13,14 @@ void cv_file_print_array( cv_file const * p_file,
 void cv_file_print_number( cv_file const * p_file,
     cv_number_desc const * p_desc);
 
+void cv_file_print_signed( cv_file const * p_file,
+    signed long int i_number,
+    cv_number_format const * p_format);
+
+void cv_file_print_unsigned( cv_file const * p_file,
+    unsigned long int i_number,
+    cv_number_format const * p_format);
+
 void cv_file_print_nl( cv_file const * p_file);
 
 #endif /* #ifndef cv_file_print_h_ */

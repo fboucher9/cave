@@ -182,11 +182,8 @@ static void cv_test_stdin(void)
                     cv_file_read(p_std_in,
                         &o_string);
                 if (i_file_read_result > 0) {
-                    cv_number_desc o_number_desc = cv_number_desc_initializer_;
-                    o_number_desc.o_data.i_unsigned = a_buf[0u];
-                    o_number_desc.o_format = cv_number_format_hex2;
                     cv_print_0("0x", 80);
-                    cv_print_number(&o_number_desc);
+                    cv_print_unsigned(a_buf[0u], &cv_number_format_hex2);
                     cv_print_nl();
                 } else {
                     b_continue = cv_false;

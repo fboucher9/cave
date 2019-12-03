@@ -65,12 +65,7 @@ static void cv_heap_print_leak_report(void)
             cv_array_text_initializer_(a_report_prefix);
         cv_file_print_array(p_std_err, &g_report_prefix);
     }
-    {
-        cv_number_desc o_desc = cv_number_desc_initializer_;
-        o_desc.o_data.i_signed = g_heap_count;
-        o_desc.o_format = cv_number_format_dec;
-        cv_file_print_number(p_std_err, &o_desc);
-    }
+    cv_file_print_signed(p_std_err, g_heap_count, &cv_number_format_dec);
     {
         static unsigned char a_report_suffix[] = {
             ' ', 'l', 'e', 'a', 'k', 's', ' ', 'd',
