@@ -14,7 +14,7 @@ void cv_file_disk_desc_init(
     cv_debug_assert_( !!p_this, "null ptr");
     cv_debug_init_( p_this, cv_sizeof_(*p_this));
     cv_array_init( &p_this->o_name);
-    p_this->i_flags = cv_file_disk_flag_invalid;
+    p_this->e_mode = cv_file_disk_mode_invalid;
 }
 
 void cv_file_disk_desc_cleanup(

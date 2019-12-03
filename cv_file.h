@@ -23,27 +23,20 @@ Windows, the WaitForSingleObject function is used.
 
 #include <cv_types.h>
 
-union cv_file
-{
-#if defined cv_linux_
+union cv_file {
+
     /* Storage for POSIX file descriptor */
     int i_index;
-#else /* #if defined cv_linux_ */
-    /* Storage for FILE* or for Windows HANDLE */
+
+    /* Alignment to pointer */
     void * p_void;
-#endif /* #if defined cv_linux_ */
 
     /* Alignment to 64-bits */
     cv_sll ll_align;
 
 };
 
-
-#if defined cv_linux_
 #define cv_file_initializer_ { -1 }
-#else /* #if defined cv_linux_ */
-#define cv_file_initializer_ { cv_null_ }
-#endif /* #if defined cv_linux_ */
 
 /* Compile-time verification of cv_file handle */
 typedef char cv_verify_sizeof_file [

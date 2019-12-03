@@ -61,6 +61,7 @@ cv_test_srcs = \
     cv_file_test.c \
     cv_runtime.c \
     cv_linux.c \
+    cv_windows.c \
 
 cv_test_srcs_abs = $(addprefix $(cv_src_path)/,$(cv_test_srcs))
 

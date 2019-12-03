@@ -14,36 +14,7 @@
 
 #include <cv_debug.h>
 
-#if defined cv_linux_
-#include <cv_linux.h>
-#endif /* #if defined cv_linux_ */
-
-#if defined cv_linux_
-static int cv_file_disk_convert_flags(
-    cv_file_disk_desc const * p_desc)
-{
-    int i_open_flags = cv_linux_flag_cloexec | cv_linux_flag_nonblock;
-    if (cv_file_disk_flag_read ==
-        (p_desc->i_flags & (cv_file_disk_flag_read |
-            cv_file_disk_flag_write))) {
-        i_open_flags |= cv_linux_flag_rdonly;
-    } else if (
-        cv_file_disk_flag_write ==
-        (p_desc->i_flags & (cv_file_disk_flag_read |
-            cv_file_disk_flag_write))) {
-        i_open_flags |= cv_linux_flag_wronly | cv_linux_flag_creat;
-    } else if (
-        (cv_file_disk_flag_read | cv_file_disk_flag_write) ==
-        (p_desc->i_flags & (cv_file_disk_flag_read |
-            cv_file_disk_flag_write))) {
-        i_open_flags |= cv_linux_flag_rdwr | cv_linux_flag_creat;
-    }
-    if (cv_file_disk_flag_append & p_desc->i_flags) {
-        i_open_flags |= cv_linux_flag_append;
-    }
-    return i_open_flags;
-}
-#endif /* #if defined cv_linux_ */
+#include <cv_runtime.h>
 
 cv_bool cv_file_disk_init(
     cv_file_disk * p_this,
@@ -59,28 +30,19 @@ cv_bool cv_file_disk_init(
         if (cv_string0_init(&o_name0, &p_desc->o_name)) {
             char const * const p_open_pathname =
                 cv_string0_get(&o_name0);
-
-#if defined cv_linux_
-            int const i_open_flags =
-                cv_file_disk_convert_flags(p_desc);
-
-            /* S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH; */
-            int const i_open_mode =
-                cv_linux_mode_user_read |
-                cv_linux_mode_user_write |
-                cv_linux_mode_group_read |
-                cv_linux_mode_other_read;
-
-            p_this->o_file.i_index = cv_linux_open(p_open_pathname, i_open_flags,
-                i_open_mode);
-
-            if (p_this->o_file.i_index >= 0) {
+            if (p_desc->e_mode == cv_file_disk_mode_append) {
+                p_this->o_file.i_index = cv_runtime_open_append(
+                    p_open_pathname);
+            } else if (p_desc->e_mode == cv_file_disk_mode_write) {
+                p_this->o_file.i_index = cv_runtime_open_write(
+                    p_open_pathname);
+            } else if (p_desc->e_mode == cv_file_disk_mode_read) {
+                p_this->o_file.i_index = cv_runtime_open_read(
+                    p_open_pathname);
+            }
+            if (p_this->o_file.i_index != -1) {
                 b_result = cv_true;
             }
-#else /* #if defined cv_linux_ */
-            cv_unused_(p_open_pathname);
-#endif /* #if defined cv_linux_ */
-
             cv_string0_cleanup(&o_name0);
         }
     }
@@ -96,13 +58,10 @@ void cv_file_disk_cleanup(
 {
     cv_debug_assert_(!!p_this, "null ptr");
     /* Setup call to close */
-#if defined cv_linux_
-    if (p_this->o_file.i_index >= 0)
-    {
-        cv_linux_close(p_this->o_file.i_index);
+    if (p_this->o_file.i_index >= 0) {
+        cv_runtime_close(p_this->o_file.i_index);
         p_this->o_file.i_index = -1;
     }
-#endif /* #if defined cv_linux_ */
     cv_file_cleanup(&p_this->o_file);
     cv_debug_cleanup_(p_this, cv_sizeof_(*p_this));
 }

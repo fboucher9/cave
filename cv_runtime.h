@@ -36,6 +36,34 @@ int cv_runtime_memcmp(
     void const * p_right,
     long i_len);
 
+int cv_runtime_stdin_fileno(void);
+
+int cv_runtime_stdout_fileno(void);
+
+int cv_runtime_stderr_fileno(void);
+
+int cv_runtime_open_read(
+    char const * p_name_0);
+
+int cv_runtime_open_write(
+    char const * p_name_0);
+
+int cv_runtime_open_append(
+    char const * p_name_0);
+
+int cv_runtime_close(
+    int i_file_index);
+
+long cv_runtime_read(
+    int i_file_index,
+    void * p_buffer,
+    long i_buffer_length);
+
+long cv_runtime_write(
+    int i_file_index,
+    void const * p_buffer,
+    long i_buffer_length);
+
 #endif /* #ifndef cv_runtime_h_ */
 
 /* end-of-file: cv_runtime.h */

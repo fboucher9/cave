@@ -1,22 +1,17 @@
 /* See LICENSE for license details */
 
 #include <cv_runtime.h>
-
 #if defined cv_have_libc_
 #include <stdarg.h>
-
 #include <stdio.h>
-
 #include <stdlib.h>
-
 #include <string.h>
 #endif /* #if defined cv_have_libc_ */
-
 #include <cv_bool.h>
-
 #include <cv_null.h>
-
 #include <cv_unused.h>
+#include <cv_linux.h>
+#include <cv_windows.h>
 
 void * cv_runtime_malloc(
     long i_buffer_len)
@@ -135,6 +130,113 @@ int cv_runtime_memcmp(
     cv_unused_(i_len);
 #endif /* #if defined cv_have_libc_ */
     return i_memcmp_result;
+}
+
+int cv_runtime_stdin_fileno(void) {
+#if defined cv_linux_
+    return cv_linux_stdin_fileno();
+#elif defined cv_windows_
+    return cv_windows_stdin_fileno();
+#else /* #if defined cv_linux_ */
+    return -1;
+#endif /* #if defined cv_linux_ */
+}
+
+int cv_runtime_stdout_fileno(void) {
+#if defined cv_linux_
+    return cv_linux_stdout_fileno();
+#elif defined cv_windows_
+    return cv_windows_stdout_fileno();
+#else /* #if defined cv_linux_ */
+    return -1;
+#endif /* #if defined cv_linux_ */
+}
+
+int cv_runtime_stderr_fileno(void) {
+#if defined cv_linux_
+    return cv_linux_stderr_fileno();
+#elif defined cv_windows_
+    return cv_windows_stderr_fileno();
+#else /* #if defined cv_linux_ */
+    return -1;
+#endif /* #if defined cv_linux_ */
+}
+
+int cv_runtime_open_read( char const * p_name_0) {
+    int i_file_index = -1;
+#if defined cv_linux_
+    i_file_index = cv_linux_open_read(p_name_0);
+#elif defined cv_windows_
+    i_file_index = cv_windows_open_read(p_name_0);
+#else /* #if defined cv_linux_ */
+    cv_unused_(p_name_0);
+#endif /* #if defined cv_linux_ */
+    return i_file_index;
+}
+
+int cv_runtime_open_write( char const * p_name_0) {
+    int i_file_index = -1;
+#if defined cv_linux_
+    i_file_index = cv_linux_open_write(p_name_0);
+#elif defined cv_windows_
+    i_file_index = cv_windows_open_write(p_name_0);
+#else /* #if defined cv_linux_ */
+    cv_unused_(p_name_0);
+#endif /* #if defined cv_linux_ */
+    return i_file_index;
+}
+
+int cv_runtime_open_append( char const * p_name_0) {
+    int i_file_index = -1;
+#if defined cv_linux_
+    i_file_index = cv_linux_open_append(p_name_0);
+#elif defined cv_windows_
+    i_file_index = cv_windows_open_append(p_name_0);
+#else /* #if defined cv_linux_ */
+    cv_unused_(p_name_0);
+#endif /* #if defined cv_linux_ */
+    return i_file_index;
+}
+
+int cv_runtime_close( int i_file_index) {
+#if defined cv_linux_
+    cv_linux_close(i_file_index);
+#elif defined cv_windows_
+    cv_windows_close(i_file_index);
+#else /* #if defined cv_linux_ */
+    cv_unused_(i_file_index);
+#endif /* #if defined cv_linux_ */
+    return 0;
+}
+
+long cv_runtime_read( int i_file_index, void * p_buffer,
+    long i_buffer_length) {
+    long i_result = -1;
+#if defined cv_linux_
+    i_result = cv_linux_read(i_file_index, p_buffer, i_buffer_length);
+#elif defined cv_windows_
+    i_result = cv_windows_read(i_file_index, p_buffer, i_buffer_length);
+#else /* #if defined cv_linux_ */
+    cv_unused_(i_file_index);
+    cv_unused_(p_buffer);
+    cv_unused_(i_buffer_length);
+#endif /* #if defined cv_linux_ */
+    return i_result;
+}
+
+long cv_runtime_write( int i_file_index, void const * p_buffer,
+    long i_buffer_length) {
+    long i_result = -1;
+#if defined cv_linux_
+    i_result = cv_linux_write(i_file_index, p_buffer, i_buffer_length);
+#elif defined cv_windows_
+    i_result = cv_windows_write(i_file_index, p_buffer, i_buffer_length);
+#else /* #if defined cv_linux_ */
+    cv_unused_(i_file_index);
+    cv_unused_(p_buffer);
+    cv_unused_(i_buffer_length);
+#endif /* #if defined cv_linux_ */
+    return i_result;
 }
 
 /* end-of-file: cv_runtime.c */

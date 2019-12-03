@@ -8,33 +8,21 @@
 */
 
 #include <cv_file_pred.h>
-
 #include <cv_array.h>
-
 #include <cv_bool.h>
 
-enum cv_file_disk_flag
-{
-    cv_file_disk_flag_invalid = 0,
-
-    cv_file_disk_flag_read = 1,
-
-    cv_file_disk_flag_write = 2,
-
-    cv_file_disk_flag_append = 4
-
+enum cv_file_disk_mode {
+    cv_file_disk_mode_invalid = 0,
+    cv_file_disk_mode_read,
+    cv_file_disk_mode_write,
+    cv_file_disk_mode_append
 };
 
-struct cv_file_disk_desc
-{
+struct cv_file_disk_desc {
     cv_array o_name;
-
     /* -- */
-
-    long i_flags;
-
-    long l_padding[1u];
-
+    int e_mode;
+    int ai_padding[3u];
 };
 
 #define cv_file_disk_desc_initializer_ { \

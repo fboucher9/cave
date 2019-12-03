@@ -77,7 +77,7 @@ static void cv_file_test_disk_read(void)
             cv_array_text_initializer_(g_ref_input_bin_name);
 
         o_desc.o_name = g_ref_input_bin_array;
-        o_desc.i_flags = cv_file_disk_flag_read;
+        o_desc.e_mode = cv_file_disk_mode_read;
 
         {
             cv_file_disk o_file_disk = cv_file_disk_initializer_;
