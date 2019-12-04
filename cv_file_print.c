@@ -17,6 +17,20 @@
  *
  */
 
+void cv_file_print_char( cv_file const * p_file,
+    unsigned char i_value) {
+    cv_array o_array = cv_array_null_;
+    cv_array_init_vector(&o_array, &i_value, 1);
+    cv_file_write(
+        p_file,
+        & o_array);
+    cv_array_cleanup(&o_array);
+}
+
+/*
+ *
+ */
+
 void cv_file_print_array( cv_file const * p_file,
     cv_array const * p_array) {
     cv_bool b_result = cv_true;

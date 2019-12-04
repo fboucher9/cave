@@ -6,7 +6,11 @@
 #include <cv_array_pred.h>
 #include <cv_number_pred.h>
 
+void cv_print_char( unsigned char i_value);
+
 void cv_print_array( cv_array const * p_array);
+
+void cv_print_vector( void const * p_buffer, long i_buffer_len );
 
 void cv_print_0( char const * p_array0, long i_array0_max_len);
 

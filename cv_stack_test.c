@@ -86,9 +86,13 @@ void cv_stack_test(void) {
             while (cv_stack_it_next(&o_stack_it, &o_node_ptr.o_stack_ptr)) {
                 cv_number_stack_node const * const p_node =
                     o_node_ptr.pc_number_stack_node;
-                cv_print_0("stack [", 80);
+                {
+                    static unsigned char const a_text[] = {
+                        's', 't', 'a', 'c', 'k', ' ', '[' };
+                    cv_print_vector(a_text, cv_sizeof_(a_text));
+                }
                 cv_print_dec(cv_cast_(long, p_node->i_value));
-                cv_print_0("]", 80);
+                cv_print_char(']');
                 cv_print_nl();
             }
         }

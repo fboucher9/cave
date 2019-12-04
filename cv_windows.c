@@ -4,6 +4,7 @@
 
 #include <cv_windows.h>
 #include <cv_unused.h>
+#include <cv_cast.h>
 #include <io.h>
 #include <stdio.h>
 

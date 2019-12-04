@@ -6,9 +6,22 @@
 #include <cv_array.h>
 #include <cv_number_desc.h>
 
+void cv_print_char( unsigned char i_value) {
+    cv_file const * p_std_out = cv_file_std_out();
+    cv_file_print_char(p_std_out, i_value);
+}
+
 void cv_print_array( cv_array const * p_array) {
     cv_file const * p_std_out = cv_file_std_out();
     cv_file_print_array( p_std_out, p_array);
+}
+
+void cv_print_vector( void const * p_buffer, long i_buffer_len ) {
+    cv_file const * p_std_out = cv_file_std_out();
+    cv_array o_array = cv_array_null_;
+    cv_array_init_vector(&o_array, p_buffer, i_buffer_len);
+    cv_file_print_array( p_std_out, &o_array);
+    cv_array_cleanup(&o_array);
 }
 
 void cv_print_0( char const * p_array0, long i_array0_max_len) {

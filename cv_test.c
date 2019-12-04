@@ -28,7 +28,13 @@
 static void cv_test_job(
     void * p_context)
 {
-    cv_print_0("thread says hello", 80);
+    {
+        static unsigned char const a_text[] = {
+            't', 'h', 'r', 'e', 'a', 'd', ' ', 's',
+            'a', 'y', 's', ' ', 'h', 'e', 'l', 'l',
+            'o' };
+        cv_print_vector(a_text, cv_sizeof_(a_text));
+    }
     cv_print_nl();
     cv_unused_(p_context);
 }
@@ -51,9 +57,13 @@ static void cv_test_dump_options(
     {
         cv_array o_cur;
         while (cv_options_it_next(&o_options_it, &o_cur)) {
-            cv_print_0("option = [", 80);
+            {
+                static unsigned char const a_text[] = {
+                    'o', 'p', 't', 'i', 'o', 'n', ' ', '=', ' ', '[' };
+                cv_print_vector(a_text, cv_sizeof_(a_text));
+            }
             cv_print_array(&o_cur);
-            cv_print_0("]", 80);
+            cv_print_char(']');
             cv_print_nl();
         }
     }
@@ -108,9 +118,13 @@ static void cv_test_thread(void)
 static void cv_test_number_step(
     cv_number_desc const * p_desc)
 {
-    cv_print_0("number = [", 80);
+    {
+        static unsigned char const a_text[] = {
+            'n', 'u', 'm', 'b', 'e', 'r', ' ', '[' };
+        cv_print_vector(a_text, cv_sizeof_(a_text));
+    }
     cv_print_number(p_desc);
-    cv_print_0("]", 80);
+    cv_print_char(']');
     cv_print_nl();
 }
 

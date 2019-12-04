@@ -12,6 +12,7 @@
 #include <cv_unused.h>
 #include <cv_linux.h>
 #include <cv_windows.h>
+#include <cv_cast.h>
 
 void * cv_runtime_malloc(
     long i_buffer_len)

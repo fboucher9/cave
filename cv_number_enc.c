@@ -52,9 +52,11 @@ static cv_bool cv_number_enc_init_digits(
             i_unsigned = p_this->o_desc.o_data.i_unsigned;
         } else {
             if (p_this->o_desc.o_data.i_signed >= 0) {
-                i_unsigned = cv_cast_(unsigned long, p_this->o_desc.o_data.i_signed);
+                i_unsigned = cv_cast_(unsigned long,
+                    p_this->o_desc.o_data.i_signed);
             } else {
-                i_unsigned = cv_cast_(unsigned long, -p_this->o_desc.o_data.i_signed);
+                i_unsigned = cv_cast_(unsigned long,
+                    -p_this->o_desc.o_data.i_signed);
                 p_this->a_sign[0u] = '-';
                 p_this->b_sign = 1;
             }
