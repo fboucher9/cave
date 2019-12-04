@@ -33,20 +33,20 @@ static long g_heap_count = 0L;
 cv_bool cv_heap_load(void)
 {
     cv_bool b_result = cv_false;
-    cv_debug_assert_(!g_heap_loaded, "already loaded");
+    cv_debug_assert_(!g_heap_loaded, cv_debug_code_already_loaded);
     if (cv_heap_primary_load()) {
         if (cv_heap_small_load()) {
             if (cv_heap_large_load()) {
                 g_heap_loaded = cv_true;
                 b_result = cv_true;
             } else {
-                cv_debug_msg_("heap load large fail");
+                cv_debug_msg_(cv_debug_code_error);
             }
         } else {
-            cv_debug_msg_("heap load small fail");
+            cv_debug_msg_(cv_debug_code_error);
         }
     } else {
-        cv_debug_msg_("heap load primary fail");
+        cv_debug_msg_(cv_debug_code_error);
     }
     return b_result;
 }
@@ -99,7 +99,7 @@ may occur.  The sub modules will produce correct leak reports.
 */
 void cv_heap_unload(void)
 {
-    cv_debug_assert_(g_heap_loaded, "already unloaded");
+    cv_debug_assert_(g_heap_loaded, cv_debug_code_already_unloaded);
     cv_heap_print_leak_report();
     cv_heap_large_unload();
     cv_heap_small_unload();
@@ -111,7 +111,7 @@ void * cv_heap_alloc(
     long i_buffer_length)
 {
     void * p_buffer = cv_null_;
-    cv_debug_assert_(g_heap_loaded, "not loaded");
+    cv_debug_assert_(g_heap_loaded, cv_debug_code_not_loaded);
     if (i_buffer_length > 0) {
         if (i_buffer_length <= cv_heap_small_max_len_) {
             p_buffer = cv_heap_small_alloc(i_buffer_length);
@@ -121,10 +121,10 @@ void * cv_heap_alloc(
         if (p_buffer) {
             g_heap_count ++;
         } else {
-            cv_debug_msg_("out of memory");
+            cv_debug_msg_(cv_debug_code_out_of_memory);
         }
     } else {
-        cv_debug_msg_("zero len");
+        cv_debug_msg_(cv_debug_code_invalid_length);
     }
     return p_buffer;
 }
@@ -132,7 +132,7 @@ void * cv_heap_alloc(
 void cv_heap_free(
     void * p_buffer)
 {
-    cv_debug_assert_(g_heap_loaded, "not loaded");
+    cv_debug_assert_(g_heap_loaded, cv_debug_code_not_loaded);
     if (p_buffer) {
         cv_heap_node const * const p_heap_node =
             cv_heap_node_from_payload(p_buffer);
@@ -144,7 +144,7 @@ void cv_heap_free(
         }
         g_heap_count --;
     } else {
-        cv_debug_msg_("null ptr");
+        cv_debug_msg_(cv_debug_code_null_ptr);
     }
 }
 

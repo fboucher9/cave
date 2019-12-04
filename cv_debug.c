@@ -10,31 +10,33 @@
 
 #include <cv_array_tool.h>
 
+#include <cv_cast.h>
+
 #if defined cv_debug_verbose_
 #include <execinfo.h>
 #endif /* #if defined cv_debug_verbose_ */
 
 void xx_debug_msg(
-    char const * p_msg0)
+    cv_debug_code e_code)
 {
-    cv_runtime_printf("*** ouch! %s ***\n",
-        p_msg0);
+    cv_runtime_printf("*** ouch! %d ***\n",
+        cv_cast_(int, e_code));
 }
 
 void xx_debug_assert(
     cv_bool b_expr,
-    char const * p_msg0)
+    cv_debug_code e_code)
 {
     if (!b_expr) {
-        xx_debug_break(p_msg0);
+        xx_debug_break(e_code);
     }
 }
 
 void xx_debug_break(
-    char const * p_msg0)
+    cv_debug_code e_code)
 {
-    cv_runtime_printf("*** assert! %s ***\n",
-        p_msg0);
+    cv_runtime_printf("*** assert! %d ***\n",
+        cv_cast_(int, e_code));
 }
 
 static long g_init_count = 0;

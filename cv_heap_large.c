@@ -30,7 +30,7 @@ static cv_list_root g_heap_large_free_list = cv_list_root_initializer_;
 
 cv_bool cv_heap_large_load(void)
 {
-    cv_debug_assert_(!g_heap_large_loaded, "already loaded");
+    cv_debug_assert_(!g_heap_large_loaded, cv_debug_code_already_loaded);
     cv_list_root_init(&g_heap_large_used_list);
     cv_list_root_init(&g_heap_large_free_list);
     g_heap_large_loaded = cv_true;
@@ -39,7 +39,7 @@ cv_bool cv_heap_large_load(void)
 
 void cv_heap_large_unload(void)
 {
-    cv_debug_assert_(g_heap_large_loaded, "already unloaded");
+    cv_debug_assert_(g_heap_large_loaded, cv_debug_code_already_unloaded);
     /* Detect leaks */
     /* Free all items ... */
     {
@@ -142,7 +142,7 @@ void * cv_heap_large_alloc(
     long i_len)
 {
     void * p_result = cv_null_;
-    cv_debug_assert_(g_heap_large_loaded, "not loaded");
+    cv_debug_assert_(g_heap_large_loaded, cv_debug_code_not_loaded);
     if (i_len > 4096) {
         cv_mutex_lock(&cv_heap_large_mutex);
         p_result = cv_heap_large_alloc_cb(i_len);
@@ -154,7 +154,7 @@ void * cv_heap_large_alloc(
 void cv_heap_large_free(
     void * p_buf)
 {
-    cv_debug_assert_(g_heap_large_loaded, "not loaded");
+    cv_debug_assert_(g_heap_large_loaded, cv_debug_code_not_loaded);
     if (p_buf) {
         cv_mutex_lock(&cv_heap_large_mutex);
         cv_heap_large_free_cb(p_buf);

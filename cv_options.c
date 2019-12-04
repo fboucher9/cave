@@ -47,7 +47,7 @@ void cv_options_unload(void)
 static void cv_options_cleanup_list(
     cv_options * p_this)
 {
-    cv_debug_assert_( !!p_this, "null ptr");
+    cv_debug_assert_( !!p_this, cv_debug_code_null_ptr);
     {
         cv_list_it o_list_it = cv_list_it_initializer_;
         cv_list_it_init(&o_list_it, &p_this->o_list);
@@ -67,7 +67,7 @@ during entire lifetime of object.  */
 void cv_options_cleanup(
     cv_options * p_this)
 {
-    cv_debug_assert_( !!p_this, "null ptr");
+    cv_debug_assert_( !!p_this, cv_debug_code_null_ptr);
     cv_options_cleanup_list(p_this);
     cv_list_root_cleanup(&p_this->o_list);
     cv_debug_cleanup_(p_this, cv_sizeof_(*p_this));
@@ -80,7 +80,7 @@ void cv_options_cleanup(
 void cv_options_init(
     cv_options * p_this)
 {
-    cv_debug_assert_( !!p_this, "null ptr");
+    cv_debug_assert_( !!p_this, cv_debug_code_null_ptr);
     cv_debug_init_(p_this, cv_sizeof_(*p_this));
     cv_list_root_init(&p_this->o_list);
 }
@@ -91,7 +91,7 @@ static cv_bool cv_options_setup_cb(
     long i_arg0_max_len)
 {
     cv_bool b_result = cv_false;
-    cv_debug_assert_( p_this && p_arg0, "null ptr");
+    cv_debug_assert_( p_this && p_arg0, cv_debug_code_null_ptr);
     {
         cv_array o_string = cv_array_null_;
         cv_array_init_0(&o_string, p_arg0, i_arg0_max_len);
@@ -106,7 +106,7 @@ cv_bool cv_options_setup(
     cv_options_desc const * p_desc)
 {
     cv_bool b_result = cv_false;
-    cv_debug_assert_( p_this && p_desc, "null ptr");
+    cv_debug_assert_( p_this && p_desc, cv_debug_code_null_ptr);
     {
         cv_array_it o_array_it = cv_array_it_initializer_;
         cv_array_it_init(&o_array_it, &p_desc->o_array);
@@ -130,7 +130,7 @@ cv_bool cv_options_add(
     cv_array const * p_array)
 {
     cv_bool b_result = cv_false;
-    cv_debug_assert_( p_this && p_array, "null ptr");
+    cv_debug_assert_( p_this && p_array, cv_debug_code_null_ptr);
     {
         cv_options_node_desc o_options_node_desc =
             cv_options_node_desc_initializer_;

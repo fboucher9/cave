@@ -21,7 +21,7 @@ cv_options * cv_main_init(
     char const * const * argv)
 {
     cv_options * p_options = cv_null_;
-    cv_debug_assert_(!g_main_init_done, "already done");
+    cv_debug_assert_(!g_main_init_done, cv_debug_code_already_loaded);
     /* load all plugins */
     if (cv_manager_load()) {
         cv_options_init(&g_main_options);
@@ -47,7 +47,7 @@ cv_options * cv_main_init(
 void cv_main_cleanup(
     cv_options * p_options)
 {
-    cv_debug_assert_(g_main_init_done, "already done");
+    cv_debug_assert_(g_main_init_done, cv_debug_code_already_unloaded);
     if (p_options) {
         cv_options_cleanup(& g_main_options);
     }

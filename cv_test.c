@@ -72,7 +72,7 @@ static void cv_test_dump_options(
 
 static void cv_test_debug(void)
 {
-    cv_debug_msg_("dont panic");
+    cv_debug_msg_(cv_debug_code_dont_panic);
 }
 
 static void cv_test_poll_stdin(void)
@@ -92,7 +92,7 @@ static void cv_test_poll_stdin(void)
                 cv_file_read(p_std_in, &o_string);
             cv_unused_(i_file_read_result);
         } else {
-            cv_debug_msg_("poll error");
+            cv_debug_msg_(cv_debug_code_error);
         }
     }
     cv_array_cleanup(&o_string);
@@ -100,10 +100,15 @@ static void cv_test_poll_stdin(void)
 
 static void cv_test_thread(void)
 {
-    cv_thread_desc o_desc;
-    if (cv_thread_desc_init(&o_desc)) {
-        o_desc.p_func = & cv_test_job;
-        o_desc.p_name0 = "job";
+    cv_thread_desc o_desc = cv_thread_desc_initializer_;
+    cv_thread_desc_init(&o_desc);
+    {
+        static unsigned char const a_thread_name[] = {
+            'j', 'o', 'b' };
+        static cv_array const g_thread_name =
+            cv_array_text_initializer_(a_thread_name);
+        o_desc.o_callback.p_func = & cv_test_job;
+        o_desc.o_name = g_thread_name;
         {
             cv_thread * const p_thread = cv_thread_create(&o_desc);
             if (p_thread) {
@@ -111,8 +116,8 @@ static void cv_test_thread(void)
                 cv_thread_destroy(p_thread);
             }
         }
-        cv_thread_desc_cleanup(&o_desc);
     }
+    cv_thread_desc_cleanup(&o_desc);
 }
 
 static void cv_test_number_step(
@@ -131,47 +136,57 @@ static void cv_test_number_step(
 static void cv_test_number(void)
 {
     cv_number_desc o_desc = cv_number_desc_initializer_;
-    o_desc.o_data.i_signed = 12345;
+    o_desc.o_data.i_unsigned = 12345;
+    o_desc.o_data.b_negative = 0;
     o_desc.o_format.i_flags = 0;
     cv_test_number_step(&o_desc);
-    o_desc.o_data.i_signed = -12345;
+    o_desc.o_data.i_unsigned = 12345;
+    o_desc.o_data.b_negative = 1;
     o_desc.o_format.i_flags = 0;
     cv_test_number_step(&o_desc);
     o_desc.o_data.i_unsigned = 0xabcd;
-    o_desc.o_format.i_flags = cv_number_flag_unsigned | cv_number_flag_hexadecimal;
+    o_desc.o_data.b_negative = 0;
+    o_desc.o_format.i_flags = cv_number_flag_hexadecimal;
     cv_test_number_step(&o_desc);
     o_desc.o_data.i_unsigned = 0xabcd;
-    o_desc.o_format.i_flags = cv_number_flag_unsigned | cv_number_flag_hexadecimal
+    o_desc.o_data.b_negative = 0;
+    o_desc.o_format.i_flags = cv_number_flag_hexadecimal
         | cv_number_flag_upper;
     cv_test_number_step(&o_desc);
-    o_desc.o_data.i_signed = 12345;
+    o_desc.o_data.i_unsigned = 12345;
     o_desc.o_format.i_flags = 0;
     o_desc.o_format.i_width = 10;
     cv_test_number_step(&o_desc);
-    o_desc.o_data.i_signed = -12345;
+    o_desc.o_data.i_unsigned = 12345;
+    o_desc.o_data.b_negative = 1;
     o_desc.o_format.i_flags = 0;
     o_desc.o_format.i_width = 10;
     cv_test_number_step(&o_desc);
-    o_desc.o_data.i_signed = 12345;
+    o_desc.o_data.i_unsigned = 12345;
+    o_desc.o_data.b_negative = 0;
     o_desc.o_format.i_flags = cv_number_flag_left;
     o_desc.o_format.i_width = 10;
     cv_test_number_step(&o_desc);
-    o_desc.o_data.i_signed = 12345;
+    o_desc.o_data.i_unsigned = 12345;
+    o_desc.o_data.b_negative = 0;
     o_desc.o_format.i_flags = cv_number_flag_center;
     o_desc.o_format.i_width = 10;
     cv_test_number_step(&o_desc);
-    o_desc.o_data.i_signed = 12345;
+    o_desc.o_data.i_unsigned = 12345;
+    o_desc.o_data.b_negative = 0;
     o_desc.o_format.i_flags = 0;
     o_desc.o_format.i_digits = 7;
     o_desc.o_format.i_width = 10;
     cv_test_number_step(&o_desc);
-    o_desc.o_data.i_signed = 123;
+    o_desc.o_data.i_unsigned = 123;
+    o_desc.o_data.b_negative = 0;
     o_desc.o_format.i_flags = 0;
     o_desc.o_format.i_digits = 0;
     o_desc.o_format.i_width = 10;
     o_desc.o_format.i_precision = 2;
     cv_test_number_step(&o_desc);
-    o_desc.o_data.i_signed = 123;
+    o_desc.o_data.i_unsigned = 123;
+    o_desc.o_data.b_negative = 0;
     o_desc.o_format.i_flags = 0;
     o_desc.o_format.i_digits = 0;
     o_desc.o_format.i_width = 10;
@@ -181,7 +196,12 @@ static void cv_test_number(void)
 
 static void cv_test_stdin(void)
 {
-    cv_print_0("test stdin...", 80);
+    {
+        static unsigned char const a_text[] = {
+            't', 'e', 's', 't', ' ', 's', 't', 'd', 'i', 'n',
+            '.', '.', '.' };
+        cv_print_vector(a_text, cv_sizeof_(a_text));
+    }
     cv_print_nl();
 
     {
@@ -196,7 +216,12 @@ static void cv_test_stdin(void)
                     cv_file_read(p_std_in,
                         &o_string);
                 if (i_file_read_result > 0) {
-                    cv_print_0("0x", 80);
+                    {
+                        static unsigned char const a_text[] = {
+                            '0', 'x'
+                        };
+                        cv_print_vector(a_text, cv_sizeof_(a_text));
+                    }
                     cv_print_unsigned(a_buf[0u], cv_number_format_hex2());
                     cv_print_nl();
                 } else {
@@ -207,14 +232,25 @@ static void cv_test_stdin(void)
         }
     }
 
-    cv_print_0("test stdin done.", 80);
+    {
+        static unsigned char const a_text[] = {
+            't', 'e', 's', 't', ' ', 's', 't', 'd', 'i', 'n',
+            ' ', 'd', 'o', 'n', 'e', '.' };
+        cv_print_vector(a_text, cv_sizeof_(a_text));
+    }
     cv_print_nl();
 }
 
 static cv_bool cv_test_main_cb(
     cv_options const * p_options)
 {
-    cv_print_0("welcome.", 80);
+    {
+        /* welcome. */
+        static unsigned char const a_text[] = {
+            'w', 'e', 'l', 'c', 'o', 'm', 'e', '.'
+        };
+        cv_print_vector(a_text, cv_sizeof_(a_text));
+    }
     cv_print_nl();
 
     cv_test_dump_options(p_options);
@@ -271,11 +307,19 @@ static cv_bool cv_test_main_cb(
                     } else if (cv_array_compare(&o_string, &g_stack_array)) {
                         cv_stack_test();
                     } else {
-                        cv_print_0("invalid command", 80);
+                        /* invalid command */
+                        static unsigned char const a_text[] = {
+                            'i', 'n', 'v', 'a', 'l', 'i', 'd', ' ',
+                            'c', 'o', 'm', 'm', 'a', 'n', 'd' };
+                        cv_print_vector(a_text, cv_sizeof_(a_text));
                         cv_print_nl();
                     }
                 } else {
-                    cv_print_0("missing command", 80);
+                    /* missing command */
+                    static unsigned char const a_text[] = {
+                        'm', 'i', 's', 's', 'i', 'n', 'g', ' ',
+                        'c', 'o', 'm', 'm', 'a', 'n', 'd' };
+                    cv_print_vector(a_text, cv_sizeof_(a_text));
                     cv_print_nl();
                 }
             }
@@ -283,7 +327,12 @@ static cv_bool cv_test_main_cb(
         cv_options_it_cleanup(&o_options_it);
     }
 
-    cv_print_0("goodbye.", 80);
+    {
+        /* goodbye. */
+        static unsigned char const a_text[] = {
+            'g', 'o', 'o', 'd', 'b', 'y', 'e', '.' };
+        cv_print_vector(a_text, cv_sizeof_(a_text));
+    }
     cv_print_nl();
 
     return cv_true;

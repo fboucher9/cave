@@ -35,7 +35,7 @@ cv_bool cv_mutex_init(
     cv_mutex * p_this)
 {
     cv_bool b_result = cv_false;
-    cv_debug_assert_(!!p_this, "null ptr");
+    cv_debug_assert_(!!p_this, cv_debug_code_null_ptr);
     {
         int i_pthread_result = 0;
 #if defined cv_have_pthread_
@@ -52,7 +52,7 @@ cv_bool cv_mutex_init(
 void cv_mutex_cleanup(
     cv_mutex * p_this)
 {
-    cv_debug_assert_(!!p_this, "null ptr");
+    cv_debug_assert_(!!p_this, cv_debug_code_null_ptr);
     {
         int i_pthread_result = 0;
 #if defined cv_have_pthread_
@@ -80,7 +80,7 @@ cv_mutex * cv_mutex_create(void)
 void cv_mutex_destroy(
     cv_mutex * p_this)
 {
-    cv_debug_assert_(!!p_this, "null ptr");
+    cv_debug_assert_(!!p_this, cv_debug_code_null_ptr);
     cv_mutex_cleanup(p_this);
     cv_mutex_pool_free(p_this);
 }
@@ -88,7 +88,7 @@ void cv_mutex_destroy(
 void cv_mutex_lock(
     cv_mutex * p_this)
 {
-    cv_debug_assert_(!!p_this, "null ptr");
+    cv_debug_assert_(!!p_this, cv_debug_code_null_ptr);
     {
         int i_pthread_result = 0;
 #if defined cv_have_pthread_
@@ -103,7 +103,7 @@ void cv_mutex_lock(
 void cv_mutex_unlock(
     cv_mutex * p_this)
 {
-    cv_debug_assert_(!!p_this, "null ptr");
+    cv_debug_assert_(!!p_this, cv_debug_code_null_ptr);
     {
         int i_pthread_result = 0;
 #if defined cv_have_pthread_

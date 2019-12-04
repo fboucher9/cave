@@ -23,7 +23,7 @@ cv_thread * cv_thread_create(
     cv_thread_desc const * p_thread_desc)
 {
     cv_thread * p_result = cv_null_;
-    cv_debug_assert_( !!p_thread_desc, "invalid param");
+    cv_debug_assert_( !!p_thread_desc, cv_debug_code_null_ptr);
     {
         cv_thread_ptr o_thread_ptr = cv_ptr_null_;
         o_thread_ptr.p_void = cv_heap_alloc(cv_sizeof_(cv_thread));
@@ -31,11 +31,11 @@ cv_thread * cv_thread_create(
             if (cv_thread_init(o_thread_ptr.p_thread, p_thread_desc)) {
                 p_result = o_thread_ptr.p_thread;
             } else {
-                cv_debug_msg_("failed init");
+                cv_debug_msg_(cv_debug_code_error);
                 cv_heap_free(o_thread_ptr.p_void);
             }
         } else {
-            cv_debug_msg_("out of memory");
+            cv_debug_msg_(cv_debug_code_out_of_memory);
         }
     }
     return p_result;

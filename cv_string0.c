@@ -31,7 +31,7 @@ cv_bool cv_string0_init(
     cv_bool b_result = cv_false;
 
     /* Validate input parameters */
-    cv_debug_assert_(!!p_this, "null ptr");
+    cv_debug_assert_(!!p_this, cv_debug_code_null_ptr);
     {
         /* Get length of string */
         long const i_length = p_string ? cv_array_len(p_string) : 0;
@@ -53,7 +53,7 @@ cv_bool cv_string0_init(
 void cv_string0_cleanup(
     cv_string0 * p_this)
 {
-    cv_debug_assert_(!!p_this, "null ptr");
+    cv_debug_assert_(!!p_this, cv_debug_code_null_ptr);
     cv_buffer_cleanup( &p_this->o_buffer);
 }
 
@@ -61,7 +61,7 @@ char const * cv_string0_get(
     cv_string0 const * p_this)
 {
     char const * p_result = cv_null_;
-    cv_debug_assert_(!!p_this, "null ptr");
+    cv_debug_assert_(!!p_this, cv_debug_code_null_ptr);
     p_result = p_this->o_buffer.o_array.o_min.pc_char;
     return p_result;
 }
@@ -71,7 +71,7 @@ long cv_string0_len(
     cv_string0 const * p_this)
 {
     long i_len = 0;
-    cv_debug_assert_(!!p_this, "null ptr");
+    cv_debug_assert_(!!p_this, cv_debug_code_null_ptr);
     i_len = cv_buffer_len(&p_this->o_buffer);
     if (i_len > 0) {
         i_len --;

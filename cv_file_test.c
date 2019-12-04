@@ -48,7 +48,8 @@ static void cv_file_test_dump_buffer(
             while (cv_array_it_read_next_char(
                     &o_array_it,
                     &c_data)) {
-                cv_print_0("0x", 80);
+                cv_print_char('0');
+                cv_print_char('x');
                 cv_print_hex(c_data);
                 cv_print_nl();
             }

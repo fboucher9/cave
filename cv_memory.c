@@ -21,7 +21,7 @@ void cv_memory_zero(
     if (p_buf && i_buf_len) {
         cv_runtime_memset(p_buf, 0, i_buf_len);
     } else {
-        cv_debug_msg_("invalid param");
+        cv_debug_msg_(cv_debug_code_invalid_parameter);
     }
 }
 
@@ -33,7 +33,7 @@ void cv_memory_fill(
     if (p_buf && i_buf_len) {
         cv_runtime_memset(p_buf, c_value, i_buf_len);
     } else {
-        cv_debug_msg_("invalid param");
+        cv_debug_msg_(cv_debug_code_invalid_parameter);
     }
 }
 
@@ -52,11 +52,11 @@ long cv_memory_copy(
         if (i_copy_len > 0) {
             cv_runtime_memcpy(p_dst, p_src, i_copy_len);
         } else {
-            cv_debug_msg_("zero copy length");
+            cv_debug_msg_(cv_debug_code_invalid_length);
             i_copy_len = 0;
         }
     } else {
-        cv_debug_msg_("invalid param");
+        cv_debug_msg_(cv_debug_code_null_ptr);
     }
     return i_copy_len;
 }
@@ -74,7 +74,7 @@ long cv_memory_find_0(
             i_find_len = cv_array_len(&o_array);
         }
     } else {
-        cv_debug_msg_("invalid param");
+        cv_debug_msg_(cv_debug_code_invalid_parameter);
     }
     return i_find_len;
 }
@@ -99,7 +99,7 @@ int cv_memory_compare(
             }
         }
     } else {
-        cv_debug_msg_("invalid param");
+        cv_debug_msg_(cv_debug_code_invalid_parameter);
     }
     return i_compare_result;
 }

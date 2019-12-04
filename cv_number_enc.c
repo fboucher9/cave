@@ -45,21 +45,13 @@ static cv_bool cv_number_enc_init_digits(
     cv_number_enc * p_this)
 {
     cv_bool b_result = cv_false;
-    cv_debug_assert_(!!p_this, "null ptr");
+    cv_debug_assert_(!!p_this, cv_debug_code_null_ptr);
     {
         unsigned long i_unsigned = 0;
-        if (cv_number_flag_unsigned & p_this->o_desc.o_format.i_flags) {
-            i_unsigned = p_this->o_desc.o_data.i_unsigned;
-        } else {
-            if (p_this->o_desc.o_data.i_signed >= 0) {
-                i_unsigned = cv_cast_(unsigned long,
-                    p_this->o_desc.o_data.i_signed);
-            } else {
-                i_unsigned = cv_cast_(unsigned long,
-                    -p_this->o_desc.o_data.i_signed);
-                p_this->a_sign[0u] = '-';
-                p_this->b_sign = 1;
-            }
+        i_unsigned = cv_cast_(unsigned long, p_this->o_desc.o_data.i_unsigned);
+        if (p_this->o_desc.o_data.b_negative) {
+            p_this->a_sign[0u] = '-';
+            p_this->b_sign = 1;
         }
         p_this->i_digit_count = 0;
         {
@@ -92,7 +84,7 @@ cv_bool cv_number_enc_init(
     cv_number_desc const * p_desc)
 {
     cv_bool b_result = cv_false;
-    cv_debug_assert_(p_this && p_desc, "null ptr");
+    cv_debug_assert_(p_this && p_desc, cv_debug_code_null_ptr);
     cv_debug_init_(p_this, cv_sizeof_(*p_this));
     cv_memory_zero(p_this, cv_sizeof_(*p_this));
     p_this->o_desc = *(p_desc);
@@ -173,7 +165,7 @@ cv_bool cv_number_enc_init(
 void cv_number_enc_cleanup(
     cv_number_enc * p_this)
 {
-    cv_debug_assert_(!!p_this, "null ptr");
+    cv_debug_assert_(!!p_this, cv_debug_code_null_ptr);
     cv_debug_cleanup_(p_this, cv_sizeof_(*p_this));
 }
 
@@ -182,7 +174,7 @@ static cv_number_status cv_number_enc_step(
     cv_string_it * p_string_it)
 {
     cv_number_status e_status = cv_number_status_fail;
-    cv_debug_assert_(p_this && p_string_it, "null ptr");
+    cv_debug_assert_(p_this && p_string_it, cv_debug_code_null_ptr);
     if (cv_number_machine_before_space == p_this->i_state) {
         if (p_this->i_before_space > 0) {
             if (cv_string_it_write_char(p_string_it, ' ')) {
@@ -311,7 +303,7 @@ cv_number_status cv_number_enc_convert(
     cv_array * p_output_buffer)
 {
     cv_number_status e_status = cv_number_status_fail;
-    cv_debug_assert_(p_desc && p_input_buffer && p_output_buffer, "null ptr");
+    cv_debug_assert_(p_desc && p_input_buffer && p_output_buffer, cv_debug_code_null_ptr);
     {
         cv_string_it o_string_it = cv_string_it_initializer_;
         cv_string_it_init(&o_string_it, p_input_buffer);

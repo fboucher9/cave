@@ -7,14 +7,17 @@
 
 #include <cv_types.h>
 
-union cv_number_data
+#include <cv_bool.h>
+
+struct cv_number_data
 {
-    cv_sll ll_align;
-    signed long i_signed;
-    unsigned long i_unsigned;
+    cv_ull i_unsigned;
+    /* -- */
+    cv_bool b_negative;
+    char c_padding[7u];
 };
 
-#define cv_number_data_initializer_ { 0 }
+#define cv_number_data_initializer_ { 0, 0, {0} }
 
 /* Verify sizeof data members */
 typedef char cv_verify_sizeof_number_data [
@@ -22,13 +25,12 @@ typedef char cv_verify_sizeof_number_data [
     ? 1 : -1 ];
 
 enum cv_number_flag {
-    cv_number_flag_unsigned = 1,
-    cv_number_flag_hexadecimal = 2,
-    cv_number_flag_upper = 4,
-    cv_number_flag_left = 8,
-    cv_number_flag_center = 16,
-    cv_number_flag_plus = 32,
-    cv_number_flag_space = 64
+    cv_number_flag_hexadecimal = 1,
+    cv_number_flag_upper = 2,
+    cv_number_flag_left = 4,
+    cv_number_flag_center = 8,
+    cv_number_flag_plus = 16,
+    cv_number_flag_space = 32
 };
 
 struct cv_number_format {

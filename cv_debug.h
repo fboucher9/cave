@@ -9,21 +9,36 @@
 
 #if defined cv_debug_
 
+typedef enum cv_debug_code {
+    cv_debug_code_null_ptr = 1,
+    cv_debug_code_error,
+    cv_debug_code_already_loaded,
+    cv_debug_code_already_unloaded,
+    cv_debug_code_not_loaded,
+    cv_debug_code_invalid_length,
+    cv_debug_code_alternative,
+    cv_debug_code_out_of_memory,
+    cv_debug_code_not_empty,
+    cv_debug_code_not_implemented,
+    cv_debug_code_invalid_parameter,
+    cv_debug_code_dont_panic
+} cv_debug_code;
+
 void xx_debug_msg(
-    char const * p_msg0);
+    cv_debug_code e_code);
 
 #define cv_debug_msg_(p_msg0) \
     xx_debug_msg((p_msg0))
 
 void xx_debug_assert(
     cv_bool b_expr,
-    char const * p_msg0);
+    cv_debug_code e_code);
 
 #define cv_debug_assert_(expr, p_msg0) \
     xx_debug_assert((expr), (p_msg0))
 
 void xx_debug_break(
-    char const * p_msg0);
+    cv_debug_code e_code);
 
 #define cv_debug_break_(p_msg0) \
     xx_debug_break((p_msg0))

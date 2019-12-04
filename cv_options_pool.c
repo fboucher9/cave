@@ -27,7 +27,7 @@ static cv_heap_pool * g_options_pool = cv_null_;
 cv_bool cv_options_pool_load(void)
 {
     cv_bool b_result = cv_false;
-    cv_debug_assert_( !g_options_pool_loaded, "already loaded");
+    cv_debug_assert_( !g_options_pool_loaded, cv_debug_code_already_loaded);
     g_options_pool = cv_heap_pool_load(cv_sizeof_(cv_options_node));
     if (g_options_pool) {
         g_options_pool_loaded = cv_true;
@@ -38,7 +38,7 @@ cv_bool cv_options_pool_load(void)
 
 void cv_options_pool_unload(void)
 {
-    cv_debug_assert_( g_options_pool_loaded, "already unloaded");
+    cv_debug_assert_( g_options_pool_loaded, cv_debug_code_already_unloaded);
     if (g_options_pool) {
         cv_heap_pool_unload(g_options_pool);
         g_options_pool = cv_null_;
@@ -49,7 +49,8 @@ void cv_options_pool_unload(void)
 cv_options_node * cv_options_pool_alloc(void)
 {
     cv_options_node_ptr o_placement = cv_ptr_null_;
-    cv_debug_assert_( g_options_pool_loaded && g_options_pool, "not loaded");
+    cv_debug_assert_( g_options_pool_loaded && g_options_pool,
+        cv_debug_code_not_loaded);
     o_placement.o_list_ptr.p_void = cv_heap_pool_alloc(g_options_pool,
         cv_sizeof_(cv_options_node));
     return o_placement.p_options_node;
@@ -58,7 +59,8 @@ cv_options_node * cv_options_pool_alloc(void)
 void cv_options_pool_free(
     cv_options_node * p_options_node)
 {
-    cv_debug_assert_( g_options_pool_loaded && g_options_pool, "not loaded");
+    cv_debug_assert_( g_options_pool_loaded && g_options_pool,
+        cv_debug_code_not_loaded);
     if (p_options_node) {
         cv_options_node_ptr o_placement = cv_ptr_null_;
         o_placement.p_options_node = p_options_node;

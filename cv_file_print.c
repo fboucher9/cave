@@ -35,7 +35,7 @@ void cv_file_print_array( cv_file const * p_file,
     cv_array const * p_array) {
     cv_bool b_result = cv_true;
     cv_array o_array_it = cv_array_null_;
-    cv_debug_assert_(p_file && p_array, "null ptr");
+    cv_debug_assert_(p_file && p_array, cv_debug_code_null_ptr);
     cv_array_init_ref(&o_array_it, p_array);
     while (b_result &&
         (o_array_it.o_min.pc_char != o_array_it.o_max.pc_char)) {
@@ -59,7 +59,7 @@ void cv_file_print_number( cv_file const * p_file,
     cv_number_desc const * p_desc) {
     char c_buffer[64u];
     cv_array o_buffer = cv_array_null_;
-    cv_debug_assert_(p_file && p_desc, "null ptr");
+    cv_debug_assert_(p_file && p_desc, cv_debug_code_null_ptr);
     cv_array_init_vector(&o_buffer, c_buffer, cv_sizeof_(c_buffer));
     {
         cv_array o_result = cv_array_null_;
@@ -81,7 +81,13 @@ void cv_file_print_signed( cv_file const * p_file,
     signed long int i_number,
     cv_number_format const * p_format) {
     cv_number_desc o_desc = cv_number_desc_initializer_;
-    o_desc.o_data.i_signed = i_number;
+    if (i_number >= 0) {
+        o_desc.o_data.i_unsigned = cv_cast_(unsigned long, i_number);
+        o_desc.o_data.b_negative = 0;
+    } else {
+        o_desc.o_data.i_unsigned = cv_cast_(unsigned long, -i_number);
+        o_desc.o_data.b_negative = 1;
+    }
     o_desc.o_format = *(p_format);
     cv_file_print_number(p_file, &o_desc);
 }
@@ -94,7 +100,8 @@ void cv_file_print_unsigned( cv_file const * p_file,
     unsigned long int i_number,
     cv_number_format const * p_format) {
     cv_number_desc o_desc = cv_number_desc_initializer_;
-    o_desc.o_data.i_unsigned = i_number;
+    o_desc.o_data.i_unsigned = cv_cast_(unsigned long, i_number);
+    o_desc.o_data.b_negative = 0;
     o_desc.o_format = *(p_format);
     cv_file_print_number(p_file, &o_desc);
 }
@@ -110,7 +117,7 @@ static cv_array const * get_nl_array(void) {
  */
 
 void cv_file_print_nl( cv_file const * p_file) {
-    cv_debug_assert_(!!p_file, "null ptr");
+    cv_debug_assert_(!!p_file, cv_debug_code_null_ptr);
     cv_file_print_array(p_file, get_nl_array());
 }
 

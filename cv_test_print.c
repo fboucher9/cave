@@ -5,6 +5,7 @@
 #include <cv_file_print.h>
 #include <cv_array.h>
 #include <cv_number_desc.h>
+#include <cv_cast.h>
 
 void cv_print_char( unsigned char i_value) {
     cv_file const * p_std_out = cv_file_std_out();
@@ -38,18 +39,14 @@ void cv_print_number( cv_number_desc const * p_desc) {
 }
 
 void cv_print_signed( long i_number, cv_number_format const * p_format) {
-    cv_number_desc o_desc = cv_number_desc_initializer_;
-    o_desc.o_data.i_signed = i_number;
-    o_desc.o_format = *p_format;
-    cv_print_number(&o_desc);
+    cv_file const * p_std_out = cv_file_std_out();
+    cv_file_print_signed(p_std_out, i_number, p_format);
 }
 
 void cv_print_unsigned( unsigned long i_number,
     cv_number_format const * p_format) {
-    cv_number_desc o_desc = cv_number_desc_initializer_;
-    o_desc.o_data.i_unsigned = i_number;
-    o_desc.o_format = *p_format;
-    cv_print_number(&o_desc);
+    cv_file const * p_std_out = cv_file_std_out();
+    cv_file_print_unsigned(p_std_out, i_number, p_format);
 }
 
 void cv_print_dec( long i_number) {

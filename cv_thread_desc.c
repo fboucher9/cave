@@ -18,18 +18,20 @@ static void cv_thread_dummy_func(
     cv_unused_(p_context);
 }
 
-cv_bool cv_thread_desc_init(
+void cv_thread_desc_init(
     cv_thread_desc * p_this)
 {
-    cv_memory_zero( p_this, cv_sizeof_(cv_thread_desc));
-    p_this->p_func = & cv_thread_dummy_func;
-    p_this->p_context = cv_null_;
-    p_this->p_name0 = cv_null_;
-    return cv_true;
+    cv_debug_assert_( !!p_this, cv_debug_code_null_ptr);
+    cv_debug_init_(p_this, cv_sizeof_(*p_this));
+    p_this->o_callback.p_func = & cv_thread_dummy_func;
+    p_this->o_callback.p_context = cv_null_;
+    cv_array_init(&p_this->o_name);
 }
 
 void cv_thread_desc_cleanup(
     cv_thread_desc * p_this)
 {
-    cv_unused_(p_this);
+    cv_debug_assert_( !!p_this, cv_debug_code_null_ptr);
+    cv_array_cleanup(&p_this->o_name);
+    cv_debug_cleanup_(p_this, cv_sizeof_(*p_this));
 }

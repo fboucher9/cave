@@ -8,14 +8,14 @@
 
 void cv_file_init(
     cv_file * p_this) {
-    cv_debug_assert_(!!p_this, "null ptr");
+    cv_debug_assert_(!!p_this, cv_debug_code_null_ptr);
     cv_debug_init_(p_this, cv_sizeof_(*p_this));
     p_this->i_index = -1;
 }
 
 void cv_file_cleanup(
     cv_file * p_this) {
-    cv_debug_assert_(!!p_this, "null ptr");
+    cv_debug_assert_(!!p_this, cv_debug_code_null_ptr);
     cv_debug_cleanup_(p_this, cv_sizeof_(*p_this));
 }
 
@@ -24,7 +24,7 @@ long cv_file_read(
     cv_array const * p_array)
 {
     long i_result = -1;
-    cv_debug_assert_( p_this && p_array, "null ptr");
+    cv_debug_assert_( p_this && p_array, cv_debug_code_null_ptr);
     {
         long const i_array_len = cv_array_len(p_array);
         if (i_array_len > 0) {
@@ -44,7 +44,7 @@ long cv_file_write(
     cv_array const * p_array)
 {
     long i_result = -1;
-    cv_debug_assert_(p_this && p_array, "null ptr");
+    cv_debug_assert_(p_this && p_array, cv_debug_code_null_ptr);
     {
         long const i_array_len = cv_array_len(p_array);
         if (i_array_len > 0) {

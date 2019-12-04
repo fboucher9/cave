@@ -65,7 +65,7 @@ static cv_bool cv_file_poll_linux_dispatch(
 {
     cv_bool b_result = cv_false;
     cv_unused_(p_timeout);
-    cv_debug_assert_(p_poll_min && i_count > 0, "null ptr");
+    cv_debug_assert_(p_poll_min && i_count > 0, cv_debug_code_null_ptr);
     {
         pollfd_ptr o_pollfd_ptr = cv_ptr_null_;
         struct pollfd a_pollfd[1u];
@@ -112,7 +112,7 @@ cv_bool cv_file_poll_dispatch(
     cv_clock const * p_timeout)
 {
     cv_bool b_result = cv_false;
-    cv_debug_assert_(p_poll_min && (i_count > 0), "null ptr");
+    cv_debug_assert_(p_poll_min && (i_count > 0), cv_debug_code_null_ptr);
 #if defined cv_linux_
     if (cv_file_poll_linux_dispatch(
         p_poll_min, i_count, p_timeout)) {
@@ -122,7 +122,7 @@ cv_bool cv_file_poll_dispatch(
     cv_unused_(p_poll_min);
     cv_unused_(i_count);
     cv_unused_(p_timeout);
-    cv_debug_msg_("not implemented");
+    cv_debug_msg_(cv_debug_code_not_implemented);
 #endif /* #if defined cv_linux_ */
     return b_result;
 }

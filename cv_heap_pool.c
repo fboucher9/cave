@@ -29,7 +29,8 @@ cv_bool cv_heap_pool_init(
     long i_len)
 {
     cv_bool b_result = cv_false;
-    cv_debug_assert_(p_this && i_len, "invalid param");
+    cv_debug_assert_(!!p_this, cv_debug_code_null_ptr);
+    cv_debug_assert_(i_len > 0, cv_debug_code_invalid_length);
     cv_debug_init_(p_this, cv_sizeof_(*p_this));
     p_this->p_mutex = cv_mutex_mgr_acquire();
     if (p_this->p_mutex) {
@@ -47,7 +48,7 @@ cv_bool cv_heap_pool_init(
 void cv_heap_pool_cleanup(
     cv_heap_pool * p_this)
 {
-    cv_debug_assert_(!!p_this, "null ptr");
+    cv_debug_assert_(!!p_this, cv_debug_code_null_ptr);
     /* Detect leaks ... */
     /* Discard all free nodes */
     {
@@ -79,7 +80,7 @@ static void * cv_heap_pool_alloc_cb(
     long i_len)
 {
     void * p_result = cv_null_;
-    cv_debug_assert_(!!p_this, "null ptr");
+    cv_debug_assert_(!!p_this, cv_debug_code_null_ptr);
     {
         /* Look for free compatible item */
         cv_heap_it o_heap_it = cv_heap_it_initializer_;
@@ -118,7 +119,8 @@ void * cv_heap_pool_alloc(
     long i_len)
 {
     void * p_result = cv_null_;
-    cv_debug_assert_(!!p_this && (i_len > 0), "invalid param");
+    cv_debug_assert_(!!p_this, cv_debug_code_null_ptr);
+    cv_debug_assert_(i_len > 0, cv_debug_code_invalid_length);
     cv_mutex_lock(p_this->p_mutex);
     p_result = cv_heap_pool_alloc_cb(p_this, i_len);
     cv_mutex_unlock(p_this->p_mutex);
@@ -129,7 +131,7 @@ static void cv_heap_pool_free_cb(
     cv_heap_pool * p_this,
     void * p_buf)
 {
-    cv_debug_assert_(p_this && p_buf, "null ptr");
+    cv_debug_assert_(p_this && p_buf, cv_debug_code_null_ptr);
     {
         cv_heap_node * const p_heap_node =
             cv_heap_node_from_payload(p_buf);
@@ -148,7 +150,7 @@ void cv_heap_pool_free(
     cv_heap_pool * p_this,
     void * p_buf)
 {
-    cv_debug_assert_(p_this && p_buf, "null ptr");
+    cv_debug_assert_(p_this && p_buf, cv_debug_code_null_ptr);
     cv_mutex_lock(p_this->p_mutex);
     cv_heap_pool_free_cb(p_this, p_buf);
     cv_mutex_unlock(p_this->p_mutex);
