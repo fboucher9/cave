@@ -83,10 +83,10 @@ void cv_file_print_signed( cv_file const * p_file,
     cv_number_format const * p_format) {
     cv_number_desc o_desc = cv_number_desc_initializer_;
     if (i_number >= 0) {
-        o_desc.o_data.i_unsigned = cv_convert_to_ull_(i_number);
+        o_desc.o_data.i_unsigned = cv_ll_to_ull_(i_number);
         o_desc.o_data.b_negative = 0;
     } else {
-        o_desc.o_data.i_unsigned = cv_convert_to_ull_(-i_number);
+        o_desc.o_data.i_unsigned = cv_ll_to_ull_(-i_number);
         o_desc.o_data.b_negative = 1;
     }
     o_desc.o_format = *(p_format);

@@ -5,6 +5,7 @@
 #include <cv_linux.h>
 #include <cv_cast.h>
 #include <cv_convert.h>
+#include <cv_limits.h>
 #include <unistd.h>
 #include <sys/types.h>
 #include <sys/stat.h>
@@ -34,13 +35,13 @@ long cv_linux_read(
     long i_result = -1;
     ssize_t i_read_result = -1;
     unsigned long const u_buffer_length =
-        cv_convert_to_ulong_(i_buffer_length);
+        cv_long_to_ulong_(i_buffer_length);
     size_t const i_read_len = u_buffer_length;
     i_read_result = read(
         i_file_index,
         p_buffer,
         i_read_len);
-    i_result = cv_truncate_to_long_(i_read_result);
+    i_result = (i_read_result & cv_signed_long_max_);
     return i_result;
 }
 
@@ -56,13 +57,13 @@ long cv_linux_write(
     long i_result = -1;
     ssize_t i_write_result = -1;
     unsigned long const u_buffer_length =
-        cv_convert_to_ulong_(i_buffer_length);
+        cv_long_to_ulong_(i_buffer_length);
     size_t i_write_len = u_buffer_length;
     i_write_result = write(
         i_file_index,
         p_buffer,
         i_write_len);
-    i_result = cv_truncate_to_long_(i_write_result);
+    i_result = (i_write_result & cv_signed_long_max_);
     return i_result;
 }
 

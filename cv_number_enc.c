@@ -57,9 +57,9 @@ static cv_bool cv_number_enc_init_digits(
                 (cv_number_flag_upper & p_this->o_desc.o_format.i_flags)
                 ? g_number_digit_upper : g_number_digit_lower;
             while (i_unsigned && (p_this->i_digit_count <
-                cv_truncate_to_short_(cv_convert_to_ptr_( sizeof(p_this->a_digit))))) {
+                (cv_sizeof_(p_this->a_digit) & cv_signed_short_max_))) {
                 unsigned long const i_digit =
-                    cv_truncate_to_ulong_(i_unsigned % i_base);
+                    (i_unsigned % i_base) & cv_unsigned_long_max_;
                 p_this->a_digit[p_this->i_digit_count ++] =
                     p_digit_ascii[i_digit];
                 i_unsigned /= i_base;
