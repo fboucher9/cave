@@ -1,14 +1,10 @@
 /* See LICENSE for license details */
 
 #include <cv_mutex_mgr.h>
-
-#include <cv_mutex_impl.h>
-
 #include <cv_mutex.h>
-
 #include <cv_mutex_ptr.h>
-
 #include <cv_heap_primary.h>
+#include <cv_sizeof.h>
 
 cv_mutex cv_heap_primary_mutex = cv_mutex_initializer_;
 
@@ -17,7 +13,7 @@ cv_mutex cv_heap_large_mutex = cv_mutex_initializer_;
 cv_mutex * cv_mutex_mgr_acquire(void)
 {
     cv_mutex_ptr o_mutex_ptr = cv_ptr_null_;
-    o_mutex_ptr.p_void = cv_heap_primary_alloc( cv_mutex_sizeof());
+    o_mutex_ptr.p_void = cv_heap_primary_alloc( cv_sizeof_(cv_mutex));
     if (o_mutex_ptr.p_void) {
         if (cv_mutex_init(o_mutex_ptr.p_mutex)) {
         } else {

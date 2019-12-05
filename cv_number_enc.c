@@ -6,7 +6,7 @@
 
 #include <cv_number_enc.h>
 #include <cv_number_desc.h>
-#include <cv_string_it.h>
+#include <cv_array_it.h>
 #include <cv_sizeof.h>
 #include <cv_memory.h>
 #include <cv_limits.h>
@@ -166,13 +166,13 @@ void cv_number_enc_cleanup(
 
 static cv_number_status cv_number_enc_step(
     cv_number_enc * p_this,
-    cv_string_it * p_string_it)
+    cv_array_it * p_array_it)
 {
     cv_number_status e_status = cv_number_status_fail;
-    cv_debug_assert_(p_this && p_string_it, cv_debug_code_null_ptr);
+    cv_debug_assert_(p_this && p_array_it, cv_debug_code_null_ptr);
     if (cv_number_machine_before_space == p_this->i_state) {
         if (p_this->i_before_space > 0) {
-            if (cv_string_it_write_char(p_string_it, ' ')) {
+            if (cv_array_it_write_next_char(p_array_it, ' ')) {
                 p_this->i_before_space --;
                 e_status = cv_number_status_continue;
             } else {
@@ -184,7 +184,7 @@ static cv_number_status cv_number_enc_step(
         }
     } else if (cv_number_machine_sign == p_this->i_state) {
         if (p_this->b_sign) {
-            if (cv_string_it_write_char(p_string_it,
+            if (cv_array_it_write_next_char(p_array_it,
                     p_this->a_sign[0u])) {
                 p_this->b_sign = 0;
                 e_status = cv_number_status_continue;
@@ -197,7 +197,7 @@ static cv_number_status cv_number_enc_step(
         }
     } else if (cv_number_machine_before_zero == p_this->i_state) {
         if (p_this->i_before_zero > 0) {
-            if (cv_string_it_write_char(p_string_it, '0')) {
+            if (cv_array_it_write_next_char(p_array_it, '0')) {
                 p_this->i_before_zero --;
                 e_status = cv_number_status_continue;
             } else {
@@ -212,7 +212,7 @@ static cv_number_status cv_number_enc_step(
             unsigned char const c = p_this->a_digit[
                 p_this->i_digit_count - 1];
 
-            if (cv_string_it_write_char(p_string_it, c)) {
+            if (cv_array_it_write_next_char(p_array_it, c)) {
                 p_this->i_digit_count --;
                 e_status = cv_number_status_continue;
             } else {
@@ -224,7 +224,7 @@ static cv_number_status cv_number_enc_step(
         }
     } else if (cv_number_machine_dot == p_this->i_state) {
         if (p_this->b_dot) {
-            if (cv_string_it_write_char(p_string_it, '.')) {
+            if (cv_array_it_write_next_char(p_array_it, '.')) {
                 p_this->b_dot = 0;
                 e_status = cv_number_status_continue;
             } else {
@@ -236,7 +236,7 @@ static cv_number_status cv_number_enc_step(
         }
     } else if (cv_number_machine_after_zero == p_this->i_state) {
         if (p_this->i_after_zero > 0) {
-            if (cv_string_it_write_char(p_string_it, '0')) {
+            if (cv_array_it_write_next_char(p_array_it, '0')) {
                 p_this->i_after_zero --;
                 e_status = cv_number_status_continue;
             } else {
@@ -251,7 +251,7 @@ static cv_number_status cv_number_enc_step(
             unsigned char const c = p_this->a_digit[
                 p_this->i_digit_count - 1];
 
-            if (cv_string_it_write_char(p_string_it, c)) {
+            if (cv_array_it_write_next_char(p_array_it, c)) {
                 p_this->i_digit_count --;
                 e_status = cv_number_status_continue;
             } else {
@@ -263,7 +263,7 @@ static cv_number_status cv_number_enc_step(
         }
     } else if (cv_number_machine_after_space == p_this->i_state) {
         if (p_this->i_after_space > 0) {
-            if (cv_string_it_write_char(p_string_it, ' ')) {
+            if (cv_array_it_write_next_char(p_array_it, ' ')) {
                 p_this->i_after_space --;
                 e_status = cv_number_status_continue;
             } else {
@@ -282,11 +282,11 @@ static cv_number_status cv_number_enc_step(
 
 cv_number_status cv_number_enc_read(
     cv_number_enc * p_this,
-    cv_string_it * p_string_it)
+    cv_array_it * p_array_it)
 {
     cv_number_status e_status = cv_number_status_continue;
     while (cv_number_status_continue == e_status) {
-        e_status = cv_number_enc_step(p_this, p_string_it);
+        e_status = cv_number_enc_step(p_this, p_array_it);
     }
     return e_status;
 }
@@ -300,20 +300,20 @@ cv_number_status cv_number_enc_convert(
     cv_number_status e_status = cv_number_status_fail;
     cv_debug_assert_(p_desc && p_input_buffer && p_output_buffer, cv_debug_code_null_ptr);
     {
-        cv_string_it o_string_it = cv_string_it_initializer_;
-        cv_string_it_init(&o_string_it, p_input_buffer);
+        cv_array_it o_array_it = cv_array_it_initializer_;
+        cv_array_it_init(&o_array_it, p_input_buffer);
         {
             cv_number_enc o_number_enc = cv_number_enc_initializer_;
             if (cv_number_enc_init(&o_number_enc, p_desc)) {
-                e_status = cv_number_enc_read(&o_number_enc, &o_string_it);
+                e_status = cv_number_enc_read(&o_number_enc, &o_array_it);
                 if (cv_number_status_done == e_status) {
                     p_output_buffer->o_min = p_input_buffer->o_min;
-                    p_output_buffer->o_max = o_string_it.o_array.o_min;
+                    p_output_buffer->o_max = o_array_it.o_array.o_min;
                 }
                 cv_number_enc_cleanup(&o_number_enc);
             }
         }
-        cv_string_it_cleanup(&o_string_it);
+        cv_array_it_cleanup(&o_array_it);
     }
     return e_status;
 }

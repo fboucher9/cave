@@ -38,6 +38,14 @@ typedef char cv_verify_sizeof_thread_ptr [
         && (sizeof(cv_thread_ptr) == sizeof(cv_ptr)))
     ? 1 : -1 ];
 
+union cv_thread_desc_ptr {
+    void const * pc_void;
+    void * p_void;
+    cv_thread_desc const * pc_thread_desc;
+    cv_thread_desc * p_thread_desc;
+    cv_ptr o_ptr;
+};
+
 #endif /* #ifndef cv_thread_ptr_h_ */
 
 /* end-of-file: cv_thread_ptr.h */

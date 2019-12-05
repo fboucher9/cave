@@ -52,7 +52,6 @@ cv_test_srcs = \
     cv_stack_it.c \
     cv_stack_test.c \
     cv_mutex.c \
-    cv_mutex_pool.c \
     cv_mutex_mgr.c \
     cv_file.c \
     cv_file_std.c \

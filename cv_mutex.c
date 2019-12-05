@@ -2,10 +2,6 @@
 
 #include <cv_mutex.h>
 
-#include <cv_mutex_impl.h>
-
-#include <cv_mutex_pool.h>
-
 #include <cv_mutex_plugin.h>
 
 #include <cv_sizeof.h>
@@ -17,18 +13,12 @@
 cv_bool cv_mutex_load(void)
 {
     cv_bool b_result = cv_false;
-    b_result = cv_mutex_pool_load();
+    b_result = cv_true;
     return b_result;
 }
 
 void cv_mutex_unload(void)
 {
-    cv_mutex_pool_unload();
-}
-
-long cv_mutex_sizeof(void)
-{
-    return cv_sizeof_(cv_mutex);
 }
 
 cv_bool cv_mutex_init(
@@ -61,28 +51,6 @@ void cv_mutex_cleanup(
         if (0 == i_pthread_result) {
         }
     }
-}
-
-cv_mutex * cv_mutex_create(void)
-{
-    cv_mutex * p_this = cv_null_;
-    p_this = cv_mutex_pool_alloc();
-    if (p_this) {
-        if (cv_mutex_init(p_this)) {
-        } else {
-            cv_mutex_pool_free(p_this);
-            p_this = cv_null_;
-        }
-    }
-    return p_this;
-}
-
-void cv_mutex_destroy(
-    cv_mutex * p_this)
-{
-    cv_debug_assert_(!!p_this, cv_debug_code_null_ptr);
-    cv_mutex_cleanup(p_this);
-    cv_mutex_pool_free(p_this);
 }
 
 void cv_mutex_lock(

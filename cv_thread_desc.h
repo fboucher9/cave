@@ -4,9 +4,7 @@
 #define cv_thread_desc_h_
 
 #include <cv_thread_pred.h>
-
 #include <cv_array.h>
-
 #include <cv_bool.h>
 
 typedef void (cv_thread_func)(

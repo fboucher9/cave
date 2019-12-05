@@ -14,11 +14,13 @@ then the join step is automatically skipped.
 */
 
 #include <cv_thread_pred.h>
+#include <cv_thread_impl.h>
 
-cv_thread * cv_thread_create(
+cv_bool cv_thread_init(
+    cv_thread * p_this,
     cv_thread_desc const * p_thread_desc);
 
-void cv_thread_destroy(
+void cv_thread_cleanup(
     cv_thread * p_this);
 
 /*

@@ -17,7 +17,7 @@ structure instead of a format string.
 
 #include <cv_bool.h>
 
-#include <cv_string_pred.h>
+#include <cv_array_pred.h>
 
 #include <cv_number_pred.h>
 
@@ -63,7 +63,7 @@ void cv_number_enc_cleanup(
 
 cv_number_status cv_number_enc_read(
     cv_number_enc * p_this,
-    cv_string_it * p_string_it);
+    cv_array_it * p_array_it);
 
 /* all-in-one service */
 cv_number_status cv_number_enc_convert(

@@ -111,10 +111,10 @@ static void cv_test_thread(void)
         o_desc.o_callback.p_func = & cv_test_job;
         o_desc.o_name = g_thread_name;
         {
-            cv_thread * const p_thread = cv_thread_create(&o_desc);
-            if (p_thread) {
+            cv_thread o_thread = cv_thread_initializer_;
+            if (cv_thread_init(&o_thread, &o_desc)) {
                 cv_test_poll_stdin();
-                cv_thread_destroy(p_thread);
+                cv_thread_cleanup(&o_thread);
             }
         }
     }
