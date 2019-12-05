@@ -6,8 +6,6 @@
 
 #include <cv_mutex.h>
 
-#include <cv_mutex_mgr.h>
-
 #include <cv_list_root.h>
 
 #include <cv_list_node.h>
@@ -22,6 +20,8 @@
 
 static cv_heap_section_list g_heap_primary_section_list =
 cv_heap_section_list_initializer_;
+
+static cv_mutex cv_heap_primary_mutex = cv_mutex_initializer_;
 
 static long g_heap_primary_max = (1024L * 1024L);
 

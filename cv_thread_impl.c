@@ -8,6 +8,22 @@
 #include <cv_debug.h>
 #include <cv_unused.h>
 #include <cv_heap.h>
+#include <cv_thread_plugin.h>
+
+static cv_bool g_thread_loaded = cv_false;
+
+cv_bool cv_thread_load(void) {
+    cv_bool b_result = cv_false;
+    cv_debug_assert_(!g_thread_loaded, cv_debug_code_already_loaded);
+    g_thread_loaded = cv_true;
+    b_result = cv_true;
+    return b_result;
+}
+
+void cv_thread_unload(void) {
+    cv_debug_assert_(g_thread_loaded, cv_debug_code_already_unloaded);
+    g_thread_loaded = cv_false;
+}
 
 #if defined cv_have_pthread_
 static void * cv_thread_start(
@@ -16,6 +32,7 @@ static void * cv_thread_start(
     cv_thread_desc_ptr o_context_ptr = cv_ptr_null_;
     o_context_ptr.p_void = p_void;
 
+    cv_debug_assert_(g_thread_loaded, cv_debug_code_not_loaded);
     cv_debug_assert_( !!p_void, cv_debug_code_null_ptr);
 
     {
@@ -40,6 +57,7 @@ cv_bool cv_thread_init(
     cv_thread_desc const * p_thread_desc)
 {
     cv_bool b_result = cv_false;
+    cv_debug_assert_(g_thread_loaded, cv_debug_code_not_loaded);
     cv_debug_assert_( p_this && p_thread_desc, cv_debug_code_null_ptr);
     {
         cv_debug_init_(p_this, cv_sizeof_(*p_this));
@@ -49,6 +67,7 @@ cv_bool cv_thread_init(
             o_desc_ptr.p_void = cv_heap_alloc(cv_sizeof_(cv_thread_desc));
             if (o_desc_ptr.p_void) {
                 cv_thread_desc_init(o_desc_ptr.p_thread_desc);
+                *(o_desc_ptr.p_thread_desc) = *(p_thread_desc);
                 {
                     int i_pthread_result = 0;
 #if defined cv_have_pthread_
@@ -80,6 +99,7 @@ cv_bool cv_thread_init(
 void cv_thread_cleanup(
     cv_thread * p_this)
 {
+    cv_debug_assert_(g_thread_loaded, cv_debug_code_not_loaded);
     cv_debug_assert_( !!p_this, cv_debug_code_null_ptr);
     {
         /* check detach flag */

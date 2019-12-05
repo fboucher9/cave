@@ -6,8 +6,6 @@
 
 #include <cv_heap_node_ptr.h>
 
-#include <cv_mutex_mgr.h>
-
 #include <cv_mutex.h>
 
 #include <cv_list_root.h>
@@ -21,6 +19,8 @@
 #include <cv_runtime.h>
 
 #include <cv_debug.h>
+
+static cv_mutex cv_heap_large_mutex = cv_mutex_initializer_;
 
 static cv_bool g_heap_large_loaded = cv_false;
 
@@ -51,6 +51,8 @@ void cv_heap_large_unload(void)
                 /* Detach from free list */
                 cv_list_join( o_heap_ptr.o_list_ptr.p_node,
                     o_heap_ptr.o_list_ptr.p_node);
+                /* Cleanup the node */
+                cv_heap_node_cleanup(o_heap_ptr.p_heap_node);
                 /* Free memory */
                 cv_runtime_free(o_heap_ptr.p_void);
             }

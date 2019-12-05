@@ -52,7 +52,6 @@ cv_test_srcs = \
     cv_stack_it.c \
     cv_stack_test.c \
     cv_mutex.c \
-    cv_mutex_mgr.c \
     cv_file.c \
     cv_file_std.c \
     cv_file_disk_desc.c \
@@ -163,7 +162,7 @@ bare : $(cv_dst_path)/test.bare.exe
 
 $(cv_dst_path)/test.exe : $(cv_src_path)/makefile $(cv_test_objs_abs)
 	@echo linking $(notdir $@)
-	$(cv_verbose)echo -m32 -o $(cv_dst_path)/test.exe $(cv_cflags) -rdynamic $(cv_test_objs_abs) -lpthread > $(cv_dst_path)/.obj/link.cmd
+	$(cv_verbose)echo -m32 -o $(cv_dst_path)/test.exe $(cv_cflags) $(cv_profile_cflags) -rdynamic $(cv_test_objs_abs) -lpthread > $(cv_dst_path)/.obj/link.cmd
 	$(cv_verbose)gcc @$(cv_dst_path)/.obj/link.cmd
 
 $(cv_test_objs_abs) : $(cv_src_path)/makefile
@@ -171,7 +170,7 @@ $(cv_test_objs_abs) : $(cv_src_path)/makefile
 $(cv_dst_path)/.obj/%.c.o : $(cv_src_path)/%.c
 	@echo compiling $(notdir $<)
 	$(cv_verbose)mkdir -p $(cv_dst_path)/.obj
-	$(cv_verbose)echo -c -m32 -x c -o $@ $(cv_cflags) $(cv_defines) $(cv_includes) $< -MMD > $@.cmd
+	$(cv_verbose)echo -c -m32 -x c -o $@ $(cv_cflags) $(cv_profile_cflags) $(cv_defines) $(cv_includes) $< -MMD > $@.cmd
 	$(cv_verbose)gcc @$@.cmd
 
 $(cv_dst_path)/test.m64.exe : $(cv_src_path)/makefile $(cv_test_srcs_abs)
