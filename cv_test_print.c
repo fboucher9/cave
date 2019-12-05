@@ -38,22 +38,22 @@ void cv_print_number( cv_number_desc const * p_desc) {
     cv_file_print_number(p_std_out, p_desc);
 }
 
-void cv_print_signed( long i_number, cv_number_format const * p_format) {
+void cv_print_signed( cv_sll i_number, cv_number_format const * p_format) {
     cv_file const * p_std_out = cv_file_std_out();
     cv_file_print_signed(p_std_out, i_number, p_format);
 }
 
-void cv_print_unsigned( unsigned long i_number,
+void cv_print_unsigned( cv_ull i_number,
     cv_number_format const * p_format) {
     cv_file const * p_std_out = cv_file_std_out();
     cv_file_print_unsigned(p_std_out, i_number, p_format);
 }
 
-void cv_print_dec( long i_number) {
+void cv_print_dec( cv_sll i_number) {
     cv_print_signed(i_number, cv_number_format_dec());
 }
 
-void cv_print_hex( unsigned long i_number) {
+void cv_print_hex( cv_ull i_number) {
     cv_print_unsigned(i_number, cv_number_format_hex());
 }
 

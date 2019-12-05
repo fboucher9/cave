@@ -60,8 +60,8 @@ void cv_stack_test(void) {
     {
         static cv_sll const g_test_vector[] = {
             12345, 31, 14, 77, 5432, 8554 };
-        static long const g_test_vector_count = cv_cast_(long,
-            sizeof(g_test_vector)/sizeof(g_test_vector[0u]));
+        static long const g_test_vector_count =
+            cv_sizeof_(g_test_vector)/cv_sizeof_(g_test_vector[0u]);
         long i_index = 0;
         for (i_index = 0; i_index < g_test_vector_count; i_index++) {
             cv_number_stack_ptr o_node_ptr = cv_ptr_null_;
@@ -91,7 +91,7 @@ void cv_stack_test(void) {
                         's', 't', 'a', 'c', 'k', ' ', '[' };
                     cv_print_vector(a_text, cv_sizeof_(a_text));
                 }
-                cv_print_dec(cv_cast_(long, p_node->i_value));
+                cv_print_dec(p_node->i_value);
                 cv_print_char(']');
                 cv_print_nl();
             }

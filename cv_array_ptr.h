@@ -40,6 +40,7 @@ union cv_array_ptr
     char * * pp_char;
     unsigned char const * const * ppc_uchar;
     unsigned char * * pp_uchar;
+    cv_ptr o_ptr;
 };
 
 #endif /* #ifndef cv_array_ptr_h_ */

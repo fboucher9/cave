@@ -17,6 +17,8 @@ cv_test_srcs = \
     cv_array_it.c \
     cv_array_tool.c \
     cv_buffer.c \
+    cv_convert.c \
+    cv_convert_test.c \
     cv_string0.c \
     cv_string_it.c \
     cv_manager.c \
@@ -192,6 +194,6 @@ $(cv_dst_path)/test.clangxx.exe : $(cv_src_path)/makefile $(cv_test_srcs_abs)
 	clang++ -x c++ -o $(cv_dst_path)/test.clangxx.exe -fno-rtti -fno-exceptions -ansi -pedantic -Weverything $(cv_defines) $(cv_includes) $(cv_test_srcs_abs) -lpthread
 
 $(cv_dst_path)/test.bare.exe : $(cv_src_path)/makefile $(cv_test_srcs_abs)
-	gcc -x c -o $(cv_dst_path)/test.bare.exe -I . -D cv_debug_ -ansi -pedantic -nostdinc -Wall -Wextra -fno-stack-protector $(cv_test_srcs_abs) -nodefaultlibs -nostartfiles
+	gcc -m64 -x c -o $(cv_dst_path)/test.bare.exe -I . -D cv_debug_ -ansi -pedantic -nostdinc -Wall -Wextra -fno-stack-protector $(cv_test_srcs_abs) -nodefaultlibs -nostartfiles
 
 -include $(cv_test_deps_abs)

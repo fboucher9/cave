@@ -20,7 +20,7 @@ void xx_debug_msg(
     cv_debug_code e_code)
 {
     cv_runtime_printf("*** ouch! %d ***\n",
-        cv_cast_(int, e_code));
+        e_code);
 }
 
 void xx_debug_assert(
@@ -36,7 +36,7 @@ void xx_debug_break(
     cv_debug_code e_code)
 {
     cv_runtime_printf("*** assert! %d ***\n",
-        cv_cast_(int, e_code));
+        e_code);
 }
 
 static long g_init_count = 0;

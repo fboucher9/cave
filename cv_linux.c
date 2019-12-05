@@ -3,15 +3,11 @@
 #if defined cv_linux_
 
 #include <cv_linux.h>
-
 #include <cv_cast.h>
-
+#include <cv_convert.h>
 #include <unistd.h>
-
 #include <sys/types.h>
-
 #include <sys/stat.h>
-
 #include <fcntl.h>
 
 int cv_linux_stdin_fileno(void) {
@@ -37,12 +33,14 @@ long cv_linux_read(
 {
     long i_result = -1;
     ssize_t i_read_result = -1;
-    size_t i_read_len = cv_cast_(size_t, i_buffer_length);
+    unsigned long const u_buffer_length =
+        cv_convert_to_ulong_(i_buffer_length);
+    size_t const i_read_len = u_buffer_length;
     i_read_result = read(
         i_file_index,
         p_buffer,
         i_read_len);
-    i_result = cv_cast_(long, i_read_result);
+    i_result = cv_truncate_to_long_(i_read_result);
     return i_result;
 }
 
@@ -57,12 +55,14 @@ long cv_linux_write(
 {
     long i_result = -1;
     ssize_t i_write_result = -1;
-    size_t i_write_len = cv_cast_(size_t, i_buffer_length);
+    unsigned long const u_buffer_length =
+        cv_convert_to_ulong_(i_buffer_length);
+    size_t i_write_len = u_buffer_length;
     i_write_result = write(
         i_file_index,
         p_buffer,
         i_write_len);
-    i_result = cv_cast_(long, i_write_result);
+    i_result = cv_truncate_to_long_(i_write_result);
     return i_result;
 }
 

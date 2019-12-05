@@ -24,6 +24,7 @@
 #include <cv_sizeof.h>
 #include <cv_stack_test.h>
 #include <cv_file.h>
+#include <cv_convert_test.h>
 
 static void cv_test_job(
     void * p_context)
@@ -276,6 +277,8 @@ static cv_bool cv_test_main_cb(
                         'f', 'i', 'l', 'e' };
                     static char const g_stack_text[] = {
                         's', 't', 'a', 'c', 'k' };
+                    static char const g_convert_text[] = {
+                        'c', 'o', 'n', 'v', 'e', 'r', 't' };
 
                     static cv_array const g_number_array =
                         cv_array_text_initializer_(g_number_text);
@@ -291,6 +294,8 @@ static cv_bool cv_test_main_cb(
                         cv_array_text_initializer_(g_file_text);
                     static cv_array const g_stack_array =
                         cv_array_text_initializer_(g_stack_text);
+                    static cv_array const g_convert_array =
+                        cv_array_text_initializer_(g_convert_text);
 
                     if (cv_array_compare(&o_string, &g_number_array)) {
                         cv_test_number();
@@ -306,6 +311,8 @@ static cv_bool cv_test_main_cb(
                         cv_file_test();
                     } else if (cv_array_compare(&o_string, &g_stack_array)) {
                         cv_stack_test();
+                    } else if (cv_array_compare(&o_string, &g_convert_array)) {
+                        cv_convert_test();
                     } else {
                         /* invalid command */
                         static unsigned char const a_text[] = {

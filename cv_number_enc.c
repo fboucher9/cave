@@ -5,18 +5,13 @@
 */
 
 #include <cv_number_enc.h>
-
 #include <cv_number_desc.h>
-
 #include <cv_string_it.h>
-
 #include <cv_sizeof.h>
-
 #include <cv_memory.h>
-
 #include <cv_limits.h>
-
 #include <cv_debug.h>
+#include <cv_convert.h>
 
 enum cv_number_machine {
     cv_number_machine_invalid = 0,
@@ -47,8 +42,8 @@ static cv_bool cv_number_enc_init_digits(
     cv_bool b_result = cv_false;
     cv_debug_assert_(!!p_this, cv_debug_code_null_ptr);
     {
-        unsigned long i_unsigned = 0;
-        i_unsigned = cv_cast_(unsigned long, p_this->o_desc.o_data.i_unsigned);
+        cv_ull i_unsigned = 0;
+        i_unsigned = p_this->o_desc.o_data.i_unsigned;
         if (p_this->o_desc.o_data.b_negative) {
             p_this->a_sign[0u] = '-';
             p_this->b_sign = 1;
@@ -57,14 +52,14 @@ static cv_bool cv_number_enc_init_digits(
         {
             unsigned long const i_base =
                 (cv_number_flag_hexadecimal & p_this->o_desc.o_format.i_flags)
-                ? 16 : 10;
+                ? 16UL : 10UL;
             unsigned char const * p_digit_ascii =
                 (cv_number_flag_upper & p_this->o_desc.o_format.i_flags)
                 ? g_number_digit_upper : g_number_digit_lower;
             while (i_unsigned && (p_this->i_digit_count <
-                    cv_cast_(short, sizeof(p_this->a_digit)))) {
+                cv_truncate_to_short_(cv_convert_to_ptr_( sizeof(p_this->a_digit))))) {
                 unsigned long const i_digit =
-                    cv_cast_(unsigned long, i_unsigned % i_base);
+                    cv_truncate_to_ulong_(i_unsigned % i_base);
                 p_this->a_digit[p_this->i_digit_count ++] =
                     p_digit_ascii[i_digit];
                 i_unsigned /= i_base;

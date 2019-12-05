@@ -11,6 +11,7 @@
 #include <cv_sizeof.h>
 #include <cv_debug.h>
 #include <cv_heap.h>
+#include <cv_convert.h>
 #if defined cv_linux_
 #include <poll.h>
 #endif /* #if defined cv_linux_ */
@@ -80,7 +81,8 @@ static cv_bool cv_file_poll_linux_dispatch(
             cv_memory_zero(p_pollfd, i_pollfd_len);
             cv_file_poll_linux_prepare( p_pollfd, p_poll_min, i_count);
             {
-                nfds_t const i_pollfd_count = cv_cast_(nfds_t, i_count);
+                unsigned long const u_count = cv_convert_to_ulong_(i_count);
+                nfds_t const i_pollfd_count = u_count;
                 int const i_poll_result = poll(
                     p_pollfd, i_pollfd_count, 1000);
                 if (i_poll_result > 0) {

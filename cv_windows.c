@@ -4,7 +4,7 @@
 
 #include <cv_windows.h>
 #include <cv_unused.h>
-#include <cv_cast.h>
+#include <cv_convert.h>
 #include <io.h>
 #include <stdio.h>
 
@@ -23,16 +23,18 @@ int cv_windows_stderr_fileno(void) {
 long cv_windows_read( int i_file_index, void * p_buffer,
     long i_buffer_length) {
     long i_result = -1;
-    i_result = _read(i_file_index, p_buffer,
-        cv_cast_(unsigned long, i_buffer_length));
+    unsigned long int const u_buffer_length =
+        cv_convert_to_ulong_(i_buffer_length);
+    i_result = _read(i_file_index, p_buffer, u_buffer_length);
     return i_result;
 }
 
 long cv_windows_write( int i_file_index, void const * p_buffer,
     long i_buffer_length) {
     long i_result = -1;
-    i_result = _write(i_file_index, p_buffer,
-        cv_cast_(unsigned long, i_buffer_length));
+    unsigned long int const u_buffer_length =
+        cv_convert_to_ulong_(i_buffer_length);
+    i_result = _write(i_file_index, p_buffer, u_buffer_length);
     return i_result;
 }
 
