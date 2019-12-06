@@ -5,24 +5,25 @@
 
 #include <cv_unused.h>
 
+#include <cv_array_pred.h>
+
 #include <cv_bool.h>
 
 #if defined cv_debug_
 
-typedef enum cv_debug_code {
-    cv_debug_code_null_ptr = 1,
-    cv_debug_code_error,
-    cv_debug_code_already_loaded,
-    cv_debug_code_already_unloaded,
-    cv_debug_code_not_loaded,
-    cv_debug_code_invalid_length,
-    cv_debug_code_alternative,
-    cv_debug_code_out_of_memory,
-    cv_debug_code_not_empty,
-    cv_debug_code_not_implemented,
-    cv_debug_code_invalid_parameter,
-    cv_debug_code_dont_panic
-} cv_debug_code;
+typedef cv_array const * cv_debug_code;
+extern cv_debug_code cv_debug_code_null_ptr;
+extern cv_debug_code cv_debug_code_error;
+extern cv_debug_code cv_debug_code_already_loaded;
+extern cv_debug_code cv_debug_code_already_unloaded;
+extern cv_debug_code cv_debug_code_not_loaded;
+extern cv_debug_code cv_debug_code_invalid_length;
+extern cv_debug_code cv_debug_code_alternative;
+extern cv_debug_code cv_debug_code_out_of_memory;
+extern cv_debug_code cv_debug_code_not_empty;
+extern cv_debug_code cv_debug_code_not_implemented;
+extern cv_debug_code cv_debug_code_invalid_parameter;
+extern cv_debug_code cv_debug_code_dont_panic;
 
 void xx_debug_msg(
     cv_debug_code e_code);
