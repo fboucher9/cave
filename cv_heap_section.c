@@ -35,19 +35,13 @@ union cv_heap_section_ptr
 struct cv_heap_section_node_desc
 {
     cv_heap_section_list * p_parent;
-    void * pv_padding[1u];
     /* -- */
     long i_grow_len;
     long l_padding[1u];
 };
 
 #define cv_heap_section_node_desc_initializer_ \
-{ \
-    cv_null_, \
-    { cv_null_ }, \
-    0, \
-    { 0 } \
-}
+{ cv_null_, 0, { 0 } }
 
 struct cv_heap_section_node
 {

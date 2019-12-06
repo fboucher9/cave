@@ -25,6 +25,7 @@ union cv_thread {
             sizeof(void *)];
     pthread_t o_handle;
 #else /* #if defined cv_have_pthread_ */
+    void * a_padding[1u];
     void * o_handle;
 #endif /* #if defined cv_have_pthread_ */
 };
