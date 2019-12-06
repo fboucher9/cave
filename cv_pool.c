@@ -13,23 +13,6 @@
  *
  */
 
-void cv_pool_desc_init( cv_pool_desc * p_desc) {
-    cv_debug_init_(p_desc, cv_sizeof_(*p_desc));
-    p_desc->i_len = 0;
-}
-
-/*
- *
- */
-
-void cv_pool_desc_cleanup( cv_pool_desc * p_desc) {
-    cv_debug_cleanup_(p_desc, cv_sizeof_(*p_desc));
-}
-
-/*
- *
- */
-
 void cv_pool_init( cv_pool * p_this, cv_pool_desc const * p_desc) {
     cv_debug_assert_(p_this && p_desc, cv_debug_code_null_ptr);
     cv_debug_init_(p_this, cv_sizeof_(*p_this));

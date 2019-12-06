@@ -53,6 +53,8 @@ cv_test_srcs = \
     cv_stack_test.c \
     cv_mutex.c \
     cv_pool.c \
+    cv_pool_desc.c \
+    cv_pool_lock.c \
     cv_file.c \
     cv_file_std.c \
     cv_file_disk_desc.c \
