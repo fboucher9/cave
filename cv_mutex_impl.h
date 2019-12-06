@@ -21,13 +21,11 @@ union cv_mutex
 #if defined cv_have_pthread_
     pthread_mutex_t o_private;
 
-    cv_ull a_padding[
-        (sizeof(pthread_mutex_t) + sizeof(cv_ull) - 1) /
-            sizeof(cv_ull) ];
+    void * a_padding[
+        (sizeof(pthread_mutex_t) + sizeof(void *) - 1) /
+            sizeof(void *) ];
 #else /* #if defined cv_have_pthread_ */
     void * o_private;
-
-    cv_ull a_padding[1u];
 #endif /* #if defined cv_have_pthread_ */
 
 };

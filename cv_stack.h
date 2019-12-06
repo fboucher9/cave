@@ -21,10 +21,8 @@
  *  Representation of root element of stack or of each object within the stack.
  */
 
-union cv_stack {
+struct cv_stack {
     cv_stack_ptr o_next;
-    /* Alignment to 64-bits */
-    cv_sll ll_align;
 };
 
 #define cv_stack_initializer_ { cv_ptr_null_ }

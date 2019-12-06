@@ -35,7 +35,7 @@ long cv_linux_read(
     long i_result = -1;
     ssize_t i_read_result = -1;
     unsigned long const u_buffer_length =
-        cv_long_to_ulong_(i_buffer_length);
+        cv_convert_l2u_(i_buffer_length);
     size_t const i_read_len = u_buffer_length;
     i_read_result = read(
         i_file_index,
@@ -57,7 +57,7 @@ long cv_linux_write(
     long i_result = -1;
     ssize_t i_write_result = -1;
     unsigned long const u_buffer_length =
-        cv_long_to_ulong_(i_buffer_length);
+        cv_convert_l2u_(i_buffer_length);
     size_t i_write_len = u_buffer_length;
     i_write_result = write(
         i_file_index,

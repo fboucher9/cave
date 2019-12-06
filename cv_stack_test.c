@@ -44,7 +44,8 @@ typedef char cv_verify_sizeof_number_stack_ptr [ (
 struct cv_number_stack_node {
     cv_stack o_stack;
     /* -- */
-    cv_sll i_value;
+    long i_value;
+    long l_padding[1u];
 };
 
 /*
@@ -58,7 +59,7 @@ void cv_stack_test(void) {
 
     /* Create some numbers and push on stack */
     {
-        static cv_sll const g_test_vector[] = {
+        static long const g_test_vector[] = {
             12345, 31, 14, 77, 5432, 8554 };
         static long const g_test_vector_count =
             cv_sizeof_(g_test_vector)/cv_sizeof_(g_test_vector[0u]);

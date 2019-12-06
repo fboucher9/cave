@@ -31,17 +31,13 @@ union cv_file {
     /* Alignment to pointer */
     void * p_void;
 
-    /* Alignment to 64-bits */
-    cv_sll ll_align;
-
 };
 
 #define cv_file_initializer_ { -1 }
 
 /* Compile-time verification of cv_file handle */
 typedef char cv_verify_sizeof_file [
-    (sizeof(cv_file) == sizeof(cv_sll))
-    && (sizeof(cv_file) >= sizeof(int))
+    (sizeof(cv_file) >= sizeof(int))
     && (sizeof(cv_file) >= sizeof(void *))
     ? 1 : -1 ];
 

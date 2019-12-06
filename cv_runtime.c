@@ -20,7 +20,7 @@ void * cv_runtime_malloc(
 {
     void * p_buffer = cv_null_;
 #if defined cv_have_libc_
-    unsigned long const u_buffer_len = cv_long_to_ulong_(i_buffer_len);
+    unsigned long const u_buffer_len = cv_convert_l2u_(i_buffer_len);
     size_t const i_malloc_len = u_buffer_len;
     p_buffer = malloc(i_malloc_len);
 #else /* #if defined cv_have_libc_ */
@@ -60,7 +60,7 @@ void cv_runtime_memset(
     long i_buf_len)
 {
 #if defined cv_have_libc_
-    unsigned long const u_buf_len = cv_long_to_ulong_(i_buf_len);
+    unsigned long const u_buf_len = cv_convert_l2u_(i_buf_len);
     size_t const i_memset_len = u_buf_len;
     memset(p_buf, c_value, i_memset_len);
 #else /* #if defined cv_have_libc_ */
@@ -82,7 +82,7 @@ void cv_runtime_memcpy(
     long i_copy_len)
 {
 #if defined cv_have_libc_
-    unsigned long int const u_copy_len = cv_long_to_ulong_(i_copy_len);
+    unsigned long int const u_copy_len = cv_convert_l2u_(i_copy_len);
     size_t const i_memcpy_len = u_copy_len;
     memcpy(p_dst, p_src, i_memcpy_len);
 #else /* #if defined cv_have_libc_ */
@@ -107,7 +107,7 @@ void const * cv_runtime_memchr(
 {
     void const * p_memchr_result = cv_null_;
 #if defined cv_have_libc_
-    unsigned long int const u_src_len = cv_long_to_ulong_(i_src_len);
+    unsigned long int const u_src_len = cv_convert_l2u_(i_src_len);
     size_t const i_memchr_len = u_src_len;
     p_memchr_result = memchr(p_src, c_value, i_memchr_len);
 #else /* #if defined cv_have_libc_ */
@@ -136,7 +136,7 @@ int cv_runtime_memcmp(
 {
     int i_memcmp_result = -1;
 #if defined cv_have_libc_
-    unsigned long int const u_len = cv_long_to_ulong_(i_len);
+    unsigned long int const u_len = cv_convert_l2u_(i_len);
     size_t const i_memcmp_len = u_len;
     i_memcmp_result = memcmp(p_left, p_right, i_memcmp_len);
 #else /* #if defined cv_have_libc_ */

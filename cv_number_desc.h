@@ -9,13 +9,11 @@
 
 struct cv_number_data
 {
-    cv_ull i_unsigned;
-    /* -- */
-    cv_bool b_negative;
-    char c_padding[7u];
+    unsigned long i_unsigned;
+    unsigned long b_negative;
 };
 
-#define cv_number_data_initializer_ { 0, 0, {0} }
+#define cv_number_data_initializer_ { 0, cv_false }
 
 /* Verify sizeof data members */
 typedef char cv_verify_sizeof_number_data [

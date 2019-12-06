@@ -24,7 +24,7 @@ long cv_windows_read( int i_file_index, void * p_buffer,
     long i_buffer_length) {
     long i_result = -1;
     unsigned long int const u_buffer_length =
-        cv_long_to_ulong_(i_buffer_length);
+        cv_convert_l2u_(i_buffer_length);
     i_result = _read(i_file_index, p_buffer, u_buffer_length);
     return i_result;
 }
@@ -33,7 +33,7 @@ long cv_windows_write( int i_file_index, void const * p_buffer,
     long i_buffer_length) {
     long i_result = -1;
     unsigned long int const u_buffer_length =
-        cv_long_to_ulong_(i_buffer_length);
+        cv_convert_l2u_(i_buffer_length);
     i_result = _write(i_file_index, p_buffer, u_buffer_length);
     return i_result;
 }

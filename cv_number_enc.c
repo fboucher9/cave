@@ -42,7 +42,7 @@ static cv_bool cv_number_enc_init_digits(
     cv_bool b_result = cv_false;
     cv_debug_assert_(!!p_this, cv_debug_code_null_ptr);
     {
-        cv_ull i_unsigned = 0;
+        unsigned long i_unsigned = 0;
         i_unsigned = p_this->o_desc.o_data.i_unsigned;
         if (p_this->o_desc.o_data.b_negative) {
             p_this->a_sign[0u] = '-';

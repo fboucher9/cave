@@ -20,16 +20,15 @@
 
 union cv_thread {
 #if defined cv_have_pthread_
+    void * a_padding[
+        (sizeof(pthread_t) + sizeof(void *) - 1) /
+            sizeof(void *)];
     pthread_t o_handle;
-    cv_ull a_padding[
-        (sizeof(pthread_t) + sizeof(cv_ull) - 1) /
-            sizeof(cv_ull)];
 #else /* #if defined cv_have_pthread_ */
     void * o_handle;
-    cv_ull a_padding[1u];
 #endif /* #if defined cv_have_pthread_ */
 };
 
-#define cv_thread_initializer_ { 0 }
+#define cv_thread_initializer_ { { cv_null_ } }
 
 #endif /* #ifndef cv_thread_impl_h_ */

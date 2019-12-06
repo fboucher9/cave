@@ -81,7 +81,7 @@ static cv_bool cv_file_poll_linux_dispatch(
             cv_memory_zero(p_pollfd, i_pollfd_len);
             cv_file_poll_linux_prepare( p_pollfd, p_poll_min, i_count);
             {
-                unsigned long const u_count = cv_long_to_ulong_(i_count);
+                unsigned long const u_count = cv_convert_l2u_(i_count);
                 nfds_t const i_pollfd_count = u_count;
                 int const i_poll_result = poll(
                     p_pollfd, i_pollfd_count, 1000);
