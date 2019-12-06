@@ -16,7 +16,6 @@
 #include <cv_unused.h>
 #include <cv_number_enc.h>
 #include <cv_number_desc.h>
-#include <cv_string_it.h>
 #include <cv_test_print.h>
 #include <cv_array_tool.h>
 #include <cv_memory.h>

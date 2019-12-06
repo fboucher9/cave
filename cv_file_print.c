@@ -10,7 +10,6 @@
 #include <cv_array_tool.h>
 #include <cv_debug.h>
 #include <cv_sizeof.h>
-#include <cv_string_it.h>
 #include <cv_number_enc.h>
 #include <cv_convert.h>
 
