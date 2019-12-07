@@ -20,7 +20,6 @@ cv_test_srcs = \
     cv_convert.c \
     cv_convert_test.c \
     cv_string0.c \
-    cv_string_it.c \
     cv_manager.c \
     cv_options_desc.c \
     cv_options.c \
