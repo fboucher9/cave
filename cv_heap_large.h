@@ -4,11 +4,21 @@
 #define cv_heap_large_h_
 
 #include <cv_heap_pred.h>
+#include <cv_mutex.h>
+#include <cv_list_root.h>
 #include <cv_bool.h>
 
-cv_bool cv_heap_large_load(void);
-void cv_heap_large_unload(void);
-cv_heap_node * cv_heap_large_alloc( long i_len);
-void cv_heap_large_free( cv_heap_node * p_heap_node);
+struct cv_heap_large {
+    cv_mutex o_mutex;
+    cv_list_root o_free_list;
+};
+
+#define cv_heap_large_initializer_ \
+{ cv_mutex_initializer_, cv_list_root_initializer_ }
+
+cv_bool cv_heap_large_init( cv_heap_large * p_this);
+void cv_heap_large_cleanup( cv_heap_large * p_this);
+cv_heap_node * cv_heap_large_alloc( cv_heap_large * p_this, long i_len);
+void cv_heap_large_free( cv_heap_large * p_this, cv_heap_node * p_heap_node);
 
 #endif /* #ifndef cv_heap_large_h_ */

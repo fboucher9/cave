@@ -14,9 +14,26 @@ Heap for allocations with small length, less than 4KB.
 
 #define cv_heap_small_max_len_ (4096)
 
-cv_bool cv_heap_small_load(void);
-void cv_heap_small_unload(void);
-cv_heap_node * cv_heap_small_alloc( long i_len);
-void cv_heap_small_free( cv_heap_node * p_heap_node);
+#define cv_heap_small_align_ (16)
+
+#define cv_heap_small_count_ (256)
+
+typedef char cv_verify_heap_small_align [
+    (cv_heap_small_align_ * cv_heap_small_count_) == cv_heap_small_max_len_
+    ? 1 : -1 ];
+
+struct cv_heap_small {
+    cv_heap_pool * a_pool[cv_heap_small_count_];
+};
+
+#define cv_heap_small_initializer_ { { cv_null_ } }
+
+cv_bool cv_heap_small_init( cv_heap_small * p_this);
+
+void cv_heap_small_cleanup( cv_heap_small * p_this);
+
+cv_heap_node * cv_heap_small_alloc( cv_heap_small * p_this, long i_len);
+
+void cv_heap_small_free( cv_heap_small * p_this, cv_heap_node * p_heap_node);
 
 #endif /* #ifndef cv_heap_small_h_ */

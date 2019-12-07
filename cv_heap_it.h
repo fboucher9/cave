@@ -4,13 +4,10 @@
 #define cv_heap_it_h_
 
 #include <cv_heap_pred.h>
-
 #include <cv_list_it.h>
-
 #include <cv_bool.h>
 
-struct cv_heap_it
-{
+struct cv_heap_it {
     cv_list_it o_list_it;
 };
 

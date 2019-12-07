@@ -20,3 +20,5 @@ void cv_heap_free(
     void * p_buffer);
 
 #endif /* #ifndef cv_heap_h_ */
+
+/* end-of-file: cv_heap.h */

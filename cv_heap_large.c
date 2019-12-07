@@ -3,29 +3,13 @@
 #include <cv_heap_large.h>
 #include <cv_heap_node.h>
 #include <cv_heap_node_ptr.h>
-#include <cv_mutex.h>
-#include <cv_list_root.h>
 #include <cv_list_it.h>
 #include <cv_sizeof.h>
 #include <cv_unused.h>
 #include <cv_runtime.h>
 #include <cv_debug.h>
 
-typedef struct cv_heap_large cv_heap_large;
-
-struct cv_heap_large {
-    cv_mutex o_mutex;
-    cv_list_root o_free_list;
-};
-
-#define cv_heap_large_initializer_ \
-{ cv_mutex_initializer_, cv_list_root_initializer_ }
-
-static cv_heap_large g_heap_large = cv_heap_large_initializer_;
-
-static cv_bool g_heap_large_loaded = cv_false;
-
-static cv_bool cv_heap_large_init( cv_heap_large * p_this) {
+cv_bool cv_heap_large_init( cv_heap_large * p_this) {
     cv_bool b_result = cv_false;
     cv_debug_assert_(!!p_this, cv_debug_code_null_ptr);
     cv_debug_init_(p_this, cv_sizeof_(*p_this));
@@ -57,31 +41,12 @@ static void cv_heap_large_empty_free_list( cv_heap_large * p_this) {
     cv_list_it_cleanup(&o_list_it);
 }
 
-static void cv_heap_large_cleanup( cv_heap_large * p_this) {
+void cv_heap_large_cleanup( cv_heap_large * p_this) {
     cv_debug_assert_(!!p_this, cv_debug_code_null_ptr);
     /* Free all items ... */
     cv_heap_large_empty_free_list(p_this);
     cv_list_root_cleanup(&p_this->o_free_list);
     cv_debug_cleanup_(p_this, cv_sizeof_(*p_this));
-}
-
-cv_bool cv_heap_large_load(void) {
-    cv_bool b_result = cv_false;
-    cv_heap_large * const p_this = &g_heap_large;
-    cv_debug_assert_(!g_heap_large_loaded, cv_debug_code_already_loaded);
-    if (cv_heap_large_init(p_this)) {
-        g_heap_large_loaded = cv_true;
-        b_result = cv_true;
-    }
-    return b_result;
-}
-
-void cv_heap_large_unload(void) {
-    cv_heap_large * const p_this = &g_heap_large;
-    cv_debug_assert_(g_heap_large_loaded, cv_debug_code_already_unloaded);
-    /* Detect leaks */
-    cv_heap_large_cleanup(p_this);
-    g_heap_large_loaded = cv_false;
 }
 
 static long cv_heap_large_align( long i_len) {
@@ -154,10 +119,8 @@ static void cv_heap_large_free_cb( cv_heap_large * p_this,
     cv_list_join( &p_heap_node->o_node, & p_this->o_free_list.o_node);
 }
 
-cv_heap_node * cv_heap_large_alloc( long i_len) {
+cv_heap_node * cv_heap_large_alloc( cv_heap_large * p_this, long i_len) {
     cv_heap_node * p_result = cv_null_;
-    cv_heap_large * const p_this = &g_heap_large;
-    cv_debug_assert_(g_heap_large_loaded, cv_debug_code_not_loaded);
     cv_debug_assert_(i_len > 4096L, cv_debug_code_invalid_length);
     cv_mutex_lock(&p_this->o_mutex);
     p_result = cv_heap_large_alloc_cb(p_this, i_len);
@@ -165,9 +128,8 @@ cv_heap_node * cv_heap_large_alloc( long i_len) {
     return p_result;
 }
 
-void cv_heap_large_free( cv_heap_node * p_heap_node) {
-    cv_heap_large * const p_this = &g_heap_large;
-    cv_debug_assert_(g_heap_large_loaded, cv_debug_code_not_loaded);
+void cv_heap_large_free( cv_heap_large * p_this,
+    cv_heap_node * p_heap_node) {
     cv_debug_assert_(!!p_heap_node, cv_debug_code_null_ptr);
     cv_mutex_lock(&p_this->o_mutex);
     cv_heap_large_free_cb(p_this, p_heap_node);

@@ -36,6 +36,7 @@ cv_test_srcs = \
     cv_heap_section_lock.c \
     cv_heap_small.c \
     cv_heap_large.c \
+    cv_heap_used.c \
     cv_debug.c \
     cv_sizeof.c \
     cv_thread_desc.c \
