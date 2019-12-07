@@ -162,9 +162,9 @@ mingw : $(cv_dst_path)/test.mingwxx.exe
 all : bare
 bare : $(cv_dst_path)/test.bare.exe
 
-$(cv_dst_path)/test.exe : $(cv_src_path)/makefile $(cv_test_objs_abs)
+$(cv_dst_path)/test.exe : $(cv_src_path)/makefile $(cv_test_objs_abs) $(cv_src_path)/cv_export.mak
 	@echo linking $(notdir $@)
-	$(cv_verbose)echo -m32 -o $(cv_dst_path)/test.exe $(cv_cflags) $(cv_profile_cflags) -rdynamic $(cv_test_objs_abs) -lpthread > $(cv_dst_path)/.obj/link.cmd
+	$(cv_verbose)echo -m32 -o $(cv_dst_path)/test.exe $(cv_cflags) $(cv_profile_cflags) -rdynamic $(cv_test_objs_abs) -Wl,--version-script=$(cv_src_path)/cv_export.mak -lpthread > $(cv_dst_path)/.obj/link.cmd
 	$(cv_verbose)gcc @$(cv_dst_path)/.obj/link.cmd
 
 $(cv_test_objs_abs) : $(cv_src_path)/makefile
