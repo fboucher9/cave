@@ -43,13 +43,15 @@ static void cv_heap_large_empty_free_list( cv_heap_large * p_this) {
     {
         cv_heap_node_ptr o_heap_ptr = cv_ptr_null_;
         while (cv_list_it_first(&o_list_it, &o_heap_ptr.o_list_ptr)) {
+            void * const p_payload =
+                o_heap_ptr.pc_heap_node->o_payload.o_min.p_void;
             /* Detach from free list */
             cv_list_join( o_heap_ptr.o_list_ptr.p_node,
                 o_heap_ptr.o_list_ptr.p_node);
             /* Cleanup the node */
             cv_heap_node_cleanup(o_heap_ptr.p_heap_node);
             /* Free memory */
-            cv_runtime_free(o_heap_ptr.p_void);
+            cv_runtime_free(p_payload);
         }
     }
     cv_list_it_cleanup(&o_list_it);
@@ -83,7 +85,7 @@ void cv_heap_large_unload(void) {
 }
 
 static long cv_heap_large_align( long i_len) {
-    long const i_total_len = i_len + cv_sizeof_(cv_heap_node);
+    long const i_total_len = i_len;
     long const i_aligned_len = cv_sizeof_align(i_total_len, 4096);
     return i_aligned_len;
 }
@@ -126,9 +128,12 @@ static cv_heap_node * cv_heap_large_alloc_cb( cv_heap_large * p_this,
             o_heap_ptr.p_heap_node->o_payload.o_max.pc_char =
                 o_heap_ptr.p_heap_node->o_payload.o_min.pc_char + i_len;
         } else {
-            o_heap_ptr.p_void = cv_runtime_malloc(i_aligned_len);
-            if (o_heap_ptr.p_void) {
-                cv_heap_node_init( o_heap_ptr.p_heap_node, i_len);
+            void * const p_payload = cv_runtime_malloc(i_aligned_len);
+            if (p_payload) {
+                cv_array o_payload = cv_array_null_;
+                cv_array_init_vector(&o_payload, p_payload, i_len);
+                o_heap_ptr.p_heap_node = cv_heap_node_create(&o_payload);
+                cv_array_cleanup(&o_payload);
             }
         }
         if (o_heap_ptr.p_void) {

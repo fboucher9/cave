@@ -23,14 +23,10 @@ cv_bool cv_heap_node_load(void);
 
 void cv_heap_node_unload(void);
 
-void cv_heap_node_init(
-    cv_heap_node * p_this,
-    long i_len);
-
 void cv_heap_node_cleanup(
     cv_heap_node * p_this);
 
 cv_heap_node * cv_heap_node_create(
-    long i_len);
+    cv_array const * p_payload);
 
 #endif /* #ifndef cv_heap_node_h_ */

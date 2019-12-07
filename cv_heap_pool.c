@@ -79,9 +79,18 @@ static cv_heap_node * cv_heap_pool_alloc_cb(
                     o_heap_ptr.o_list_ptr.p_node,
                     o_heap_ptr.o_list_ptr.p_node);
             } else {
-                /* Create new item */
-                o_heap_ptr.p_heap_node =
-                    cv_heap_node_create(p_this->i_len);
+                /* Allocate memory from primary */
+                void * const p_payload = cv_heap_primary_alloc(
+                    p_this->i_len);
+                if (p_payload) {
+                    /* Create new item */
+                    cv_array o_payload = cv_array_null_;
+                    cv_array_init_vector(&o_payload, p_payload,
+                        p_this->i_len);
+                    o_heap_ptr.p_heap_node =
+                        cv_heap_node_create(&o_payload);
+                    cv_array_cleanup(&o_payload);
+                }
             }
             if (o_heap_ptr.p_heap_node) {
                 /* Attach to used list */

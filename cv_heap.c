@@ -25,10 +25,14 @@ are thread-safe.
 #include <cv_array.h>
 #include <cv_array_tool.h>
 #include <cv_number_desc.h>
+#include <cv_list_root.h>
+#include <cv_list_it.h>
 
 static cv_bool g_heap_loaded = cv_false;
 
 static long g_heap_count = 0L;
+
+static cv_list_root g_heap_used_list = cv_list_root_initializer_;
 
 cv_bool cv_heap_load(void)
 {
@@ -38,6 +42,7 @@ cv_bool cv_heap_load(void)
         if (cv_heap_node_load()) {
             if (cv_heap_small_load()) {
                 if (cv_heap_large_load()) {
+                    cv_list_root_init(&g_heap_used_list);
                     g_heap_loaded = cv_true;
                     b_result = cv_true;
                 } else {
@@ -114,6 +119,7 @@ void cv_heap_unload(void)
 {
     cv_debug_assert_(g_heap_loaded, cv_debug_code_already_unloaded);
     cv_heap_print_leak_report();
+    cv_list_root_cleanup(&g_heap_used_list);
     cv_heap_large_unload();
     cv_heap_small_unload();
     cv_heap_node_unload();
@@ -134,6 +140,8 @@ void * cv_heap_alloc(
             p_heap_node = cv_heap_large_alloc(i_buffer_length);
         }
         if (p_heap_node) {
+            /* Attach node to used list */
+            cv_list_join(&p_heap_node->o_node, &g_heap_used_list.o_node);
             p_buffer = p_heap_node->o_payload.o_min.p_void;
             g_heap_count ++;
         } else {
@@ -150,14 +158,28 @@ void cv_heap_free(
 {
     cv_debug_assert_(g_heap_loaded, cv_debug_code_not_loaded);
     if (p_buffer) {
-        cv_heap_node * const p_heap_node =
-            cv_heap_node_from_payload(p_buffer);
-        long const i_buffer_length = cv_array_len(&p_heap_node->o_payload);
-        if (i_buffer_length <= cv_heap_small_max_len_) {
-            cv_heap_small_free(p_heap_node);
-        } else {
-            cv_heap_large_free(p_heap_node);
+        cv_list_it o_list_it = cv_list_it_initializer_;
+        cv_list_it_init(&o_list_it, &g_heap_used_list);
+        {
+            cv_bool b_found = cv_false;
+            cv_heap_node_ptr o_heap_node_ptr = cv_ptr_null_;
+            while (!b_found && cv_list_it_next(&o_list_it,
+                    &o_heap_node_ptr.o_list_ptr)) {
+                cv_heap_node * p_heap_node =
+                    o_heap_node_ptr.p_heap_node;
+                if (p_buffer == p_heap_node->o_payload.o_min.p_void) {
+                    long const i_buffer_length = cv_array_len(&p_heap_node->o_payload);
+                    if (i_buffer_length <= cv_heap_small_max_len_) {
+                        cv_heap_small_free(p_heap_node);
+                    } else {
+                        cv_heap_large_free(p_heap_node);
+                    }
+                    b_found = cv_true;
+                }
+            }
+            cv_debug_assert_(b_found, cv_debug_code_error);
         }
+        cv_list_it_cleanup(&o_list_it);
         g_heap_count --;
     } else {
         cv_debug_msg_(cv_debug_code_null_ptr);

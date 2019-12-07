@@ -32,14 +32,14 @@ void cv_heap_node_unload(void) {
     g_heap_node_loaded = cv_false;
 }
 
-void cv_heap_node_init(
+static void cv_heap_node_init(
     cv_heap_node * p_this,
-    long i_len)
+    cv_array const * p_payload)
 {
     cv_debug_assert_( !!p_this, cv_debug_code_null_ptr);
     cv_debug_init_(p_this, cv_sizeof_(cv_heap_node));
     cv_list_node_init(&p_this->o_node);
-    cv_array_init_vector(&p_this->o_payload, p_this + 1, i_len);
+    cv_array_init_ref(&p_this->o_payload, p_payload);
 }
 
 void cv_heap_node_cleanup(
@@ -52,15 +52,15 @@ void cv_heap_node_cleanup(
 }
 
 cv_heap_node * cv_heap_node_create(
-    long i_len)
+    cv_array const * p_payload)
 {
     cv_heap_node * p_this = cv_null_;
-    if (i_len) {
+    if (p_payload) {
         cv_heap_node_ptr o_heap_ptr = cv_ptr_null_;
-        long const i_node_len = cv_sizeof_(cv_heap_node) + i_len;
+        long const i_node_len = cv_sizeof_(cv_heap_node);
         o_heap_ptr.o_list_ptr.p_void = cv_heap_primary_alloc(i_node_len);
         if (o_heap_ptr.o_list_ptr.p_void) {
-            cv_heap_node_init(o_heap_ptr.p_heap_node, i_len);
+            cv_heap_node_init(o_heap_ptr.p_heap_node, p_payload);
             p_this = o_heap_ptr.p_heap_node;
         }
     }
