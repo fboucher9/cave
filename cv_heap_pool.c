@@ -1,25 +1,19 @@
 /* See LICENSE for license details */
 
+/*
+ *
+ */
+
 #include <cv_heap_pool.h>
-
 #include <cv_heap_pool_impl.h>
-
 #include <cv_heap_primary.h>
-
 #include <cv_heap_node.h>
-
 #include <cv_heap_node_ptr.h>
-
 #include <cv_heap_it.h>
-
 #include <cv_mutex.h>
-
 #include <cv_memory.h>
-
 #include <cv_sizeof.h>
-
 #include <cv_null.h>
-
 #include <cv_debug.h>
 
 cv_bool cv_heap_pool_init(
@@ -31,7 +25,6 @@ cv_bool cv_heap_pool_init(
     cv_debug_assert_(i_len > 0, cv_debug_code_invalid_length);
     cv_debug_init_(p_this, cv_sizeof_(*p_this));
     if (cv_mutex_init(&p_this->o_mutex)) {
-        cv_list_root_init(&p_this->o_used_list);
         cv_list_root_init(&p_this->o_free_list);
         p_this->i_len = i_len;
         b_result = cv_true;
@@ -63,7 +56,6 @@ void cv_heap_pool_cleanup(
     cv_list_join(
         &p_this->o_free_list.o_node,
         &p_this->o_free_list.o_node);
-    cv_list_root_cleanup(&p_this->o_used_list);
     cv_list_root_cleanup(&p_this->o_free_list);
     cv_mutex_cleanup(&p_this->o_mutex);
     cv_debug_cleanup_(p_this, cv_sizeof_(*p_this));
@@ -93,9 +85,7 @@ static cv_heap_node * cv_heap_pool_alloc_cb(
             }
             if (o_heap_ptr.p_heap_node) {
                 /* Attach to used list */
-                cv_list_join(
-                    o_heap_ptr.o_list_ptr.p_node,
-                    &p_this->o_used_list.o_node);
+                /* handled by cv_heap... */
                 /* Set actual len */
                 o_heap_ptr.p_heap_node->o_payload.o_max.pc_char =
                     o_heap_ptr.p_heap_node->o_payload.o_min.pc_char + i_len;

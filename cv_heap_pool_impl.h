@@ -3,13 +3,18 @@
 #ifndef cv_heap_pool_impl_h_
 #define cv_heap_pool_impl_h_
 
+/*
+ *
+ */
+
 #include <cv_heap_pred.h>
-
 #include <cv_mutex.h>
-
 #include <cv_list_root.h>
-
 #include <cv_null.h>
+
+/*
+ *
+ */
 
 union cv_heap_pool_ptr
 {
@@ -19,11 +24,13 @@ union cv_heap_pool_ptr
     cv_heap_pool * p_heap_pool;
 };
 
+/*
+ *
+ */
+
 struct cv_heap_pool
 {
     cv_mutex o_mutex; /* safety first */
-    /* -- */
-    cv_list_root o_used_list; /* list of allocations */
     /* -- */
     cv_list_root o_free_list; /* list of unused */
     /* -- */
@@ -33,7 +40,6 @@ struct cv_heap_pool
 
 #define cv_heap_pool_initializer_ { \
     cv_mutex_initializer_, \
-    cv_list_root_initializer_, \
     cv_list_root_initializer_, \
     0, \
     { 0 }
