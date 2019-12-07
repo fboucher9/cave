@@ -29,7 +29,7 @@ than largest allocation.
 
 Structure: cv_heap_section_desc
 
-Description: Options for initialization of cv_heap_section_list object.
+Description: Options for initialization of cv_heap_section object.
 
 Comments: If i_grow_len is a large value, larger than 64KB, then please try
 to use a multiple of 4KB to reduce wasted space.
@@ -51,12 +51,12 @@ struct cv_heap_section_desc
 
 /*
 
-Structure: cv_heap_section_list
+Structure: cv_heap_section
 
 Description: State for sections object.
 
 */
-struct cv_heap_section_list
+struct cv_heap_section
 {
     cv_heap_section_desc o_desc;
     /* -- */
@@ -65,8 +65,8 @@ struct cv_heap_section_list
     cv_array_it o_array_it;
 };
 
-/* Initializer list for cv_heap_section_list structure */
-#define cv_heap_section_list_initializer_ \
+/* Initializer list for cv_heap_section structure */
+#define cv_heap_section_initializer_ \
 { \
     cv_heap_section_desc_initializer_, \
     cv_list_root_initializer_, \
@@ -75,15 +75,15 @@ struct cv_heap_section_list
 
 /* Functions: see cv_heap_section.c for more details */
 
-void cv_heap_section_list_init(
-    cv_heap_section_list * p_this,
+void cv_heap_section_init(
+    cv_heap_section * p_this,
     cv_heap_section_desc const * p_desc);
 
-void cv_heap_section_list_cleanup(
-    cv_heap_section_list * p_this);
+void cv_heap_section_cleanup(
+    cv_heap_section * p_this);
 
-void * cv_heap_section_list_alloc(
-    cv_heap_section_list * p_this,
+void * cv_heap_section_alloc(
+    cv_heap_section * p_this,
     long i_len);
 
 #endif /* #ifndef cv_heap_section_h_ */

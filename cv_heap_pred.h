@@ -22,6 +22,9 @@ typedef struct cv_heap_it cv_heap_it;
 typedef struct cv_heap_section_desc cv_heap_section_desc;
 
 /* Predefine */
-typedef struct cv_heap_section_list cv_heap_section_list;
+typedef struct cv_heap_section cv_heap_section;
+
+/* Predefine */
+typedef struct cv_heap_section_lock cv_heap_section_lock;
 
 #endif /* #ifndef cv_heap_pred_h_ */

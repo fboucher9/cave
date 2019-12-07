@@ -35,15 +35,28 @@ cv_bool cv_heap_load(void)
     cv_bool b_result = cv_false;
     cv_debug_assert_(!g_heap_loaded, cv_debug_code_already_loaded);
     if (cv_heap_primary_load()) {
-        if (cv_heap_small_load()) {
-            if (cv_heap_large_load()) {
-                g_heap_loaded = cv_true;
-                b_result = cv_true;
+        if (cv_heap_node_load()) {
+            if (cv_heap_small_load()) {
+                if (cv_heap_large_load()) {
+                    g_heap_loaded = cv_true;
+                    b_result = cv_true;
+                } else {
+                    cv_debug_msg_(cv_debug_code_error);
+                }
+                if (!b_result) {
+                    cv_heap_small_unload();
+                }
             } else {
                 cv_debug_msg_(cv_debug_code_error);
             }
+            if (!b_result) {
+                cv_heap_node_unload();
+            }
         } else {
             cv_debug_msg_(cv_debug_code_error);
+        }
+        if (!b_result) {
+            cv_heap_primary_unload();
         }
     } else {
         cv_debug_msg_(cv_debug_code_error);
@@ -103,6 +116,7 @@ void cv_heap_unload(void)
     cv_heap_print_leak_report();
     cv_heap_large_unload();
     cv_heap_small_unload();
+    cv_heap_node_unload();
     cv_heap_primary_unload();
     g_heap_loaded = cv_false;
 }

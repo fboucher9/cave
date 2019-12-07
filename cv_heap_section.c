@@ -34,14 +34,12 @@ union cv_heap_section_ptr
 
 struct cv_heap_section_node_desc
 {
-    cv_heap_section_list * p_parent;
-    /* -- */
     long i_grow_len;
     long l_padding[1u];
 };
 
 #define cv_heap_section_node_desc_initializer_ \
-{ cv_null_, 0, { 0 } }
+{ 0, { 0 } }
 
 struct cv_heap_section_node
 {
@@ -70,10 +68,9 @@ static void cv_heap_section_node_init(
     cv_heap_section_node_desc const * p_desc)
 {
     cv_debug_assert_(p_this && p_desc, cv_debug_code_null_ptr);
+    cv_debug_init_(p_this, cv_sizeof_(*p_this));
     cv_list_node_init(&p_this->o_node);
     p_this->o_desc = *p_desc;
-    cv_list_join(&p_this->o_node,
-        &p_desc->p_parent->o_list.o_node);
 }
 
 static void cv_heap_section_node_cleanup(
@@ -83,6 +80,7 @@ static void cv_heap_section_node_cleanup(
     cv_list_node_cleanup(&p_this->o_node);
     cv_array_cleanup(&p_this->o_payload);
     cv_array_cleanup(&p_this->o_allocation);
+    cv_debug_cleanup_(p_this, cv_sizeof_(*p_this));
 }
 
 static cv_heap_section_node * cv_heap_section_node_create(
@@ -124,8 +122,8 @@ static void cv_heap_section_node_destroy(
     }
 }
 
-void cv_heap_section_list_init(
-    cv_heap_section_list * p_this,
+void cv_heap_section_init(
+    cv_heap_section * p_this,
     cv_heap_section_desc const * p_desc)
 {
     cv_debug_assert_( p_this && p_desc, cv_debug_code_null_ptr);
@@ -134,8 +132,8 @@ void cv_heap_section_list_init(
     cv_array_it_init_vector(&p_this->o_array_it, cv_null_, 0);
 }
 
-void cv_heap_section_list_cleanup(
-    cv_heap_section_list * p_this)
+void cv_heap_section_cleanup(
+    cv_heap_section * p_this)
 {
     cv_debug_assert_( !!p_this, cv_debug_code_null_ptr);
     {
@@ -154,8 +152,8 @@ void cv_heap_section_list_cleanup(
     }
 }
 
-static cv_bool cv_heap_section_list_grow(
-    cv_heap_section_list * p_this)
+static cv_bool cv_heap_section_grow(
+    cv_heap_section * p_this)
 {
     cv_bool b_result = cv_false;
     cv_debug_assert_( !!p_this, cv_debug_code_null_ptr);
@@ -163,11 +161,12 @@ static cv_bool cv_heap_section_list_grow(
         cv_heap_section_ptr o_ptr = cv_ptr_null_;
         cv_heap_section_node_desc o_desc =
             cv_heap_section_node_desc_initializer_;
-        o_desc.p_parent = p_this;
         o_desc.i_grow_len = p_this->o_desc.i_grow_len;
         o_ptr.p_heap_section_node =
             cv_heap_section_node_create(&o_desc);
         if (o_ptr.p_heap_section_node) {
+            cv_list_join(&o_ptr.p_heap_section_node->o_node,
+                &p_this->o_list.o_node);
             /* Setup array iterator to new buffer */
             cv_array_it_cleanup(&p_this->o_array_it);
             cv_array_it_init(&p_this->o_array_it,
@@ -178,8 +177,8 @@ static cv_bool cv_heap_section_list_grow(
     return b_result;
 }
 
-void * cv_heap_section_list_alloc(
-    cv_heap_section_list * p_this,
+void * cv_heap_section_alloc(
+    cv_heap_section * p_this,
     long i_len)
 {
     cv_array_ptr o_data_ptr = cv_ptr_null_;
@@ -194,7 +193,7 @@ void * cv_heap_section_list_alloc(
                 i_aligned_len,
                 &o_data_ptr)) {
         } else {
-            if (cv_heap_section_list_grow(p_this)) {
+            if (cv_heap_section_grow(p_this)) {
                 if (cv_array_it_get_next_array(&p_this->o_array_it,
                         i_aligned_len,
                         &o_data_ptr)) {

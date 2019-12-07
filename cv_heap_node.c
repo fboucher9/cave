@@ -1,18 +1,36 @@
 /* See LICENSE for license details */
 
 #include <cv_heap_node.h>
-
-#include <cv_memory.h>
-
 #include <cv_sizeof.h>
-
 #include <cv_heap_primary.h>
-
 #include <cv_heap_node_ptr.h>
-
 #include <cv_null.h>
-
 #include <cv_debug.h>
+#include <cv_heap_section_lock.h>
+
+static cv_heap_section_lock g_heap_node_section =
+cv_heap_section_lock_initializer_;
+
+static cv_bool g_heap_node_loaded = cv_false;
+
+static long const g_heap_node_grow_len = 4096L;
+
+cv_bool cv_heap_node_load(void) {
+    cv_bool b_result = cv_false;
+    cv_heap_section_desc o_desc = cv_heap_section_desc_initializer_;
+    o_desc.i_grow_len = g_heap_node_grow_len;
+    if (cv_heap_section_lock_init(&g_heap_node_section,
+            &o_desc)) {
+        g_heap_node_loaded = cv_true;
+        b_result = cv_true;
+    }
+    return b_result;
+}
+
+void cv_heap_node_unload(void) {
+    cv_heap_section_lock_cleanup(&g_heap_node_section);
+    g_heap_node_loaded = cv_false;
+}
 
 void cv_heap_node_init(
     cv_heap_node * p_this,
