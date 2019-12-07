@@ -18,7 +18,4 @@ union cv_heap_node_ptr
     cv_heap_node const * pc_heap_node;
 };
 
-cv_heap_node * cv_heap_node_from_payload(
-    void * p_void);
-
 #endif /* #ifndef cv_heap_ptr_h_ */
