@@ -38,10 +38,11 @@ cv_bool cv_options_pool_load(void) {
     {
         cv_pool_desc o_desc = cv_pool_desc_initializer_;
         o_desc.i_len = cv_sizeof_(cv_options_node);
-        cv_pool_lock_init(&g_options_pool.o_pool, &o_desc);
+        if (cv_pool_lock_init(&g_options_pool.o_pool, &o_desc)) {
+            g_options_pool_loaded = cv_true;
+            b_result = cv_true;
+        }
     }
-    g_options_pool_loaded = cv_true;
-    b_result = cv_true;
     return b_result;
 }
 

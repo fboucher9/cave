@@ -14,13 +14,17 @@
  *
  */
 
-void cv_pool_lock_init(
+cv_bool cv_pool_lock_init(
     cv_pool_lock * p_this,
     cv_pool_desc const * p_desc) {
+    cv_bool b_result = cv_false;
     cv_debug_assert_(p_this && p_desc, cv_debug_code_null_ptr);
     cv_debug_init_(p_this, cv_sizeof_(*p_this));
-    cv_mutex_init(&p_this->o_mutex);
-    cv_pool_init(&p_this->o_pool, p_desc);
+    if (cv_mutex_init(&p_this->o_mutex)) {
+        cv_pool_init(&p_this->o_pool, p_desc);
+        b_result = cv_true;
+    }
+    return b_result;
 }
 
 /*
