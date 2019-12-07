@@ -124,26 +124,36 @@ cv_debug_code cv_debug_code_invalid_parameter = &g_debug_code_invalid_parameter;
 cv_debug_code cv_debug_code_dont_panic = &g_debug_code_dont_panic;
 
 void xx_debug_msg(
-    cv_debug_code e_code)
+    cv_debug_code e_code,
+    char const * p_file,
+    int i_line)
 {
-    cv_runtime_printf("*** ouch! %s ***\n",
-        e_code->o_min.pc_char);
+    cv_runtime_printf("*** ouch! %s (%s:%d) ***\n",
+        e_code->o_min.pc_char,
+        p_file,
+        i_line);
 }
 
 void xx_debug_assert(
     cv_bool b_expr,
-    cv_debug_code e_code)
+    cv_debug_code e_code,
+    char const * p_file,
+    int i_line)
 {
     if (!b_expr) {
-        xx_debug_break(e_code);
+        xx_debug_break(e_code, p_file, i_line);
     }
 }
 
 void xx_debug_break(
-    cv_debug_code e_code)
+    cv_debug_code e_code,
+    char const * p_file,
+    int i_line)
 {
-    cv_runtime_printf("*** assert! %s ***\n",
-        e_code->o_min.pc_char);
+    cv_runtime_printf("*** assert! %s (%s:%d) ***\n",
+        e_code->o_min.pc_char,
+        p_file,
+        i_line);
 }
 
 static long g_init_count = 0;

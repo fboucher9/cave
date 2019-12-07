@@ -26,23 +26,29 @@ extern cv_debug_code cv_debug_code_invalid_parameter;
 extern cv_debug_code cv_debug_code_dont_panic;
 
 void xx_debug_msg(
-    cv_debug_code e_code);
+    cv_debug_code e_code,
+    char const * p_file,
+    int i_line);
 
 #define cv_debug_msg_(p_msg0) \
-    xx_debug_msg((p_msg0))
+    xx_debug_msg((p_msg0), __FILE__, __LINE__)
 
 void xx_debug_assert(
     cv_bool b_expr,
-    cv_debug_code e_code);
+    cv_debug_code e_code,
+    char const * p_file,
+    int i_line);
 
 #define cv_debug_assert_(expr, p_msg0) \
-    xx_debug_assert((expr), (p_msg0))
+    xx_debug_assert((expr), (p_msg0), __FILE__, __LINE__)
 
 void xx_debug_break(
-    cv_debug_code e_code);
+    cv_debug_code e_code,
+    char const * p_file,
+    int i_line);
 
 #define cv_debug_break_(p_msg0) \
-    xx_debug_break((p_msg0))
+    xx_debug_break((p_msg0), __FILE__, __LINE__)
 
 void xx_debug_init(
     void * p_buf,
