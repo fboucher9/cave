@@ -31,6 +31,10 @@ are thread-safe.
 
 static cv_bool g_heap_loaded = cv_false;
 
+extern cv_heap_node_mgr g_heap_node_mgr;
+
+cv_heap_node_mgr g_heap_node_mgr = cv_heap_node_mgr_initializer_;
+
 static cv_heap_used g_heap_used = cv_heap_used_initializer_;
 
 static cv_heap_small g_heap_small = cv_heap_small_initializer_;
@@ -42,7 +46,7 @@ cv_bool cv_heap_load(void)
     cv_bool b_result = cv_false;
     cv_debug_assert_(!g_heap_loaded, cv_debug_code_already_loaded);
     if (cv_heap_primary_load()) {
-        if (cv_heap_node_load()) {
+        if (cv_heap_node_mgr_init(&g_heap_node_mgr)) {
             if (cv_heap_small_init(&g_heap_small)) {
                 if (cv_heap_large_init(&g_heap_large)) {
                     cv_heap_used_init(&g_heap_used);
@@ -58,7 +62,7 @@ cv_bool cv_heap_load(void)
                 cv_debug_msg_(cv_debug_code_error);
             }
             if (!b_result) {
-                cv_heap_node_unload();
+                cv_heap_node_mgr_cleanup(&g_heap_node_mgr);
             }
         } else {
             cv_debug_msg_(cv_debug_code_error);
@@ -93,7 +97,7 @@ void cv_heap_unload(void)
     cv_heap_used_cleanup(&g_heap_used);
     cv_heap_large_cleanup(&g_heap_large);
     cv_heap_small_cleanup(&g_heap_small);
-    cv_heap_node_unload();
+    cv_heap_node_mgr_cleanup(&g_heap_node_mgr);
     cv_heap_primary_unload();
     g_heap_loaded = cv_false;
 }

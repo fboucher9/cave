@@ -9,6 +9,8 @@
 #include <cv_runtime.h>
 #include <cv_debug.h>
 
+extern cv_heap_node_mgr g_heap_node_mgr;
+
 cv_bool cv_heap_large_init( cv_heap_large * p_this) {
     cv_bool b_result = cv_false;
     cv_debug_assert_(!!p_this, cv_debug_code_null_ptr);
@@ -33,7 +35,7 @@ static void cv_heap_large_empty_free_list( cv_heap_large * p_this) {
             cv_list_join( o_heap_ptr.o_list_ptr.p_node,
                 o_heap_ptr.o_list_ptr.p_node);
             /* Cleanup the node */
-            cv_heap_node_cleanup(o_heap_ptr.p_heap_node);
+            cv_heap_node_mgr_release(&g_heap_node_mgr, o_heap_ptr.p_heap_node);
             /* Free memory */
             cv_runtime_free(p_payload);
         }
@@ -97,7 +99,8 @@ static cv_heap_node * cv_heap_large_alloc_cb( cv_heap_large * p_this,
             if (p_payload) {
                 cv_array o_payload = cv_array_null_;
                 cv_array_init_vector(&o_payload, p_payload, i_len);
-                o_heap_ptr.p_heap_node = cv_heap_node_create(&o_payload);
+                o_heap_ptr.p_heap_node = cv_heap_node_mgr_acquire(
+                    &g_heap_node_mgr, &o_payload);
                 cv_array_cleanup(&o_payload);
             }
         }

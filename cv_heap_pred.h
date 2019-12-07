@@ -10,6 +10,9 @@ typedef struct cv_heap_node cv_heap_node;
 typedef union cv_heap_node_ptr cv_heap_node_ptr;
 
 /* Predefine */
+typedef struct cv_heap_node_mgr cv_heap_node_mgr;
+
+/* Predefine */
 typedef struct cv_heap_pool cv_heap_pool;
 
 /* Predefine */

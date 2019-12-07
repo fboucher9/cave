@@ -3,13 +3,21 @@
 #ifndef cv_heap_node_h_
 #define cv_heap_node_h_
 
+/*
+ *
+ */
+
 #include <cv_heap_pred.h>
 #include <cv_list_node.h>
 #include <cv_array.h>
 #include <cv_bool.h>
+#include <cv_heap_section_lock.h>
 
-struct cv_heap_node
-{
+/*
+ *
+ */
+
+struct cv_heap_node {
     cv_list_node o_node;
     /* -- */
     char const * a_stack[4u];
@@ -19,14 +27,25 @@ struct cv_heap_node
     /* payload follows ... */
 };
 
-cv_bool cv_heap_node_load(void);
+/*
+ *
+ */
 
-void cv_heap_node_unload(void);
+struct cv_heap_node_mgr {
+    cv_heap_section_lock o_heap_section_lock;
+};
 
-void cv_heap_node_cleanup(
-    cv_heap_node * p_this);
+#define cv_heap_node_mgr_initializer_ \
+{ cv_heap_section_lock_initializer_ }
 
-cv_heap_node * cv_heap_node_create(
+cv_bool cv_heap_node_mgr_init( cv_heap_node_mgr * p_this);
+
+void cv_heap_node_mgr_cleanup( cv_heap_node_mgr * p_this);
+
+void cv_heap_node_mgr_release( cv_heap_node_mgr * p_heap_node_mgr,
+    cv_heap_node * p_heap_node);
+
+cv_heap_node * cv_heap_node_mgr_acquire( cv_heap_node_mgr * p_heap_node_mgr,
     cv_array const * p_payload);
 
 #endif /* #ifndef cv_heap_node_h_ */
