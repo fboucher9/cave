@@ -6,14 +6,6 @@
 
 #include <cv_cast.h>
 
-void * cv_heap_node_to_payload(
-    cv_heap_node * p_heap_node)
-{
-    cv_heap_node_ptr o_heap_ptr = cv_ptr_null_;
-    o_heap_ptr.p_heap_node = p_heap_node + 1;
-    return o_heap_ptr.p_void;
-}
-
 cv_heap_node * cv_heap_node_from_payload(
     void * p_void)
 {

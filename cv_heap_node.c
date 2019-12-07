@@ -39,13 +39,14 @@ void cv_heap_node_init(
     cv_debug_assert_( !!p_this, cv_debug_code_null_ptr);
     cv_debug_init_(p_this, cv_sizeof_(cv_heap_node));
     cv_list_node_init(&p_this->o_node);
-    p_this->i_len = i_len;
+    cv_array_init_vector(&p_this->o_payload, p_this + 1, i_len);
 }
 
 void cv_heap_node_cleanup(
     cv_heap_node * p_this)
 {
     cv_debug_assert_( !!p_this, cv_debug_code_null_ptr);
+    cv_array_cleanup(&p_this->o_payload);
     cv_list_node_cleanup(&p_this->o_node);
     cv_debug_cleanup_(p_this, cv_sizeof_(*p_this));
 }

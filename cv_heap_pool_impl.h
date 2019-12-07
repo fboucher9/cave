@@ -33,7 +33,6 @@ struct cv_heap_pool
 
 #define cv_heap_pool_initializer_ { \
     cv_mutex_initializer_, \
-    { 0 }, \
     cv_list_root_initializer_, \
     cv_list_root_initializer_, \
     0, \

@@ -69,11 +69,11 @@ void cv_heap_pool_cleanup(
     cv_debug_cleanup_(p_this, cv_sizeof_(*p_this));
 }
 
-static void * cv_heap_pool_alloc_cb(
+static cv_heap_node * cv_heap_pool_alloc_cb(
     cv_heap_pool * p_this,
     long i_len)
 {
-    void * p_result = cv_null_;
+    cv_heap_node * p_result = cv_null_;
     cv_debug_assert_(!!p_this, cv_debug_code_null_ptr);
     {
         /* Look for free compatible item */
@@ -97,10 +97,10 @@ static void * cv_heap_pool_alloc_cb(
                     o_heap_ptr.o_list_ptr.p_node,
                     &p_this->o_used_list.o_node);
                 /* Set actual len */
-                o_heap_ptr.p_heap_node->i_len = i_len;
+                o_heap_ptr.p_heap_node->o_payload.o_max.pc_char =
+                    o_heap_ptr.p_heap_node->o_payload.o_min.pc_char + i_len;
                 /* Get payload */
-                p_result = cv_heap_node_to_payload(
-                    o_heap_ptr.p_heap_node);
+                p_result = o_heap_ptr.p_heap_node;
             }
         }
         cv_heap_it_cleanup(&o_heap_it);
@@ -108,11 +108,11 @@ static void * cv_heap_pool_alloc_cb(
     return p_result;
 }
 
-void * cv_heap_pool_alloc(
+cv_heap_node * cv_heap_pool_alloc(
     cv_heap_pool * p_this,
     long i_len)
 {
-    void * p_result = cv_null_;
+    cv_heap_node * p_result = cv_null_;
     cv_debug_assert_(!!p_this, cv_debug_code_null_ptr);
     cv_debug_assert_(i_len > 0, cv_debug_code_invalid_length);
     cv_mutex_lock(&p_this->o_mutex);
@@ -123,12 +123,10 @@ void * cv_heap_pool_alloc(
 
 static void cv_heap_pool_free_cb(
     cv_heap_pool * p_this,
-    void * p_buf)
+    cv_heap_node * p_heap_node)
 {
-    cv_debug_assert_(p_this && p_buf, cv_debug_code_null_ptr);
+    cv_debug_assert_(p_this && p_heap_node, cv_debug_code_null_ptr);
     {
-        cv_heap_node * const p_heap_node =
-            cv_heap_node_from_payload(p_buf);
         /* Detach from used list */
         cv_list_join(
             &p_heap_node->o_node,
@@ -142,11 +140,11 @@ static void cv_heap_pool_free_cb(
 
 void cv_heap_pool_free(
     cv_heap_pool * p_this,
-    void * p_buf)
+    cv_heap_node * p_heap_node)
 {
-    cv_debug_assert_(p_this && p_buf, cv_debug_code_null_ptr);
+    cv_debug_assert_(p_this && p_heap_node, cv_debug_code_null_ptr);
     cv_mutex_lock(&p_this->o_mutex);
-    cv_heap_pool_free_cb(p_this, p_buf);
+    cv_heap_pool_free_cb(p_this, p_heap_node);
     cv_mutex_unlock(&p_this->o_mutex);
 }
 

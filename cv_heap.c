@@ -127,12 +127,14 @@ void * cv_heap_alloc(
     void * p_buffer = cv_null_;
     cv_debug_assert_(g_heap_loaded, cv_debug_code_not_loaded);
     if (i_buffer_length > 0) {
+        cv_heap_node * p_heap_node = cv_null_;
         if (i_buffer_length <= cv_heap_small_max_len_) {
-            p_buffer = cv_heap_small_alloc(i_buffer_length);
+            p_heap_node = cv_heap_small_alloc(i_buffer_length);
         } else {
-            p_buffer = cv_heap_large_alloc(i_buffer_length);
+            p_heap_node = cv_heap_large_alloc(i_buffer_length);
         }
-        if (p_buffer) {
+        if (p_heap_node) {
+            p_buffer = p_heap_node->o_payload.o_min.p_void;
             g_heap_count ++;
         } else {
             cv_debug_msg_(cv_debug_code_out_of_memory);
@@ -148,13 +150,13 @@ void cv_heap_free(
 {
     cv_debug_assert_(g_heap_loaded, cv_debug_code_not_loaded);
     if (p_buffer) {
-        cv_heap_node const * const p_heap_node =
+        cv_heap_node * const p_heap_node =
             cv_heap_node_from_payload(p_buffer);
-        long const i_buffer_length = p_heap_node->i_len;
+        long const i_buffer_length = cv_array_len(&p_heap_node->o_payload);
         if (i_buffer_length <= cv_heap_small_max_len_) {
-            cv_heap_small_free(p_buffer);
+            cv_heap_small_free(p_heap_node);
         } else {
-            cv_heap_large_free(p_buffer);
+            cv_heap_large_free(p_heap_node);
         }
         g_heap_count --;
     } else {

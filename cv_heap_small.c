@@ -14,6 +14,8 @@
 
 #include <cv_sizeof.h>
 
+#include <cv_debug.h>
+
 #define cv_heap_small_align_ (16)
 
 #define cv_heap_small_count_ (256)
@@ -26,46 +28,37 @@ static cv_bool g_heap_small_loaded = cv_false;
 
 static cv_heap_pool * g_heap_small_pool[cv_heap_small_count_];
 
-cv_bool cv_heap_small_load(void)
-{
+cv_bool cv_heap_small_load(void) {
     cv_bool b_result = cv_false;
-    if (!g_heap_small_loaded)
+    cv_debug_assert_(!g_heap_small_loaded, cv_debug_code_already_loaded);
     {
         long i_pool_index = 0;
         b_result = cv_true;
-        while (b_result && (i_pool_index < cv_heap_small_count_))
-        {
+        while (b_result && (i_pool_index < cv_heap_small_count_)) {
             g_heap_small_pool[i_pool_index] = cv_heap_pool_load(
                 (i_pool_index + 1) * cv_heap_small_align_);
-            if (g_heap_small_pool[i_pool_index])
-            {
+            if (g_heap_small_pool[i_pool_index]) {
                 i_pool_index ++;
-            }
-            else
-            {
-                while (i_pool_index)
-                {
+            } else {
+                while (i_pool_index) {
                     i_pool_index --;
                     cv_heap_pool_unload(g_heap_small_pool[i_pool_index]);
                 }
                 b_result = cv_false;
             }
         }
-        if (b_result)
-        {
+        if (b_result) {
             g_heap_small_loaded = cv_true;
         }
     }
     return b_result;
 }
 
-void cv_heap_small_unload(void)
-{
-    if (g_heap_small_loaded)
+void cv_heap_small_unload(void) {
+    cv_debug_assert_(g_heap_small_loaded, cv_debug_code_already_unloaded);
     {
         long i_pool_index = 0;
-        while (i_pool_index < cv_heap_small_count_)
-        {
+        while (i_pool_index < cv_heap_small_count_) {
             cv_heap_pool_unload(g_heap_small_pool[i_pool_index]);
             i_pool_index ++;
         }
@@ -73,25 +66,19 @@ void cv_heap_small_unload(void)
     }
 }
 
-void * cv_heap_small_alloc(
-    long i_len)
-{
-    void * p_result = cv_null_;
-
-    if (g_heap_small_loaded && (i_len > 0))
+cv_heap_node * cv_heap_small_alloc( long i_len) {
+    cv_heap_node * p_result = cv_null_;
+    cv_debug_assert_(g_heap_small_loaded, cv_debug_code_not_loaded);
+    cv_debug_assert_(i_len > 0, cv_debug_code_invalid_length);
     {
         /* Align len to multiple */
         long const i_aligned_len =
             cv_sizeof_align(i_len, cv_heap_small_align_);
-
         /* Locate pool */
         long const i_pool_index = (i_aligned_len - 1) / cv_heap_small_align_;
-
-        if ((i_pool_index >= 0) && (i_pool_index < cv_heap_small_count_))
-        {
+        if ((i_pool_index >= 0) && (i_pool_index < cv_heap_small_count_)) {
             cv_heap_pool * const p_heap_pool =
                 g_heap_small_pool[i_pool_index];
-
             p_result = cv_heap_pool_alloc(p_heap_pool, i_len);
         }
     }
@@ -99,24 +86,16 @@ void * cv_heap_small_alloc(
     return p_result;
 }
 
-void cv_heap_small_free(
-    void * p_buf)
-{
-    if (g_heap_small_loaded && p_buf)
+void cv_heap_small_free( cv_heap_node * p_heap_node) {
+    cv_debug_assert_(g_heap_small_loaded, cv_debug_code_not_loaded);
+    cv_debug_assert_(!!p_heap_node, cv_debug_code_null_ptr);
     {
-        cv_heap_node const * p_heap_node =
-            cv_heap_node_from_payload(p_buf);
-
-        long const i_len = p_heap_node->i_len;
-
+        long const i_len = cv_array_len(&p_heap_node->o_payload);
         long const i_pool_index = (i_len - 1) / cv_heap_small_align_;
-
-        if ((i_pool_index >= 0) && (i_pool_index < cv_heap_small_count_))
-        {
+        if ((i_pool_index >= 0) && (i_pool_index < cv_heap_small_count_)) {
             cv_heap_pool * const p_heap_pool =
                 g_heap_small_pool[i_pool_index];
-
-            cv_heap_pool_free(p_heap_pool, p_buf);
+            cv_heap_pool_free(p_heap_pool, p_heap_node);
         }
     }
 }
