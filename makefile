@@ -8,6 +8,8 @@ cv_src_path ?= .
 
 cv_dst_path ?= .
 
+cv_obj_path ?= $(cv_dst_path)/.obj
+
 cv_test_srcs = \
     cv_test_os.c \
     cv_test.c \
@@ -72,11 +74,11 @@ cv_test_srcs_abs = $(addprefix $(cv_src_path)/,$(cv_test_srcs))
 
 cv_test_objs = $(addsuffix .o,$(cv_test_srcs))
 
-cv_test_objs_abs = $(addprefix $(cv_dst_path)/.obj/,$(cv_test_objs))
+cv_test_objs_abs = $(addprefix $(cv_obj_path)/,$(cv_test_objs))
 
 cv_test_deps = $(addsuffix .d,$(cv_test_srcs))
 
-cv_test_deps_abs = $(addprefix $(cv_dst_path)/.obj/,$(cv_test_deps))
+cv_test_deps_abs = $(addprefix $(cv_obj_path)/,$(cv_test_deps))
 
 cv_profile_cflags = \
     -pg \
@@ -93,14 +95,7 @@ cv_defines = \
 cv_includes = \
     -I .
 
-cv_cflags = \
-    -g \
-    -O0 \
-    -no-pie \
-    -fno-pie \
-    -fno-stack-protector \
-    -fno-unwind-tables \
-    -fno-asynchronous-unwind-tables \
+cv_gnu_warnings = \
     -ansi \
     -pedantic \
     -Wall \
@@ -148,55 +143,111 @@ cv_cflags = \
     -Wvla \
     -Wwrite-strings
 
+cv_clang_warnings = \
+    -ansi \
+    -pedantic \
+    -Weverything
+
+cv_cflags = \
+    -g \
+    -O0 \
+    -no-pie \
+    -fno-pie \
+    -fno-stack-protector \
+    -fno-unwind-tables \
+    -fno-asynchronous-unwind-tables \
+    $(cv_gnu_warnings)
+
 cv_verbose ?= @
 
 .PHONY : test all clang mingw bare
-test : $(cv_dst_path)/test.exe
+test : $(cv_obj_path)/test.exe
 
-all : $(cv_dst_path)/test.exe
-all : $(cv_dst_path)/test.m64.exe
-all : $(cv_dst_path)/test.cxx.exe
+all : $(cv_obj_path)/test.exe
+all : $(cv_obj_path)/test.m64.exe
+all : $(cv_obj_path)/test.cxx.exe
 all : clang
-clang : $(cv_dst_path)/test.clang.exe
-clang : $(cv_dst_path)/test.clangxx.exe
+clang : $(cv_obj_path)/test.clang.exe
+clang : $(cv_obj_path)/test.clangxx.exe
 all : mingw
-mingw : $(cv_dst_path)/test.mingw.exe
-mingw : $(cv_dst_path)/test.mingwxx.exe
+mingw : $(cv_obj_path)/test.mingw.exe
+mingw : $(cv_obj_path)/test.mingwxx.exe
 all : bare
-bare : $(cv_dst_path)/test.bare.exe
+bare : $(cv_obj_path)/test.bare.exe
 
-$(cv_dst_path)/test.exe : $(cv_src_path)/makefile $(cv_test_objs_abs) $(cv_src_path)/cv_export.mak
-	@echo linking $(notdir $@)
-	$(cv_verbose)echo -m32 -o $(cv_dst_path)/test.exe $(cv_cflags) $(cv_profile_cflags) -rdynamic $(cv_test_objs_abs) -Wl,--version-script=$(cv_src_path)/cv_export.mak -lpthread > $(cv_dst_path)/.obj/link.cmd
-	$(cv_verbose)gcc @$(cv_dst_path)/.obj/link.cmd
+$(cv_obj_path)/test.exe : $(cv_src_path)/makefile $(cv_test_objs_abs) $(cv_src_path)/cv_export.mak
+	@echo ld $(notdir $@)
+	$(cv_verbose)echo -m32 -o $(cv_obj_path)/test.exe $(cv_cflags) $(cv_profile_cflags) -rdynamic $(cv_test_objs_abs) -Wl,--version-script=$(cv_src_path)/cv_export.mak -lpthread > $@.cmd
+	$(cv_verbose)gcc @$@.cmd
 
 $(cv_test_objs_abs) : $(cv_src_path)/makefile
 
-$(cv_dst_path)/.obj/%.c.o : $(cv_src_path)/%.c
-	@echo compiling $(notdir $<)
+$(cv_obj_path)/%.c.o : $(cv_src_path)/%.c
+	@echo cc $(notdir $<)
 	$(cv_verbose)mkdir -p $(dir $@)
 	$(cv_verbose)echo -c -m32 -x c -o $@ $(cv_cflags) $(cv_profile_cflags) $(cv_defines) $(cv_includes) $< -MMD > $@.cmd
 	$(cv_verbose)gcc @$@.cmd
 
-$(cv_dst_path)/test.m64.exe : $(cv_src_path)/makefile $(cv_test_srcs_abs)
-	gcc -m64 -x c -o $(cv_dst_path)/test.m64.exe $(cv_cflags) $(cv_defines) $(cv_includes) $(cv_test_srcs_abs) -lpthread
+$(cv_obj_path)/test.m64.exe : $(cv_src_path)/makefile $(cv_test_srcs_abs)
+	@echo ld $(notdir $@)
+	$(cv_verbose)gcc -m64 -x c -o $(cv_obj_path)/test.m64.exe $(cv_cflags) $(cv_defines) $(cv_includes) $(cv_test_srcs_abs) -lpthread
 
-$(cv_dst_path)/test.cxx.exe : $(cv_src_path)/makefile $(cv_test_srcs_abs)
-	g++ -x c++ -o $(cv_dst_path)/test.cxx.exe -fno-rtti -fno-exceptions -Wold-style-cast $(cv_cflags) $(cv_defines) $(cv_includes) $(cv_test_srcs_abs) -lpthread
+$(cv_obj_path)/test.cxx.exe : $(cv_src_path)/makefile $(cv_test_srcs_abs)
+	@echo ld $(notdir $@)
+	$(cv_verbose)g++ -x c++ -o $(cv_obj_path)/test.cxx.exe -fno-rtti -fno-exceptions -Wold-style-cast $(cv_cflags) $(cv_defines) $(cv_includes) $(cv_test_srcs_abs) -lpthread
 
-$(cv_dst_path)/test.mingw.exe : $(cv_src_path)/makefile $(cv_test_srcs_abs)
-	i686-w64-mingw32-gcc -x c -o $(cv_dst_path)/test.mingw.exe $(cv_cflags) -D cv_debug_ -D cv_windows_ -D cv_have_libc_ $(cv_includes) $(cv_test_srcs_abs) -lpthread
+cv_mingw_cc = i686-w64-mingw32-gcc -x c
 
-$(cv_dst_path)/test.mingwxx.exe : $(cv_src_path)/makefile $(cv_test_srcs_abs)
-	i686-w64-mingw32-g++ -x c++ -o $(cv_dst_path)/test.mingwxx.exe -fno-rtti -fno-exceptions -Wold-style-cast $(cv_cflags) -D cv_debug_ -D cv_windows_ -D cv_have_libc_ $(cv_includes) $(cv_test_srcs_abs) -lpthread
+cv_mingw_cxx = i686-w64-mingw32-g++ -x c++
 
-$(cv_dst_path)/test.clang.exe : $(cv_src_path)/makefile $(cv_test_srcs_abs)
-	clang -x c -o $(cv_dst_path)/test.clang.exe -ansi -pedantic -Weverything $(cv_defines) $(cv_includes) $(cv_test_srcs_abs) -lpthread
+cv_mingw_cflags = $(cv_cflags) -D cv_debug_ -D cv_windows_ -D cv_have_libc_ -D cv_have_pthread_ $(cv_includes)
 
-$(cv_dst_path)/test.clangxx.exe : $(cv_src_path)/makefile $(cv_test_srcs_abs)
-	clang++ -x c++ -o $(cv_dst_path)/test.clangxx.exe -fno-rtti -fno-exceptions -ansi -pedantic -Weverything $(cv_defines) $(cv_includes) $(cv_test_srcs_abs) -lpthread
+cv_mingw_cxxflags = -fno-rtti -fno-exceptions -Wold-style-cast $(cv_mingw_cflags)
 
-$(cv_dst_path)/test.bare.exe : $(cv_src_path)/makefile $(cv_test_srcs_abs)
-	gcc -m64 -x c -o $(cv_dst_path)/test.bare.exe -I . -D cv_debug_ -ansi -pedantic -nostdinc -Wall -Wextra -fno-stack-protector $(cv_test_srcs_abs) -nodefaultlibs -nostartfiles
+cv_mingw_libs = -lpthread
+
+$(cv_obj_path)/test.mingw.exe : $(cv_src_path)/makefile $(cv_test_srcs_abs)
+	@echo ld $(notdir $@)
+	$(cv_verbose)echo -o $@ $(cv_mingw_cflags) $(cv_test_srcs_abs) $(cv_mingw_libs) > $@.cmd
+	$(cv_verbose)$(cv_mingw_cc) @$@.cmd
+
+$(cv_obj_path)/test.mingwxx.exe : $(cv_src_path)/makefile $(cv_test_srcs_abs)
+	@echo ld $(notdir $@)
+	$(cv_verbose)echo -o $@ $(cv_mingw_cxxflags) $(cv_test_srcs_abs) $(cv_mingw_libs) > $@.cmd
+	$(cv_verbose)$(cv_mingw_cxx) @$@.cmd
+
+cv_clang_cc = clang -x c
+
+cv_clang_cxx = clang++ -x c++
+
+cv_clang_ld = clang
+
+cv_clang_cflags = -g -O0 $(cv_clang_warnings) $(cv_defines) $(cv_includes)
+
+cv_clang_cxxflags = $(cv_clang_cflags) -fno-rtti -fno-exceptions
+
+cv_clang_libs = -lpthread
+
+$(cv_obj_path)/test.clang.exe : $(cv_src_path)/makefile $(cv_test_srcs_abs)
+	@echo ld $(notdir $@)
+	$(cv_verbose)mkdir -p $(dir $@)
+	$(cv_verbose)echo -o $@ $(cv_clang_cflags) $(cv_test_srcs_abs) $(cv_clang_libs) > $@.cmd
+	$(cv_verbose)$(cv_clang_cc) @$@.cmd
+
+$(cv_obj_path)/test.clangxx.exe : $(cv_src_path)/makefile $(cv_test_srcs_abs)
+	@echo ld $(notdir $@)
+	$(cv_verbose)mkdir -p $(dir $@)
+	$(cv_verbose)echo -o $@ $(cv_clang_cxxflags) $(cv_test_srcs_abs) $(cv_clang_libs) > $@.cmd
+	$(cv_verbose)$(cv_clang_cxx) @$@.cmd
+
+$(cv_obj_path)/test.bare.exe : $(cv_src_path)/makefile $(cv_test_srcs_abs)
+	@echo ld $(notdir $@)
+	$(cv_verbose)mkdir -p $(dir $@)
+	$(cv_verbose)echo -m64 -x c -o $@ -I . -D cv_debug_ -ansi -pedantic -nostdinc -Wall -Wextra -fno-stack-protector $(cv_test_srcs_abs) -nodefaultlibs -nostartfiles > $@.cmd
+	$(cv_verbose)gcc @$@.cmd
 
 -include $(cv_test_deps_abs)
+
+.PHONY : clean
+clean :
+	rm -rf $(cv_obj_path)/*
