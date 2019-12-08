@@ -119,7 +119,7 @@ cv_heap_node * cv_heap_large_lookup( cv_heap_large * p_this,
     return p_result;
 }
 
-cv_heap_node * cv_heap_large_alloc( cv_heap_node_mgr * p_heap_node_mgr,
+cv_heap_node * cv_heap_large_alloc( cv_heap_secondary * p_heap_secondary,
     long i_len) {
     cv_heap_node * p_result = cv_null_;
     cv_debug_assert_(i_len > 0, cv_debug_code_invalid_length);
@@ -129,8 +129,8 @@ cv_heap_node * cv_heap_large_alloc( cv_heap_node_mgr * p_heap_node_mgr,
         if (p_payload) {
             cv_array o_payload = cv_array_null_;
             cv_array_init_vector(&o_payload, p_payload, i_len);
-            p_result = cv_heap_node_mgr_acquire(
-                p_heap_node_mgr, &o_payload);
+            p_result = cv_heap_node_create(
+                p_heap_secondary, &o_payload);
             cv_array_cleanup(&o_payload);
         }
     }

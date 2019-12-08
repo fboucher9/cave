@@ -19,7 +19,7 @@ struct cv_heap_large {
 cv_bool cv_heap_large_init( cv_heap_large * p_this);
 void cv_heap_large_cleanup( cv_heap_large * p_this);
 cv_heap_node * cv_heap_large_lookup( cv_heap_large * p_this, long i_len);
-cv_heap_node * cv_heap_large_alloc( cv_heap_node_mgr * p_heap_node_mgr,
+cv_heap_node * cv_heap_large_alloc( cv_heap_secondary * p_heap_secondary,
     long i_len);
 void cv_heap_large_free( cv_heap_large * p_this, cv_heap_node * p_heap_node);
 

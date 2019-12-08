@@ -20,31 +20,15 @@
 struct cv_heap_node {
     cv_list_node o_node;
     /* -- */
-    char const * a_stack[4u];
-    /* -- */
     cv_array o_payload;
     /* -- */
-    /* payload follows ... */
+    /* statistics ... */
+    /* stack ... */
 };
-
-/*
- *
- */
-
-struct cv_heap_node_mgr {
-    cv_heap_section_lock o_heap_section_lock;
-};
-
-#define cv_heap_node_mgr_initializer_ \
-{ cv_heap_section_lock_initializer_ }
-
-cv_bool cv_heap_node_mgr_init( cv_heap_node_mgr * p_this);
-
-void cv_heap_node_mgr_cleanup( cv_heap_node_mgr * p_this);
 
 void cv_heap_node_cleanup( cv_heap_node * p_heap_node);
 
-cv_heap_node * cv_heap_node_mgr_acquire( cv_heap_node_mgr * p_heap_node_mgr,
+cv_heap_node * cv_heap_node_create( cv_heap_secondary * p_heap_secondary,
     cv_array const * p_payload);
 
 #endif /* #ifndef cv_heap_node_h_ */

@@ -18,6 +18,7 @@ are thread-safe.
 #include <cv_heap_node.h>
 #include <cv_heap_node_ptr.h>
 #include <cv_heap_primary.h>
+#include <cv_heap_secondary.h>
 #include <cv_null.h>
 #include <cv_debug.h>
 #include <cv_file_print.h>
@@ -31,7 +32,7 @@ are thread-safe.
 
 static cv_bool g_heap_loaded = cv_false;
 
-static cv_heap_node_mgr g_heap_node_mgr = cv_heap_node_mgr_initializer_;
+static cv_heap_secondary g_heap_secondary = cv_heap_secondary_initializer_;
 
 static cv_heap_used g_heap_used = cv_heap_used_initializer_;
 
@@ -46,7 +47,7 @@ cv_bool cv_heap_load(void)
     cv_bool b_result = cv_false;
     cv_debug_assert_(!g_heap_loaded, cv_debug_code_already_loaded);
     if (cv_heap_primary_init(&g_heap_primary)) {
-        if (cv_heap_node_mgr_init(&g_heap_node_mgr)) {
+        if (cv_heap_secondary_init(&g_heap_secondary)) {
             if (cv_heap_small_init(&g_heap_small)) {
                 if (cv_heap_large_init(&g_heap_large)) {
                     cv_heap_used_init(&g_heap_used);
@@ -62,7 +63,7 @@ cv_bool cv_heap_load(void)
                 cv_debug_msg_(cv_debug_code_error);
             }
             if (!b_result) {
-                cv_heap_node_mgr_cleanup(&g_heap_node_mgr);
+                cv_heap_secondary_cleanup(&g_heap_secondary);
             }
         } else {
             cv_debug_msg_(cv_debug_code_error);
@@ -97,7 +98,7 @@ void cv_heap_unload(void)
     cv_heap_used_cleanup(&g_heap_used);
     cv_heap_large_cleanup(&g_heap_large);
     cv_heap_small_cleanup(&g_heap_small);
-    cv_heap_node_mgr_cleanup(&g_heap_node_mgr);
+    cv_heap_secondary_cleanup(&g_heap_secondary);
     cv_heap_primary_cleanup(&g_heap_primary);
     g_heap_loaded = cv_false;
 }
@@ -114,13 +115,13 @@ void * cv_heap_alloc(
                 i_buffer_length);
             if (!p_heap_node) {
                 p_heap_node = cv_heap_small_alloc(&g_heap_primary,
-                    &g_heap_node_mgr, i_buffer_length);
+                    &g_heap_secondary, i_buffer_length);
             }
         } else {
             p_heap_node = cv_heap_large_lookup(&g_heap_large,
                 i_buffer_length);
             if (!p_heap_node) {
-                p_heap_node = cv_heap_large_alloc(&g_heap_node_mgr,
+                p_heap_node = cv_heap_large_alloc(&g_heap_secondary,
                     i_buffer_length);
             }
         }
