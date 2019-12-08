@@ -35,7 +35,9 @@ void cv_heap_small_cleanup( cv_heap_small * p_this);
 
 cv_heap_node * cv_heap_small_lookup( cv_heap_small * p_this, long i_len);
 
-cv_heap_node * cv_heap_small_alloc( cv_heap_node_mgr * p_heap_node_mgr,
+cv_heap_node * cv_heap_small_alloc(
+    cv_heap_primary * p_heap_primary,
+    cv_heap_node_mgr * p_heap_node_mgr,
     long i_len);
 
 void cv_heap_small_free( cv_heap_small * p_this, cv_heap_node * p_heap_node);

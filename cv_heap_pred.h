@@ -31,6 +31,9 @@ typedef struct cv_heap_section cv_heap_section;
 typedef struct cv_heap_section_lock cv_heap_section_lock;
 
 /* Predefine */
+typedef struct cv_heap_primary cv_heap_primary;
+
+/* Predefine */
 typedef struct cv_heap_small cv_heap_small;
 
 /* Predefine */

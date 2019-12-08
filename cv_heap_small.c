@@ -71,7 +71,9 @@ cv_heap_node * cv_heap_small_lookup( cv_heap_small * p_this, long i_len) {
     return p_result;
 }
 
-cv_heap_node * cv_heap_small_alloc( cv_heap_node_mgr * p_heap_node_mgr,
+cv_heap_node * cv_heap_small_alloc(
+    cv_heap_primary * p_heap_primary,
+    cv_heap_node_mgr * p_heap_node_mgr,
     long i_len) {
     cv_heap_node * p_result = cv_null_;
     cv_debug_assert_(i_len > 0, cv_debug_code_invalid_length);
@@ -82,7 +84,8 @@ cv_heap_node * cv_heap_small_alloc( cv_heap_node_mgr * p_heap_node_mgr,
         /* Locate pool */
         long const i_pool_index = (i_aligned_len - 1) / cv_heap_small_align_;
         if ((i_pool_index >= 0) && (i_pool_index < cv_heap_small_count_)) {
-            p_result = cv_heap_pool_alloc( p_heap_node_mgr, i_aligned_len);
+            p_result = cv_heap_pool_alloc( p_heap_primary,
+                p_heap_node_mgr, i_aligned_len);
         }
     }
     return p_result;

@@ -95,6 +95,7 @@ cv_heap_node * cv_heap_pool_lookup(
 }
 
 cv_heap_node * cv_heap_pool_alloc(
+    cv_heap_primary * p_heap_primary,
     cv_heap_node_mgr * p_heap_node_mgr,
     long i_len)
 {
@@ -102,7 +103,7 @@ cv_heap_node * cv_heap_pool_alloc(
     cv_debug_assert_(!!p_heap_node_mgr, cv_debug_code_null_ptr);
     {
         /* Allocate memory from primary */
-        void * const p_payload = cv_heap_primary_alloc( i_len);
+        void * const p_payload = cv_heap_primary_alloc(p_heap_primary, i_len);
         if (p_payload) {
             /* Create new item */
             cv_array o_payload = cv_array_null_;

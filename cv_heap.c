@@ -39,11 +39,13 @@ static cv_heap_small g_heap_small = cv_heap_small_initializer_;
 
 static cv_heap_large g_heap_large = cv_heap_large_initializer_;
 
+static cv_heap_primary g_heap_primary = cv_heap_primary_initializer_;
+
 cv_bool cv_heap_load(void)
 {
     cv_bool b_result = cv_false;
     cv_debug_assert_(!g_heap_loaded, cv_debug_code_already_loaded);
-    if (cv_heap_primary_load()) {
+    if (cv_heap_primary_init(&g_heap_primary)) {
         if (cv_heap_node_mgr_init(&g_heap_node_mgr)) {
             if (cv_heap_small_init(&g_heap_small)) {
                 if (cv_heap_large_init(&g_heap_large)) {
@@ -66,7 +68,7 @@ cv_bool cv_heap_load(void)
             cv_debug_msg_(cv_debug_code_error);
         }
         if (!b_result) {
-            cv_heap_primary_unload();
+            cv_heap_primary_cleanup(&g_heap_primary);
         }
     } else {
         cv_debug_msg_(cv_debug_code_error);
@@ -96,7 +98,7 @@ void cv_heap_unload(void)
     cv_heap_large_cleanup(&g_heap_large);
     cv_heap_small_cleanup(&g_heap_small);
     cv_heap_node_mgr_cleanup(&g_heap_node_mgr);
-    cv_heap_primary_unload();
+    cv_heap_primary_cleanup(&g_heap_primary);
     g_heap_loaded = cv_false;
 }
 
@@ -111,8 +113,8 @@ void * cv_heap_alloc(
             p_heap_node = cv_heap_small_lookup(&g_heap_small,
                 i_buffer_length);
             if (!p_heap_node) {
-                p_heap_node = cv_heap_small_alloc(&g_heap_node_mgr,
-                    i_buffer_length);
+                p_heap_node = cv_heap_small_alloc(&g_heap_primary,
+                    &g_heap_node_mgr, i_buffer_length);
             }
         } else {
             p_heap_node = cv_heap_large_lookup(&g_heap_large,
