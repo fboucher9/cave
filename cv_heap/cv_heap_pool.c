@@ -10,7 +10,7 @@
 #include <cv_heap/cv_heap_node.h>
 #include <cv_heap/cv_heap_node_ptr.h>
 #include <cv_heap/cv_heap_it.h>
-#include <cv_mutex.h>
+#include <cv_thread/cv_mutex.h>
 #include <cv_memory.h>
 #include <cv_sizeof.h>
 #include <cv_null.h>

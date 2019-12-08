@@ -5,7 +5,7 @@
 
 #include <cv_heap/cv_heap_pred.h>
 
-#include <cv_list_ptr.h>
+#include <cv_algo/cv_list_ptr.h>
 
 #include <cv_ptr.h>
 

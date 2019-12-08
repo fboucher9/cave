@@ -1,9 +1,9 @@
 /* See LICENSE for license details */
 
 #include <cv_test_print.h>
-#include <cv_file_std.h>
-#include <cv_file_print.h>
-#include <cv_array.h>
+#include <cv_file/cv_file_std.h>
+#include <cv_file/cv_file_print.h>
+#include <cv_algo/cv_array.h>
 #include <cv_number_desc.h>
 #include <cv_cast.h>
 

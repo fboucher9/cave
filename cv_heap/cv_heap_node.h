@@ -8,8 +8,8 @@
  */
 
 #include <cv_heap/cv_heap_pred.h>
-#include <cv_list_node.h>
-#include <cv_array.h>
+#include <cv_algo/cv_list_node.h>
+#include <cv_algo/cv_array.h>
 #include <cv_bool.h>
 #include <cv_heap/cv_heap_section_lock.h>
 

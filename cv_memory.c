@@ -8,7 +8,7 @@
 
 #include <cv_bool.h>
 
-#include <cv_array.h>
+#include <cv_algo/cv_array.h>
 
 #include <cv_runtime.h>
 

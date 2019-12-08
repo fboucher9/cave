@@ -8,9 +8,9 @@
 
 #include <cv_sizeof.h>
 
-#include <cv_list_it.h>
+#include <cv_algo/cv_list_it.h>
 
-#include <cv_array.h>
+#include <cv_algo/cv_array.h>
 
 /* Predefine */
 typedef struct cv_heap_section_node cv_heap_section_node;

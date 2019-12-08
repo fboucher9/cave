@@ -3,7 +3,7 @@
 #ifndef cv_main_h_
 #define cv_main_h_
 
-#include <cv_options_pred.h>
+#include <cv_options/cv_options_pred.h>
 
 cv_options * cv_main_init(
     int argc,

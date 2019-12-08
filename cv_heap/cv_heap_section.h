@@ -21,9 +21,9 @@ than largest allocation.
 
 #include <cv_heap/cv_heap_pred.h>
 
-#include <cv_list_root.h>
+#include <cv_algo/cv_list_root.h>
 
-#include <cv_array_it.h>
+#include <cv_algo/cv_array_it.h>
 
 /*
 

@@ -13,7 +13,7 @@
 #include <cv_linux.h>
 #include <cv_windows.h>
 #include <cv_convert.h>
-#include <cv_array_ptr.h>
+#include <cv_algo/cv_array_ptr.h>
 
 void * cv_runtime_malloc(
     long i_buffer_len)

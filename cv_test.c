@@ -2,27 +2,27 @@
 
 #include <cv_test.h>
 #include <cv_main.h>
-#include <cv_options_desc.h>
-#include <cv_options.h>
-#include <cv_options_it.h>
+#include <cv_options/cv_options_desc.h>
+#include <cv_options/cv_options.h>
+#include <cv_options/cv_options_it.h>
 #include <cv_debug.h>
-#include <cv_array.h>
-#include <cv_thread.h>
-#include <cv_thread_desc.h>
+#include <cv_algo/cv_array.h>
+#include <cv_thread/cv_thread.h>
+#include <cv_thread/cv_thread_desc.h>
 #include <cv_heap/cv_heap.h>
-#include <cv_file_std.h>
-#include <cv_file_poll.h>
+#include <cv_file/cv_file_std.h>
+#include <cv_file/cv_file_poll.h>
 #include <cv_null.h>
 #include <cv_unused.h>
 #include <cv_number_enc.h>
 #include <cv_number_desc.h>
 #include <cv_test_print.h>
-#include <cv_array_tool.h>
+#include <cv_algo/cv_array_tool.h>
 #include <cv_memory.h>
-#include <cv_file_test.h>
+#include <cv_file/cv_file_test.h>
 #include <cv_sizeof.h>
-#include <cv_stack_test.h>
-#include <cv_file.h>
+#include <cv_algo/cv_stack_test.h>
+#include <cv_file/cv_file.h>
 #include <cv_convert_test.h>
 
 static void cv_test_job(

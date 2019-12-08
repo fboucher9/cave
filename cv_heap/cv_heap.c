@@ -21,13 +21,13 @@ are thread-safe.
 #include <cv_heap/cv_heap_used.h>
 #include <cv_null.h>
 #include <cv_debug.h>
-#include <cv_file_print.h>
-#include <cv_file_std.h>
-#include <cv_array.h>
-#include <cv_array_tool.h>
+#include <cv_file/cv_file_print.h>
+#include <cv_file/cv_file_std.h>
+#include <cv_algo/cv_array.h>
+#include <cv_algo/cv_array_tool.h>
 #include <cv_number_desc.h>
-#include <cv_list_root.h>
-#include <cv_list_it.h>
+#include <cv_algo/cv_list_root.h>
+#include <cv_algo/cv_list_it.h>
 #include <cv_sizeof.h>
 
 static cv_bool g_heap_loaded = cv_false;

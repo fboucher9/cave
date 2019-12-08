@@ -3,7 +3,7 @@
 #ifndef cv_test_print_h_
 #define cv_test_print_h_
 
-#include <cv_array_pred.h>
+#include <cv_algo/cv_array_pred.h>
 #include <cv_number_pred.h>
 #include <cv_types.h>
 

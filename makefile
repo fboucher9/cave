@@ -15,19 +15,19 @@ cv_test_srcs = \
     cv_test.c \
     cv_test_print.c \
     cv_main.c \
-    cv_array.c \
-    cv_array_it.c \
-    cv_array_tool.c \
-    cv_buffer.c \
+    cv_algo/cv_array.c \
+    cv_algo/cv_array_it.c \
+    cv_algo/cv_array_tool.c \
+    cv_algo/cv_buffer.c \
     cv_convert.c \
     cv_convert_test.c \
-    cv_string0.c \
+    cv_algo/cv_string0.c \
     cv_manager.c \
-    cv_options_desc.c \
-    cv_options.c \
-    cv_options_it.c \
-    cv_options_node.c \
-    cv_options_pool.c \
+    cv_options/cv_options_desc.c \
+    cv_options/cv_options.c \
+    cv_options/cv_options_it.c \
+    cv_options/cv_options_node.c \
+    cv_options/cv_options_pool.c \
     cv_heap/cv_heap.c \
     cv_heap/cv_heap_primary.c \
     cv_heap/cv_heap_secondary.c \
@@ -42,30 +42,30 @@ cv_test_srcs = \
     cv_heap/cv_heap_used.c \
     cv_debug.c \
     cv_sizeof.c \
-    cv_thread_desc.c \
-    cv_thread.c \
-    cv_thread_impl.c \
+    cv_thread/cv_thread_desc.c \
+    cv_thread/cv_thread.c \
+    cv_thread/cv_thread_impl.c \
     cv_memory.c \
     cv_number_desc.c \
     cv_number_enc.c \
     cv_clock.c \
-    cv_list_node.c \
-    cv_list_it.c \
-    cv_list_root.c \
-    cv_stack.c \
-    cv_stack_it.c \
-    cv_stack_test.c \
-    cv_mutex.c \
-    cv_pool.c \
-    cv_pool_desc.c \
-    cv_pool_lock.c \
-    cv_file.c \
-    cv_file_std.c \
-    cv_file_disk_desc.c \
-    cv_file_disk.c \
-    cv_file_poll.c \
-    cv_file_print.c \
-    cv_file_test.c \
+    cv_algo/cv_list_node.c \
+    cv_algo/cv_list_it.c \
+    cv_algo/cv_list_root.c \
+    cv_algo/cv_stack.c \
+    cv_algo/cv_stack_it.c \
+    cv_algo/cv_stack_test.c \
+    cv_thread/cv_mutex.c \
+    cv_algo/cv_pool.c \
+    cv_algo/cv_pool_desc.c \
+    cv_algo/cv_pool_lock.c \
+    cv_file/cv_file.c \
+    cv_file/cv_file_std.c \
+    cv_file/cv_file_disk_desc.c \
+    cv_file/cv_file_disk.c \
+    cv_file/cv_file_poll.c \
+    cv_file/cv_file_print.c \
+    cv_file/cv_file_test.c \
     cv_runtime.c \
     cv_linux.c \
     cv_windows.c \
