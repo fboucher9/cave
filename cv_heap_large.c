@@ -75,8 +75,7 @@ static cv_heap_node * cv_heap_large_find_existing( cv_heap_large * p_this,
     return o_heap_ptr.p_heap_node;
 }
 
-static cv_heap_node * cv_heap_large_alloc_cb( cv_heap_large * p_this,
-    cv_heap_node_mgr * p_heap_node_mgr,
+static cv_heap_node * cv_heap_large_lookup_cb( cv_heap_large * p_this,
     long i_len) {
     cv_heap_node * p_result = cv_null_;
     cv_debug_assert_(i_len > 0, cv_debug_code_invalid_length);
@@ -93,17 +92,6 @@ static cv_heap_node * cv_heap_large_alloc_cb( cv_heap_large * p_this,
             /* See actual length */
             o_heap_ptr.p_heap_node->o_payload.o_max.pc_char =
                 o_heap_ptr.p_heap_node->o_payload.o_min.pc_char + i_len;
-        } else {
-            void * const p_payload = cv_runtime_malloc(i_aligned_len);
-            if (p_payload) {
-                cv_array o_payload = cv_array_null_;
-                cv_array_init_vector(&o_payload, p_payload, i_len);
-                o_heap_ptr.p_heap_node = cv_heap_node_mgr_acquire(
-                    p_heap_node_mgr, &o_payload);
-                cv_array_cleanup(&o_payload);
-            }
-        }
-        if (o_heap_ptr.p_void) {
             /* Attach to used list */
             /* ... */
             p_result = o_heap_ptr.p_heap_node;
@@ -121,16 +109,34 @@ static void cv_heap_large_free_cb( cv_heap_large * p_this,
     cv_list_join( &p_heap_node->o_node, & p_this->o_free_list.o_node);
 }
 
-cv_heap_node * cv_heap_large_alloc( cv_heap_large * p_this,
-    cv_heap_node_mgr * p_heap_node_mgr,
+cv_heap_node * cv_heap_large_lookup( cv_heap_large * p_this,
     long i_len) {
     cv_heap_node * p_result = cv_null_;
     cv_debug_assert_(i_len > 4096L, cv_debug_code_invalid_length);
     cv_mutex_lock(&p_this->o_mutex);
-    p_result = cv_heap_large_alloc_cb(p_this, p_heap_node_mgr, i_len);
+    p_result = cv_heap_large_lookup_cb(p_this, i_len);
     cv_mutex_unlock(&p_this->o_mutex);
     return p_result;
 }
+
+cv_heap_node * cv_heap_large_alloc( cv_heap_node_mgr * p_heap_node_mgr,
+    long i_len) {
+    cv_heap_node * p_result = cv_null_;
+    cv_debug_assert_(i_len > 0, cv_debug_code_invalid_length);
+    {
+        long const i_aligned_len = cv_heap_large_align(i_len);
+        void * const p_payload = cv_runtime_malloc(i_aligned_len);
+        if (p_payload) {
+            cv_array o_payload = cv_array_null_;
+            cv_array_init_vector(&o_payload, p_payload, i_len);
+            p_result = cv_heap_node_mgr_acquire(
+                p_heap_node_mgr, &o_payload);
+            cv_array_cleanup(&o_payload);
+        }
+    }
+    return p_result;
+}
+
 
 void cv_heap_large_free( cv_heap_large * p_this,
     cv_heap_node * p_heap_node) {

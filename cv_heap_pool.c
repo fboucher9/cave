@@ -61,11 +61,8 @@ void cv_heap_pool_cleanup(
     cv_debug_cleanup_(p_this, cv_sizeof_(*p_this));
 }
 
-static cv_heap_node * cv_heap_pool_alloc_cb(
-    cv_heap_pool * p_this,
-    cv_heap_node_mgr * p_heap_node_mgr,
-    long i_len)
-{
+static cv_heap_node * cv_heap_pool_lookup_cb(
+    cv_heap_pool * p_this) {
     cv_heap_node * p_result = cv_null_;
     cv_debug_assert_(!!p_this, cv_debug_code_null_ptr);
     {
@@ -79,27 +76,6 @@ static cv_heap_node * cv_heap_pool_alloc_cb(
                 cv_list_join(
                     o_heap_ptr.o_list_ptr.p_node,
                     o_heap_ptr.o_list_ptr.p_node);
-            } else {
-                /* Allocate memory from primary */
-                void * const p_payload = cv_heap_primary_alloc(
-                    p_this->i_len);
-                if (p_payload) {
-                    /* Create new item */
-                    cv_array o_payload = cv_array_null_;
-                    cv_array_init_vector(&o_payload, p_payload,
-                        p_this->i_len);
-                    o_heap_ptr.p_heap_node =
-                        cv_heap_node_mgr_acquire(p_heap_node_mgr, &o_payload);
-                    cv_array_cleanup(&o_payload);
-                }
-            }
-            if (o_heap_ptr.p_heap_node) {
-                /* Attach to used list */
-                /* handled by cv_heap... */
-                /* Set actual len */
-                o_heap_ptr.p_heap_node->o_payload.o_max.pc_char =
-                    o_heap_ptr.p_heap_node->o_payload.o_min.pc_char + i_len;
-                /* Get payload */
                 p_result = o_heap_ptr.p_heap_node;
             }
         }
@@ -108,17 +84,35 @@ static cv_heap_node * cv_heap_pool_alloc_cb(
     return p_result;
 }
 
+cv_heap_node * cv_heap_pool_lookup(
+    cv_heap_pool * p_this) {
+    cv_heap_node * p_result = cv_null_;
+    cv_debug_assert_(!!p_this, cv_debug_code_null_ptr);
+    cv_mutex_lock(&p_this->o_mutex);
+    p_result = cv_heap_pool_lookup_cb(p_this);
+    cv_mutex_unlock(&p_this->o_mutex);
+    return p_result;
+}
+
 cv_heap_node * cv_heap_pool_alloc(
-    cv_heap_pool * p_this,
     cv_heap_node_mgr * p_heap_node_mgr,
     long i_len)
 {
     cv_heap_node * p_result = cv_null_;
-    cv_debug_assert_(!!p_this, cv_debug_code_null_ptr);
-    cv_debug_assert_(i_len > 0, cv_debug_code_invalid_length);
-    cv_mutex_lock(&p_this->o_mutex);
-    p_result = cv_heap_pool_alloc_cb(p_this, p_heap_node_mgr, i_len);
-    cv_mutex_unlock(&p_this->o_mutex);
+    cv_debug_assert_(!!p_heap_node_mgr, cv_debug_code_null_ptr);
+    {
+        /* Allocate memory from primary */
+        void * const p_payload = cv_heap_primary_alloc( i_len);
+        if (p_payload) {
+            /* Create new item */
+            cv_array o_payload = cv_array_null_;
+            cv_array_init_vector(&o_payload, p_payload, i_len);
+            p_result = cv_heap_node_mgr_acquire(p_heap_node_mgr,
+                &o_payload);
+            cv_array_cleanup(&o_payload);
+        }
+        /* Get payload */
+    }
     return p_result;
 }
 
@@ -147,26 +141,5 @@ void cv_heap_pool_free(
     cv_mutex_lock(&p_this->o_mutex);
     cv_heap_pool_free_cb(p_this, p_heap_node);
     cv_mutex_unlock(&p_this->o_mutex);
-}
-
-cv_heap_pool * cv_heap_pool_load(
-    long i_len)
-{
-    cv_heap_pool_ptr o_heap_pool_ptr = cv_ptr_null_;
-    o_heap_pool_ptr.p_void = cv_heap_primary_alloc(cv_sizeof_(cv_heap_pool));
-    if (o_heap_pool_ptr.p_void) {
-        if (cv_heap_pool_init(o_heap_pool_ptr.p_heap_pool, i_len)) {
-        } else {
-            o_heap_pool_ptr.p_void = cv_null_;
-        }
-    }
-    return o_heap_pool_ptr.p_heap_pool;
-}
-
-void cv_heap_pool_unload(
-    cv_heap_pool * p_this)
-{
-    cv_heap_pool_cleanup(p_this);
-    /* Memory is not freed */
 }
 

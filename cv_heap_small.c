@@ -24,14 +24,13 @@ cv_bool cv_heap_small_init(cv_heap_small * p_this) {
         long i_pool_index = 0;
         b_result = cv_true;
         while (b_result && (i_pool_index < cv_heap_small_count_)) {
-            p_this->a_pool[i_pool_index] = cv_heap_pool_load(
-                (i_pool_index + 1) * cv_heap_small_align_);
-            if (p_this->a_pool[i_pool_index]) {
+            if (cv_heap_pool_init(p_this->a_pool + i_pool_index,
+                    (i_pool_index + 1) * cv_heap_small_align_)) {
                 i_pool_index ++;
             } else {
                 while (i_pool_index) {
                     i_pool_index --;
-                    cv_heap_pool_unload(p_this->a_pool[i_pool_index]);
+                    cv_heap_pool_cleanup(p_this->a_pool + i_pool_index);
                 }
                 cv_debug_cleanup_(p_this, cv_sizeof_(*p_this));
                 b_result = cv_false;
@@ -46,15 +45,14 @@ void cv_heap_small_cleanup(cv_heap_small * p_this) {
     {
         long i_pool_index = 0;
         while (i_pool_index < cv_heap_small_count_) {
-            cv_heap_pool_unload(p_this->a_pool[i_pool_index]);
+            cv_heap_pool_cleanup(p_this->a_pool + i_pool_index);
             i_pool_index ++;
         }
     }
     cv_debug_cleanup_(p_this, cv_sizeof_(*p_this));
 }
 
-cv_heap_node * cv_heap_small_alloc( cv_heap_small * p_this,
-    cv_heap_node_mgr * p_heap_node_mgr, long i_len) {
+cv_heap_node * cv_heap_small_lookup( cv_heap_small * p_this, long i_len) {
     cv_heap_node * p_result = cv_null_;
     cv_debug_assert_(i_len > 0, cv_debug_code_invalid_length);
     {
@@ -65,12 +63,28 @@ cv_heap_node * cv_heap_small_alloc( cv_heap_small * p_this,
         long const i_pool_index = (i_aligned_len - 1) / cv_heap_small_align_;
         if ((i_pool_index >= 0) && (i_pool_index < cv_heap_small_count_)) {
             cv_heap_pool * const p_heap_pool =
-                p_this->a_pool[i_pool_index];
-            p_result = cv_heap_pool_alloc(p_heap_pool, p_heap_node_mgr,
-                i_len);
+                p_this->a_pool + i_pool_index;
+            p_result = cv_heap_pool_lookup(p_heap_pool);
         }
     }
 
+    return p_result;
+}
+
+cv_heap_node * cv_heap_small_alloc( cv_heap_node_mgr * p_heap_node_mgr,
+    long i_len) {
+    cv_heap_node * p_result = cv_null_;
+    cv_debug_assert_(i_len > 0, cv_debug_code_invalid_length);
+    {
+        /* Align len to multiple */
+        long const i_aligned_len =
+            cv_sizeof_align(i_len, cv_heap_small_align_);
+        /* Locate pool */
+        long const i_pool_index = (i_aligned_len - 1) / cv_heap_small_align_;
+        if ((i_pool_index >= 0) && (i_pool_index < cv_heap_small_count_)) {
+            p_result = cv_heap_pool_alloc( p_heap_node_mgr, i_aligned_len);
+        }
+    }
     return p_result;
 }
 
@@ -81,7 +95,7 @@ void cv_heap_small_free( cv_heap_small * p_this, cv_heap_node * p_heap_node) {
         long const i_pool_index = (i_len - 1) / cv_heap_small_align_;
         if ((i_pool_index >= 0) && (i_pool_index < cv_heap_small_count_)) {
             cv_heap_pool * const p_heap_pool =
-                p_this->a_pool[i_pool_index];
+                p_this->a_pool + i_pool_index;
             cv_heap_pool_free(p_heap_pool, p_heap_node);
         }
     }

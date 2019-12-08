@@ -121,7 +121,7 @@ cv_cflags = \
     -Wformat-nonliteral \
     -Wformat-security \
     -Wformat-y2k \
-    -Wlarger-than=4096 \
+    -Wframe-larger-than=1024 \
     -Wlong-long \
     -Wmissing-declarations \
     -Wmissing-format-attribute \

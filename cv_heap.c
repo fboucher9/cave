@@ -108,11 +108,19 @@ void * cv_heap_alloc(
     if (i_buffer_length > 0) {
         cv_heap_node * p_heap_node = cv_null_;
         if (i_buffer_length <= cv_heap_small_max_len_) {
-            p_heap_node = cv_heap_small_alloc(&g_heap_small, &g_heap_node_mgr,
+            p_heap_node = cv_heap_small_lookup(&g_heap_small,
                 i_buffer_length);
+            if (!p_heap_node) {
+                p_heap_node = cv_heap_small_alloc(&g_heap_node_mgr,
+                    i_buffer_length);
+            }
         } else {
-            p_heap_node = cv_heap_large_alloc(&g_heap_large, &g_heap_node_mgr,
+            p_heap_node = cv_heap_large_lookup(&g_heap_large,
                 i_buffer_length);
+            if (!p_heap_node) {
+                p_heap_node = cv_heap_large_alloc(&g_heap_node_mgr,
+                    i_buffer_length);
+            }
         }
         if (p_heap_node) {
             /* Attach node to used list */
