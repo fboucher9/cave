@@ -9,9 +9,7 @@
 #include <cv_runtime.h>
 #include <cv_debug.h>
 
-extern cv_heap_node_mgr g_heap_node_mgr;
-
-cv_bool cv_heap_large_init( cv_heap_large * p_this) {
+cv_bool cv_heap_large_init( cv_heap_large * p_this ) {
     cv_bool b_result = cv_false;
     cv_debug_assert_(!!p_this, cv_debug_code_null_ptr);
     cv_debug_init_(p_this, cv_sizeof_(*p_this));
@@ -35,7 +33,7 @@ static void cv_heap_large_empty_free_list( cv_heap_large * p_this) {
             cv_list_join( o_heap_ptr.o_list_ptr.p_node,
                 o_heap_ptr.o_list_ptr.p_node);
             /* Cleanup the node */
-            cv_heap_node_mgr_release(&g_heap_node_mgr, o_heap_ptr.p_heap_node);
+            cv_heap_node_cleanup(o_heap_ptr.p_heap_node);
             /* Free memory */
             cv_runtime_free(p_payload);
         }
@@ -78,6 +76,7 @@ static cv_heap_node * cv_heap_large_find_existing( cv_heap_large * p_this,
 }
 
 static cv_heap_node * cv_heap_large_alloc_cb( cv_heap_large * p_this,
+    cv_heap_node_mgr * p_heap_node_mgr,
     long i_len) {
     cv_heap_node * p_result = cv_null_;
     cv_debug_assert_(i_len > 0, cv_debug_code_invalid_length);
@@ -100,7 +99,7 @@ static cv_heap_node * cv_heap_large_alloc_cb( cv_heap_large * p_this,
                 cv_array o_payload = cv_array_null_;
                 cv_array_init_vector(&o_payload, p_payload, i_len);
                 o_heap_ptr.p_heap_node = cv_heap_node_mgr_acquire(
-                    &g_heap_node_mgr, &o_payload);
+                    p_heap_node_mgr, &o_payload);
                 cv_array_cleanup(&o_payload);
             }
         }
@@ -122,11 +121,13 @@ static void cv_heap_large_free_cb( cv_heap_large * p_this,
     cv_list_join( &p_heap_node->o_node, & p_this->o_free_list.o_node);
 }
 
-cv_heap_node * cv_heap_large_alloc( cv_heap_large * p_this, long i_len) {
+cv_heap_node * cv_heap_large_alloc( cv_heap_large * p_this,
+    cv_heap_node_mgr * p_heap_node_mgr,
+    long i_len) {
     cv_heap_node * p_result = cv_null_;
     cv_debug_assert_(i_len > 4096L, cv_debug_code_invalid_length);
     cv_mutex_lock(&p_this->o_mutex);
-    p_result = cv_heap_large_alloc_cb(p_this, i_len);
+    p_result = cv_heap_large_alloc_cb(p_this, p_heap_node_mgr, i_len);
     cv_mutex_unlock(&p_this->o_mutex);
     return p_result;
 }

@@ -53,7 +53,8 @@ void cv_heap_small_cleanup(cv_heap_small * p_this) {
     cv_debug_cleanup_(p_this, cv_sizeof_(*p_this));
 }
 
-cv_heap_node * cv_heap_small_alloc( cv_heap_small * p_this, long i_len) {
+cv_heap_node * cv_heap_small_alloc( cv_heap_small * p_this,
+    cv_heap_node_mgr * p_heap_node_mgr, long i_len) {
     cv_heap_node * p_result = cv_null_;
     cv_debug_assert_(i_len > 0, cv_debug_code_invalid_length);
     {
@@ -65,7 +66,8 @@ cv_heap_node * cv_heap_small_alloc( cv_heap_small * p_this, long i_len) {
         if ((i_pool_index >= 0) && (i_pool_index < cv_heap_small_count_)) {
             cv_heap_pool * const p_heap_pool =
                 p_this->a_pool[i_pool_index];
-            p_result = cv_heap_pool_alloc(p_heap_pool, i_len);
+            p_result = cv_heap_pool_alloc(p_heap_pool, p_heap_node_mgr,
+                i_len);
         }
     }
 

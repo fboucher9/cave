@@ -16,8 +16,6 @@
 #include <cv_null.h>
 #include <cv_debug.h>
 
-extern cv_heap_node_mgr g_heap_node_mgr;
-
 cv_bool cv_heap_pool_init(
     cv_heap_pool * p_this,
     long i_len)
@@ -49,7 +47,7 @@ void cv_heap_pool_cleanup(
         {
             cv_heap_node_ptr o_ptr = cv_ptr_null_;
             while (cv_list_it_first(&o_list_it, &o_ptr.o_list_ptr)) {
-                cv_heap_node_mgr_release(&g_heap_node_mgr, o_ptr.p_heap_node);
+                cv_heap_node_cleanup(o_ptr.p_heap_node);
             }
         }
         cv_list_it_cleanup(&o_list_it);
@@ -65,6 +63,7 @@ void cv_heap_pool_cleanup(
 
 static cv_heap_node * cv_heap_pool_alloc_cb(
     cv_heap_pool * p_this,
+    cv_heap_node_mgr * p_heap_node_mgr,
     long i_len)
 {
     cv_heap_node * p_result = cv_null_;
@@ -90,7 +89,7 @@ static cv_heap_node * cv_heap_pool_alloc_cb(
                     cv_array_init_vector(&o_payload, p_payload,
                         p_this->i_len);
                     o_heap_ptr.p_heap_node =
-                        cv_heap_node_mgr_acquire(&g_heap_node_mgr, &o_payload);
+                        cv_heap_node_mgr_acquire(p_heap_node_mgr, &o_payload);
                     cv_array_cleanup(&o_payload);
                 }
             }
@@ -111,13 +110,14 @@ static cv_heap_node * cv_heap_pool_alloc_cb(
 
 cv_heap_node * cv_heap_pool_alloc(
     cv_heap_pool * p_this,
+    cv_heap_node_mgr * p_heap_node_mgr,
     long i_len)
 {
     cv_heap_node * p_result = cv_null_;
     cv_debug_assert_(!!p_this, cv_debug_code_null_ptr);
     cv_debug_assert_(i_len > 0, cv_debug_code_invalid_length);
     cv_mutex_lock(&p_this->o_mutex);
-    p_result = cv_heap_pool_alloc_cb(p_this, i_len);
+    p_result = cv_heap_pool_alloc_cb(p_this, p_heap_node_mgr, i_len);
     cv_mutex_unlock(&p_this->o_mutex);
     return p_result;
 }

@@ -42,8 +42,7 @@ cv_bool cv_heap_node_mgr_init( cv_heap_node_mgr * p_this);
 
 void cv_heap_node_mgr_cleanup( cv_heap_node_mgr * p_this);
 
-void cv_heap_node_mgr_release( cv_heap_node_mgr * p_heap_node_mgr,
-    cv_heap_node * p_heap_node);
+void cv_heap_node_cleanup( cv_heap_node * p_heap_node);
 
 cv_heap_node * cv_heap_node_mgr_acquire( cv_heap_node_mgr * p_heap_node_mgr,
     cv_array const * p_payload);

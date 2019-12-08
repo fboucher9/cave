@@ -34,22 +34,11 @@ static void cv_heap_node_init( cv_heap_node * p_this,
     cv_array_init_ref(&p_this->o_payload, p_payload);
 }
 
-static void cv_heap_node_cleanup( cv_heap_node * p_this) {
+void cv_heap_node_cleanup( cv_heap_node * p_this) {
     cv_debug_assert_( !!p_this, cv_debug_code_null_ptr);
     cv_array_cleanup(&p_this->o_payload);
     cv_list_node_cleanup(&p_this->o_node);
     cv_debug_cleanup_(p_this, cv_sizeof_(*p_this));
-}
-
-void cv_heap_node_mgr_release(
-    cv_heap_node_mgr * p_heap_node_mgr,
-    cv_heap_node * p_heap_node)
-{
-    cv_debug_assert_( p_heap_node_mgr && p_heap_node,
-        cv_debug_code_null_ptr);
-    cv_unused_(p_heap_node_mgr);
-    cv_heap_node_cleanup(p_heap_node);
-    /* nothing to free */
 }
 
 cv_heap_node * cv_heap_node_mgr_acquire(

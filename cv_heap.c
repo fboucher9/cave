@@ -31,9 +31,7 @@ are thread-safe.
 
 static cv_bool g_heap_loaded = cv_false;
 
-extern cv_heap_node_mgr g_heap_node_mgr;
-
-cv_heap_node_mgr g_heap_node_mgr = cv_heap_node_mgr_initializer_;
+static cv_heap_node_mgr g_heap_node_mgr = cv_heap_node_mgr_initializer_;
 
 static cv_heap_used g_heap_used = cv_heap_used_initializer_;
 
@@ -110,9 +108,11 @@ void * cv_heap_alloc(
     if (i_buffer_length > 0) {
         cv_heap_node * p_heap_node = cv_null_;
         if (i_buffer_length <= cv_heap_small_max_len_) {
-            p_heap_node = cv_heap_small_alloc(&g_heap_small, i_buffer_length);
+            p_heap_node = cv_heap_small_alloc(&g_heap_small, &g_heap_node_mgr,
+                i_buffer_length);
         } else {
-            p_heap_node = cv_heap_large_alloc(&g_heap_large, i_buffer_length);
+            p_heap_node = cv_heap_large_alloc(&g_heap_large, &g_heap_node_mgr,
+                i_buffer_length);
         }
         if (p_heap_node) {
             /* Attach node to used list */

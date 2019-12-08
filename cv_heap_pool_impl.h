@@ -42,7 +42,7 @@ struct cv_heap_pool
     cv_mutex_initializer_, \
     cv_list_root_initializer_, \
     0, \
-    { 0 }
+    { 0 } }
 
 cv_bool cv_heap_pool_init(
     cv_heap_pool * p_this,
