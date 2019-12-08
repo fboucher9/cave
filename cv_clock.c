@@ -2,7 +2,7 @@
 
 #include <cv_clock.h>
 
-#include <cv_unused.h>
+#include <cv_misc/cv_unused.h>
 
 #if defined cv_have_libc_
 #include <time.h>

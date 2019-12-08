@@ -19,8 +19,8 @@ cv_test_srcs = \
     cv_algo/cv_array_it.c \
     cv_algo/cv_array_tool.c \
     cv_algo/cv_buffer.c \
-    cv_convert.c \
-    cv_convert_test.c \
+    cv_misc/cv_convert.c \
+    cv_misc/cv_convert_test.c \
     cv_algo/cv_string0.c \
     cv_manager.c \
     cv_options/cv_options_desc.c \
@@ -41,7 +41,7 @@ cv_test_srcs = \
     cv_heap/cv_heap_large.c \
     cv_heap/cv_heap_used.c \
     cv_debug.c \
-    cv_sizeof.c \
+    cv_misc/cv_sizeof.c \
     cv_thread/cv_thread_desc.c \
     cv_thread/cv_thread.c \
     cv_thread/cv_thread_impl.c \

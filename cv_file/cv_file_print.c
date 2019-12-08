@@ -9,9 +9,9 @@
 #include <cv_algo/cv_array.h>
 #include <cv_algo/cv_array_tool.h>
 #include <cv_debug.h>
-#include <cv_sizeof.h>
+#include <cv_misc/cv_sizeof.h>
 #include <cv_number_enc.h>
-#include <cv_convert.h>
+#include <cv_misc/cv_convert.h>
 
 /*
  *

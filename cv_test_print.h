@@ -5,7 +5,7 @@
 
 #include <cv_algo/cv_array_pred.h>
 #include <cv_number_pred.h>
-#include <cv_types.h>
+#include <cv_misc/cv_types.h>
 
 void cv_print_char( unsigned char i_value);
 

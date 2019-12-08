@@ -11,8 +11,8 @@
 
 #include <cv_algo/cv_stack_pred.h>
 #include <cv_algo/cv_stack_ptr.h>
-#include <cv_bool.h>
-#include <cv_types.h>
+#include <cv_misc/cv_bool.h>
+#include <cv_misc/cv_types.h>
 
 struct cv_stack_it {
     cv_stack_ptr o_cur;

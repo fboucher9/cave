@@ -4,10 +4,10 @@
  *
  */
 
-#include <cv_convert_test.h>
-#include <cv_convert.h>
+#include <cv_misc/cv_convert_test.h>
+#include <cv_misc/cv_convert.h>
 #include <cv_test_print.h>
-#include <cv_unused.h>
+#include <cv_misc/cv_unused.h>
 
 /*
  *

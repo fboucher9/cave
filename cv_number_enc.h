@@ -13,9 +13,9 @@ structure instead of a format string.
 
 */
 
-#include <cv_types.h>
+#include <cv_misc/cv_types.h>
 
-#include <cv_bool.h>
+#include <cv_misc/cv_bool.h>
 
 #include <cv_algo/cv_array_pred.h>
 

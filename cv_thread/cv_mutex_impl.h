@@ -5,7 +5,7 @@
 
 #include <cv_thread/cv_mutex_pred.h>
 
-#include <cv_types.h>
+#include <cv_misc/cv_types.h>
 
 #if defined cv_have_pthread_
 #include <pthread.h>

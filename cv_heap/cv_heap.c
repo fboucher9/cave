@@ -19,7 +19,7 @@ are thread-safe.
 #include <cv_heap/cv_heap_primary.h>
 #include <cv_heap/cv_heap_secondary.h>
 #include <cv_heap/cv_heap_used.h>
-#include <cv_null.h>
+#include <cv_misc/cv_null.h>
 #include <cv_debug.h>
 #include <cv_file/cv_file_print.h>
 #include <cv_file/cv_file_std.h>
@@ -28,7 +28,7 @@ are thread-safe.
 #include <cv_number_desc.h>
 #include <cv_algo/cv_list_root.h>
 #include <cv_algo/cv_list_it.h>
-#include <cv_sizeof.h>
+#include <cv_misc/cv_sizeof.h>
 
 static cv_bool g_heap_loaded = cv_false;
 

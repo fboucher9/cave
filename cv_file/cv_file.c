@@ -4,7 +4,7 @@
 #include <cv_algo/cv_array.h>
 #include <cv_runtime.h>
 #include <cv_debug.h>
-#include <cv_sizeof.h>
+#include <cv_misc/cv_sizeof.h>
 
 void cv_file_init(
     cv_file * p_this) {

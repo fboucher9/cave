@@ -9,7 +9,7 @@
  *  Description: Limits for base types.
  */
 
-#include <cv_cast.h>
+#include <cv_misc/cv_cast.h>
 
 #define cv_char_min_ cv_cast_(char, 0x00)
 #define cv_char_max_ cv_cast_(char, 0x7f)

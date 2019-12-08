@@ -7,12 +7,12 @@
 #include <stdlib.h>
 #include <string.h>
 #endif /* #if defined cv_have_libc_ */
-#include <cv_bool.h>
-#include <cv_null.h>
-#include <cv_unused.h>
+#include <cv_misc/cv_bool.h>
+#include <cv_misc/cv_null.h>
+#include <cv_misc/cv_unused.h>
 #include <cv_linux.h>
 #include <cv_windows.h>
-#include <cv_convert.h>
+#include <cv_misc/cv_convert.h>
 #include <cv_algo/cv_array_ptr.h>
 
 void * cv_runtime_malloc(

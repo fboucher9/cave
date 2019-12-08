@@ -25,9 +25,9 @@
 #endif /* #if ... */
 #endif /* #if ! defined cv_typeof_sll_ */
 
-#include <cv_warning_ll_ignore.h>
+#include <cv_misc/cv_warning_ll_ignore.h>
 typedef cv_typeof_sll_ cv_sll;
-#include <cv_warning_ll_restore.h>
+#include <cv_misc/cv_warning_ll_restore.h>
 
 /* Verify sizeof cv_sll */
 typedef char cv_verify_sizeof_sll [

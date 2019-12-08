@@ -10,9 +10,9 @@
 
 #include <cv_heap/cv_heap_primary.h>
 
-#include <cv_null.h>
+#include <cv_misc/cv_null.h>
 
-#include <cv_sizeof.h>
+#include <cv_misc/cv_sizeof.h>
 
 #include <cv_debug.h>
 

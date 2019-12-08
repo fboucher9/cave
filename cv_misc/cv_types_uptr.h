@@ -22,9 +22,9 @@
 #endif
 #endif /* #if ! defined cv_typeof_uptr_ */
 
-#include <cv_warning_ll_ignore.h>
+#include <cv_misc/cv_warning_ll_ignore.h>
 typedef cv_typeof_uptr_ cv_uptr;
-#include <cv_warning_ll_restore.h>
+#include <cv_misc/cv_warning_ll_restore.h>
 
 /* Verify sizeof the cv_uptr type */
 typedef char cv_verify_sizeof_uptr [

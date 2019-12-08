@@ -9,7 +9,7 @@
 
 #include <cv_thread/cv_thread_pred.h>
 #include <cv_thread/cv_thread_desc.h>
-#include <cv_types.h>
+#include <cv_misc/cv_types.h>
 #if defined cv_have_pthread_
 #include <pthread.h>
 #endif /* #if defined cv_have_pthread_ */

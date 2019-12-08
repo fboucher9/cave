@@ -8,7 +8,7 @@
 
 #include <cv_algo/cv_pool_lock.h>
 #include <cv_debug.h>
-#include <cv_sizeof.h>
+#include <cv_misc/cv_sizeof.h>
 
 /*
  *

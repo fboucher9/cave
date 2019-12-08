@@ -3,11 +3,11 @@
 #ifndef cv_debug_h_
 #define cv_debug_h_
 
-#include <cv_unused.h>
+#include <cv_misc/cv_unused.h>
 
 #include <cv_algo/cv_array_pred.h>
 
-#include <cv_bool.h>
+#include <cv_misc/cv_bool.h>
 
 #if defined cv_debug_
 

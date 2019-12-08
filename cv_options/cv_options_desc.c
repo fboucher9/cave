@@ -2,11 +2,11 @@
 
 #include <cv_options/cv_options_desc.h>
 
-#include <cv_null.h>
+#include <cv_misc/cv_null.h>
 
 #include <cv_debug.h>
 
-#include <cv_sizeof.h>
+#include <cv_misc/cv_sizeof.h>
 
 void cv_options_desc_init(
     cv_options_desc * p_options_desc,

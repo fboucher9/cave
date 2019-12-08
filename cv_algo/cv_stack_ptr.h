@@ -5,7 +5,7 @@
 
 #include <cv_algo/cv_stack_pred.h>
 
-#include <cv_ptr.h>
+#include <cv_algo/cv_ptr.h>
 
 /*
  *  Union: cv_stack_ptr

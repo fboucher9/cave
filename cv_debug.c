@@ -12,7 +12,7 @@
 
 #include <cv_algo/cv_array_tool.h>
 
-#include <cv_cast.h>
+#include <cv_misc/cv_cast.h>
 
 #if defined cv_debug_verbose_
 #include <execinfo.h>

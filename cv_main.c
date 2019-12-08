@@ -8,7 +8,7 @@
 
 #include <cv_debug.h>
 
-#include <cv_bool.h>
+#include <cv_misc/cv_bool.h>
 
 static cv_options g_main_options = cv_options_initializer_;
 

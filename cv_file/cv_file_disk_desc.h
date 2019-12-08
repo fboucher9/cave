@@ -9,7 +9,7 @@
 
 #include <cv_file/cv_file_pred.h>
 #include <cv_algo/cv_array.h>
-#include <cv_bool.h>
+#include <cv_misc/cv_bool.h>
 
 enum cv_file_disk_mode {
     cv_file_disk_mode_invalid = 0,

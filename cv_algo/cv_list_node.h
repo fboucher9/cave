@@ -16,7 +16,7 @@ single cv_list_join function is used to insert and remove nodes.
 
 #include <cv_algo/cv_list_ptr.h>
 
-#include <cv_bool.h>
+#include <cv_misc/cv_bool.h>
 
 struct cv_list_node
 {

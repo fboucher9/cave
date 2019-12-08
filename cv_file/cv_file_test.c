@@ -22,7 +22,7 @@
 
 #include <cv_algo/cv_array_tool.h>
 
-#include <cv_sizeof.h>
+#include <cv_misc/cv_sizeof.h>
 
 #include <cv_test_print.h>
 

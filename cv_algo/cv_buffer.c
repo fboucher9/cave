@@ -4,11 +4,11 @@
 
 #include <cv_heap/cv_heap.h>
 
-#include <cv_null.h>
+#include <cv_misc/cv_null.h>
 
 #include <cv_debug.h>
 
-#include <cv_sizeof.h>
+#include <cv_misc/cv_sizeof.h>
 
 static cv_bool cv_buffer_realloc(
     cv_buffer * p_this,

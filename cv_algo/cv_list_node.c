@@ -2,11 +2,11 @@
 
 #include <cv_algo/cv_list_node.h>
 
-#include <cv_null.h>
+#include <cv_misc/cv_null.h>
 
 #include <cv_debug.h>
 
-#include <cv_sizeof.h>
+#include <cv_misc/cv_sizeof.h>
 
 void cv_list_node_init(
     cv_list_node * p_this)

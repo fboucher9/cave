@@ -12,7 +12,7 @@ does init and cleanup of all modules.
 
 */
 
-#include <cv_bool.h>
+#include <cv_misc/cv_bool.h>
 
 cv_bool cv_manager_load(void);
 

@@ -13,7 +13,7 @@ Utilities for arrays.
 
 #include <cv_algo/cv_array_ptr.h>
 
-#include <cv_bool.h>
+#include <cv_misc/cv_bool.h>
 
 struct cv_array
 {

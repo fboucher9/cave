@@ -3,9 +3,9 @@
 #ifndef cv_fifo_h_
 #define cv_fifo_h_
 
-#include <cv_ptr.h>
+#include <cv_algo/cv_ptr.h>
 
-#include <cv_bool.h>
+#include <cv_misc/cv_bool.h>
 
 typedef union cv_fifo_ptr cv_fifo_ptr;
 

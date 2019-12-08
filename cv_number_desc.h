@@ -4,8 +4,8 @@
 #define cv_number_desc_h_
 
 #include <cv_number_pred.h>
-#include <cv_types.h>
-#include <cv_bool.h>
+#include <cv_misc/cv_types.h>
+#include <cv_misc/cv_bool.h>
 
 struct cv_number_data
 {

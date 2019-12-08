@@ -16,7 +16,7 @@ elements.
 
 #include <cv_algo/cv_list_node.h>
 
-#include <cv_bool.h>
+#include <cv_misc/cv_bool.h>
 
 /*
 

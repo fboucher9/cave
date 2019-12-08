@@ -6,9 +6,9 @@
 
 #include <cv_debug.h>
 
-#include <cv_sizeof.h>
+#include <cv_misc/cv_sizeof.h>
 
-#include <cv_limits.h>
+#include <cv_misc/cv_limits.h>
 
 void cv_array_init(
     cv_array * p_this)

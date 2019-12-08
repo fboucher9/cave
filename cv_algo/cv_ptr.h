@@ -3,7 +3,7 @@
 #ifndef cv_ptr_h_
 #define cv_ptr_h_
 
-#include <cv_null.h>
+#include <cv_misc/cv_null.h>
 
 typedef union cv_ptr cv_ptr;
 

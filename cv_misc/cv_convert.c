@@ -1,6 +1,6 @@
 /* See LICENSE for license details */
 
-#include <cv_convert.h>
+#include <cv_misc/cv_convert.h>
 
 #if defined cv_debug_
 

@@ -12,8 +12,8 @@
 #include <cv_heap/cv_heap_it.h>
 #include <cv_thread/cv_mutex.h>
 #include <cv_memory.h>
-#include <cv_sizeof.h>
-#include <cv_null.h>
+#include <cv_misc/cv_sizeof.h>
+#include <cv_misc/cv_null.h>
 #include <cv_debug.h>
 
 cv_bool cv_heap_pool_init(

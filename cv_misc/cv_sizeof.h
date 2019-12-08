@@ -3,7 +3,7 @@
 #ifndef cv_sizeof_h_
 #define cv_sizeof_h_
 
-#include <cv_cast.h>
+#include <cv_misc/cv_cast.h>
 
 /*
 

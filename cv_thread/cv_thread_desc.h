@@ -5,7 +5,7 @@
 
 #include <cv_thread/cv_thread_pred.h>
 #include <cv_algo/cv_array.h>
-#include <cv_bool.h>
+#include <cv_misc/cv_bool.h>
 
 typedef void (cv_thread_func)(
     void * p_context);

@@ -7,7 +7,7 @@
 
 #include <cv_algo/cv_list_ptr.h>
 
-#include <cv_ptr.h>
+#include <cv_algo/cv_ptr.h>
 
 union cv_heap_node_ptr
 {

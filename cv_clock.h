@@ -7,9 +7,9 @@
 
 #include <cv_clock_epoch.h>
 
-#include <cv_types.h>
+#include <cv_misc/cv_types.h>
 
-#include <cv_bool.h>
+#include <cv_misc/cv_bool.h>
 
 struct cv_clock
 {

@@ -6,7 +6,7 @@
 #include <cv_heap/cv_heap_pred.h>
 #include <cv_thread/cv_mutex.h>
 #include <cv_algo/cv_list_root.h>
-#include <cv_bool.h>
+#include <cv_misc/cv_bool.h>
 
 struct cv_heap_large {
     cv_mutex o_mutex;

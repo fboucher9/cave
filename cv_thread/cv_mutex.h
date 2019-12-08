@@ -9,7 +9,7 @@
 
 #include <cv_thread/cv_mutex_pred.h>
 #include <cv_thread/cv_mutex_impl.h>
-#include <cv_bool.h>
+#include <cv_misc/cv_bool.h>
 
 /* see cv_mutex_impl.h for cv_mutex members */
 

@@ -9,8 +9,8 @@
  *  Description: Conversions for fundamental types.
  */
 
-#include <cv_types.h>
-#include <cv_cast.h>
+#include <cv_misc/cv_types.h>
+#include <cv_misc/cv_cast.h>
 
 #if defined cv_debug_
 

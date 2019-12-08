@@ -6,8 +6,8 @@
 
 #include <cv_thread/cv_mutex.h>
 #include <cv_thread/cv_mutex_plugin.h>
-#include <cv_sizeof.h>
-#include <cv_null.h>
+#include <cv_misc/cv_sizeof.h>
+#include <cv_misc/cv_null.h>
 #include <cv_debug.h>
 
 static cv_bool g_mutex_loaded = cv_false;

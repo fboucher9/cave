@@ -2,7 +2,7 @@
 
 #include <cv_test.h>
 
-#include <cv_null.h>
+#include <cv_misc/cv_null.h>
 
 #if defined cv_have_libc_
 

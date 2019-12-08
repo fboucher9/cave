@@ -11,9 +11,9 @@ Description: Pointer to cv_mutex object.
 
 */
 
-#include <cv_mutex_pred.h>
+#include <cv_thread/cv_mutex_pred.h>
 
-#include <cv_ptr.h>
+#include <cv_algo/cv_ptr.h>
 
 union cv_mutex_ptr
 {

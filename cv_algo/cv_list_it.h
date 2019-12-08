@@ -13,7 +13,7 @@ Base iterator for linked lists.
 
 #include <cv_algo/cv_list_ptr.h>
 
-#include <cv_bool.h>
+#include <cv_misc/cv_bool.h>
 
 struct cv_list_it
 {

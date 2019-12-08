@@ -1,6 +1,6 @@
 /* See LICENSE for license details */
 
-#include <cv_sizeof.h>
+#include <cv_misc/cv_sizeof.h>
 
 long cv_sizeof_align(
     long i_sizeof,

@@ -2,11 +2,11 @@
 
 #include <cv_memory.h>
 
-#include <cv_cast.h>
+#include <cv_misc/cv_cast.h>
 
-#include <cv_null.h>
+#include <cv_misc/cv_null.h>
 
-#include <cv_bool.h>
+#include <cv_misc/cv_bool.h>
 
 #include <cv_algo/cv_array.h>
 

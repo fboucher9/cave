@@ -8,8 +8,8 @@
 #include <cv_algo/cv_stack.h>
 #include <cv_algo/cv_stack_it.h>
 #include <cv_heap/cv_heap.h>
-#include <cv_types.h>
-#include <cv_sizeof.h>
+#include <cv_misc/cv_types.h>
+#include <cv_misc/cv_sizeof.h>
 #include <cv_test_print.h>
 
 typedef struct cv_number_stack_node cv_number_stack_node;

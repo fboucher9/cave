@@ -6,11 +6,11 @@
 
 #include <cv_debug.h>
 
-#include <cv_sizeof.h>
+#include <cv_misc/cv_sizeof.h>
 
-#include <cv_null.h>
+#include <cv_misc/cv_null.h>
 
-#include <cv_unused.h>
+#include <cv_misc/cv_unused.h>
 
 static void cv_thread_dummy_func(
     void * p_context)

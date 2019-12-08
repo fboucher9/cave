@@ -6,7 +6,7 @@
 
 #include <cv_heap/cv_heap_secondary.h>
 #include <cv_debug.h>
-#include <cv_sizeof.h>
+#include <cv_misc/cv_sizeof.h>
 
 static long const g_heap_secondary_grow_len = 4096L;
 

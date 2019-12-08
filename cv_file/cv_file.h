@@ -17,11 +17,11 @@ Windows, the WaitForSingleObject function is used.
 
 #include <cv_file/cv_file_pred.h>
 
-#include <cv_bool.h>
+#include <cv_misc/cv_bool.h>
 
 #include <cv_algo/cv_array.h>
 
-#include <cv_types.h>
+#include <cv_misc/cv_types.h>
 
 union cv_file {
 

@@ -6,12 +6,12 @@
 
 #include <cv_file/cv_file_poll.h>
 #include <cv_file/cv_file.h>
-#include <cv_unused.h>
+#include <cv_misc/cv_unused.h>
 #include <cv_memory.h>
-#include <cv_sizeof.h>
+#include <cv_misc/cv_sizeof.h>
 #include <cv_debug.h>
 #include <cv_heap/cv_heap.h>
-#include <cv_convert.h>
+#include <cv_misc/cv_convert.h>
 #if defined cv_linux_
 #include <poll.h>
 #endif /* #if defined cv_linux_ */

@@ -6,7 +6,7 @@
 
 #include <cv_options/cv_options_pool.h>
 
-#include <cv_null.h>
+#include <cv_misc/cv_null.h>
 
 #include <cv_algo/cv_array.h>
 
@@ -14,7 +14,7 @@
 
 #include <cv_algo/cv_list_root.h>
 
-#include <cv_sizeof.h>
+#include <cv_misc/cv_sizeof.h>
 
 #include <cv_debug.h>
 

@@ -6,11 +6,11 @@
 
 #include <cv_memory.h>
 
-#include <cv_sizeof.h>
+#include <cv_misc/cv_sizeof.h>
 
 #include <cv_algo/cv_string0.h>
 
-#include <cv_unused.h>
+#include <cv_misc/cv_unused.h>
 
 #include <cv_debug.h>
 

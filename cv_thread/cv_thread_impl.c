@@ -3,10 +3,10 @@
 #include <cv_thread/cv_thread.h>
 #include <cv_thread/cv_thread_ptr.h>
 #include <cv_memory.h>
-#include <cv_null.h>
-#include <cv_sizeof.h>
+#include <cv_misc/cv_null.h>
+#include <cv_misc/cv_sizeof.h>
 #include <cv_debug.h>
-#include <cv_unused.h>
+#include <cv_misc/cv_unused.h>
 #include <cv_heap/cv_heap.h>
 #include <cv_thread/cv_thread_plugin.h>
 

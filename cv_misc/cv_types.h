@@ -15,12 +15,12 @@
  *  ommited because the _t suffix is reserved for use by POSIX standard.
  */
 
-#include <cv_types_uptr.h>
+#include <cv_misc/cv_types_uptr.h>
 
-#include <cv_types_sptr.h>
+#include <cv_misc/cv_types_sptr.h>
 
-#include <cv_types_ull.h>
+#include <cv_misc/cv_types_ull.h>
 
-#include <cv_types_sll.h>
+#include <cv_misc/cv_types_sll.h>
 
 #endif /* #ifndef cv_types_h_ */

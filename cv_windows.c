@@ -3,8 +3,8 @@
 #if defined cv_windows_
 
 #include <cv_windows.h>
-#include <cv_unused.h>
-#include <cv_convert.h>
+#include <cv_misc/cv_unused.h>
+#include <cv_misc/cv_convert.h>
 #include <io.h>
 #include <stdio.h>
 

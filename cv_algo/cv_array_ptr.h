@@ -5,9 +5,9 @@
 
 #include <cv_algo/cv_array_pred.h>
 
-#include <cv_ptr.h>
+#include <cv_algo/cv_ptr.h>
 
-#include <cv_types.h>
+#include <cv_misc/cv_types.h>
 
 union cv_array_ptr
 {

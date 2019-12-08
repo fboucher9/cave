@@ -5,7 +5,7 @@
 
 #include <cv_file/cv_file_pred.h>
 
-#include <cv_bool.h>
+#include <cv_misc/cv_bool.h>
 
 cv_bool cv_file_std_load(void);
 

@@ -13,7 +13,7 @@ memory from once callbacks.  It is used for small allocations maximum 1MB.
 
 #include <cv_heap/cv_heap_pred.h>
 #include <cv_heap/cv_heap_section_lock.h>
-#include <cv_bool.h>
+#include <cv_misc/cv_bool.h>
 
 /*
  *

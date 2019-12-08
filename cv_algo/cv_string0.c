@@ -8,11 +8,11 @@
 
 #include <cv_heap/cv_heap.h>
 
-#include <cv_sizeof.h>
+#include <cv_misc/cv_sizeof.h>
 
-#include <cv_unused.h>
+#include <cv_misc/cv_unused.h>
 
-#include <cv_null.h>
+#include <cv_misc/cv_null.h>
 
 #include <cv_memory.h>
 

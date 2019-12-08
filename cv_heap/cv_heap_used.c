@@ -8,7 +8,7 @@
 #include <cv_heap/cv_heap_node.h>
 #include <cv_heap/cv_heap_node_ptr.h>
 #include <cv_debug.h>
-#include <cv_sizeof.h>
+#include <cv_misc/cv_sizeof.h>
 #include <cv_algo/cv_list_it.h>
 #include <cv_algo/cv_array_tool.h>
 #include <cv_file/cv_file_std.h>

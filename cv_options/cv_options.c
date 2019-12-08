@@ -18,9 +18,9 @@
 
 #include <cv_heap/cv_heap.h>
 
-#include <cv_null.h>
+#include <cv_misc/cv_null.h>
 
-#include <cv_sizeof.h>
+#include <cv_misc/cv_sizeof.h>
 
 #include <cv_algo/cv_array.h>
 
@@ -28,7 +28,7 @@
 
 #include <cv_debug.h>
 
-#include <cv_limits.h>
+#include <cv_misc/cv_limits.h>
 
 cv_bool cv_options_load(void)
 {

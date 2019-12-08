@@ -5,7 +5,7 @@
 
 #include <cv_file/cv_file_pred.h>
 #include <cv_clock_pred.h>
-#include <cv_bool.h>
+#include <cv_misc/cv_bool.h>
 
 enum cv_file_poll_flag {
     cv_file_poll_flag_read = 1,

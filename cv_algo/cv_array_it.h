@@ -7,7 +7,7 @@
 
 #include <cv_algo/cv_array.h>
 
-#include <cv_bool.h>
+#include <cv_misc/cv_bool.h>
 
 struct cv_array_it
 {

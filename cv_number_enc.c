@@ -7,11 +7,11 @@
 #include <cv_number_enc.h>
 #include <cv_number_desc.h>
 #include <cv_algo/cv_array_it.h>
-#include <cv_sizeof.h>
+#include <cv_misc/cv_sizeof.h>
 #include <cv_memory.h>
-#include <cv_limits.h>
+#include <cv_misc/cv_limits.h>
 #include <cv_debug.h>
-#include <cv_convert.h>
+#include <cv_misc/cv_convert.h>
 
 enum cv_number_machine {
     cv_number_machine_invalid = 0,

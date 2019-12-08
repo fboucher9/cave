@@ -9,7 +9,7 @@
 
 #include <cv_algo/cv_buffer.h>
 
-#include <cv_bool.h>
+#include <cv_misc/cv_bool.h>
 
 struct cv_string0
 {

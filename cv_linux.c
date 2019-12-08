@@ -3,9 +3,9 @@
 #if defined cv_linux_
 
 #include <cv_linux.h>
-#include <cv_cast.h>
-#include <cv_convert.h>
-#include <cv_limits.h>
+#include <cv_misc/cv_cast.h>
+#include <cv_misc/cv_convert.h>
+#include <cv_misc/cv_limits.h>
 #include <unistd.h>
 #include <sys/types.h>
 #include <sys/stat.h>

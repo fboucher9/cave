@@ -7,7 +7,7 @@
 #include <cv_algo/cv_stack_it.h>
 #include <cv_algo/cv_stack.h>
 #include <cv_debug.h>
-#include <cv_sizeof.h>
+#include <cv_misc/cv_sizeof.h>
 
 /*
  *

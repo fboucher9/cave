@@ -11,7 +11,7 @@
 
 #include <cv_thread/cv_thread_pred.h>
 
-#include <cv_ptr.h>
+#include <cv_algo/cv_ptr.h>
 
 /*
  *  Structure: cv_thread_ptr
