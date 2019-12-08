@@ -42,4 +42,7 @@ typedef struct cv_heap_large cv_heap_large;
 /* Predefine */
 typedef struct cv_heap_used cv_heap_used;
 
+/* Predefine */
+typedef struct cv_heap_mgr cv_heap_mgr;
+
 #endif /* #ifndef cv_heap_pred_h_ */
