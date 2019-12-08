@@ -1,12 +1,12 @@
 /* See LICENSE for license details */
 
-#include <cv_heap_node.h>
+#include <cv_heap/cv_heap_node.h>
 #include <cv_sizeof.h>
-#include <cv_heap_primary.h>
-#include <cv_heap_node_ptr.h>
+#include <cv_heap/cv_heap_primary.h>
+#include <cv_heap/cv_heap_node_ptr.h>
 #include <cv_null.h>
 #include <cv_debug.h>
-#include <cv_heap_secondary.h>
+#include <cv_heap/cv_heap_secondary.h>
 
 static void cv_heap_node_init( cv_heap_node * p_this,
     cv_array const * p_payload)

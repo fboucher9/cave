@@ -11,13 +11,14 @@ are thread-safe.
 
 */
 
-#include <cv_heap.h>
-#include <cv_heap_plugin.h>
-#include <cv_heap_small.h>
-#include <cv_heap_large.h>
-#include <cv_heap_node.h>
-#include <cv_heap_primary.h>
-#include <cv_heap_secondary.h>
+#include <cv_heap/cv_heap.h>
+#include <cv_heap/cv_heap_plugin.h>
+#include <cv_heap/cv_heap_small.h>
+#include <cv_heap/cv_heap_large.h>
+#include <cv_heap/cv_heap_node.h>
+#include <cv_heap/cv_heap_primary.h>
+#include <cv_heap/cv_heap_secondary.h>
+#include <cv_heap/cv_heap_used.h>
 #include <cv_null.h>
 #include <cv_debug.h>
 #include <cv_file_print.h>
@@ -27,7 +28,6 @@ are thread-safe.
 #include <cv_number_desc.h>
 #include <cv_list_root.h>
 #include <cv_list_it.h>
-#include <cv_heap_used.h>
 #include <cv_sizeof.h>
 
 static cv_bool g_heap_loaded = cv_false;

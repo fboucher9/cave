@@ -3,8 +3,8 @@
 #ifndef cv_heap_pool_h_
 #define cv_heap_pool_h_
 
-#include <cv_heap_pred.h>
-#include <cv_heap_pool_impl.h>
+#include <cv_heap/cv_heap_pred.h>
+#include <cv_heap/cv_heap_pool_impl.h>
 
 cv_heap_node * cv_heap_pool_lookup(
     cv_heap_pool * p_this);

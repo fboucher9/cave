@@ -4,7 +4,7 @@
  *
  */
 
-#include <cv_heap_secondary.h>
+#include <cv_heap/cv_heap_secondary.h>
 #include <cv_debug.h>
 #include <cv_sizeof.h>
 

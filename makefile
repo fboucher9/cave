@@ -26,18 +26,18 @@ cv_test_srcs = \
     cv_options_it.c \
     cv_options_node.c \
     cv_options_pool.c \
-    cv_heap.c \
-    cv_heap_primary.c \
-    cv_heap_secondary.c \
-    cv_heap_node.c \
-    cv_heap_node_ptr.c \
-    cv_heap_pool.c \
-    cv_heap_it.c \
-    cv_heap_section.c \
-    cv_heap_section_lock.c \
-    cv_heap_small.c \
-    cv_heap_large.c \
-    cv_heap_used.c \
+    cv_heap/cv_heap.c \
+    cv_heap/cv_heap_primary.c \
+    cv_heap/cv_heap_secondary.c \
+    cv_heap/cv_heap_node.c \
+    cv_heap/cv_heap_node_ptr.c \
+    cv_heap/cv_heap_pool.c \
+    cv_heap/cv_heap_it.c \
+    cv_heap/cv_heap_section.c \
+    cv_heap/cv_heap_section_lock.c \
+    cv_heap/cv_heap_small.c \
+    cv_heap/cv_heap_large.c \
+    cv_heap/cv_heap_used.c \
     cv_debug.c \
     cv_sizeof.c \
     cv_thread_desc.c \
@@ -174,7 +174,7 @@ $(cv_test_objs_abs) : $(cv_src_path)/makefile
 
 $(cv_dst_path)/.obj/%.c.o : $(cv_src_path)/%.c
 	@echo compiling $(notdir $<)
-	$(cv_verbose)mkdir -p $(cv_dst_path)/.obj
+	$(cv_verbose)mkdir -p $(dir $@)
 	$(cv_verbose)echo -c -m32 -x c -o $@ $(cv_cflags) $(cv_profile_cflags) $(cv_defines) $(cv_includes) $< -MMD > $@.cmd
 	$(cv_verbose)gcc @$@.cmd
 

@@ -9,9 +9,9 @@
  *  Description: Thread-safe version of cv_heap_section object.
  */
 
-#include <cv_heap_pred.h>
+#include <cv_heap/cv_heap_pred.h>
 #include <cv_mutex.h>
-#include <cv_heap_section.h>
+#include <cv_heap/cv_heap_section.h>
 
 struct cv_heap_section_lock {
     cv_mutex o_mutex;

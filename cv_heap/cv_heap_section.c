@@ -1,6 +1,6 @@
 /* See LICENSE for license details */
 
-#include <cv_heap_section.h>
+#include <cv_heap/cv_heap_section.h>
 
 #include <cv_runtime.h>
 

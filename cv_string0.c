@@ -6,7 +6,7 @@
 
 #include <cv_array_tool.h>
 
-#include <cv_heap.h>
+#include <cv_heap/cv_heap.h>
 
 #include <cv_sizeof.h>
 

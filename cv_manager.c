@@ -9,7 +9,7 @@ Description: None.
 */
 
 #include <cv_manager.h>
-#include <cv_heap_plugin.h>
+#include <cv_heap/cv_heap_plugin.h>
 #include <cv_mutex_plugin.h>
 #include <cv_thread_plugin.h>
 #include <cv_options_plugin.h>

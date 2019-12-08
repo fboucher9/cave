@@ -9,7 +9,7 @@
 #include <cv_array.h>
 #include <cv_thread.h>
 #include <cv_thread_desc.h>
-#include <cv_heap.h>
+#include <cv_heap/cv_heap.h>
 #include <cv_file_std.h>
 #include <cv_file_poll.h>
 #include <cv_null.h>

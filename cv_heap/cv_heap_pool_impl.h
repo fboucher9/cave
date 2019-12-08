@@ -7,7 +7,7 @@
  *
  */
 
-#include <cv_heap_pred.h>
+#include <cv_heap/cv_heap_pred.h>
 #include <cv_mutex.h>
 #include <cv_list_root.h>
 #include <cv_null.h>

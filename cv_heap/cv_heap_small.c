@@ -1,14 +1,14 @@
 /* See LICENSE for license details */
 
-#include <cv_heap_small.h>
+#include <cv_heap/cv_heap_small.h>
 
-#include <cv_heap_pool.h>
+#include <cv_heap/cv_heap_pool.h>
 
-#include <cv_heap_node_ptr.h>
+#include <cv_heap/cv_heap_node_ptr.h>
 
-#include <cv_heap_node.h>
+#include <cv_heap/cv_heap_node.h>
 
-#include <cv_heap_primary.h>
+#include <cv_heap/cv_heap_primary.h>
 
 #include <cv_null.h>
 

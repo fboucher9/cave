@@ -4,7 +4,7 @@
  *
  */
 
-#include <cv_heap_primary.h>
+#include <cv_heap/cv_heap_primary.h>
 
 static long const g_heap_primary_max = (4096L);
 

@@ -7,8 +7,8 @@
  *
  */
 
-#include <cv_heap_pred.h>
-#include <cv_heap_section_lock.h>
+#include <cv_heap/cv_heap_pred.h>
+#include <cv_heap/cv_heap_section_lock.h>
 
 /*
  *

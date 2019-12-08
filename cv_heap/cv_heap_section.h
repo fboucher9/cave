@@ -19,7 +19,7 @@ than largest allocation.
 
 */
 
-#include <cv_heap_pred.h>
+#include <cv_heap/cv_heap_pred.h>
 
 #include <cv_list_root.h>
 

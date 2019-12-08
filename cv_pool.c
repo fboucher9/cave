@@ -5,7 +5,7 @@
  */
 
 #include <cv_pool.h>
-#include <cv_heap.h>
+#include <cv_heap/cv_heap.h>
 #include <cv_debug.h>
 #include <cv_sizeof.h>
 

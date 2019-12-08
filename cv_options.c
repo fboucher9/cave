@@ -16,7 +16,7 @@
 
 #include <cv_list_it.h>
 
-#include <cv_heap.h>
+#include <cv_heap/cv_heap.h>
 
 #include <cv_null.h>
 

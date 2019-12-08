@@ -10,7 +10,7 @@
 #include <cv_memory.h>
 #include <cv_sizeof.h>
 #include <cv_debug.h>
-#include <cv_heap.h>
+#include <cv_heap/cv_heap.h>
 #include <cv_convert.h>
 #if defined cv_linux_
 #include <poll.h>

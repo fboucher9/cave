@@ -7,7 +7,7 @@
 #include <cv_sizeof.h>
 #include <cv_debug.h>
 #include <cv_unused.h>
-#include <cv_heap.h>
+#include <cv_heap/cv_heap.h>
 #include <cv_thread_plugin.h>
 
 static cv_bool g_thread_loaded = cv_false;

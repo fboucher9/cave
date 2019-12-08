@@ -4,12 +4,12 @@
  *
  */
 
-#include <cv_heap_pool.h>
-#include <cv_heap_pool_impl.h>
-#include <cv_heap_primary.h>
-#include <cv_heap_node.h>
-#include <cv_heap_node_ptr.h>
-#include <cv_heap_it.h>
+#include <cv_heap/cv_heap_pool.h>
+#include <cv_heap/cv_heap_pool_impl.h>
+#include <cv_heap/cv_heap_primary.h>
+#include <cv_heap/cv_heap_node.h>
+#include <cv_heap/cv_heap_node_ptr.h>
+#include <cv_heap/cv_heap_it.h>
 #include <cv_mutex.h>
 #include <cv_memory.h>
 #include <cv_sizeof.h>

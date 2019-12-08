@@ -2,7 +2,7 @@
 
 #include <cv_buffer.h>
 
-#include <cv_heap.h>
+#include <cv_heap/cv_heap.h>
 
 #include <cv_null.h>
 

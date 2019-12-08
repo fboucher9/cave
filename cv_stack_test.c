@@ -7,7 +7,7 @@
 #include <cv_stack_test.h>
 #include <cv_stack.h>
 #include <cv_stack_it.h>
-#include <cv_heap.h>
+#include <cv_heap/cv_heap.h>
 #include <cv_types.h>
 #include <cv_sizeof.h>
 #include <cv_test_print.h>

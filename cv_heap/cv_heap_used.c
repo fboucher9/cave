@@ -4,9 +4,9 @@
  *
  */
 
-#include <cv_heap_used.h>
-#include <cv_heap_node.h>
-#include <cv_heap_node_ptr.h>
+#include <cv_heap/cv_heap_used.h>
+#include <cv_heap/cv_heap_node.h>
+#include <cv_heap/cv_heap_node_ptr.h>
 #include <cv_debug.h>
 #include <cv_sizeof.h>
 #include <cv_list_it.h>
