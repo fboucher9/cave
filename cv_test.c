@@ -24,6 +24,7 @@
 #include <cv_algo/cv_stack_test.h>
 #include <cv_file/cv_file.h>
 #include <cv_misc/cv_convert_test.h>
+#include <cv_clock_test.h>
 
 static void cv_test_job(
     void * p_context)
@@ -253,8 +254,6 @@ static cv_bool cv_test_main_cb(
     }
     cv_print_nl();
 
-    cv_test_dump_options(p_options);
-
     {
         cv_options_it o_options_it = cv_options_it_initializer_;
         cv_options_it_init(&o_options_it, p_options);
@@ -278,6 +277,8 @@ static cv_bool cv_test_main_cb(
                         's', 't', 'a', 'c', 'k' };
                     static char const g_convert_text[] = {
                         'c', 'o', 'n', 'v', 'e', 'r', 't' };
+                    static char const g_clock_text[] = {
+                        'c', 'l', 'o', 'c', 'k' };
 
                     static cv_array const g_number_array =
                         cv_array_text_initializer_(g_number_text);
@@ -295,6 +296,8 @@ static cv_bool cv_test_main_cb(
                         cv_array_text_initializer_(g_stack_text);
                     static cv_array const g_convert_array =
                         cv_array_text_initializer_(g_convert_text);
+                    static cv_array const g_clock_array =
+                        cv_array_text_initializer_(g_clock_text);
 
                     if (cv_array_compare(&o_string, &g_number_array)) {
                         cv_test_number();
@@ -312,6 +315,8 @@ static cv_bool cv_test_main_cb(
                         cv_stack_test();
                     } else if (cv_array_compare(&o_string, &g_convert_array)) {
                         cv_convert_test();
+                    } else if (cv_array_compare(&o_string, &g_clock_array)) {
+                        cv_clock_test();
                     } else {
                         /* invalid command */
                         static unsigned char const a_text[] = {
@@ -319,6 +324,7 @@ static cv_bool cv_test_main_cb(
                             'c', 'o', 'm', 'm', 'a', 'n', 'd' };
                         cv_print_vector(a_text, cv_sizeof_(a_text));
                         cv_print_nl();
+                        cv_test_dump_options(p_options);
                     }
                 } else {
                     /* missing command */
