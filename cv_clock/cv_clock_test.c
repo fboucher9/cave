@@ -11,6 +11,7 @@
 #include <cv_clock/cv_clock_duration.h>
 #include <cv_test_print.h>
 #include <cv_number_desc.h>
+#include <cv_misc/cv_sizeof.h>
 
 /*
  *
@@ -49,9 +50,14 @@ void cv_clock_test(void) {
             {
                 cv_clock_duration o_max_sleep = cv_clock_duration_initializer_;
                 cv_clock_duration_init(&o_max_sleep);
-                o_max_sleep.o_clock.i_seconds = 1;
+                o_max_sleep.o_clock.i_seconds = 2;
                 o_max_sleep.o_clock.i_fraction = 0;
-                cv_clock_it_next(&o_clock_it, &o_max_sleep);
+                while (cv_clock_it_next(&o_clock_it, &o_max_sleep)) {
+                    static unsigned char const a_msg[] = {
+                        'n', 'e', 'x', 't', '.', '.', '.' };
+                    cv_print_vector(a_msg, cv_sizeof_(a_msg));
+                    cv_print_nl();
+                }
                 cv_clock_duration_cleanup(&o_max_sleep);
             }
             cv_clock_it_cleanup(&o_clock_it);

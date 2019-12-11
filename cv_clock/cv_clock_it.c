@@ -14,7 +14,7 @@
  */
 
 void cv_clock_it_init( cv_clock_it * p_this,
-    cv_clock const * p_target, cv_clock_epoch i_epoch) {
+    cv_clock const * p_target, int i_epoch) {
     cv_debug_assert_(p_this && p_target, cv_debug_code_null_ptr);
     cv_debug_construct_(p_this);
     p_this->o_target = *p_target;
@@ -45,17 +45,22 @@ cv_bool cv_clock_it_next( cv_clock_it * p_this,
         if (cv_clock_read(&o_now, p_this->i_epoch)) {
             cv_clock_duration o_duration = cv_clock_duration_initializer_;
             cv_clock_duration_init(&o_duration);
-            if (cv_clock_diff(&p_this->o_target, p_this->i_epoch,
-                &o_now, p_this->i_epoch, &o_duration)) {
+            if (0 <= cv_clock_diff(&p_this->o_target, &o_now, &o_duration)) {
                 cv_clock_duration o_min_sleep =
                     cv_clock_duration_initializer_;
                 cv_clock_duration_init(&o_min_sleep);
                 if (cv_clock_duration_min(&o_duration, p_max_sleep,
                         &o_min_sleep)) {
                     /* Sleep for min duration */
-                    cv_clock_duration_until(&o_min_sleep);
-                    b_result = cv_true;
-                } else {
+                    if (cv_clock_duration_until(&o_min_sleep)) {
+                        /* Verify if reached end */
+                        if (cv_clock_read(&o_now, p_this->i_epoch)) {
+                            if (0 <= cv_clock_diff(&p_this->o_target, &o_now,
+                                    &o_duration)) {
+                                b_result = cv_true;
+                            }
+                        }
+                    }
                 }
                 cv_clock_duration_cleanup(&o_min_sleep);
             }

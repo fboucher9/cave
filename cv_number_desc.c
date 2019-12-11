@@ -32,7 +32,7 @@ cv_number_format const * cv_number_format_hex4(void) {
 cv_number_format const * cv_number_format_hex8(void) {
     static cv_number_format g_format_hex8 = {
         cv_number_flag_hexadecimal,
-        0, 4, 0 };
+        0, 8, 0 };
     return &g_format_hex8;
 }
 

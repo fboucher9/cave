@@ -58,13 +58,23 @@ static void cv_clock_from_linux_timespec( cv_clock * p_this,
 }
 #endif /* #if defined cv_linux_ */
 
+#if defined cv_linux_
+static void cv_clock_to_linux_timespec( cv_clock const * p_this,
+    struct timespec * p_linux_timespec) {
+    cv_ull const ull_fraction = p_this->i_fraction;
+    cv_ull const ull_nsec = ((ull_fraction * 1000000000UL) >> 32);
+    p_linux_timespec->tv_sec = cv_convert_u2l_(p_this->i_seconds);
+    p_linux_timespec->tv_nsec = cv_convert_u2l_(ull_nsec & cv_unsigned_long_max_);
+}
+#endif /* #if defined cv_linux_ */
+
 /*
  *
  */
 
 #if defined cv_linux_
 static cv_bool cv_clock_read_linux( cv_clock * p_this,
-    cv_clock_epoch e_epoch) {
+    int e_epoch) {
     cv_bool b_result = cv_false;
     if (cv_clock_epoch_mono == e_epoch) {
         struct timespec o_linux_timespec;
@@ -87,7 +97,7 @@ static cv_bool cv_clock_read_linux( cv_clock * p_this,
  *
  */
 
-cv_bool cv_clock_read( cv_clock * p_this, cv_clock_epoch e_epoch) {
+cv_bool cv_clock_read( cv_clock * p_this, int e_epoch) {
     cv_bool b_result = cv_false;
 #if defined cv_linux_
     b_result = cv_clock_read_linux(p_this, e_epoch);
@@ -103,10 +113,42 @@ cv_bool cv_clock_read( cv_clock * p_this, cv_clock_epoch e_epoch) {
  *
  */
 
-cv_bool cv_clock_until( cv_clock const * p_this, cv_clock_epoch e_epoch) {
+#if defined cv_linux_
+static cv_bool cv_clock_until_linux( cv_clock const * p_this,
+    int e_epoch) {
     cv_bool b_result = cv_false;
+    struct timespec o_linux_request;
+    cv_clock_to_linux_timespec(p_this, &o_linux_request);
+    if (cv_clock_epoch_mono == e_epoch) {
+        int const i_linux_result = clock_nanosleep(CLOCK_MONOTONIC,
+            TIMER_ABSTIME, &o_linux_request, NULL);
+        if (0 <= i_linux_result) {
+            b_result = cv_true;
+        }
+    } else if (cv_clock_epoch_duration == e_epoch) {
+        int const i_linux_result = clock_nanosleep(CLOCK_MONOTONIC,
+            0, &o_linux_request, NULL);
+        if (0 <= i_linux_result) {
+            b_result = cv_true;
+        }
+    } else {
+    }
+    return b_result;
+}
+#endif /* #if defined cv_linux_ */
+
+/*
+ *
+ */
+
+cv_bool cv_clock_until( cv_clock const * p_this, int e_epoch) {
+    cv_bool b_result = cv_false;
+#if defined cv_linux_
+    b_result = cv_clock_until_linux(p_this, e_epoch);
+#else /* #if defined cv_linux_ */
     cv_unused_(p_this);
     cv_unused_(e_epoch);
+#endif /* #if defined cv_linux_ */
     return b_result;
 }
 
@@ -115,7 +157,7 @@ cv_bool cv_clock_until( cv_clock const * p_this, cv_clock_epoch e_epoch) {
  */
 
 cv_bool cv_clock_get_info( cv_clock const * p_this,
-    cv_clock_epoch e_epoch, cv_clock_info * r_info) {
+    int e_epoch, cv_clock_info * r_info) {
     cv_bool b_result = cv_false;
     cv_unused_(p_this);
     cv_unused_(e_epoch);
@@ -151,18 +193,23 @@ void cv_clock_set( cv_clock * p_this, cv_ull ll_value) {
  *
  */
 
-cv_bool cv_clock_diff( cv_clock const * p_left, cv_clock_epoch i_left_epoch,
-    cv_clock const * p_right, cv_clock_epoch i_right_epoch,
+int cv_clock_diff( cv_clock const * p_left, cv_clock const * p_right,
     cv_clock_duration * r_duration) {
-    cv_bool b_result = cv_false;
-    if (i_left_epoch == i_right_epoch) {
-        cv_ull const ll_left = cv_clock_get(p_left);
-        cv_ull const ll_right = cv_clock_get(p_right);
+    int i_result = -1;
+    cv_ull const ll_left = cv_clock_get(p_left);
+    cv_ull const ll_right = cv_clock_get(p_right);
+    if (ll_left > ll_right) {
+        i_result = 1;
+    } else if (ll_left == ll_right) {
+        i_result = 0;
+    } else {
+        i_result = -1;
+    }
+    {
         cv_ull const ll_diff = ll_left - ll_right;
         cv_clock_set(&r_duration->o_clock, ll_diff);
-        b_result = cv_true;
     }
-    return b_result;
+    return i_result;
 }
 
 /* end-of-file: cv_clock.c */

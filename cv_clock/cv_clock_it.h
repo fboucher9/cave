@@ -25,7 +25,7 @@ struct cv_clock_it {
 #define cv_clock_it_initializer_ { cv_clock_initializer_, 0, {0} }
 
 void cv_clock_it_init( cv_clock_it * p_this,
-    cv_clock const * p_target, cv_clock_epoch i_epoch);
+    cv_clock const * p_target, int i_epoch);
 
 void cv_clock_it_cleanup( cv_clock_it * p_this);
 
