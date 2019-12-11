@@ -7,7 +7,7 @@
  *
  */
 
-#include <cv_clock.h>
+#include <cv_clock/cv_clock.h>
 
 /*
  *

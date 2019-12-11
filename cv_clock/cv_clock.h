@@ -7,8 +7,8 @@
  *
  */
 
-#include <cv_clock_pred.h>
-#include <cv_clock_epoch.h>
+#include <cv_clock/cv_clock_pred.h>
+#include <cv_clock/cv_clock_epoch.h>
 #include <cv_misc/cv_bool.h>
 
 /*

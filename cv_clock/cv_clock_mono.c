@@ -4,7 +4,7 @@
  *
  */
 
-#include <cv_clock_mono.h>
+#include <cv_clock/cv_clock_mono.h>
 #include <cv_debug.h>
 #include <cv_misc/cv_sizeof.h>
 

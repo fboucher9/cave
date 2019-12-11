@@ -4,9 +4,9 @@
  *
  */
 
-#include <cv_clock_test.h>
-#include <cv_clock.h>
-#include <cv_clock_mono.h>
+#include <cv_clock/cv_clock_test.h>
+#include <cv_clock/cv_clock.h>
+#include <cv_clock/cv_clock_mono.h>
 #include <cv_test_print.h>
 #include <cv_number_desc.h>
 
