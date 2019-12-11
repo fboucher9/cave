@@ -47,24 +47,55 @@ void cv_clock_cleanup( cv_clock * p_this) {
  *
  */
 
+unsigned long cv_clock_to_fraction( unsigned long i_count,
+    unsigned long i_freq) {
+    unsigned long i_result = 0ul;
+    if (i_freq) {
+        cv_ull const ull_count = i_count;
+        cv_ull const ull_fraction = ((ull_count << 32u) / i_freq);
+        i_result = (ull_fraction & cv_unsigned_long_max_);
+    }
+    return i_result;
+}
+
+/*
+ *
+ */
+
+unsigned long cv_clock_from_fraction( unsigned long i_fraction,
+    unsigned long i_freq) {
+    unsigned long i_result = 0ul;
+    cv_ull const ull_fraction = i_fraction;
+    cv_ull const ull_count = ((ull_fraction * i_freq) >> 32u);
+    i_result = (ull_count & cv_unsigned_long_max_);
+    return i_result;
+}
+
+/*
+ *
+ */
+
 #if defined cv_linux_
 static void cv_clock_from_linux_timespec( cv_clock * p_this,
     struct timespec const * p_linux_timespec) {
     cv_ull const ull_sec = cv_convert_ll2u_(p_linux_timespec->tv_sec);
-    cv_ull const ull_nsec = cv_convert_ll2u_(p_linux_timespec->tv_nsec);
+    unsigned long const ui_nsec = cv_convert_l2u_(p_linux_timespec->tv_nsec);
     p_this->i_seconds = ull_sec & cv_unsigned_long_max_;
-    p_this->i_fraction = ((ull_nsec << 32u) / 1000000000UL) &
-        cv_unsigned_long_max_;
+    p_this->i_fraction = cv_clock_to_fraction(ui_nsec, 1000000000UL);
 }
 #endif /* #if defined cv_linux_ */
+
+/*
+ *
+ */
 
 #if defined cv_linux_
 static void cv_clock_to_linux_timespec( cv_clock const * p_this,
     struct timespec * p_linux_timespec) {
-    cv_ull const ull_fraction = p_this->i_fraction;
-    cv_ull const ull_nsec = ((ull_fraction * 1000000000UL) >> 32);
+    unsigned long ui_nsec = cv_clock_from_fraction(p_this->i_fraction,
+        1000000000UL);
     p_linux_timespec->tv_sec = cv_convert_u2l_(p_this->i_seconds);
-    p_linux_timespec->tv_nsec = cv_convert_u2l_(ull_nsec & cv_unsigned_long_max_);
+    p_linux_timespec->tv_nsec = cv_convert_u2l_(ui_nsec);
 }
 #endif /* #if defined cv_linux_ */
 
@@ -76,12 +107,22 @@ static void cv_clock_to_linux_timespec( cv_clock const * p_this,
 static cv_bool cv_clock_read_linux( cv_clock * p_this,
     int e_epoch) {
     cv_bool b_result = cv_false;
+    cv_debug_assert_(!!p_this, cv_debug_code_null_ptr);
     if (cv_clock_epoch_mono == e_epoch) {
         struct timespec o_linux_timespec;
         int const i_linux_result = clock_gettime(
             CLOCK_MONOTONIC, &o_linux_timespec);
         if (0 == i_linux_result) {
             cv_clock_from_linux_timespec(p_this, &o_linux_timespec);
+            b_result = cv_true;
+        } else {
+            cv_debug_msg_(cv_debug_code_error);
+        }
+    } else if (cv_clock_epoch_unix == e_epoch) {
+        struct timespec o_linux_timespec;
+        int const i_linux_result = clock_gettime(
+            CLOCK_REALTIME, &o_linux_timespec);
+        if (0 == i_linux_result) {
             b_result = cv_true;
         } else {
             cv_debug_msg_(cv_debug_code_error);
@@ -99,6 +140,7 @@ static cv_bool cv_clock_read_linux( cv_clock * p_this,
 
 cv_bool cv_clock_read( cv_clock * p_this, int e_epoch) {
     cv_bool b_result = cv_false;
+    cv_debug_assert_(!!p_this, cv_debug_code_null_ptr);
 #if defined cv_linux_
     b_result = cv_clock_read_linux(p_this, e_epoch);
 #else /* #if defined cv_linux_ */
@@ -121,6 +163,12 @@ static cv_bool cv_clock_until_linux( cv_clock const * p_this,
     cv_clock_to_linux_timespec(p_this, &o_linux_request);
     if (cv_clock_epoch_mono == e_epoch) {
         int const i_linux_result = clock_nanosleep(CLOCK_MONOTONIC,
+            TIMER_ABSTIME, &o_linux_request, NULL);
+        if (0 <= i_linux_result) {
+            b_result = cv_true;
+        }
+    } else if (cv_clock_epoch_unix == e_epoch) {
+        int const i_linux_result = clock_nanosleep(CLOCK_REALTIME,
             TIMER_ABSTIME, &o_linux_request, NULL);
         if (0 <= i_linux_result) {
             b_result = cv_true;
@@ -198,16 +246,14 @@ int cv_clock_diff( cv_clock const * p_left, cv_clock const * p_right,
     int i_result = -1;
     cv_ull const ll_left = cv_clock_get(p_left);
     cv_ull const ll_right = cv_clock_get(p_right);
+    cv_ull const ll_diff = ll_left - ll_right;
+    cv_clock_set(&r_duration->o_clock, ll_diff);
     if (ll_left > ll_right) {
         i_result = 1;
     } else if (ll_left == ll_right) {
         i_result = 0;
     } else {
         i_result = -1;
-    }
-    {
-        cv_ull const ll_diff = ll_left - ll_right;
-        cv_clock_set(&r_duration->o_clock, ll_diff);
     }
     return i_result;
 }

@@ -73,4 +73,14 @@ cv_bool cv_clock_mono_info(
     return b_result;
 }
 
+/*
+ *
+ */
+
+int cv_clock_mono_diff( cv_clock_mono const * p_left,
+    cv_clock_mono const * p_right, cv_clock_duration * r_duration) {
+    cv_debug_assert_(p_left && p_right && r_duration, cv_debug_code_null_ptr);
+    return cv_clock_diff(&p_left->o_clock, &p_right->o_clock, r_duration);
+}
+
 /* end-of-file: cv_clock_mono.c */

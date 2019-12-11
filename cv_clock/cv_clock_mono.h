@@ -35,6 +35,9 @@ cv_bool cv_clock_mono_info(
     cv_clock_mono const * p_this,
     cv_clock_info * r_info);
 
+int cv_clock_mono_diff( cv_clock_mono const * p_left,
+    cv_clock_mono const * p_right, cv_clock_duration * r_duration);
+
 #endif /* #ifndef cv_clock_mono_h_ */
 
 /* end-of-file: cv_clock_mono.h */
