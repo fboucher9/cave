@@ -60,7 +60,7 @@ cv_bool cv_thread_init(
     cv_debug_assert_(g_thread_loaded, cv_debug_code_not_loaded);
     cv_debug_assert_( p_this && p_thread_desc, cv_debug_code_null_ptr);
     {
-        cv_debug_init_(p_this, cv_sizeof_(*p_this));
+        cv_debug_construct_(p_this);
         cv_memory_zero(p_this, cv_sizeof_(cv_thread));
         {
             cv_thread_desc_ptr o_desc_ptr = cv_ptr_null_;
@@ -90,7 +90,7 @@ cv_bool cv_thread_init(
             }
         }
         if (!b_result) {
-            cv_debug_cleanup_(p_this, cv_sizeof_(*p_this));
+            cv_debug_destruct_(p_this);
         }
     }
     return b_result;
@@ -113,7 +113,7 @@ void cv_thread_cleanup(
         } else {
             cv_debug_msg_(cv_debug_code_error);
         }
-        cv_debug_cleanup_(p_this, cv_sizeof_(*p_this));
+        cv_debug_destruct_(p_this);
     }
 }
 

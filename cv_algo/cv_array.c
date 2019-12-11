@@ -50,7 +50,7 @@ void cv_array_cleanup(
     cv_debug_assert_( !!p_this, cv_debug_code_null_ptr);
     p_this->o_min.pc_void = cv_null_;
     p_this->o_max.pc_void = cv_null_;
-    cv_debug_cleanup_(p_this, cv_sizeof_(*p_this));
+    cv_debug_destruct_(p_this);
 }
 
 void cv_array_init_range(
@@ -59,7 +59,7 @@ void cv_array_init_range(
     void const * p_ref_max)
 {
     cv_debug_assert_( !!p_this, cv_debug_code_null_ptr);
-    cv_debug_init_(p_this, cv_sizeof_(*p_this));
+    cv_debug_construct_(p_this);
     p_this->o_min.pc_void = p_ref_min;
     p_this->o_max.pc_void = p_ref_max;
 }

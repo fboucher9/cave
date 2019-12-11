@@ -9,14 +9,14 @@
 void cv_file_init(
     cv_file * p_this) {
     cv_debug_assert_(!!p_this, cv_debug_code_null_ptr);
-    cv_debug_init_(p_this, cv_sizeof_(*p_this));
+    cv_debug_construct_(p_this);
     p_this->i_index = -1;
 }
 
 void cv_file_cleanup(
     cv_file * p_this) {
     cv_debug_assert_(!!p_this, cv_debug_code_null_ptr);
-    cv_debug_cleanup_(p_this, cv_sizeof_(*p_this));
+    cv_debug_destruct_(p_this);
 }
 
 long cv_file_read(

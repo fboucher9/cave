@@ -24,7 +24,7 @@ void cv_stack_init(
     cv_stack * p_this)
 {
     cv_debug_assert_( !!p_this, cv_debug_code_null_ptr);
-    cv_debug_init_( p_this, cv_sizeof_(*p_this));
+    cv_debug_construct_(p_this);
     p_this->o_next.p_void = cv_null_;
 }
 
@@ -39,7 +39,7 @@ void cv_stack_cleanup(
     if (p_this->o_next.p_void) {
         cv_debug_msg_(cv_debug_code_not_empty);
     }
-    cv_debug_cleanup_( p_this, cv_sizeof_(*p_this));
+    cv_debug_destruct_(p_this);
 }
 
 /*

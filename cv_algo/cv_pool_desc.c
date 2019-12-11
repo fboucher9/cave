@@ -13,7 +13,7 @@
  */
 
 void cv_pool_desc_init( cv_pool_desc * p_desc) {
-    cv_debug_init_(p_desc, cv_sizeof_(*p_desc));
+    cv_debug_construct_(p_desc);
     p_desc->i_len = 0;
 }
 
@@ -22,7 +22,7 @@ void cv_pool_desc_init( cv_pool_desc * p_desc) {
  */
 
 void cv_pool_desc_cleanup( cv_pool_desc * p_desc) {
-    cv_debug_cleanup_(p_desc, cv_sizeof_(*p_desc));
+    cv_debug_destruct_(p_desc);
 }
 
 /* end-of-file: cv_pool_desc.c */

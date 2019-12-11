@@ -12,7 +12,7 @@ void cv_list_node_init(
     cv_list_node * p_this)
 {
     cv_debug_assert_( !!p_this, cv_debug_code_null_ptr);
-    cv_debug_init_(p_this, cv_sizeof_(*p_this));
+    cv_debug_construct_(p_this);
     p_this->o_next.p_node = p_this;
     p_this->o_prev.p_node = p_this;
 }
@@ -24,7 +24,7 @@ void cv_list_node_cleanup(
     cv_list_join(p_this, p_this);
     p_this->o_next.p_node = cv_null_;
     p_this->o_prev.p_node = cv_null_;
-    cv_debug_cleanup_(p_this, cv_sizeof_(*p_this));
+    cv_debug_destruct_(p_this);
 }
 
 void cv_list_join(

@@ -17,7 +17,7 @@ void cv_list_it_init(
     cv_list_root const * p_list)
 {
     cv_debug_assert_( p_this && p_list, cv_debug_code_null_ptr);
-    cv_debug_init_(p_this, cv_sizeof_(*p_this));
+    cv_debug_construct_(p_this);
     p_this->o_cur.pc_node = & p_list->o_node;
     p_this->o_list.pc_node = & p_list->o_node;
 }
@@ -28,7 +28,7 @@ void cv_list_it_cleanup(
     cv_debug_assert_( !!p_this, cv_debug_code_null_ptr);
     p_this->o_cur.p_void = cv_null_;
     p_this->o_list.p_void = cv_null_;
-    cv_debug_cleanup_(p_this, cv_sizeof_(*p_this));
+    cv_debug_destruct_(p_this);
 }
 
 cv_bool cv_list_it_first(

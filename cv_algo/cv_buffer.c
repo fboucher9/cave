@@ -42,12 +42,12 @@ cv_bool cv_buffer_init(
     cv_debug_assert_( !!p_this, cv_debug_code_null_ptr);
     cv_debug_assert_( i_length > 0, cv_debug_code_invalid_length);
     {
-        cv_debug_init_(p_this, cv_sizeof_(*p_this));
+        cv_debug_construct_(p_this);
         if (cv_buffer_realloc(p_this, i_length)) {
             b_result = cv_true;
         }
         if (!b_result) {
-            cv_debug_cleanup_(p_this, cv_sizeof_(*p_this));
+            cv_debug_destruct_(p_this);
         }
     }
     return b_result;
@@ -66,7 +66,7 @@ void cv_buffer_cleanup(
         cv_heap_free(p_this->o_array.o_min.p_void);
     }
     cv_array_cleanup(&p_this->o_array);
-    cv_debug_cleanup_(p_this, cv_sizeof_(*p_this));
+    cv_debug_destruct_(p_this);
 } /* _cleanup() */
 
 /* Get length of buffer */

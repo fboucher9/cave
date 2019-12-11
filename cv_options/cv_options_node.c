@@ -63,7 +63,7 @@ static cv_bool cv_options_node_init(
 {
     cv_bool b_result = cv_false;
     cv_debug_assert_( p_this && p_desc, cv_debug_code_null_ptr);
-    cv_debug_init_(p_this, cv_sizeof_(*p_this));
+    cv_debug_construct_(p_this);
     cv_options_node_init_node(p_this);
     if (cv_options_node_init_buffer(p_this, &p_desc->o_array)) {
         b_result = cv_true;
@@ -76,7 +76,7 @@ static cv_bool cv_options_node_init(
     }
     if (!b_result) {
         cv_options_node_cleanup_node(p_this);
-        cv_debug_cleanup_(p_this, cv_sizeof_(*p_this));
+        cv_debug_destruct_(p_this);
     }
     return b_result;
 }
@@ -87,7 +87,7 @@ static void cv_options_node_cleanup(
     cv_debug_assert_( !!p_this, cv_debug_code_null_ptr);
     cv_options_node_cleanup_buf0(p_this);
     cv_options_node_cleanup_node(p_this);
-    cv_debug_cleanup_(p_this, cv_sizeof_(*p_this));
+    cv_debug_destruct_(p_this);
 }
 
 cv_options_node * cv_options_node_create(

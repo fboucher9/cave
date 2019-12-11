@@ -12,7 +12,7 @@ static void cv_heap_node_init( cv_heap_node * p_this,
     cv_array const * p_payload)
 {
     cv_debug_assert_( !!p_this, cv_debug_code_null_ptr);
-    cv_debug_init_(p_this, cv_sizeof_(cv_heap_node));
+    cv_debug_construct_(p_this);
     cv_list_node_init(&p_this->o_node);
     cv_array_init_ref(&p_this->o_payload, p_payload);
 }
@@ -21,7 +21,7 @@ void cv_heap_node_cleanup( cv_heap_node * p_this) {
     cv_debug_assert_( !!p_this, cv_debug_code_null_ptr);
     cv_array_cleanup(&p_this->o_payload);
     cv_list_node_cleanup(&p_this->o_node);
-    cv_debug_cleanup_(p_this, cv_sizeof_(*p_this));
+    cv_debug_destruct_(p_this);
 }
 
 cv_heap_node * cv_heap_node_create(

@@ -22,7 +22,7 @@ cv_bool cv_file_disk_init(
 {
     cv_bool b_result = cv_false;
     cv_debug_assert_(p_this && p_desc, cv_debug_code_null_ptr);
-    cv_debug_init_(p_this, cv_sizeof_(*p_this));
+    cv_debug_construct_(p_this);
     cv_file_init(&p_this->o_file);
     /* Setup call to open */
     {
@@ -48,7 +48,7 @@ cv_bool cv_file_disk_init(
     }
     if (!b_result) {
         cv_file_cleanup(&p_this->o_file);
-        cv_debug_cleanup_(p_this, cv_sizeof_(*p_this));
+        cv_debug_destruct_(p_this);
     }
     return b_result;
 }
@@ -63,7 +63,7 @@ void cv_file_disk_cleanup(
         p_this->o_file.i_index = -1;
     }
     cv_file_cleanup(&p_this->o_file);
-    cv_debug_cleanup_(p_this, cv_sizeof_(*p_this));
+    cv_debug_destruct_(p_this);
 }
 
 /* end-of-file: cv_file_disk.c */

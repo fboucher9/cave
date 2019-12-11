@@ -28,7 +28,7 @@
 
 void cv_clock_init( cv_clock * p_this) {
     cv_debug_assert_(!!p_this, cv_debug_code_null_ptr);
-    cv_debug_init_(p_this, cv_sizeof_(*p_this));
+    cv_debug_construct_(p_this);
     p_this->i_seconds = 0;
     p_this->i_fraction = 0;
 }
@@ -40,7 +40,7 @@ void cv_clock_init( cv_clock * p_this) {
 void cv_clock_cleanup( cv_clock * p_this) {
     cv_debug_assert_(!!p_this, cv_debug_code_null_ptr);
     /* ... */
-    cv_debug_cleanup_(p_this, cv_sizeof_(*p_this));
+    cv_debug_destruct_(p_this);
 }
 
 /*

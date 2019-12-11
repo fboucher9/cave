@@ -23,14 +23,14 @@ cv_bool cv_heap_pool_init(
     cv_bool b_result = cv_false;
     cv_debug_assert_(!!p_this, cv_debug_code_null_ptr);
     cv_debug_assert_(i_len > 0, cv_debug_code_invalid_length);
-    cv_debug_init_(p_this, cv_sizeof_(*p_this));
+    cv_debug_construct_(p_this);
     if (cv_mutex_init(&p_this->o_mutex)) {
         cv_list_root_init(&p_this->o_free_list);
         p_this->i_len = i_len;
         b_result = cv_true;
     }
     if (!b_result) {
-        cv_debug_cleanup_(p_this, cv_sizeof_(*p_this));
+        cv_debug_destruct_(p_this);
     }
     return b_result;
 }
@@ -58,7 +58,7 @@ void cv_heap_pool_cleanup(
         &p_this->o_free_list.o_node);
     cv_list_root_cleanup(&p_this->o_free_list);
     cv_mutex_cleanup(&p_this->o_mutex);
-    cv_debug_cleanup_(p_this, cv_sizeof_(*p_this));
+    cv_debug_destruct_(p_this);
 }
 
 static cv_heap_node * cv_heap_pool_lookup_cb(
