@@ -49,8 +49,10 @@ cv_test_srcs = \
     cv_number_desc.c \
     cv_number_enc.c \
     cv_clock/cv_clock.c \
+    cv_clock/cv_clock_it.c \
     cv_clock/cv_clock_mono.c \
     cv_clock/cv_clock_test.c \
+    cv_clock/cv_clock_duration.c \
     cv_algo/cv_list_node.c \
     cv_algo/cv_list_it.c \
     cv_algo/cv_list_root.c \

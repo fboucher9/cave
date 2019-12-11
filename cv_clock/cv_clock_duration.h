@@ -7,7 +7,7 @@
  *
  */
 
-#include <cv_clock.h>
+#include <cv_clock/cv_clock.h>
 
 /*
  *
@@ -19,18 +19,17 @@ struct cv_clock_duration {
 
 #define cv_clock_duration_initializer_ { cv_clock_initializer_ }
 
-void cv_clock_duration_init(
-    cv_clock_duration * p_this);
+void cv_clock_duration_init( cv_clock_duration * p_this);
 
-void cv_clock_duration_cleanup(
-    cv_clock_duration * p_this);
+void cv_clock_duration_cleanup( cv_clock_duration * p_this);
 
-cv_bool cv_clock_duration_until(
-    cv_clock_duration const * p_this);
+cv_bool cv_clock_duration_until( cv_clock_duration const * p_this);
 
-cv_bool cv_clock_duration_info(
-    cv_clock_duration const * p_this,
+cv_bool cv_clock_duration_info( cv_clock_duration const * p_this,
     cv_clock_info * r_info);
+
+cv_bool cv_clock_duration_min( cv_clock_duration const * p_left,
+    cv_clock_duration const * p_right, cv_clock_duration * r_result);
 
 #endif /* #ifndef cv_clock_duration_h_ */
 

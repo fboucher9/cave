@@ -9,6 +9,8 @@
 
 #include <cv_misc/cv_bool.h>
 
+#include <cv_misc/cv_sizeof.h>
+
 #if defined cv_debug_
 
 typedef cv_array const * cv_debug_code;
@@ -57,12 +59,18 @@ void xx_debug_init(
 #define cv_debug_init_(p_buf, i_buf_len) \
     xx_debug_init((p_buf), (i_buf_len))
 
+#define cv_debug_construct_(p_this) \
+    xx_debug_init((p_this), cv_sizeof_(*(p_this)))
+
 void xx_debug_cleanup(
     void * p_buf,
     long i_buf_len);
 
 #define cv_debug_cleanup_(p_buf, i_buf_len) \
     xx_debug_cleanup((p_buf), (i_buf_len))
+
+#define cv_debug_destruct_(p_this) \
+    xx_debug_cleanup((p_this), cv_sizeof_(*(p_this)))
 
 #else /* #if defined cv_debug_ */
 
