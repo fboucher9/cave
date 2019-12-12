@@ -8,12 +8,14 @@
 #include <cv_debug.h>
 #include <cv_misc/cv_limits.h>
 #include <cv_misc/cv_types.h>
+#include <cv_clock/cv_clock_tool.h>
 
 /*
  *
  */
 
 static cv_ull cv_clock_duration_get( cv_clock_duration const * p_this) {
+    cv_debug_assert_(!!p_this, cv_debug_code_null_ptr);
     return cv_clock_get(&p_this->o_clock);
 }
 
@@ -23,6 +25,7 @@ static cv_ull cv_clock_duration_get( cv_clock_duration const * p_this) {
 
 static void cv_clock_duration_set( cv_clock_duration * p_this,
     cv_ull ll_value) {
+    cv_debug_assert_(!!p_this, cv_debug_code_null_ptr);
     cv_clock_set(&p_this->o_clock, ll_value);
 }
 

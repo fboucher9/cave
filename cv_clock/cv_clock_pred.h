@@ -34,6 +34,15 @@ typedef struct cv_clock_mono_it cv_clock_mono_it;
 /* Predefine */
 typedef struct cv_clock_unix_it cv_clock_unix_it;
 
+/* Predefine */
+typedef struct cv_clock_msec cv_clock_msec;
+
+/* Predefine */
+typedef struct cv_clock_usec cv_clock_usec;
+
+/* Predefine */
+typedef struct cv_clock_nsec cv_clock_nsec;
+
 #endif /* #ifndef cv_clock_pred_h_ */
 
 /* end-of-file: cv_clock_pred.h */

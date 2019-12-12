@@ -8,6 +8,7 @@
 #include <cv_misc/cv_unused.h>
 #include <cv_debug.h>
 #include <cv_clock/cv_clock_duration.h>
+#include <cv_clock/cv_clock_tool.h>
 
 /*
  *

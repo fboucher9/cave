@@ -6,6 +6,7 @@
 
 #include <cv_clock/cv_clock.h>
 #include <cv_clock/cv_clock_duration.h>
+#include <cv_clock/cv_clock_tool.h>
 #include <cv_debug.h>
 #include <cv_misc/cv_sizeof.h>
 #include <cv_misc/cv_cast.h>
@@ -41,34 +42,6 @@ void cv_clock_cleanup( cv_clock * p_this) {
     cv_debug_assert_(!!p_this, cv_debug_code_null_ptr);
     /* ... */
     cv_debug_destruct_(p_this);
-}
-
-/*
- *
- */
-
-unsigned long cv_clock_to_fraction( unsigned long i_count,
-    unsigned long i_freq) {
-    unsigned long i_result = 0ul;
-    if (i_freq) {
-        cv_ull const ull_count = i_count;
-        cv_ull const ull_fraction = ((ull_count << 32u) / i_freq);
-        i_result = (ull_fraction & cv_unsigned_long_max_);
-    }
-    return i_result;
-}
-
-/*
- *
- */
-
-unsigned long cv_clock_from_fraction( unsigned long i_fraction,
-    unsigned long i_freq) {
-    unsigned long i_result = 0ul;
-    cv_ull const ull_fraction = i_fraction;
-    cv_ull const ull_count = ((ull_fraction * i_freq) >> 32u);
-    i_result = (ull_count & cv_unsigned_long_max_);
-    return i_result;
 }
 
 /*
@@ -211,51 +184,6 @@ cv_bool cv_clock_get_info( cv_clock const * p_this,
     cv_unused_(e_epoch);
     cv_unused_(r_info);
     return b_result;
-}
-
-/*
- *
- */
-
-cv_ull cv_clock_get( cv_clock const * p_this) {
-    cv_ull ll_result = 0;
-    cv_debug_assert_(!!p_this, cv_debug_code_null_ptr);
-    ll_result = p_this->i_seconds;
-    ll_result <<= 32u;
-    ll_result += p_this->i_fraction;
-    return ll_result;
-}
-
-/*
- *
- */
-
-void cv_clock_set( cv_clock * p_this, cv_ull ll_value) {
-    cv_ull ll_seconds = (ll_value >> 32u);
-    cv_debug_assert_(!!p_this, cv_debug_code_null_ptr);
-    p_this->i_seconds = (ll_seconds & cv_unsigned_long_max_);
-    p_this->i_fraction = (ll_value & cv_unsigned_long_max_);
-}
-
-/*
- *
- */
-
-int cv_clock_diff( cv_clock const * p_left, cv_clock const * p_right,
-    cv_clock_duration * r_duration) {
-    int i_result = -1;
-    cv_ull const ll_left = cv_clock_get(p_left);
-    cv_ull const ll_right = cv_clock_get(p_right);
-    cv_ull const ll_diff = ll_left - ll_right;
-    cv_clock_set(&r_duration->o_clock, ll_diff);
-    if (ll_left > ll_right) {
-        i_result = 1;
-    } else if (ll_left == ll_right) {
-        i_result = 0;
-    } else {
-        i_result = -1;
-    }
-    return i_result;
 }
 
 /* end-of-file: cv_clock.c */
