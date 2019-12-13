@@ -25,6 +25,7 @@ void cv_pool_desc_init( cv_pool_desc * p_desc) {
  */
 
 void cv_pool_desc_cleanup( cv_pool_desc * p_desc) {
+    cv_unused_(p_desc);
     cv_debug_destruct_(p_desc);
     cv_debug_class_cleanup_(g_class);
 }
