@@ -257,3 +257,16 @@ $(cv_obj_path)/test.bare.exe : $(cv_src_path)/makefile $(cv_test_srcs_abs)
 .PHONY : clean
 clean :
 	rm -rf $(cv_obj_path)/*
+
+.PHONY : doc
+doc : cv-template
+
+.PHONY : cv-template
+cv-template : $(cv_obj_path)/cv_template.pdf
+
+$(cv_obj_path)/cv_template.pdf : $(cv_src_path)/makefile $(cv_src_path)/cv_doc/cv_template.tex
+	@echo latex $(notdir $@)
+	$(cv_verbose)mkdir -p $(dir $@)
+	$(cv_verbose)pdflatex -output-directory=$(cv_obj_path) -halt-on-error $(cv_src_path)/cv_doc/cv_template.tex >/dev/null
+	$(cv_verbose)pdflatex -output-directory=$(cv_obj_path) -halt-on-error $(cv_src_path)/cv_doc/cv_template.tex >/dev/null
+
