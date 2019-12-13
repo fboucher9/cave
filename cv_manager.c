@@ -14,6 +14,7 @@ Description: None.
 #include <cv_thread/cv_thread_plugin.h>
 #include <cv_options/cv_options_plugin.h>
 #include <cv_file/cv_file_std.h>
+#include <cv_clock/cv_clock_plugin.h>
 #include <cv_debug.h>
 #include <cv_misc/cv_null.h>
 
@@ -28,8 +29,13 @@ cv_bool cv_manager_load(void)
         if (cv_mutex_load()) {
             if (cv_heap_load()) {
                 if (cv_thread_load()) {
-                    if (cv_options_load()) {
-                        b_result = cv_true;
+                    if (cv_clock_load()) {
+                        if (cv_options_load()) {
+                            b_result = cv_true;
+                        }
+                        if (!b_result) {
+                            cv_clock_unload();
+                        }
                     }
                     if (!b_result) {
                         cv_thread_unload();
@@ -53,6 +59,7 @@ cv_bool cv_manager_load(void)
 void cv_manager_unload(void)
 {
     cv_options_unload();
+    cv_clock_unload();
     cv_thread_unload();
     cv_heap_unload();
     cv_mutex_unload();

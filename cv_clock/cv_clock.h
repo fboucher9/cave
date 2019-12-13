@@ -31,7 +31,7 @@ cv_bool cv_clock_read( cv_clock * p_this, int e_epoch);
 
 cv_bool cv_clock_until( cv_clock const * p_this, int e_epoch);
 
-cv_bool cv_clock_get_info( cv_clock const * p_this,
+cv_bool cv_clock_query( cv_clock const * p_this,
     int e_epoch, cv_clock_info * r_info);
 
 #endif /* #ifndef cv_clock_h_ */

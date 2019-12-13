@@ -68,7 +68,7 @@ cv_bool cv_clock_mono_info(
     cv_clock_info * r_info) {
     cv_bool b_result = cv_false;
     cv_debug_assert_(p_this && r_info, cv_debug_code_null_ptr);
-    if (cv_clock_get_info(&p_this->o_clock, cv_clock_epoch_mono, r_info)) {
+    if (cv_clock_query(&p_this->o_clock, cv_clock_epoch_mono, r_info)) {
         b_result = cv_true;
     }
     return b_result;

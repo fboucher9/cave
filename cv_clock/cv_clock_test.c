@@ -9,6 +9,7 @@
 #include <cv_clock/cv_clock_mono.h>
 #include <cv_clock/cv_clock_it.h>
 #include <cv_clock/cv_clock_duration.h>
+#include <cv_clock/cv_clock_tool.h>
 #include <cv_test_print.h>
 #include <cv_number_desc.h>
 #include <cv_misc/cv_sizeof.h>
@@ -21,10 +22,40 @@ void cv_clock_test(void) {
     {
         cv_clock o_value = cv_clock_initializer_;
         if (cv_clock_read(&o_value, cv_clock_epoch_mono)) {
-            cv_print_unsigned(o_value.i_seconds, cv_number_format_hex8());
+            cv_print_unsigned(o_value.i_seconds, cv_number_format_dec());
             cv_print_char('.');
             cv_print_unsigned(o_value.i_fraction, cv_number_format_hex8());
             cv_print_nl();
+            {
+                cv_clock_msec o_value_msec = cv_clock_msec_initializer_;
+                cv_clock_get_msec(&o_value, &o_value_msec);
+                cv_print_unsigned(o_value_msec.i_seconds,
+                    cv_number_format_dec());
+                cv_print_char('.');
+                cv_print_unsigned(o_value_msec.i_mseconds,
+                    cv_number_format_dec());
+                cv_print_nl();
+            }
+            {
+                cv_clock_usec o_value_usec = cv_clock_usec_initializer_;
+                cv_clock_get_usec(&o_value, &o_value_usec);
+                cv_print_unsigned(o_value_usec.i_seconds,
+                    cv_number_format_dec());
+                cv_print_char('.');
+                cv_print_unsigned(o_value_usec.i_useconds,
+                    cv_number_format_dec());
+                cv_print_nl();
+            }
+            {
+                cv_clock_nsec o_value_nsec = cv_clock_nsec_initializer_;
+                cv_clock_get_nsec(&o_value, &o_value_nsec);
+                cv_print_unsigned(o_value_nsec.i_seconds,
+                    cv_number_format_dec());
+                cv_print_char('.');
+                cv_print_unsigned(o_value_nsec.i_nseconds,
+                    cv_number_format_dec());
+                cv_print_nl();
+            }
         } else {
         }
     }

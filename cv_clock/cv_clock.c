@@ -7,9 +7,8 @@
 #include <cv_clock/cv_clock.h>
 #include <cv_clock/cv_clock_duration.h>
 #include <cv_clock/cv_clock_tool.h>
+#include <cv_clock/cv_clock_plugin.h>
 #include <cv_debug.h>
-#include <cv_misc/cv_sizeof.h>
-#include <cv_misc/cv_cast.h>
 #include <cv_misc/cv_types.h>
 #include <cv_misc/cv_limits.h>
 #include <cv_misc/cv_convert.h>
@@ -22,6 +21,23 @@
 #if defined cv_linux_
 #include <unistd.h>
 #endif /* #if defined cv_linux_ */
+
+/*
+ *
+ */
+
+cv_bool cv_clock_load(void) {
+    cv_bool b_result = cv_false;
+    b_result = cv_true;
+    return b_result;
+}
+
+/*
+ *
+ */
+
+void cv_clock_unload(void) {
+}
 
 /*
  *
@@ -177,7 +193,7 @@ cv_bool cv_clock_until( cv_clock const * p_this, int e_epoch) {
  *
  */
 
-cv_bool cv_clock_get_info( cv_clock const * p_this,
+cv_bool cv_clock_query( cv_clock const * p_this,
     int e_epoch, cv_clock_info * r_info) {
     cv_bool b_result = cv_false;
     cv_unused_(p_this);

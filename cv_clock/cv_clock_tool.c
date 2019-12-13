@@ -125,4 +125,34 @@ int cv_clock_diff( cv_clock const * p_left, cv_clock const * p_right,
     return i_result;
 }
 
+/*
+ *
+ */
+
+cv_bool cv_clock_convert(
+    cv_clock const * p_src_clock,
+    int i_src_epoch,
+    cv_clock * p_dst_clock,
+    int i_dst_epoch) {
+    cv_bool b_result = cv_false;
+    cv_debug_assert_(p_src_clock && p_dst_clock, cv_debug_code_null_ptr);
+    if (i_src_epoch == i_dst_epoch) {
+        *p_dst_clock = *p_src_clock;
+        b_result = cv_true;
+    } else {
+        if (i_src_epoch == cv_clock_epoch_mono) {
+            if (i_dst_epoch == cv_clock_epoch_unix) {
+                cv_ull const ll_src = cv_clock_get(p_src_clock);
+                cv_clock_set(p_dst_clock, ll_src + 1234567ul);
+            }
+        } else if (i_src_epoch == cv_clock_epoch_unix) {
+            if (i_dst_epoch == cv_clock_epoch_mono) {
+                cv_ull const ll_src = cv_clock_get(p_src_clock);
+                cv_clock_set(p_dst_clock, ll_src - 1234567ul);
+            }
+        }
+    }
+    return b_result;
+}
+
 /* end-of-file: cv_clock_tool.c */
