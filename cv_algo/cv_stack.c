@@ -15,6 +15,7 @@
 
 #include <cv_misc/cv_null.h>
 
+cv_debug_class_decl_(g_class);
 
 /*
  *  Function: cv_stack_init()
@@ -25,6 +26,7 @@ void cv_stack_init(
 {
     cv_debug_assert_( !!p_this, cv_debug_code_null_ptr);
     cv_debug_construct_(p_this);
+    cv_debug_class_init_(g_class);
     p_this->o_next.p_void = cv_null_;
 }
 
@@ -40,6 +42,7 @@ void cv_stack_cleanup(
         cv_debug_msg_(cv_debug_code_not_empty);
     }
     cv_debug_destruct_(p_this);
+    cv_debug_class_cleanup_(g_class);
 }
 
 /*

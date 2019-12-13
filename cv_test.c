@@ -242,111 +242,107 @@ static void cv_test_stdin(void)
     cv_print_nl();
 }
 
-static cv_bool cv_test_main_cb(
-    cv_options const * p_options)
-{
+static void cv_test_hello(void) {
     {
         /* welcome. */
         static unsigned char const a_text[] = {
-            'w', 'e', 'l', 'c', 'o', 'm', 'e', '.'
-        };
+            'h', 'e', 'l', 'l', 'o', '!' };
         cv_print_vector(a_text, cv_sizeof_(a_text));
+        cv_print_nl();
     }
-    cv_print_nl();
+}
 
+static cv_bool cv_test_main_cb(
+    cv_options const * p_options)
+{
+    cv_options_it o_options_it = cv_options_it_initializer_;
+    cv_options_it_init(&o_options_it, p_options);
     {
-        cv_options_it o_options_it = cv_options_it_initializer_;
-        cv_options_it_init(&o_options_it, p_options);
-        {
-            cv_array o_string = cv_array_null_;
+        cv_array o_string = cv_array_null_;
+        if (cv_options_it_next(&o_options_it, &o_string)) {
             if (cv_options_it_next(&o_options_it, &o_string)) {
-                if (cv_options_it_next(&o_options_it, &o_string)) {
-                    static char const g_number_text[] = {
-                        'n', 'u', 'm', 'b', 'e', 'r' };
-                    static char const g_heap_large_text[] = {
-                        'h', 'e', 'a', 'p', '.', 'l', 'a', 'r', 'g', 'e' };
-                    static char const g_debug_text[] = {
-                        'd', 'e', 'b', 'u', 'g' };
-                    static char const g_thread_text[] = {
-                        't', 'h', 'r', 'e', 'a', 'd' };
-                    static char const g_stdin_text[] = {
-                        's', 't', 'd', 'i', 'n' };
-                    static char const g_file_text[] = {
-                        'f', 'i', 'l', 'e' };
-                    static char const g_stack_text[] = {
-                        's', 't', 'a', 'c', 'k' };
-                    static char const g_convert_text[] = {
-                        'c', 'o', 'n', 'v', 'e', 'r', 't' };
-                    static char const g_clock_text[] = {
-                        'c', 'l', 'o', 'c', 'k' };
+                static char const g_number_text[] = {
+                    'n', 'u', 'm', 'b', 'e', 'r' };
+                static char const g_heap_large_text[] = {
+                    'h', 'e', 'a', 'p', '.', 'l', 'a', 'r', 'g', 'e' };
+                static char const g_debug_text[] = {
+                    'd', 'e', 'b', 'u', 'g' };
+                static char const g_thread_text[] = {
+                    't', 'h', 'r', 'e', 'a', 'd' };
+                static char const g_stdin_text[] = {
+                    's', 't', 'd', 'i', 'n' };
+                static char const g_file_text[] = {
+                    'f', 'i', 'l', 'e' };
+                static char const g_stack_text[] = {
+                    's', 't', 'a', 'c', 'k' };
+                static char const g_convert_text[] = {
+                    'c', 'o', 'n', 'v', 'e', 'r', 't' };
+                static char const g_clock_text[] = {
+                    'c', 'l', 'o', 'c', 'k' };
+                static char const g_hello_text[] = {
+                    'h', 'e', 'l', 'l', 'o' };
 
-                    static cv_array const g_number_array =
-                        cv_array_text_initializer_(g_number_text);
-                    static cv_array const g_heap_large_array =
-                        cv_array_text_initializer_(g_heap_large_text);
-                    static cv_array const g_debug_array =
-                        cv_array_text_initializer_(g_debug_text);
-                    static cv_array const g_thread_array =
-                        cv_array_text_initializer_(g_thread_text);
-                    static cv_array const g_stdin_array =
-                        cv_array_text_initializer_(g_stdin_text);
-                    static cv_array const g_file_array =
-                        cv_array_text_initializer_(g_file_text);
-                    static cv_array const g_stack_array =
-                        cv_array_text_initializer_(g_stack_text);
-                    static cv_array const g_convert_array =
-                        cv_array_text_initializer_(g_convert_text);
-                    static cv_array const g_clock_array =
-                        cv_array_text_initializer_(g_clock_text);
+                static cv_array const g_number_array =
+                    cv_array_text_initializer_(g_number_text);
+                static cv_array const g_heap_large_array =
+                    cv_array_text_initializer_(g_heap_large_text);
+                static cv_array const g_debug_array =
+                    cv_array_text_initializer_(g_debug_text);
+                static cv_array const g_thread_array =
+                    cv_array_text_initializer_(g_thread_text);
+                static cv_array const g_stdin_array =
+                    cv_array_text_initializer_(g_stdin_text);
+                static cv_array const g_file_array =
+                    cv_array_text_initializer_(g_file_text);
+                static cv_array const g_stack_array =
+                    cv_array_text_initializer_(g_stack_text);
+                static cv_array const g_convert_array =
+                    cv_array_text_initializer_(g_convert_text);
+                static cv_array const g_clock_array =
+                    cv_array_text_initializer_(g_clock_text);
+                static cv_array const g_hello_array =
+                    cv_array_text_initializer_(g_hello_text);
 
-                    if (cv_array_compare(&o_string, &g_number_array)) {
-                        cv_test_number();
-                    } else if (cv_array_compare(&o_string, &g_heap_large_array)) {
-                        cv_test_heap_large();
-                    } else if (cv_array_compare(&o_string, &g_debug_array)) {
-                        cv_test_debug();
-                    } else if (cv_array_compare(&o_string, &g_thread_array)) {
-                        cv_test_thread();
-                    } else if (cv_array_compare(&o_string, &g_stdin_array)) {
-                        cv_test_stdin();
-                    } else if (cv_array_compare(&o_string, &g_file_array)) {
-                        cv_file_test();
-                    } else if (cv_array_compare(&o_string, &g_stack_array)) {
-                        cv_stack_test();
-                    } else if (cv_array_compare(&o_string, &g_convert_array)) {
-                        cv_convert_test();
-                    } else if (cv_array_compare(&o_string, &g_clock_array)) {
-                        cv_clock_test();
-                    } else {
-                        /* invalid command */
-                        static unsigned char const a_text[] = {
-                            'i', 'n', 'v', 'a', 'l', 'i', 'd', ' ',
-                            'c', 'o', 'm', 'm', 'a', 'n', 'd' };
-                        cv_print_vector(a_text, cv_sizeof_(a_text));
-                        cv_print_nl();
-                        cv_test_dump_options(p_options);
-                    }
+                if (cv_array_compare(&o_string, &g_number_array)) {
+                    cv_test_number();
+                } else if (cv_array_compare(&o_string, &g_heap_large_array)) {
+                    cv_test_heap_large();
+                } else if (cv_array_compare(&o_string, &g_debug_array)) {
+                    cv_test_debug();
+                } else if (cv_array_compare(&o_string, &g_thread_array)) {
+                    cv_test_thread();
+                } else if (cv_array_compare(&o_string, &g_stdin_array)) {
+                    cv_test_stdin();
+                } else if (cv_array_compare(&o_string, &g_file_array)) {
+                    cv_file_test();
+                } else if (cv_array_compare(&o_string, &g_stack_array)) {
+                    cv_stack_test();
+                } else if (cv_array_compare(&o_string, &g_convert_array)) {
+                    cv_convert_test();
+                } else if (cv_array_compare(&o_string, &g_clock_array)) {
+                    cv_clock_test();
+                } else if (cv_array_compare(&o_string, &g_hello_array)) {
+                    cv_test_hello();
                 } else {
-                    /* missing command */
+                    /* invalid command */
                     static unsigned char const a_text[] = {
-                        'm', 'i', 's', 's', 'i', 'n', 'g', ' ',
+                        'i', 'n', 'v', 'a', 'l', 'i', 'd', ' ',
                         'c', 'o', 'm', 'm', 'a', 'n', 'd' };
                     cv_print_vector(a_text, cv_sizeof_(a_text));
                     cv_print_nl();
+                    cv_test_dump_options(p_options);
                 }
+            } else {
+                /* missing command */
+                static unsigned char const a_text[] = {
+                    'm', 'i', 's', 's', 'i', 'n', 'g', ' ',
+                    'c', 'o', 'm', 'm', 'a', 'n', 'd' };
+                cv_print_vector(a_text, cv_sizeof_(a_text));
+                cv_print_nl();
             }
         }
-        cv_options_it_cleanup(&o_options_it);
     }
-
-    {
-        /* goodbye. */
-        static unsigned char const a_text[] = {
-            'g', 'o', 'o', 'd', 'b', 'y', 'e', '.' };
-        cv_print_vector(a_text, cv_sizeof_(a_text));
-    }
-    cv_print_nl();
-
+    cv_options_it_cleanup(&o_options_it);
     return cv_true;
 }
 

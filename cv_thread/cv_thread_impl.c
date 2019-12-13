@@ -10,6 +10,8 @@
 #include <cv_heap/cv_heap.h>
 #include <cv_thread/cv_thread_plugin.h>
 
+cv_debug_class_decl_(g_class);
+
 static cv_bool g_thread_loaded = cv_false;
 
 cv_bool cv_thread_load(void) {
@@ -61,6 +63,7 @@ cv_bool cv_thread_init(
     cv_debug_assert_( p_this && p_thread_desc, cv_debug_code_null_ptr);
     {
         cv_debug_construct_(p_this);
+        cv_debug_class_init_(g_class);
         cv_memory_zero(p_this, cv_sizeof_(cv_thread));
         {
             cv_thread_desc_ptr o_desc_ptr = cv_ptr_null_;
@@ -91,6 +94,7 @@ cv_bool cv_thread_init(
         }
         if (!b_result) {
             cv_debug_destruct_(p_this);
+            cv_debug_class_cleanup_(g_class);
         }
     }
     return b_result;
@@ -114,6 +118,7 @@ void cv_thread_cleanup(
             cv_debug_msg_(cv_debug_code_error);
         }
         cv_debug_destruct_(p_this);
+        cv_debug_class_cleanup_(g_class);
     }
 }
 

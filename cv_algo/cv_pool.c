@@ -9,6 +9,8 @@
 #include <cv_debug.h>
 #include <cv_misc/cv_sizeof.h>
 
+cv_debug_class_decl_(g_class);
+
 /*
  *
  */
@@ -16,6 +18,7 @@
 void cv_pool_init( cv_pool * p_this, cv_pool_desc const * p_desc) {
     cv_debug_assert_(p_this && p_desc, cv_debug_code_null_ptr);
     cv_debug_construct_(p_this);
+    cv_debug_class_init_(g_class);
     cv_pool_desc_init(&p_this->o_desc);
     p_this->o_desc = *p_desc;
     cv_stack_init(&p_this->o_free_list);
@@ -35,6 +38,7 @@ void cv_pool_cleanup( cv_pool * p_this) {
     cv_stack_cleanup(&p_this->o_free_list);
     cv_pool_desc_cleanup(&p_this->o_desc);
     cv_debug_destruct_(p_this);
+    cv_debug_class_cleanup_(g_class);
 }
 
 /*

@@ -11,6 +11,8 @@
 
 #include <cv_misc/cv_sizeof.h>
 
+#include <cv_algo/cv_array_tool.h>
+
 #if defined cv_debug_
 
 typedef cv_array const * cv_debug_code;
@@ -26,6 +28,7 @@ extern cv_debug_code cv_debug_code_not_empty;
 extern cv_debug_code cv_debug_code_not_implemented;
 extern cv_debug_code cv_debug_code_invalid_parameter;
 extern cv_debug_code cv_debug_code_dont_panic;
+extern cv_debug_code cv_debug_code_leak;
 
 void xx_debug_msg(
     cv_debug_code e_code,
@@ -72,6 +75,34 @@ void xx_debug_cleanup(
 #define cv_debug_destruct_(p_this) \
     xx_debug_cleanup((p_this), cv_sizeof_(*(p_this)))
 
+typedef struct cv_debug_class cv_debug_class;
+
+struct cv_debug_class {
+    cv_debug_class * p_next;
+    char const * p_file;
+    /* -- */
+    long i_init_count;
+    long i_line;
+};
+
+#define cv_debug_class_initializer_ \
+{ cv_null_, cv_null_, 0, 0 }
+
+#define cv_debug_class_decl_(g_class) \
+static cv_debug_class g_class = cv_debug_class_initializer_
+
+void xx_debug_class_init( cv_debug_class * p_debug_class,
+    char const * p_file, int i_line);
+
+#define cv_debug_class_init_(g_class) \
+    xx_debug_class_init(&(g_class), __FILE__, __LINE__)
+
+void xx_debug_class_cleanup( cv_debug_class * p_debug_class,
+    char const * p_file, int i_line);
+
+#define cv_debug_class_cleanup_(g_class) \
+    xx_debug_class_cleanup(&(g_class), __FILE__, __LINE__)
+
 #else /* #if defined cv_debug_ */
 
 #define cv_debug_msg_(p_msg0)
@@ -83,6 +114,17 @@ void xx_debug_cleanup(
 #define cv_debug_init_(p_buf, i_buf_len)
 
 #define cv_debug_cleanup_(p_buf, i_buf_len)
+
+#define cv_debug_construct_(p_this)
+
+#define cv_debug_destruct_(p_this)
+
+#define cv_debug_class_decl_(g_class) \
+typedef void g_class
+
+#define cv_debug_class_init_(g_class)
+
+#define cv_debug_class_cleanup_(g_class)
 
 #endif /* #if defined cv_debug_ */
 

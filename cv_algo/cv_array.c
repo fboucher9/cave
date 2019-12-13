@@ -10,6 +10,8 @@
 
 #include <cv_misc/cv_limits.h>
 
+cv_debug_class_decl_(g_class);
+
 void cv_array_init(
     cv_array * p_this)
 {
@@ -51,6 +53,7 @@ void cv_array_cleanup(
     p_this->o_min.pc_void = cv_null_;
     p_this->o_max.pc_void = cv_null_;
     cv_debug_destruct_(p_this);
+    cv_debug_class_cleanup_(g_class);
 }
 
 void cv_array_init_range(
@@ -60,6 +63,7 @@ void cv_array_init_range(
 {
     cv_debug_assert_( !!p_this, cv_debug_code_null_ptr);
     cv_debug_construct_(p_this);
+    cv_debug_class_init_(g_class);
     p_this->o_min.pc_void = p_ref_min;
     p_this->o_max.pc_void = p_ref_max;
 }

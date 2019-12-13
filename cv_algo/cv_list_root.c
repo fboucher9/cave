@@ -16,6 +16,8 @@ cv_node_it modules.
 
 #include <cv_misc/cv_sizeof.h>
 
+cv_debug_class_decl_(g_class);
+
 /*
 
 Function: cv_list_root_init()
@@ -35,6 +37,7 @@ void cv_list_root_init(
 {
     cv_debug_assert_( !!p_this, cv_debug_code_null_ptr);
     cv_debug_construct_(p_this);
+    cv_debug_class_init_(g_class);
     cv_list_node_init( &p_this->o_node);
 }
 
@@ -63,6 +66,7 @@ void cv_list_root_cleanup(
     }
     cv_list_node_cleanup( &p_this->o_node);
     cv_debug_destruct_(p_this);
+    cv_debug_class_cleanup_(g_class);
 }
 
 /* end-of-file: cv_list_root.c */

@@ -14,9 +14,7 @@
 
 #include <cv_misc/cv_cast.h>
 
-#if defined cv_debug_verbose_
-#include <execinfo.h>
-#endif /* #if defined cv_debug_verbose_ */
+#include <cv_misc/cv_limits.h>
 
 static unsigned char const a_debug_code_null_ptr[] = {
     'n', 'u', 'l', 'l', ' ', 'p', 't', 'r' };
@@ -63,6 +61,10 @@ static unsigned char const a_debug_code_dont_panic[] = {
     'd', 'o', 'n', 't', ' ', 'p', 'a', 'n', 'i', 'c'
 };
 
+static unsigned char const a_debug_code_leak[] = {
+    'l', 'e', 'a', 'k'
+};
+
 static cv_array const g_debug_code_null_ptr =
 cv_array_text_initializer_(a_debug_code_null_ptr);
 
@@ -99,6 +101,9 @@ cv_array_text_initializer_(a_debug_code_invalid_parameter);
 static cv_array const g_debug_code_dont_panic =
 cv_array_text_initializer_(a_debug_code_dont_panic);
 
+static cv_array const g_debug_code_leak =
+cv_array_text_initializer_(a_debug_code_leak);
+
 cv_debug_code cv_debug_code_null_ptr = &g_debug_code_null_ptr;
 
 cv_debug_code cv_debug_code_error = &g_debug_code_error;
@@ -123,61 +128,101 @@ cv_debug_code cv_debug_code_invalid_parameter = &g_debug_code_invalid_parameter;
 
 cv_debug_code cv_debug_code_dont_panic = &g_debug_code_dont_panic;
 
-void xx_debug_msg(
-    cv_debug_code e_code,
-    char const * p_file,
-    int i_line)
-{
-    cv_runtime_printf("*** ouch! %s (%s:%d) ***\n",
-        e_code->o_min.pc_char,
-        p_file,
-        i_line);
+cv_debug_code cv_debug_code_leak = &g_debug_code_leak;
+
+static void cv_runtime_print_ld(int fd, long i_signed) {
+    static unsigned char const a_digit[] = {
+        '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' };
+    if (0 == i_signed) {
+        cv_runtime_write(fd, a_digit, 1);
+    } else {
+        unsigned long i_unsigned = 0;
+        if (i_signed < 0) {
+            static unsigned char const a_sign[] = { '-' };
+            i_unsigned = cv_cast_(unsigned long, -i_signed);
+            cv_runtime_write(fd, a_sign, cv_sizeof_(a_sign));
+        } else {
+            i_unsigned = cv_cast_(unsigned long, i_signed);
+        }
+        {
+            unsigned long i_shift = 1000000000ul;
+            while (i_shift) {
+                if (i_unsigned >= i_shift) {
+                    cv_runtime_write(fd, a_digit + ((i_unsigned/i_shift)%10ul), 1);
+                }
+                i_shift /= 10ul;
+            }
+        }
+    }
 }
 
-void xx_debug_assert(
-    cv_bool b_expr,
-    cv_debug_code e_code,
-    char const * p_file,
-    int i_line)
-{
+void xx_debug_msg( cv_debug_code e_code, char const * p_file, int i_line) {
+    if (e_code) {
+        static unsigned char const a_prefix[] = {
+            '*', '*', '*', ' ' };
+        static unsigned char const a_colon[] = {
+            ':' };
+        static unsigned char const a_suffix[] = {
+            ' ', '*', '*', '*', '\n' };
+        long const i_array_len = cv_array_len(e_code) & cv_signed_int_max_;
+        int const i_stderr = cv_runtime_stderr_fileno();
+        cv_runtime_write(i_stderr, a_prefix, cv_sizeof_(a_prefix));
+        cv_runtime_write(i_stderr, p_file,
+            cv_memory_find_0(p_file, cv_signed_short_max_));
+        cv_runtime_write(i_stderr, a_colon, cv_sizeof_(a_colon));
+        cv_runtime_print_ld(i_stderr, i_line);
+        cv_runtime_write(i_stderr, a_colon, cv_sizeof_(a_colon));
+        cv_runtime_write(i_stderr, e_code->o_min.pc_void, i_array_len);
+        cv_runtime_write(i_stderr, a_suffix, cv_sizeof_(a_suffix));
+    }
+}
+
+void xx_debug_assert( cv_bool b_expr, cv_debug_code e_code, char const * p_file,
+    int i_line) {
     if (!b_expr) {
         xx_debug_break(e_code, p_file, i_line);
     }
 }
 
-void xx_debug_break(
-    cv_debug_code e_code,
-    char const * p_file,
-    int i_line)
-{
-    cv_runtime_printf("*** assert! %s (%s:%d) ***\n",
-        e_code->o_min.pc_char,
-        p_file,
-        i_line);
+void xx_debug_break( cv_debug_code e_code, char const * p_file, int i_line) {
+    if (e_code) {
+        xx_debug_msg(e_code, p_file, i_line);
+        cv_runtime_exit(42);
+    }
 }
 
 static long g_init_count = 0;
 
 #if defined cv_debug_verbose_
-static void cv_debug_verbose_trace(
-    char const * p_name_0)
-{
-    cv_runtime_printf("%s: count=%ld\n",
-        p_name_0,
-        g_init_count);
-    {
-        void * a_stack[8u];
-        backtrace(a_stack, 8);
-        backtrace_symbols_fd(a_stack, 8, 1);
-    }
-    cv_runtime_printf("^^^^^^^^\n");
+static unsigned char const g_debug_init_text[] = {
+    'c', 'v', '_', 'd', 'e', 'b', 'u', 'g', '_', 'i', 'n', 'i', 't' };
+static unsigned char const g_debug_cleanup_text[] = {
+    'c', 'v', '_', 'd', 'e', 'b', 'u', 'g', '_', 'c', 'l', 'e', 'a', 'n', 'u',
+    'p' };
+static cv_array const g_debug_init_array =
+cv_array_text_initializer_(g_debug_init_text);
+static cv_array const g_debug_cleanup_array =
+cv_array_text_initializer_(g_debug_cleanup_text);
+
+static void cv_debug_verbose_trace( cv_array const * p_name_0) {
+    static unsigned char const a_middle[] = {
+        ':', ' ' };
+    static unsigned char const a_suffix[] = {
+        '\n' };
+    int i_stdout = cv_runtime_stdout_fileno();
+    cv_runtime_write(i_stdout, p_name_0->o_min.pc_void,
+        cv_array_len(p_name_0));
+    cv_runtime_write(i_stdout, a_middle, cv_sizeof_(a_middle));
+    cv_runtime_print_ld(i_stdout, g_init_count);
+    cv_runtime_write(i_stdout, a_suffix, cv_sizeof_(a_suffix));
 }
 #endif /* #if defined cv_debug_verbose_ */
 
-void xx_debug_init(
-    void * p_buf,
-    long i_buf_len)
-{
+static cv_debug_class g_debug_class_footer = cv_debug_class_initializer_;
+
+static cv_debug_class * g_debug_class_list = &g_debug_class_footer;
+
+void xx_debug_init( void * p_buf, long i_buf_len) {
     if (p_buf && i_buf_len) {
         cv_array o_array = cv_array_null_;
         o_array.o_min.p_void = p_buf;
@@ -188,24 +233,59 @@ void xx_debug_init(
     }
     g_init_count ++;
 #if defined cv_debug_verbose_
-    cv_debug_verbose_trace("cv_debug_init");
+    cv_debug_verbose_trace(&g_debug_init_array);
 #endif /* #if defined cv_debug_verbose_ */
 }
 
-void xx_debug_cleanup(
-    void * p_buf,
-    long i_buf_len)
-{
+void xx_debug_cleanup( void * p_buf, long i_buf_len) {
     g_init_count --;
 #if defined cv_debug_verbose_
-    cv_debug_verbose_trace("cv_debug_cleanup");
+    cv_debug_verbose_trace(&g_debug_cleanup_array);
 #endif
     if (p_buf && i_buf_len) {
         cv_runtime_memset(p_buf, 0xcd, i_buf_len);
     } else {
-        cv_runtime_printf("*** %ld cleanup remain ***\n",
-            g_init_count);
+        /* Print report of class leaks */
+        {
+            cv_debug_class * p_iterator = g_debug_class_list;
+            while (p_iterator && p_iterator != &g_debug_class_footer) {
+                if (p_iterator->i_init_count) {
+                    cv_runtime_printf("%s:%ld:%ld\n",
+                        p_iterator->p_file,
+                        p_iterator->i_line,
+                        p_iterator->i_init_count);
+                }
+                p_iterator = p_iterator->p_next;
+            }
+        }
+        cv_debug_assert_(0 == g_init_count, cv_debug_code_leak);
     }
+}
+
+static void xx_debug_class_register( cv_debug_class * p_class,
+    char const * p_file, int i_line) {
+    if (p_class->p_next) {
+    } else {
+        /* lock */
+        p_class->p_file = p_file;
+        p_class->i_line = i_line;
+        p_class->p_next = g_debug_class_list;
+        g_debug_class_list = p_class;
+        /* unlock */
+    }
+
+}
+
+void xx_debug_class_init( cv_debug_class * p_class,
+    char const * p_file, int i_line) {
+    xx_debug_class_register(p_class, p_file, i_line);
+    p_class->i_init_count ++;
+}
+
+void xx_debug_class_cleanup( cv_debug_class * p_class,
+    char const * p_file, int i_line) {
+    xx_debug_class_register(p_class, p_file, i_line);
+    p_class->i_init_count --;
 }
 
 #endif /* #if defined cv_debug_ */
