@@ -15,9 +15,7 @@
 #include <cv_misc/cv_convert.h>
 #include <cv_algo/cv_array_ptr.h>
 
-void * cv_runtime_malloc(
-    long i_buffer_len)
-{
+void * cv_runtime_malloc( long i_buffer_len) {
     void * p_buffer = cv_null_;
 #if defined cv_have_libc_
     unsigned long const u_buffer_len = cv_convert_l2u_(i_buffer_len);
@@ -29,9 +27,7 @@ void * cv_runtime_malloc(
     return p_buffer;
 }
 
-void cv_runtime_free(
-    void * p_buffer)
-{
+void cv_runtime_free( void * p_buffer) {
 #if defined cv_have_libc_
     free(p_buffer);
 #else /* #if defined cv_have_libc_ */
@@ -39,26 +35,19 @@ void cv_runtime_free(
 #endif /* #if defined cv_have_libc_ */
 }
 
-void cv_runtime_printf(
-    char const * p_format0,
-    ...)
-{
+void cv_runtime_printf( char const * p_format0, ...) {
 #if defined cv_have_libc_
     va_list o_arg_list;
     va_start(o_arg_list, p_format0);
-    vfprintf(stdout, p_format0, o_arg_list);
-    fflush(stdout);
+    vfprintf(stderr, p_format0, o_arg_list);
+    fflush(stderr);
     va_end(o_arg_list);
 #else /* #if defined cv_have_libc_ */
     cv_unused_(p_format0);
 #endif /* #if defined cv_have_libc_ */
 }
 
-void cv_runtime_memset(
-    void * p_buf,
-    unsigned char c_value,
-    long i_buf_len)
-{
+void cv_runtime_memset( void * p_buf, unsigned char c_value, long i_buf_len) {
 #if defined cv_have_libc_
     unsigned long const u_buf_len = cv_convert_l2u_(i_buf_len);
     size_t const i_memset_len = u_buf_len;
@@ -76,11 +65,7 @@ void cv_runtime_memset(
 #endif /* #if defined cv_have_libc_ */
 }
 
-void cv_runtime_memcpy(
-    void * p_dst,
-    void const * p_src,
-    long i_copy_len)
-{
+void cv_runtime_memcpy( void * p_dst, void const * p_src, long i_copy_len) {
 #if defined cv_have_libc_
     unsigned long int const u_copy_len = cv_convert_l2u_(i_copy_len);
     size_t const i_memcpy_len = u_copy_len;
@@ -100,11 +85,8 @@ void cv_runtime_memcpy(
 #endif /* #if defined cv_have_libc_ */
 }
 
-void const * cv_runtime_memchr(
-    void const * p_src,
-    unsigned char c_value,
-    long i_src_len)
-{
+void const * cv_runtime_memchr( void const * p_src, unsigned char c_value,
+    long i_src_len) {
     void const * p_memchr_result = cv_null_;
 #if defined cv_have_libc_
     unsigned long int const u_src_len = cv_convert_l2u_(i_src_len);
@@ -129,11 +111,8 @@ void const * cv_runtime_memchr(
     return p_memchr_result;
 }
 
-int cv_runtime_memcmp(
-    void const * p_left,
-    void const * p_right,
-    long i_len)
-{
+int cv_runtime_memcmp( void const * p_left, void const * p_right,
+    long i_len) {
     int i_memcmp_result = -1;
 #if defined cv_have_libc_
     unsigned long int const u_len = cv_convert_l2u_(i_len);
@@ -244,14 +223,28 @@ long cv_runtime_write( int i_file_index, void const * p_buffer,
     long i_result = -1;
 #if defined cv_linux_
     i_result = cv_linux_write(i_file_index, p_buffer, i_buffer_length);
-#elif defined cv_windows_
+#else /* #if defined cv_linux_ */
+#if defined cv_windows_
     i_result = cv_windows_write(i_file_index, p_buffer, i_buffer_length);
 #else /* #if defined cv_linux_ */
     cv_unused_(i_file_index);
     cv_unused_(p_buffer);
     cv_unused_(i_buffer_length);
+#endif /* #if defined cv_windows_ */
 #endif /* #if defined cv_linux_ */
     return i_result;
+}
+
+void cv_runtime_exit( int i_exit_code) {
+    if (i_exit_code) {
+#if defined cv_linux_
+        cv_linux_exit(i_exit_code);
+#else /* #if defined cv_linux_ */
+#if defined cv_have_libc_
+        exit(i_exit_code);
+#endif /* #if defined cv_have_libc_ */
+#endif /* #if defined cv_linux_ */
+    }
 }
 
 /* end-of-file: cv_runtime.c */
