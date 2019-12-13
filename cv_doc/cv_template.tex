@@ -1,0 +1,128 @@
+\title{CAVE Project \\
+Code Template}
+\author{\large Felix Boucher \\
+    \texttt{fboucher9@gmail.com}}
+\documentclass[12pt]{article}
+\usepackage{times}
+\usepackage{listings}
+\usepackage{xcolor}
+\lstset{language=C++, basicstyle=\footnotesize\ttfamily}
+\begin{document}
+\maketitle
+\begin{abstract}
+
+Illustrate coding style of CAVE project via annotated code samples.  All of
+the modules within the project have a common style selected with a specific
+intention.  The annotations provide insight to the style choices.
+
+\end{abstract}
+
+\section{Introduction}
+
+\section{Source Code}
+
+\subsection{Interface}
+
+\begin{lstlisting}[caption={cv\_demo.h}]
+/* See LICENSE for license details */
+
+#ifndef cv_demo_h_
+#define cv_demo_h_
+
+/*
+ *  Module: cv_demo.h
+ *
+ *  Description: Sample header.
+ */
+
+#include <cv_demo_pred.h>
+
+/*
+ *  Structure: cv_demo
+ *
+ *  Description: Sample demo object.
+ */
+
+struct cv_demo {
+    char const * pc_text0;
+    /* -- */
+    int i_number;
+    int i_padding[1u];
+};
+
+#define cv_demo_initializer_ \
+{ cv_null_, 0, { 0 } }
+
+void cv_demo_report( cv_demo const * p_this );
+
+#endif /* #ifndef cv_demo_h_ */
+
+/* end-of-file: cv_demo.h */
+\end{lstlisting}
+
+\subsubsection{Remarks}
+
+\begin{itemize}
+
+\item The first line is a reference to the license file found in root folder
+    of the project.
+
+\item Header files have an include guard.  Each file must have a unique name
+    so that the include guard macro is also unique.  The include guard is
+    a preprocessor macro so the name must end with an underscore.
+
+\item After the include guard is the module comment block.  The comment block
+    must minimally have a brief description of the module.
+
+\item After the module comment block and before any definitions are the include
+    statements.  Try to include the minimal amount of headers.  Try to include
+    predefinitions if possible instead of including an interface.  Try to
+    avoid including any standard header files, or any OS-specific header
+    files.
+
+\item Definition of structure has a comment block with a brief description.
+    Fields are grouped by type.  In this particular case the base alignment
+    of the structure in pointer so the \texttt{pc\_text0} member may be
+        alone.  The \texttt{i\_number} field requires padding since an
+        \texttt{int} may be smaller than a pointer.
+
+\item Functions may be grouped together after the structures or placed near
+    the corresponding structure.  No need to comment the functions from
+        the header, they will be commented from the implementation.
+
+\item The last line is a comment that marks the end of the file.  This is
+    useful when printing, or for viewing source code from an environment that
+        does not show the file name.  For example, cat of file in a terminal.
+
+\end{itemize}
+
+\subsection{Implementation}
+
+\begin{lstlisting}[caption={cv\_demo.c}]
+/* See LICENSE for license details */
+
+/*
+ *  Module: cv_demo.c
+ *
+ *  Description Sample source file.
+ */
+
+#include <cv_demo.h>
+#include <stdio.h>
+
+/*
+ *  Function: cv_demo_report
+ *
+ *  Description: Print report to standard output.
+ */
+
+void cv_demo_report( cv_demo const * p_this) {
+    printf("%s:%d\n", p_this->pc_text0, p_this->i_number);
+}
+
+/* end-of-file: cv_demo.c */
+\end{lstlisting}
+
+\lstlistoflistings
+
+\end{document}
