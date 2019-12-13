@@ -55,11 +55,14 @@ static cv_array const * report_suffix(void) {
  */
 
 static void cv_heap_print_leak_report(cv_heap_used * p_this) {
-    cv_file const * const p_std_err = cv_file_std_err();
-    cv_file_print_array(p_std_err, report_prefix());
-    cv_file_print_signed(p_std_err, p_this->i_count, cv_number_format_dec());
-    cv_file_print_array(p_std_err, report_suffix());
-    cv_file_print_nl(p_std_err);
+    if (p_this->i_count) {
+        cv_file const * const p_std_err = cv_file_std_err();
+        cv_file_print_array(p_std_err, report_prefix());
+        cv_file_print_signed(p_std_err, p_this->i_count, cv_number_format_dec());
+        cv_file_print_array(p_std_err, report_suffix());
+        cv_file_print_nl(p_std_err);
+    }
+    cv_debug_assert_(0 == p_this->i_count, cv_debug_code_leak);
 }
 
 /*
