@@ -33,6 +33,8 @@ int cv_linux_open_append(
 int cv_linux_close(
     int i_file_index);
 
+void cv_linux_exit(int i_exit_code);
+
 #endif /* #if defined cv_linux_ */
 
 #endif /* #ifndef cv_linux_h_ */
