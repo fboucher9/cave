@@ -1,14 +1,12 @@
 \title{CAVE Project \\
 Code Template}
-\author{\large Felix Boucher \\
-    \texttt{fboucher9@gmail.com}}
-\documentclass[12pt]{article}
-\usepackage{times}
-\usepackage{listings}
-\usepackage{xcolor}
-\lstset{language=C++, basicstyle=\footnotesize\ttfamily}
+
+\input{cv_doc/cv_common.tex}
+
 \begin{document}
+
 \maketitle
+
 \begin{abstract}
 
 Illustrate coding style of CAVE project via annotated code samples.  All of
@@ -16,6 +14,10 @@ the modules within the project have a common style selected with a specific
 intention.  The annotations provide insight to the style choices.
 
 \end{abstract}
+
+\tableofcontents
+
+\lstlistoflistings
 
 \section{Introduction}
 
@@ -64,17 +66,50 @@ void cv_demo_report( cv_demo const * p_this );
 
 \begin{itemize}
 
-\item The first line is a reference to the license file found in root folder
+\item \emph{License}
+
+\begin{lstlisting}
+/* See LICENSE for license details */
+\end{lstlisting}
+
+    The first line is a reference to the license file found in root folder
     of the project.
 
-\item Header files have an include guard.  Each file must have a unique name
+\item \emph{Include guard}
+
+\begin{lstlisting}
+#ifndef cv_demo_h_
+#define cv_demo_h_
+...
+#endif /* #ifndef cv_demo_h_ */
+\end{lstlisting}
+
+    Header files have an include guard.  Each file must have a unique name
     so that the include guard macro is also unique.  The include guard is
     a preprocessor macro so the name must end with an underscore.
 
-\item After the include guard is the module comment block.  The comment block
-    must minimally have a brief description of the module.
+\item \emph{Module comment block}
 
-\item After the module comment block and before any definitions are the include
+\begin{lstlisting}
+/*
+ *  Module: cv_demo.h
+ *
+ *  Description: Sample header.
+ */
+\end{lstlisting}
+
+    After the include guard is the module comment block.  The comment block
+    must minimally have a brief description of the module.  Leave an empty line
+    before and after the comment block so that the editor recognizes the block
+    as a paragraph.
+
+\item \emph{Includes}
+
+\begin{lstlisting}
+#include <cv_demo_pred.h>
+\end{lstlisting}
+
+    After the module comment block and before any definitions are the include
     statements.  Try to include the minimal amount of headers.  Try to include
     predefinitions if possible instead of including an interface.  Try to
     avoid including any standard header files, or any OS-specific header
@@ -122,7 +157,5 @@ void cv_demo_report( cv_demo const * p_this) {
 
 /* end-of-file: cv_demo.c */
 \end{lstlisting}
-
-\lstlistoflistings
 
 \end{document}

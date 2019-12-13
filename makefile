@@ -264,6 +264,8 @@ doc : cv-template
 .PHONY : cv-template
 cv-template : $(cv_obj_path)/cv_template.pdf
 
+$(cv_obj_path)/cv_template.pdf : $(cv_src_path)/cv_doc/cv_common.tex
+
 $(cv_obj_path)/cv_template.pdf : $(cv_src_path)/makefile $(cv_src_path)/cv_doc/cv_template.tex
 	@echo latex $(notdir $@)
 	$(cv_verbose)mkdir -p $(dir $@)
