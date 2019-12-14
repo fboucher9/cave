@@ -8,6 +8,7 @@
  */
 
 #include <cv_trace/cv_trace_pred.h>
+#include <cv_trace/cv_trace_stats.h>
 #include <cv_misc/cv_null.h>
 
 /*
@@ -46,14 +47,17 @@ struct cv_trace_node {
     /* -- */
     unsigned char i_level;
     unsigned char uc_padding[7u];
+    /* -- */
+    cv_trace_stats o_trace_stats;
 };
 
 #define cv_trace_node_initializer_(level, text) \
-{ cv_null_, (text), (level), {0} }
+{ cv_null_, (text), (level), {0}, cv_trace_stats_initializer_ }
 
-void cv_trace_node_dispatch(
-    cv_trace_node * p_trace_node,
+void cv_trace_node_dispatch( cv_trace_node * p_trace_node,
     unsigned char i_type);
+
+void cv_trace_node_profile_report(void);
 
 #endif /* #ifndef cv_trace_node_h_ */
 

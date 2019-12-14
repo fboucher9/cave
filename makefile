@@ -72,6 +72,9 @@ cv_test_srcs = \
     cv_file/cv_file_poll.c \
     cv_file/cv_file_print.c \
     cv_file/cv_file_test.c \
+    cv_trace/cv_trace_node.c \
+    cv_trace/cv_trace_func.c \
+    cv_trace/cv_trace_func0.c \
     cv_runtime.c \
     cv_linux.c \
     cv_windows.c \

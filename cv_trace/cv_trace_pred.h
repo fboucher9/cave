@@ -3,11 +3,13 @@
 #ifndef cv_trace_pred_h_
 #define cv_trace_pred_h_
 
-#define cv_trace_levels_ 0
+#define cv_trace_levels_ 1
 
 /*
  *
  */
+
+typedef struct cv_trace_stats cv_trace_stats;
 
 typedef struct cv_trace_node cv_trace_node;
 

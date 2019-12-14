@@ -9,6 +9,7 @@
 
 #include <cv_trace/cv_trace_pred.h>
 #include <cv_trace/cv_trace_node.h>
+#include <cv_misc/cv_function.h>
 
 #if (cv_trace_levels_ > 0)
 
