@@ -15,6 +15,7 @@
 #include <cv_misc/cv_convert.h>
 #include <cv_algo/cv_array_ptr.h>
 #include <cv_misc/cv_sizeof.h>
+#include <cv_misc/cv_limits.h>
 
 void * cv_runtime_malloc( long i_buffer_len) {
     void * p_buffer = cv_null_;
@@ -27,7 +28,7 @@ void * cv_runtime_malloc( long i_buffer_len) {
 #endif /* #if defined cv_have_libc_ */
     return p_buffer;
 }
-
+ 
 void cv_runtime_free( void * p_buffer) {
 #if defined cv_have_libc_
     free(p_buffer);
@@ -45,10 +46,10 @@ void cv_runtime_print_ld(int fd, long i_signed) {
         unsigned long i_unsigned = 0;
         if (i_signed < 0) {
             static unsigned char const a_sign[] = { '-' };
-            i_unsigned = cv_cast_(unsigned long, -i_signed);
+            i_unsigned = (-i_signed & cv_signed_long_max_);
             cv_runtime_write(fd, a_sign, cv_sizeof_(a_sign));
         } else {
-            i_unsigned = cv_cast_(unsigned long, i_signed);
+            i_unsigned = (i_signed & cv_signed_long_max_);
         }
         {
             unsigned long i_shift = 1000000000ul;

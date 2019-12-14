@@ -25,6 +25,11 @@ void cv_array_it_init_vector(
     void const * p_buf,
     long i_len);
 
+void cv_array_it_init_range(
+    cv_array_it * p_this,
+    void const * p_range_min,
+    void const * p_range_max);
+
 void cv_array_it_cleanup(
     cv_array_it * p_this);
 

@@ -152,7 +152,7 @@ static void cv_debug_class_report_node(cv_debug_class const * p_iterator) {
     if (p_iterator->i_init_count) {
         int const i_stderr = cv_runtime_stderr_fileno();
         long const i_file_len = cv_memory_find_0(p_iterator->p_file,
-            cv_signed_int_max_);
+            cv_signed_short_max_);
         cv_runtime_write(i_stderr, p_iterator->p_file,
             i_file_len);
         cv_runtime_write(i_stderr, a_colon,

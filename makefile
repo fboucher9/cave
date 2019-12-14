@@ -18,6 +18,7 @@ cv_test_srcs = \
     cv_algo/cv_array.c \
     cv_algo/cv_array_it.c \
     cv_algo/cv_array_tool.c \
+    cv_algo/cv_array_print.c \
     cv_algo/cv_buffer.c \
     cv_misc/cv_convert.c \
     cv_misc/cv_convert_test.c \

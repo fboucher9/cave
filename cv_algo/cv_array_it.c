@@ -29,6 +29,15 @@ void cv_array_it_init_vector(
     cv_array_init_vector(&p_this->o_array, p_buf, i_len);
 }
 
+void cv_array_it_init_range(
+    cv_array_it * p_this,
+    void const * p_range_min,
+    void const * p_range_max) {
+    cv_debug_assert_( !!p_this, cv_debug_code_null_ptr);
+    cv_debug_construct_(g_class, p_this);
+    cv_array_init_range(&p_this->o_array, p_range_min, p_range_max);
+}
+
 void cv_array_it_cleanup(
     cv_array_it * p_this)
 {

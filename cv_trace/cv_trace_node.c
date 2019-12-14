@@ -13,6 +13,8 @@
 #include <cv_clock/cv_clock_mono.h>
 #include <cv_clock/cv_clock_tool.h>
 #include <cv_debug.h>
+#include <cv_algo/cv_array_it.h>
+#include <cv_algo/cv_array_print.h>
 #include <pthread.h>
 
 static cv_trace_node g_trace_footer =
@@ -64,10 +66,10 @@ void cv_trace_node_dispatch( cv_trace_node * p_trace_node,
             cv_clock_msec o_value_msec = cv_clock_msec_initializer_;
             cv_clock_get_msec(&o_value.o_clock, &o_value_msec);
             cv_runtime_print_ld(i_stdout,
-                cv_cast_(long, o_value_msec.i_seconds));
+                (o_value_msec.i_seconds & cv_signed_long_max_));
             cv_runtime_write(i_stdout, a_period, cv_sizeof_(a_period));
             cv_runtime_print_ld(i_stdout,
-                cv_cast_(long, o_value_msec.i_mseconds));
+                (o_value_msec.i_mseconds & cv_signed_long_max_));
             cv_runtime_write(i_stdout, a_colon, cv_sizeof_(a_colon));
         }
     }
@@ -90,12 +92,23 @@ void cv_trace_node_profile_report(void) {
     int const i_stdout = cv_runtime_stdout_fileno();
     cv_trace_node * p_iterator = g_trace_list;
     while (p_iterator && (p_iterator != &g_trace_footer)) {
+        unsigned char a_line[80u];
+        cv_array_it o_array_it = cv_array_it_initializer_;
+        cv_array_it_init_range(&o_array_it, a_line, a_line+sizeof(a_line));
         {
             long const i_text_len = cv_memory_find_0(p_iterator->pc_text,
                 cv_signed_short_max_);
-            cv_runtime_write(i_stdout, p_iterator->pc_text, i_text_len);
+            cv_array_print_vector(&o_array_it, p_iterator->pc_text,
+                i_text_len);
         }
-        cv_runtime_write(i_stdout, a_newline, cv_sizeof_(a_newline));
+        cv_array_print_nl(&o_array_it);
+        if ((o_array_it.o_array.o_min.pc_uchar >= a_line) &&
+            (o_array_it.o_array.o_min.pc_uchar <= a_line+sizeof(a_line))) {
+            long const i_line_len = (o_array_it.o_array.o_min.pc_uchar -
+                a_line) & cv_signed_long_max_;
+            cv_runtime_write(i_stdout, a_line, i_line_len);
+        }
+        cv_array_it_cleanup(&o_array_it);
         p_iterator = p_iterator->p_next;
     }
 }
