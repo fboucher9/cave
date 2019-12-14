@@ -24,7 +24,7 @@ void xx_trace_func0_enter(cv_trace_func0 * p_trace_func0);
 void xx_trace_func0_leave(cv_trace_func0 * p_trace_func0);
 
 #define cv_trace_func0_decl_(name) \
-static cv_trace_func0 name = { cv_trace_func_initializer_(cv_trace_level_0) };
+static cv_trace_func0 name = { cv_trace_func_initializer_(cv_trace_level_0) }
 #define cv_trace_func0_enter_(name) xx_trace_func0_enter(&(name))
 #define cv_trace_func0_leave_(name) xx_trace_func0_leave(&(name))
 
