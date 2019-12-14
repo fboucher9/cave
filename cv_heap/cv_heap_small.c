@@ -16,10 +16,12 @@
 
 #include <cv_debug.h>
 
+cv_debug_decl_(g_class);
+
 cv_bool cv_heap_small_init(cv_heap_small * p_this) {
     cv_bool b_result = cv_false;
     cv_debug_assert_(!!p_this, cv_debug_code_null_ptr);
-    cv_debug_construct_(p_this);
+    cv_debug_construct_(g_class, p_this);
     {
         long i_pool_index = 0;
         b_result = cv_true;
@@ -32,7 +34,7 @@ cv_bool cv_heap_small_init(cv_heap_small * p_this) {
                     i_pool_index --;
                     cv_heap_pool_cleanup(p_this->a_pool + i_pool_index);
                 }
-                cv_debug_destruct_(p_this);
+                cv_debug_destruct_(g_class, p_this);
                 b_result = cv_false;
             }
         }
@@ -49,7 +51,7 @@ void cv_heap_small_cleanup(cv_heap_small * p_this) {
             i_pool_index ++;
         }
     }
-    cv_debug_destruct_(p_this);
+    cv_debug_destruct_(g_class, p_this);
 }
 
 cv_heap_node * cv_heap_small_lookup( cv_heap_small * p_this, long i_len) {

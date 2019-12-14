@@ -14,6 +14,7 @@
 #include <cv_windows.h>
 #include <cv_misc/cv_convert.h>
 #include <cv_algo/cv_array_ptr.h>
+#include <cv_misc/cv_sizeof.h>
 
 void * cv_runtime_malloc( long i_buffer_len) {
     void * p_buffer = cv_null_;
@@ -35,17 +36,32 @@ void cv_runtime_free( void * p_buffer) {
 #endif /* #if defined cv_have_libc_ */
 }
 
-void cv_runtime_printf( char const * p_format0, ...) {
-#if defined cv_have_libc_
-    va_list o_arg_list;
-    va_start(o_arg_list, p_format0);
-    vfprintf(stderr, p_format0, o_arg_list);
-    fflush(stderr);
-    va_end(o_arg_list);
-#else /* #if defined cv_have_libc_ */
-    cv_unused_(p_format0);
-#endif /* #if defined cv_have_libc_ */
+void cv_runtime_print_ld(int fd, long i_signed) {
+    static unsigned char const a_digit[] = {
+        '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' };
+    if (0 == i_signed) {
+        cv_runtime_write(fd, a_digit, 1);
+    } else {
+        unsigned long i_unsigned = 0;
+        if (i_signed < 0) {
+            static unsigned char const a_sign[] = { '-' };
+            i_unsigned = cv_cast_(unsigned long, -i_signed);
+            cv_runtime_write(fd, a_sign, cv_sizeof_(a_sign));
+        } else {
+            i_unsigned = cv_cast_(unsigned long, i_signed);
+        }
+        {
+            unsigned long i_shift = 1000000000ul;
+            while (i_shift) {
+                if (i_unsigned >= i_shift) {
+                    cv_runtime_write(fd, a_digit + ((i_unsigned/i_shift)%10ul), 1);
+                }
+                i_shift /= 10ul;
+            }
+        }
+    }
 }
+
 
 void cv_runtime_memset( void * p_buf, unsigned char c_value, long i_buf_len) {
 #if defined cv_have_libc_

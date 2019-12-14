@@ -30,6 +30,8 @@
 
 #include <cv_misc/cv_limits.h>
 
+cv_debug_decl_(g_class);
+
 cv_bool cv_options_load(void)
 {
     cv_bool b_result = cv_false;
@@ -70,7 +72,7 @@ void cv_options_cleanup(
     cv_debug_assert_( !!p_this, cv_debug_code_null_ptr);
     cv_options_cleanup_list(p_this);
     cv_list_root_cleanup(&p_this->o_list);
-    cv_debug_destruct_(p_this);
+    cv_debug_destruct_(g_class, p_this);
 }
 
 /*
@@ -81,7 +83,7 @@ void cv_options_init(
     cv_options * p_this)
 {
     cv_debug_assert_( !!p_this, cv_debug_code_null_ptr);
-    cv_debug_construct_(p_this);
+    cv_debug_construct_(g_class, p_this);
     cv_list_root_init(&p_this->o_list);
 }
 

@@ -8,11 +8,13 @@
 #include <cv_debug.h>
 #include <cv_heap/cv_heap_secondary.h>
 
+cv_debug_decl_(g_class);
+
 static void cv_heap_node_init( cv_heap_node * p_this,
     cv_array const * p_payload)
 {
     cv_debug_assert_( !!p_this, cv_debug_code_null_ptr);
-    cv_debug_construct_(p_this);
+    cv_debug_construct_(g_class, p_this);
     cv_list_node_init(&p_this->o_node);
     cv_array_init_ref(&p_this->o_payload, p_payload);
 }
@@ -21,7 +23,7 @@ void cv_heap_node_cleanup( cv_heap_node * p_this) {
     cv_debug_assert_( !!p_this, cv_debug_code_null_ptr);
     cv_array_cleanup(&p_this->o_payload);
     cv_list_node_cleanup(&p_this->o_node);
-    cv_debug_destruct_(p_this);
+    cv_debug_destruct_(g_class, p_this);
 }
 
 cv_heap_node * cv_heap_node_create(

@@ -55,26 +55,6 @@ void xx_debug_break(
 #define cv_debug_break_(p_msg0) \
     xx_debug_break((p_msg0), __FILE__, __LINE__)
 
-void xx_debug_init(
-    void * p_buf,
-    long i_buf_len);
-
-#define cv_debug_init_(p_buf, i_buf_len) \
-    xx_debug_init((p_buf), (i_buf_len))
-
-#define cv_debug_construct_(p_this) \
-    xx_debug_init((p_this), cv_sizeof_(*(p_this)))
-
-void xx_debug_cleanup(
-    void * p_buf,
-    long i_buf_len);
-
-#define cv_debug_cleanup_(p_buf, i_buf_len) \
-    xx_debug_cleanup((p_buf), (i_buf_len))
-
-#define cv_debug_destruct_(p_this) \
-    xx_debug_cleanup((p_this), cv_sizeof_(*(p_this)))
-
 typedef struct cv_debug_class cv_debug_class;
 
 struct cv_debug_class {
@@ -88,20 +68,34 @@ struct cv_debug_class {
 #define cv_debug_class_initializer_ \
 { cv_null_, cv_null_, 0, 0 }
 
-#define cv_debug_class_decl_(g_class) \
+#define cv_debug_decl_(g_class) \
 static cv_debug_class g_class = cv_debug_class_initializer_
 
-void xx_debug_class_init( cv_debug_class * p_debug_class,
-    char const * p_file, int i_line);
+void cv_debug_load(void);
 
-#define cv_debug_class_init_(g_class) \
-    xx_debug_class_init(&(g_class), __FILE__, __LINE__)
+void cv_debug_unload(void);
 
-void xx_debug_class_cleanup( cv_debug_class * p_debug_class,
-    char const * p_file, int i_line);
+void xx_debug_init(
+    cv_debug_class * p_class,
+    char const * p_file,
+    int i_line,
+    void * p_buf,
+    long i_buf_len);
 
-#define cv_debug_class_cleanup_(g_class) \
-    xx_debug_class_cleanup(&(g_class), __FILE__, __LINE__)
+#define cv_debug_construct_(g_class, p_this) \
+    xx_debug_init(&(g_class), __FILE__, __LINE__, \
+        (p_this), cv_sizeof_(*(p_this)))
+
+void xx_debug_cleanup(
+    cv_debug_class * p_class,
+    char const * p_file,
+    int i_line,
+    void * p_buf,
+    long i_buf_len);
+
+#define cv_debug_destruct_(g_class, p_this) \
+    xx_debug_cleanup(&(g_class), __FILE__, __LINE__, \
+        (p_this), cv_sizeof_(*(p_this)))
 
 #else /* #if defined cv_debug_ */
 
@@ -111,20 +105,12 @@ void xx_debug_class_cleanup( cv_debug_class * p_debug_class,
 
 #define cv_debug_break_(p_msg0)
 
-#define cv_debug_init_(p_buf, i_buf_len)
-
-#define cv_debug_cleanup_(p_buf, i_buf_len)
-
-#define cv_debug_construct_(p_this)
-
-#define cv_debug_destruct_(p_this)
-
-#define cv_debug_class_decl_(g_class) \
+#define cv_debug_decl_(g_class) \
 typedef void g_class
 
-#define cv_debug_class_init_(g_class)
+#define cv_debug_construct_(g_class, p_this)
 
-#define cv_debug_class_cleanup_(g_class)
+#define cv_debug_destruct_(g_class, p_this)
 
 #endif /* #if defined cv_debug_ */
 

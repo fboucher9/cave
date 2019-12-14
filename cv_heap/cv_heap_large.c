@@ -9,13 +9,17 @@
 #include <cv_runtime.h>
 #include <cv_debug.h>
 
+cv_debug_decl_(g_class);
+
 cv_bool cv_heap_large_init( cv_heap_large * p_this ) {
     cv_bool b_result = cv_false;
     cv_debug_assert_(!!p_this, cv_debug_code_null_ptr);
-    cv_debug_construct_(p_this);
+    cv_debug_construct_(g_class, p_this);
     if (cv_mutex_init(&p_this->o_mutex)) {
         cv_list_root_init(&p_this->o_free_list);
         b_result = cv_true;
+    } else {
+        cv_debug_destruct_(g_class, p_this);
     }
     return b_result;
 }
@@ -46,7 +50,7 @@ void cv_heap_large_cleanup( cv_heap_large * p_this) {
     /* Free all items ... */
     cv_heap_large_empty_free_list(p_this);
     cv_list_root_cleanup(&p_this->o_free_list);
-    cv_debug_destruct_(p_this);
+    cv_debug_destruct_(g_class, p_this);
 }
 
 static long cv_heap_large_align( long i_len) {

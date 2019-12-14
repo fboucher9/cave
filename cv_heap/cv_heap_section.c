@@ -12,6 +12,8 @@
 
 #include <cv_algo/cv_array.h>
 
+cv_debug_decl_(g_class);
+
 /* Predefine */
 typedef struct cv_heap_section_node cv_heap_section_node;
 
@@ -68,7 +70,7 @@ static void cv_heap_section_node_init(
     cv_heap_section_node_desc const * p_desc)
 {
     cv_debug_assert_(p_this && p_desc, cv_debug_code_null_ptr);
-    cv_debug_construct_(p_this);
+    cv_debug_construct_(g_class, p_this);
     cv_list_node_init(&p_this->o_node);
     p_this->o_desc = *p_desc;
 }
@@ -80,7 +82,7 @@ static void cv_heap_section_node_cleanup(
     cv_list_node_cleanup(&p_this->o_node);
     cv_array_cleanup(&p_this->o_payload);
     cv_array_cleanup(&p_this->o_allocation);
-    cv_debug_destruct_(p_this);
+    cv_debug_destruct_(g_class, p_this);
 }
 
 static cv_heap_section_node * cv_heap_section_node_create(

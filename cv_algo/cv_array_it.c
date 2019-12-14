@@ -8,15 +8,14 @@
 
 #include <cv_misc/cv_sizeof.h>
 
-cv_debug_class_decl_(g_class);
+cv_debug_decl_(g_class);
 
 void cv_array_it_init(
     cv_array_it * p_this,
     cv_array const * p_array)
 {
     cv_debug_assert_( p_this && p_array, cv_debug_code_null_ptr);
-    cv_debug_construct_(p_this);
-    cv_debug_class_init_(g_class);
+    cv_debug_construct_(g_class, p_this);
     cv_array_init_ref(&p_this->o_array, p_array);
 }
 
@@ -26,8 +25,7 @@ void cv_array_it_init_vector(
     long i_len)
 {
     cv_debug_assert_( !!p_this, cv_debug_code_null_ptr);
-    cv_debug_construct_(p_this);
-    cv_debug_class_init_(g_class);
+    cv_debug_construct_(g_class, p_this);
     cv_array_init_vector(&p_this->o_array, p_buf, i_len);
 }
 
@@ -36,8 +34,7 @@ void cv_array_it_cleanup(
 {
     cv_debug_assert_( !!p_this, cv_debug_code_null_ptr);
     cv_array_cleanup(&p_this->o_array);
-    cv_debug_destruct_(p_this);
-    cv_debug_class_cleanup_(g_class);
+    cv_debug_destruct_(g_class, p_this);
 }
 
 cv_bool cv_array_it_get_next_char(

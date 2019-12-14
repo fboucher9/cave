@@ -8,14 +8,13 @@
 
 #include <cv_misc/cv_sizeof.h>
 
-cv_debug_class_decl_(g_class);
+cv_debug_decl_(g_class);
 
 void cv_list_node_init(
     cv_list_node * p_this)
 {
     cv_debug_assert_( !!p_this, cv_debug_code_null_ptr);
-    cv_debug_construct_(p_this);
-    cv_debug_class_init_(g_class);
+    cv_debug_construct_(g_class, p_this);
     p_this->o_next.p_node = p_this;
     p_this->o_prev.p_node = p_this;
 }
@@ -27,8 +26,7 @@ void cv_list_node_cleanup(
     cv_list_join(p_this, p_this);
     p_this->o_next.p_node = cv_null_;
     p_this->o_prev.p_node = cv_null_;
-    cv_debug_destruct_(p_this);
-    cv_debug_class_cleanup_(g_class);
+    cv_debug_destruct_(g_class, p_this);
 }
 
 void cv_list_join(

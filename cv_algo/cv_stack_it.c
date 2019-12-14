@@ -9,6 +9,8 @@
 #include <cv_debug.h>
 #include <cv_misc/cv_sizeof.h>
 
+cv_debug_decl_(g_class);
+
 /*
  *
  */
@@ -17,7 +19,7 @@ void cv_stack_it_init(
     cv_stack_it * p_this,
     cv_stack const * p_root) {
     cv_debug_assert_(p_this && p_root, cv_debug_code_null_ptr);
-    cv_debug_construct_(p_this);
+    cv_debug_construct_(g_class, p_this);
     p_this->o_cur.pc_stack = p_root->o_next.pc_stack;
 }
 
@@ -28,7 +30,7 @@ void cv_stack_it_init(
 void cv_stack_it_cleanup(
     cv_stack_it * p_this) {
     cv_debug_assert_(!!p_this, cv_debug_code_null_ptr);
-    cv_debug_destruct_(p_this);
+    cv_debug_destruct_(g_class, p_this);
 }
 
 /*

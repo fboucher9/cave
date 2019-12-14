@@ -8,6 +8,8 @@
 #include <cv_debug.h>
 #include <cv_misc/cv_sizeof.h>
 
+cv_debug_decl_(g_class);
+
 /*
  *
  */
@@ -17,7 +19,7 @@ cv_bool cv_heap_section_lock_init(
     cv_heap_section_desc const * p_desc) {
     cv_bool b_result = cv_false;
     cv_debug_assert_(p_this && p_desc, cv_debug_code_null_ptr);
-    cv_debug_construct_(p_this);
+    cv_debug_construct_(g_class, p_this);
     if (cv_mutex_init(&p_this->o_mutex)) {
         cv_heap_section_init(&p_this->o_heap_section, p_desc);
         b_result = cv_true;
@@ -33,7 +35,7 @@ void cv_heap_section_lock_cleanup(
     cv_heap_section_lock * p_this) {
     cv_heap_section_cleanup(&p_this->o_heap_section);
     cv_mutex_cleanup(&p_this->o_mutex);
-    cv_debug_destruct_(p_this);
+    cv_debug_destruct_(g_class, p_this);
 }
 
 /*

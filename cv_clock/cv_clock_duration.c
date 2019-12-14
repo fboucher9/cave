@@ -10,6 +10,8 @@
 #include <cv_misc/cv_types.h>
 #include <cv_clock/cv_clock_tool.h>
 
+cv_debug_decl_(g_class);
+
 /*
  *
  */
@@ -35,7 +37,7 @@ static void cv_clock_duration_set( cv_clock_duration * p_this,
 
 void cv_clock_duration_init( cv_clock_duration * p_this) {
     cv_debug_assert_(!!p_this, cv_debug_code_null_ptr);
-    cv_debug_construct_(p_this);
+    cv_debug_construct_(g_class, p_this);
     cv_clock_init(&p_this->o_clock);
 }
 
@@ -46,7 +48,7 @@ void cv_clock_duration_init( cv_clock_duration * p_this) {
 void cv_clock_duration_cleanup( cv_clock_duration * p_this) {
     cv_debug_assert_(!!p_this, cv_debug_code_null_ptr);
     cv_clock_cleanup(&p_this->o_clock);
-    cv_debug_destruct_(p_this);
+    cv_debug_destruct_(g_class, p_this);
 }
 
 /*

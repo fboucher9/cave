@@ -22,6 +22,8 @@
 #include <unistd.h>
 #endif /* #if defined cv_linux_ */
 
+cv_debug_decl_(g_class);
+
 /*
  *
  */
@@ -45,7 +47,7 @@ void cv_clock_unload(void) {
 
 void cv_clock_init( cv_clock * p_this) {
     cv_debug_assert_(!!p_this, cv_debug_code_null_ptr);
-    cv_debug_construct_(p_this);
+    cv_debug_construct_(g_class, p_this);
     p_this->i_seconds = 0;
     p_this->i_fraction = 0;
 }
@@ -57,7 +59,7 @@ void cv_clock_init( cv_clock * p_this) {
 void cv_clock_cleanup( cv_clock * p_this) {
     cv_debug_assert_(!!p_this, cv_debug_code_null_ptr);
     /* ... */
-    cv_debug_destruct_(p_this);
+    cv_debug_destruct_(g_class, p_this);
 }
 
 /*

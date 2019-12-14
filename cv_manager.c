@@ -24,7 +24,9 @@ Description: None.
 cv_bool cv_manager_load(void)
 {
     cv_bool b_result = cv_false;
-    cv_debug_init_(cv_null_, 0);
+#if defined cv_debug_
+    cv_debug_load();
+#endif /* #if defined cv_debug_ */
     if (cv_file_std_load()) {
         if (cv_mutex_load()) {
             if (cv_heap_load()) {
@@ -53,6 +55,11 @@ cv_bool cv_manager_load(void)
             cv_file_std_unload();
         }
     }
+#if defined cv_debug_
+    if (!b_result) {
+        cv_debug_unload();
+    }
+#endif /* #if defined cv_debug_ */
     return b_result;
 }
 
@@ -64,6 +71,8 @@ void cv_manager_unload(void)
     cv_heap_unload();
     cv_mutex_unload();
     cv_file_std_unload();
-    cv_debug_cleanup_(cv_null_, 0);
+#if defined cv_debug_
+    cv_debug_unload();
+#endif /* #if defined cv_debug_ */
 }
 

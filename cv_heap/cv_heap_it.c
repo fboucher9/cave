@@ -8,12 +8,14 @@
 
 #include <cv_misc/cv_sizeof.h>
 
+cv_debug_decl_(g_class);
+
 void cv_heap_it_init(
     cv_heap_it * p_this,
     cv_list_root const * p_list)
 {
     cv_debug_assert_( !!p_this, cv_debug_code_null_ptr);
-    cv_debug_construct_(p_this);
+    cv_debug_construct_(g_class, p_this);
     cv_list_it_init( &p_this->o_list_it, p_list);
 }
 
@@ -22,7 +24,7 @@ void cv_heap_it_cleanup(
 {
     cv_debug_assert_(!!p_this, cv_debug_code_null_ptr);
     cv_list_it_cleanup( &p_this->o_list_it);
-    cv_debug_destruct_(p_this);
+    cv_debug_destruct_(g_class, p_this);
 }
 
 cv_bool cv_heap_it_next(

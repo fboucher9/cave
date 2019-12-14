@@ -252,6 +252,22 @@ static void cv_test_hello(void) {
     }
 }
 
+static void cv_test_leak1(void) {
+    cv_debug_decl_(g_class);
+    int i;
+    cv_debug_construct_(g_class, &i);
+}
+
+static void cv_test_leak2(void) {
+    cv_debug_decl_(g_class);
+    int i;
+    cv_debug_destruct_(g_class, &i);
+}
+
+static void cv_test_leak3(void) {
+    cv_heap_alloc(123);
+}
+
 static cv_bool cv_test_main_cb(
     cv_options const * p_options)
 {
@@ -281,6 +297,12 @@ static cv_bool cv_test_main_cb(
                     'c', 'l', 'o', 'c', 'k' };
                 static char const g_hello_text[] = {
                     'h', 'e', 'l', 'l', 'o' };
+                static char const g_leak1_text[] = {
+                    'l', 'e', 'a', 'k', '1' };
+                static char const g_leak2_text[] = {
+                    'l', 'e', 'a', 'k', '2' };
+                static char const g_leak3_text[] = {
+                    'l', 'e', 'a', 'k', '3' };
 
                 static cv_array const g_number_array =
                     cv_array_text_initializer_(g_number_text);
@@ -302,6 +324,12 @@ static cv_bool cv_test_main_cb(
                     cv_array_text_initializer_(g_clock_text);
                 static cv_array const g_hello_array =
                     cv_array_text_initializer_(g_hello_text);
+                static cv_array const g_leak1_array =
+                    cv_array_text_initializer_(g_leak1_text);
+                static cv_array const g_leak2_array =
+                    cv_array_text_initializer_(g_leak2_text);
+                static cv_array const g_leak3_array =
+                    cv_array_text_initializer_(g_leak3_text);
 
                 if (cv_array_compare(&o_string, &g_number_array)) {
                     cv_test_number();
@@ -323,6 +351,12 @@ static cv_bool cv_test_main_cb(
                     cv_clock_test();
                 } else if (cv_array_compare(&o_string, &g_hello_array)) {
                     cv_test_hello();
+                } else if (cv_array_compare(&o_string, &g_leak1_array)) {
+                    cv_test_leak1();
+                } else if (cv_array_compare(&o_string, &g_leak2_array)) {
+                    cv_test_leak2();
+                } else if (cv_array_compare(&o_string, &g_leak3_array)) {
+                    cv_test_leak3();
                 } else {
                     /* invalid command */
                     static unsigned char const a_text[] = {

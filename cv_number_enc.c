@@ -13,6 +13,8 @@
 #include <cv_debug.h>
 #include <cv_misc/cv_convert.h>
 
+cv_debug_decl_(g_class);
+
 enum cv_number_machine {
     cv_number_machine_invalid = 0,
     cv_number_machine_before_space,
@@ -80,7 +82,7 @@ cv_bool cv_number_enc_init(
 {
     cv_bool b_result = cv_false;
     cv_debug_assert_(p_this && p_desc, cv_debug_code_null_ptr);
-    cv_debug_construct_(p_this);
+    cv_debug_construct_(g_class, p_this);
     cv_memory_zero(p_this, cv_sizeof_(*p_this));
     p_this->o_desc = *(p_desc);
     if (cv_number_enc_init_digits(p_this)) {
@@ -161,7 +163,7 @@ void cv_number_enc_cleanup(
     cv_number_enc * p_this)
 {
     cv_debug_assert_(!!p_this, cv_debug_code_null_ptr);
-    cv_debug_destruct_(p_this);
+    cv_debug_destruct_(g_class, p_this);
 }
 
 static cv_number_status cv_number_enc_step(

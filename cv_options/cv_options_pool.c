@@ -15,6 +15,8 @@ Description: Memory allocation pool for cv_options_node objects.
 #include <cv_misc/cv_sizeof.h>
 #include <cv_debug.h>
 
+cv_debug_decl_(g_class);
+
 typedef struct cv_options_pool cv_options_pool;
 
 struct cv_options_pool {
@@ -34,7 +36,7 @@ static cv_options_pool g_options_pool = cv_options_pool_initializer_;
 cv_bool cv_options_pool_load(void) {
     cv_bool b_result = cv_false;
     cv_debug_assert_( !g_options_pool_loaded, cv_debug_code_already_loaded);
-    cv_debug_construct_(&g_options_pool);
+    cv_debug_construct_(g_class, &g_options_pool);
     {
         cv_pool_desc o_desc = cv_pool_desc_initializer_;
         o_desc.i_len = cv_sizeof_(cv_options_node);
@@ -53,7 +55,7 @@ cv_bool cv_options_pool_load(void) {
 void cv_options_pool_unload(void) {
     cv_debug_assert_( g_options_pool_loaded, cv_debug_code_already_unloaded);
     cv_pool_lock_cleanup(&g_options_pool.o_pool);
-    cv_debug_destruct_(&g_options_pool);
+    cv_debug_destruct_(g_class, &g_options_pool);
     g_options_pool_loaded = cv_false;
 }
 
