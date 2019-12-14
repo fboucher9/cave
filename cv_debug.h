@@ -106,11 +106,13 @@ void xx_debug_cleanup(
 #define cv_debug_break_(p_msg0)
 
 #define cv_debug_decl_(g_class) \
-typedef void g_class
+static char g_class
 
-#define cv_debug_construct_(g_class, p_this)
+#define cv_debug_construct_(g_class, p_this) \
+(void)(g_class)
 
-#define cv_debug_destruct_(g_class, p_this)
+#define cv_debug_destruct_(g_class, p_this) \
+(void)(g_class)
 
 #endif /* #if defined cv_debug_ */
 

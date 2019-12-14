@@ -256,12 +256,14 @@ static void cv_test_leak1(void) {
     cv_debug_decl_(g_class);
     int i;
     cv_debug_construct_(g_class, &i);
+    cv_unused_(i);
 }
 
 static void cv_test_leak2(void) {
     cv_debug_decl_(g_class);
     int i;
     cv_debug_destruct_(g_class, &i);
+    cv_unused_(i);
 }
 
 static void cv_test_leak3(void) {
