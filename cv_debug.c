@@ -16,7 +16,13 @@
 
 #include <cv_misc/cv_limits.h>
 
-#include <pthread.h>
+#include <cv_algo/cv_array_it.h>
+
+#include <cv_algo/cv_array_print.h>
+
+#include <cv_number_desc.h>
+
+#include <cv_thread/cv_mutex_impl.h>
 
 static long g_init_count = 0;
 
@@ -24,7 +30,7 @@ static cv_debug_class g_debug_class_footer = cv_debug_class_initializer_;
 
 static cv_debug_class * g_debug_class_list = &g_debug_class_footer;
 
-static pthread_mutex_t g_debug_class_mutex = PTHREAD_MUTEX_INITIALIZER;
+static cv_mutex g_debug_class_mutex = cv_mutex_initializer_;
 
 static unsigned char const a_debug_code_null_ptr[] = {
     'n', 'u', 'l', 'l', ' ', 'p', 't', 'r' };
@@ -140,61 +146,32 @@ cv_debug_code cv_debug_code_dont_panic = &g_debug_code_dont_panic;
 
 cv_debug_code cv_debug_code_leak = &g_debug_code_leak;
 
-static unsigned char const a_colon[] = { ':' };
-
-static unsigned char const a_newline[] = { '\n' };
-
-/*
- *
- */
-
-static void cv_debug_class_report_node(cv_debug_class const * p_iterator) {
-    if (p_iterator->i_init_count) {
-        int const i_stderr = cv_runtime_stderr_fileno();
-        long const i_file_len = cv_memory_find_0(p_iterator->p_file,
-            cv_signed_short_max_);
-        cv_runtime_write(i_stderr, p_iterator->p_file,
-            i_file_len);
-        cv_runtime_write(i_stderr, a_colon,
-            cv_sizeof_(a_colon));
-        cv_runtime_print_ld(i_stderr, p_iterator->i_line);
-        cv_runtime_write(i_stderr, a_colon,
-            cv_sizeof_(a_colon));
-        cv_runtime_print_ld(i_stderr, p_iterator->i_init_count);
-        cv_runtime_write(i_stderr, a_newline,
-            cv_sizeof_(a_newline));
-    }
-}
-
-/*
- *
- */
-
-static void cv_debug_class_report(void) {
-    cv_debug_class * p_iterator = g_debug_class_list;
-    while (p_iterator && p_iterator != &g_debug_class_footer) {
-        cv_debug_class_report_node(p_iterator);
-        p_iterator = p_iterator->p_next;
-    }
-}
-
 void xx_debug_msg( cv_debug_code e_code, char const * p_file, int i_line) {
-    if (e_code) {
-        static unsigned char const a_prefix[] = {
-            '*', '*', '*', ' ' };
-        static unsigned char const a_suffix[] = {
-            ' ', '*', '*', '*', '\n' };
-        long const i_array_len = cv_array_len(e_code) & cv_signed_int_max_;
+    static unsigned char const a_prefix[] = {
+        '*', '*', '*', ' ' };
+    static unsigned char const a_suffix[] = {
+        ' ', '*', '*', '*' };
+    unsigned char a_line[80u];
+    cv_array_it o_array_it = cv_array_it_initializer_;
+    cv_array_it_init_range(&o_array_it, a_line,
+        a_line + sizeof(a_line));
+    cv_array_print_range(&o_array_it, a_prefix,
+        a_prefix + sizeof(a_prefix));
+    cv_array_print_0(&o_array_it, p_file, cv_signed_short_max_);
+    cv_array_print_char(&o_array_it, ':');
+    cv_array_print_signed(&o_array_it, i_line,
+        cv_number_format_dec());
+    cv_array_print_char(&o_array_it, ':');
+    cv_array_print(&o_array_it, e_code);
+    cv_array_print_range(&o_array_it, a_suffix,
+        a_suffix + sizeof(a_suffix));
+    if (cv_array_print_nl(&o_array_it)) {
         int const i_stderr = cv_runtime_stderr_fileno();
-        cv_runtime_write(i_stderr, a_prefix, cv_sizeof_(a_prefix));
-        cv_runtime_write(i_stderr, p_file,
-            cv_memory_find_0(p_file, cv_signed_short_max_));
-        cv_runtime_write(i_stderr, a_colon, cv_sizeof_(a_colon));
-        cv_runtime_print_ld(i_stderr, i_line);
-        cv_runtime_write(i_stderr, a_colon, cv_sizeof_(a_colon));
-        cv_runtime_write(i_stderr, e_code->o_min.pc_void, i_array_len);
-        cv_runtime_write(i_stderr, a_suffix, cv_sizeof_(a_suffix));
+        long const i_line_len = (o_array_it.o_array.o_min.pc_uchar -
+            a_line) & cv_signed_long_max_;
+        cv_runtime_write(i_stderr, a_line, i_line_len);
     }
+    cv_array_it_cleanup(&o_array_it);
 }
 
 void xx_debug_assert( cv_bool b_expr, cv_debug_code e_code, char const * p_file,
@@ -205,10 +182,8 @@ void xx_debug_assert( cv_bool b_expr, cv_debug_code e_code, char const * p_file,
 }
 
 void xx_debug_break( cv_debug_code e_code, char const * p_file, int i_line) {
-    if (e_code) {
-        xx_debug_msg(e_code, p_file, i_line);
-        cv_runtime_exit(42);
-    }
+    xx_debug_msg(e_code, p_file, i_line);
+    cv_runtime_exit(42);
 }
 
 /*
@@ -224,7 +199,6 @@ static void cv_debug_class_register( cv_debug_class * p_class,
         p_class->p_next = g_debug_class_list;
         g_debug_class_list = p_class;
     }
-
 }
 
 /*
@@ -235,12 +209,12 @@ void xx_debug_init( cv_debug_class * p_class,
     char const * p_file, int i_line,
     void * p_buf, long i_buf_len) {
     cv_debug_assert_(p_class && p_buf && i_buf_len, cv_debug_code_null_ptr);
-    pthread_mutex_lock(&g_debug_class_mutex);
+    cv_mutex_impl_lock(&g_debug_class_mutex);
     cv_runtime_memset(p_buf, 0xcc, i_buf_len);
     cv_debug_class_register(p_class, p_file, i_line);
     p_class->i_init_count ++;
     g_init_count ++;
-    pthread_mutex_unlock(&g_debug_class_mutex);
+    cv_mutex_impl_unlock(&g_debug_class_mutex);
 }
 
 /*
@@ -251,13 +225,55 @@ void xx_debug_cleanup( cv_debug_class * p_class,
     char const * p_file, int i_line,
     void * p_buf, long i_buf_len) {
     cv_debug_assert_(p_class && p_buf && i_buf_len, cv_debug_code_null_ptr);
-    pthread_mutex_lock(&g_debug_class_mutex);
+    cv_mutex_impl_lock(&g_debug_class_mutex);
     cv_runtime_memset(p_buf, 0xcd, i_buf_len);
     cv_debug_class_register(p_class, p_file, i_line);
     p_class->i_init_count --;
     g_init_count --;
-    pthread_mutex_unlock(&g_debug_class_mutex);
+    cv_mutex_impl_unlock(&g_debug_class_mutex);
 }
+
+/*
+ *
+ */
+
+static void cv_debug_class_report_node(cv_debug_class const * p_iterator) {
+    if (p_iterator->i_init_count) {
+        unsigned char a_line[80];
+        cv_array_it o_array_it = cv_array_it_initializer_;
+        cv_array_it_init_range(&o_array_it, a_line,
+            a_line + sizeof(a_line));
+        cv_array_print_0(&o_array_it, p_iterator->p_file, cv_signed_short_max_);
+        cv_array_print_char(&o_array_it, ':');
+        cv_array_print_signed(&o_array_it, p_iterator->i_line,
+            cv_number_format_dec());
+        cv_array_print_char(&o_array_it, ':');
+        cv_array_print_signed(&o_array_it, p_iterator->i_init_count,
+            cv_number_format_dec());
+        if (cv_array_print_nl(&o_array_it)) {
+            int const i_stderr = cv_runtime_stderr_fileno();
+            long const i_line_len = (o_array_it.o_array.o_min.pc_uchar -
+                a_line) & cv_signed_long_max_;
+            cv_runtime_write(i_stderr, a_line,
+                i_line_len);
+        }
+        cv_array_it_cleanup(&o_array_it);
+    }
+}
+
+/*
+ *
+ */
+
+static void cv_debug_class_report(void) {
+    cv_debug_class * p_iterator = g_debug_class_list;
+    while (p_iterator && p_iterator != &g_debug_class_footer) {
+        cv_debug_class_report_node(p_iterator);
+        p_iterator = p_iterator->p_next;
+    }
+}
+
+#endif /* #if defined cv_debug_ */
 
 /*
  *
@@ -272,8 +288,10 @@ void cv_debug_load(void) {
 
 void cv_debug_unload(void) {
     /* Print report of class leaks */
+#if defined cv_debug_
     cv_debug_class_report();
+#endif /* #if defined cv_debug_ */
     cv_debug_assert_(0 == g_init_count, cv_debug_code_leak);
 }
 
-#endif /* #if defined cv_debug_ */
+/* end-of-file: cv_debug.c */

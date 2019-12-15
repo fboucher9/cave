@@ -13,6 +13,10 @@
 
 #include <cv_algo/cv_array_tool.h>
 
+void cv_debug_load(void);
+
+void cv_debug_unload(void);
+
 #if defined cv_debug_
 
 typedef cv_array const * cv_debug_code;
@@ -70,10 +74,6 @@ struct cv_debug_class {
 
 #define cv_debug_decl_(g_class) \
 static cv_debug_class g_class = cv_debug_class_initializer_
-
-void cv_debug_load(void);
-
-void cv_debug_unload(void);
 
 void xx_debug_init(
     cv_debug_class * p_class,

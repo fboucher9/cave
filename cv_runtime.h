@@ -13,8 +13,6 @@ void * cv_runtime_malloc( long i_malloc_len);
 
 void cv_runtime_free( void * p_buffer);
 
-void cv_runtime_print_ld(int fd, long i_signed);
-
 void cv_runtime_memset( void * p_buf, unsigned char c_fill_value,
     long i_buf_len);
 

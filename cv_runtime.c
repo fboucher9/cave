@@ -28,7 +28,7 @@ void * cv_runtime_malloc( long i_buffer_len) {
 #endif /* #if defined cv_have_libc_ */
     return p_buffer;
 }
- 
+
 void cv_runtime_free( void * p_buffer) {
 #if defined cv_have_libc_
     free(p_buffer);
@@ -36,33 +36,6 @@ void cv_runtime_free( void * p_buffer) {
     cv_unused_(p_buffer);
 #endif /* #if defined cv_have_libc_ */
 }
-
-void cv_runtime_print_ld(int fd, long i_signed) {
-    static unsigned char const a_digit[] = {
-        '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' };
-    if (0 == i_signed) {
-        cv_runtime_write(fd, a_digit, 1);
-    } else {
-        unsigned long i_unsigned = 0;
-        if (i_signed < 0) {
-            static unsigned char const a_sign[] = { '-' };
-            i_unsigned = (-i_signed & cv_signed_long_max_);
-            cv_runtime_write(fd, a_sign, cv_sizeof_(a_sign));
-        } else {
-            i_unsigned = (i_signed & cv_signed_long_max_);
-        }
-        {
-            unsigned long i_shift = 1000000000ul;
-            while (i_shift) {
-                if (i_unsigned >= i_shift) {
-                    cv_runtime_write(fd, a_digit + ((i_unsigned/i_shift)%10ul), 1);
-                }
-                i_shift /= 10ul;
-            }
-        }
-    }
-}
-
 
 void cv_runtime_memset( void * p_buf, unsigned char c_value, long i_buf_len) {
 #if defined cv_have_libc_
