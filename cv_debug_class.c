@@ -43,7 +43,7 @@ static void cv_debug_class_register( cv_debug_class * p_class,
  *
  */
 
-void xx_debug_init( cv_debug_class * p_class,
+void xx_debug_class_construct( cv_debug_class * p_class,
     char const * p_file, int i_line,
     void * p_buf, long i_buf_len) {
     cv_mutex_impl_lock(&g_debug_class_mutex);
@@ -58,7 +58,7 @@ void xx_debug_init( cv_debug_class * p_class,
  *
  */
 
-void xx_debug_cleanup( cv_debug_class * p_class,
+void xx_debug_class_destruct( cv_debug_class * p_class,
     char const * p_file, int i_line,
     void * p_buf, long i_buf_len) {
     cv_mutex_impl_lock(&g_debug_class_mutex);

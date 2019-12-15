@@ -5,6 +5,9 @@
  */
 
 #include <cv_debug_code.h>
+
+#if defined cv_debug_
+
 #include <cv_algo/cv_array.h>
 #include <cv_algo/cv_array_tool.h>
 
@@ -121,5 +124,11 @@ cv_debug_code cv_debug_code_invalid_parameter = &g_debug_code_invalid_parameter;
 cv_debug_code cv_debug_code_dont_panic = &g_debug_code_dont_panic;
 
 cv_debug_code cv_debug_code_leak = &g_debug_code_leak;
+
+#else /* #if defined cv_debug_ */
+
+typedef void not_empty;
+
+#endif /* #if defined cv_debug_ */
 
 /* end-of-file: cv_debug_code.c */

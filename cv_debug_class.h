@@ -14,6 +14,10 @@
 
 #if defined cv_debug_
 
+/*
+ *
+ */
+
 struct cv_debug_class {
     cv_debug_class * p_next;
     char const * p_file;
@@ -28,7 +32,7 @@ struct cv_debug_class {
 #define cv_debug_decl_(g_class) \
 static cv_debug_class g_class = cv_debug_class_initializer_
 
-void xx_debug_init(
+void xx_debug_class_construct(
     cv_debug_class * p_class,
     char const * p_file,
     int i_line,
@@ -36,10 +40,10 @@ void xx_debug_init(
     long i_buf_len);
 
 #define cv_debug_construct_(g_class, p_this) \
-    xx_debug_init(&(g_class), __FILE__, __LINE__, \
+    xx_debug_class_construct(&(g_class), __FILE__, __LINE__, \
         (p_this), cv_sizeof_(*(p_this)))
 
-void xx_debug_cleanup(
+void xx_debug_class_destruct(
     cv_debug_class * p_class,
     char const * p_file,
     int i_line,
@@ -47,7 +51,7 @@ void xx_debug_cleanup(
     long i_buf_len);
 
 #define cv_debug_destruct_(g_class, p_this) \
-    xx_debug_cleanup(&(g_class), __FILE__, __LINE__, \
+    xx_debug_class_destruct(&(g_class), __FILE__, __LINE__, \
         (p_this), cv_sizeof_(*(p_this)))
 
 #else /* #if defined cv_debug_ */
