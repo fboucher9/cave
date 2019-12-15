@@ -23,6 +23,20 @@ cv_bool cv_array_print( cv_array_it * p_array_it,
  *
  */
 
+cv_bool cv_array_print_0( cv_array_it * p_array_it,
+    char const * p_buf_0, long i_max_len) {
+    cv_bool b_result = cv_false;
+    cv_array o_array = cv_array_null_;
+    cv_array_init_0(&o_array, p_buf_0, i_max_len);
+    b_result = cv_array_print(p_array_it, &o_array);
+    cv_array_cleanup(&o_array);
+    return b_result;
+}
+
+/*
+ *
+ */
+
 cv_bool cv_array_print_vector( cv_array_it * p_array_it,
     void const * p_buf, long i_buf_len) {
     cv_bool b_result = cv_false;
