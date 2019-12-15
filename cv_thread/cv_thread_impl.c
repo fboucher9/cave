@@ -35,7 +35,7 @@ static void * cv_thread_start(
     o_context_ptr.p_void = p_void;
 
     cv_debug_assert_(g_thread_loaded, cv_debug_code_not_loaded);
-    cv_debug_assert_( !!p_void, cv_debug_code_null_ptr);
+    cv_debug_assert_( p_void, cv_debug_code_null_ptr);
 
     {
         cv_thread_desc const o_desc =
@@ -44,7 +44,7 @@ static void * cv_thread_start(
         cv_thread_desc_cleanup(o_context_ptr.p_thread_desc);
         cv_heap_free(o_context_ptr.p_void);
 
-        cv_debug_assert_( !!o_desc.o_callback.p_func,
+        cv_debug_assert_( o_desc.o_callback.p_func,
             cv_debug_code_null_ptr);
 
         (*(o_desc.o_callback.p_func))( o_desc.o_callback.p_context);
@@ -102,7 +102,7 @@ void cv_thread_cleanup(
     cv_thread * p_this)
 {
     cv_debug_assert_(g_thread_loaded, cv_debug_code_not_loaded);
-    cv_debug_assert_( !!p_this, cv_debug_code_null_ptr);
+    cv_debug_assert_( p_this, cv_debug_code_null_ptr);
     {
         /* check detach flag */
         int i_pthread_result = 0;

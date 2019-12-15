@@ -22,7 +22,7 @@ void cv_clock_mono_it_init( cv_clock_mono_it * p_this,
  */
 
 void cv_clock_mono_it_cleanup( cv_clock_mono_it * p_this) {
-    cv_debug_assert_(!!p_this, cv_debug_code_null_ptr);
+    cv_debug_assert_(p_this, cv_debug_code_null_ptr);
     cv_debug_destruct_(g_class, p_this);
 }
 

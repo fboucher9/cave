@@ -55,6 +55,42 @@ void cv_file_print_array( cv_file const * p_file,
  *
  */
 
+void cv_file_print_range( cv_file const * p_file,
+    void const * p_range_min, void const * p_range_max) {
+    cv_array o_array = cv_array_null_;
+    cv_array_init_range(&o_array, p_range_min, p_range_max);
+    cv_file_print_array( p_file, &o_array);
+    cv_array_cleanup(&o_array);
+}
+
+/*
+ *
+ */
+
+void cv_file_print_vector( cv_file const * p_file,
+    void const * p_buffer, long i_buffer_len) {
+    cv_array o_array = cv_array_null_;
+    cv_array_init_vector(&o_array, p_buffer, i_buffer_len);
+    cv_file_print_array( p_file, &o_array);
+    cv_array_cleanup(&o_array);
+}
+
+/*
+ *
+ */
+
+void cv_file_print_0( cv_file const * p_file,
+    char const * p_buffer, long i_max_len) {
+    cv_array o_array = cv_array_null_;
+    cv_array_init_0(&o_array, p_buffer, i_max_len);
+    cv_file_print_array( p_file, &o_array);
+    cv_array_cleanup(&o_array);
+}
+
+/*
+ *
+ */
+
 void cv_file_print_number( cv_file const * p_file,
     cv_number_desc const * p_desc) {
     char c_buffer[64u];
@@ -117,7 +153,7 @@ static cv_array const * get_nl_array(void) {
  */
 
 void cv_file_print_nl( cv_file const * p_file) {
-    cv_debug_assert_(!!p_file, cv_debug_code_null_ptr);
+    cv_debug_assert_(p_file, cv_debug_code_null_ptr);
     cv_file_print_array(p_file, get_nl_array());
 }
 

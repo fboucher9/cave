@@ -10,7 +10,7 @@
 
 cv_ull cv_clock_get( cv_clock const * p_this) {
     cv_ull ll_result = 0;
-    cv_debug_assert_(!!p_this, cv_debug_code_null_ptr);
+    cv_debug_assert_(p_this, cv_debug_code_null_ptr);
     ll_result = p_this->i_seconds;
     ll_result <<= 32u;
     ll_result += p_this->i_fraction;
@@ -47,7 +47,7 @@ void cv_clock_get_nsec( cv_clock const * p_this,
 
 void cv_clock_set( cv_clock * p_this, cv_ull ll_value) {
     cv_ull ll_seconds = (ll_value >> 32u);
-    cv_debug_assert_(!!p_this, cv_debug_code_null_ptr);
+    cv_debug_assert_(p_this, cv_debug_code_null_ptr);
     p_this->i_seconds = (ll_seconds & cv_unsigned_long_max_);
     p_this->i_fraction = (ll_value & cv_unsigned_long_max_);
 }

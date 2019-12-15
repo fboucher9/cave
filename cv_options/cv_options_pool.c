@@ -77,7 +77,7 @@ cv_options_node * cv_options_pool_alloc(void) {
 
 void cv_options_pool_free( cv_options_node * p_options_node) {
     cv_debug_assert_( g_options_pool_loaded, cv_debug_code_not_loaded);
-    cv_debug_assert_( !!p_options_node, cv_debug_code_null_ptr);
+    cv_debug_assert_( p_options_node, cv_debug_code_null_ptr);
     {
         cv_options_node_ptr o_placement = cv_ptr_null_;
         o_placement.p_options_node = p_options_node;

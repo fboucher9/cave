@@ -24,7 +24,7 @@ cv_debug_decl_(g_class);
 void cv_stack_init(
     cv_stack * p_this)
 {
-    cv_debug_assert_( !!p_this, cv_debug_code_null_ptr);
+    cv_debug_assert_( p_this, cv_debug_code_null_ptr);
     cv_debug_construct_(g_class, p_this);
     p_this->o_next.p_void = cv_null_;
 }
@@ -36,7 +36,7 @@ void cv_stack_init(
 void cv_stack_cleanup(
     cv_stack * p_this)
 {
-    cv_debug_assert_( !!p_this, cv_debug_code_null_ptr);
+    cv_debug_assert_( p_this, cv_debug_code_null_ptr);
     if (p_this->o_next.p_void) {
         cv_debug_msg_(cv_debug_code_not_empty);
     }

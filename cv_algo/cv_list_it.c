@@ -27,7 +27,7 @@ void cv_list_it_init(
 void cv_list_it_cleanup(
     cv_list_it * p_this)
 {
-    cv_debug_assert_( !!p_this, cv_debug_code_null_ptr);
+    cv_debug_assert_( p_this, cv_debug_code_null_ptr);
     p_this->o_cur.p_void = cv_null_;
     p_this->o_list.p_void = cv_null_;
     cv_debug_destruct_(g_class, p_this);
@@ -38,7 +38,7 @@ cv_bool cv_list_it_first(
     cv_list_ptr * r_cur)
 {
     cv_bool b_result = cv_false;
-    cv_debug_assert_(!!p_this, cv_debug_code_null_ptr);
+    cv_debug_assert_(p_this, cv_debug_code_null_ptr);
     p_this->o_cur = p_this->o_list;
     b_result = cv_list_it_next(p_this, r_cur);
     return b_result;
@@ -49,7 +49,7 @@ cv_bool cv_list_it_last(
     cv_list_ptr * r_cur)
 {
     cv_bool b_result = cv_false;
-    cv_debug_assert_(!!p_this, cv_debug_code_null_ptr);
+    cv_debug_assert_(p_this, cv_debug_code_null_ptr);
     p_this->o_cur = p_this->o_list;
     b_result = cv_list_it_prev(p_this, r_cur);
     return b_result;

@@ -78,7 +78,7 @@ static void cv_heap_section_node_init(
 static void cv_heap_section_node_cleanup(
     cv_heap_section_node * p_this)
 {
-    cv_debug_assert_(!!p_this, cv_debug_code_null_ptr);
+    cv_debug_assert_(p_this, cv_debug_code_null_ptr);
     cv_list_node_cleanup(&p_this->o_node);
     cv_array_cleanup(&p_this->o_payload);
     cv_array_cleanup(&p_this->o_allocation);
@@ -89,7 +89,7 @@ static cv_heap_section_node * cv_heap_section_node_create(
     cv_heap_section_node_desc const * p_desc)
 {
     cv_heap_section_ptr o_ptr = cv_ptr_null_;
-    cv_debug_assert_(!!p_desc, cv_debug_code_null_ptr);
+    cv_debug_assert_(p_desc, cv_debug_code_null_ptr);
     {
         long const i_malloc_len = p_desc->i_grow_len;
         o_ptr.p_void = cv_runtime_malloc(i_malloc_len);
@@ -114,7 +114,7 @@ static cv_heap_section_node * cv_heap_section_node_create(
 static void cv_heap_section_node_destroy(
     cv_heap_section_node * p_this)
 {
-    cv_debug_assert_(!!p_this, cv_debug_code_null_ptr);
+    cv_debug_assert_(p_this, cv_debug_code_null_ptr);
     {
         void * const p_allocation = p_this->o_allocation.o_min.p_void;
         cv_heap_section_node_cleanup(p_this);
@@ -137,7 +137,7 @@ void cv_heap_section_init(
 void cv_heap_section_cleanup(
     cv_heap_section * p_this)
 {
-    cv_debug_assert_( !!p_this, cv_debug_code_null_ptr);
+    cv_debug_assert_( p_this, cv_debug_code_null_ptr);
     {
         /* Destroy all nodes */
         cv_list_it o_list_it = cv_list_it_initializer_;
@@ -158,7 +158,7 @@ static cv_bool cv_heap_section_grow(
     cv_heap_section * p_this)
 {
     cv_bool b_result = cv_false;
-    cv_debug_assert_( !!p_this, cv_debug_code_null_ptr);
+    cv_debug_assert_( p_this, cv_debug_code_null_ptr);
     {
         cv_heap_section_ptr o_ptr = cv_ptr_null_;
         cv_heap_section_node_desc o_desc =
@@ -184,7 +184,7 @@ void * cv_heap_section_alloc(
     long i_len)
 {
     cv_array_ptr o_data_ptr = cv_ptr_null_;
-    cv_debug_assert_( !!p_this, cv_debug_code_null_ptr);
+    cv_debug_assert_( p_this, cv_debug_code_null_ptr);
     cv_debug_assert_( i_len > 0, cv_debug_code_invalid_length);
     {
         /* Align len */

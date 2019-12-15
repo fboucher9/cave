@@ -17,7 +17,7 @@ cv_debug_decl_(g_class);
 
 void cv_clock_mono_init(
     cv_clock_mono * p_this) {
-    cv_debug_assert_(!!p_this, cv_debug_code_null_ptr);
+    cv_debug_assert_(p_this, cv_debug_code_null_ptr);
     cv_debug_construct_(g_class, p_this);
     cv_clock_init(&p_this->o_clock);
 }
@@ -28,7 +28,7 @@ void cv_clock_mono_init(
 
 void cv_clock_mono_cleanup(
     cv_clock_mono * p_this) {
-    cv_debug_assert_(!!p_this, cv_debug_code_null_ptr);
+    cv_debug_assert_(p_this, cv_debug_code_null_ptr);
     cv_clock_cleanup(&p_this->o_clock);
     cv_debug_destruct_(g_class, p_this);
 }
@@ -40,7 +40,7 @@ void cv_clock_mono_cleanup(
 cv_bool cv_clock_mono_read(
     cv_clock_mono * p_this) {
     cv_bool b_result = cv_false;
-    cv_debug_assert_(!!p_this, cv_debug_code_null_ptr);
+    cv_debug_assert_(p_this, cv_debug_code_null_ptr);
     if (cv_clock_read(&p_this->o_clock, cv_clock_epoch_mono)) {
         b_result = cv_true;
     }
@@ -54,7 +54,7 @@ cv_bool cv_clock_mono_read(
 cv_bool cv_clock_mono_until(
     cv_clock_mono const * p_this) {
     cv_bool b_result = cv_false;
-    cv_debug_assert_(!!p_this, cv_debug_code_null_ptr);
+    cv_debug_assert_(p_this, cv_debug_code_null_ptr);
     if (cv_clock_until(&p_this->o_clock, cv_clock_epoch_mono)) {
         b_result = cv_true;
     }

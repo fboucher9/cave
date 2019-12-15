@@ -27,7 +27,7 @@ cv_bool cv_array_compare(
 void cv_array_zero(
     cv_array const * p_this)
 {
-    cv_debug_assert_( !!p_this, cv_debug_code_null_ptr);
+    cv_debug_assert_( p_this, cv_debug_code_null_ptr);
     cv_memory_zero( p_this->o_min.p_void,
         cv_array_len(p_this));
 }
@@ -36,7 +36,7 @@ void cv_array_fill(
     cv_array const * p_this,
     unsigned char c_value)
 {
-    cv_debug_assert_( !!p_this, cv_debug_code_null_ptr);
+    cv_debug_assert_( p_this, cv_debug_code_null_ptr);
     if (!c_value) {
         cv_debug_msg_(cv_debug_code_alternative);
     }

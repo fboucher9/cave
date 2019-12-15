@@ -30,7 +30,7 @@ void cv_options_it_init(
 void cv_options_it_cleanup(
     cv_options_it * p_this)
 {
-    cv_debug_assert_(!!p_this, cv_debug_code_null_ptr);
+    cv_debug_assert_(p_this, cv_debug_code_null_ptr);
     cv_list_it_cleanup(&p_this->o_list_it);
     cv_debug_destruct_(g_class, p_this);
 }

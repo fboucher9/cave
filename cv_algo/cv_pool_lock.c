@@ -37,7 +37,7 @@ cv_bool cv_pool_lock_init(
 
 void cv_pool_lock_cleanup(
     cv_pool_lock * p_this) {
-    cv_debug_assert_(!!p_this, cv_debug_code_null_ptr);
+    cv_debug_assert_(p_this, cv_debug_code_null_ptr);
     cv_pool_cleanup(&p_this->o_pool);
     cv_mutex_cleanup(&p_this->o_mutex);
     cv_debug_destruct_(g_class, p_this);
@@ -50,7 +50,7 @@ void cv_pool_lock_cleanup(
 void * cv_pool_lock_alloc(
     cv_pool_lock * p_this) {
     void * p_result = cv_null_;
-    cv_debug_assert_(!!p_this, cv_debug_code_null_ptr);
+    cv_debug_assert_(p_this, cv_debug_code_null_ptr);
     cv_mutex_lock(&p_this->o_mutex);
     p_result = cv_pool_alloc(&p_this->o_pool);
     cv_mutex_unlock(&p_this->o_mutex);

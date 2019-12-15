@@ -24,7 +24,7 @@ cv_debug_decl_(g_class);
 cv_bool cv_heap_used_init(
     cv_heap_used * p_this) {
     cv_bool b_result = cv_false;
-    cv_debug_assert_(!!p_this, cv_debug_code_null_ptr);
+    cv_debug_assert_(p_this, cv_debug_code_null_ptr);
     cv_debug_construct_(g_class, p_this);
     if (cv_mutex_init(&p_this->o_mutex)) {
         cv_list_root_init(&p_this->o_used_list);
@@ -75,7 +75,7 @@ static void cv_heap_print_leak_report(cv_heap_used * p_this) {
 
 void cv_heap_used_cleanup(
     cv_heap_used * p_this) {
-    cv_debug_assert_(!!p_this, cv_debug_code_null_ptr);
+    cv_debug_assert_(p_this, cv_debug_code_null_ptr);
     cv_heap_print_leak_report(p_this);
     cv_list_root_cleanup(&p_this->o_used_list);
     cv_mutex_cleanup(&p_this->o_mutex);

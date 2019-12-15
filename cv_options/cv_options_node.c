@@ -25,14 +25,14 @@ cv_debug_decl_(g_class);
 static void cv_options_node_init_node(
     cv_options_node * p_this)
 {
-    cv_debug_assert_( !!p_this, cv_debug_code_null_ptr);
+    cv_debug_assert_( p_this, cv_debug_code_null_ptr);
     cv_list_node_init(&(p_this->o_node));
 }
 
 static void cv_options_node_cleanup_node(
     cv_options_node * p_this)
 {
-    cv_debug_assert_( !!p_this, cv_debug_code_null_ptr);
+    cv_debug_assert_( p_this, cv_debug_code_null_ptr);
     cv_list_node_cleanup(&(p_this->o_node));
 }
 
@@ -55,7 +55,7 @@ static cv_bool cv_options_node_init_buffer(
 static void cv_options_node_cleanup_buf0(
     cv_options_node * p_this)
 {
-    cv_debug_assert_( !!p_this, cv_debug_code_null_ptr);
+    cv_debug_assert_( p_this, cv_debug_code_null_ptr);
     cv_buffer_cleanup(&(p_this->o_buffer));
 }
 
@@ -86,7 +86,7 @@ static cv_bool cv_options_node_init(
 static void cv_options_node_cleanup(
     cv_options_node * p_this)
 {
-    cv_debug_assert_( !!p_this, cv_debug_code_null_ptr);
+    cv_debug_assert_( p_this, cv_debug_code_null_ptr);
     cv_options_node_cleanup_buf0(p_this);
     cv_options_node_cleanup_node(p_this);
     cv_debug_destruct_(g_class, p_this);
@@ -96,7 +96,7 @@ cv_options_node * cv_options_node_create(
     cv_options_node_desc const * p_desc)
 {
     cv_options_node * p_this = cv_null_;
-    cv_debug_assert_(!!p_desc, cv_debug_code_null_ptr);
+    cv_debug_assert_(p_desc, cv_debug_code_null_ptr);
     p_this = cv_options_pool_alloc();
     if (p_this) {
         if (cv_options_node_init(p_this, p_desc)) {
@@ -114,7 +114,7 @@ cv_options_node * cv_options_node_create(
 void cv_options_node_destroy(
     cv_options_node * p_this)
 {
-    cv_debug_assert_(!!p_this, cv_debug_code_null_ptr);
+    cv_debug_assert_(p_this, cv_debug_code_null_ptr);
     cv_options_node_cleanup(p_this);
     cv_options_pool_free(p_this);
 }

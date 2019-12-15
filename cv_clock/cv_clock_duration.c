@@ -17,7 +17,7 @@ cv_debug_decl_(g_class);
  */
 
 static cv_ull cv_clock_duration_get( cv_clock_duration const * p_this) {
-    cv_debug_assert_(!!p_this, cv_debug_code_null_ptr);
+    cv_debug_assert_(p_this, cv_debug_code_null_ptr);
     return cv_clock_get(&p_this->o_clock);
 }
 
@@ -27,7 +27,7 @@ static cv_ull cv_clock_duration_get( cv_clock_duration const * p_this) {
 
 static void cv_clock_duration_set( cv_clock_duration * p_this,
     cv_ull ll_value) {
-    cv_debug_assert_(!!p_this, cv_debug_code_null_ptr);
+    cv_debug_assert_(p_this, cv_debug_code_null_ptr);
     cv_clock_set(&p_this->o_clock, ll_value);
 }
 
@@ -36,7 +36,7 @@ static void cv_clock_duration_set( cv_clock_duration * p_this,
  */
 
 void cv_clock_duration_init( cv_clock_duration * p_this) {
-    cv_debug_assert_(!!p_this, cv_debug_code_null_ptr);
+    cv_debug_assert_(p_this, cv_debug_code_null_ptr);
     cv_debug_construct_(g_class, p_this);
     cv_clock_init(&p_this->o_clock);
 }
@@ -46,7 +46,7 @@ void cv_clock_duration_init( cv_clock_duration * p_this) {
  */
 
 void cv_clock_duration_cleanup( cv_clock_duration * p_this) {
-    cv_debug_assert_(!!p_this, cv_debug_code_null_ptr);
+    cv_debug_assert_(p_this, cv_debug_code_null_ptr);
     cv_clock_cleanup(&p_this->o_clock);
     cv_debug_destruct_(g_class, p_this);
 }
@@ -56,7 +56,7 @@ void cv_clock_duration_cleanup( cv_clock_duration * p_this) {
  */
 
 cv_bool cv_clock_duration_until( cv_clock_duration const * p_this) {
-    cv_debug_assert_(!!p_this, cv_debug_code_null_ptr);
+    cv_debug_assert_(p_this, cv_debug_code_null_ptr);
     return cv_clock_until(&p_this->o_clock, cv_clock_epoch_duration);
 }
 

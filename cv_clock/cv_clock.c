@@ -46,7 +46,7 @@ void cv_clock_unload(void) {
  */
 
 void cv_clock_init( cv_clock * p_this) {
-    cv_debug_assert_(!!p_this, cv_debug_code_null_ptr);
+    cv_debug_assert_(p_this, cv_debug_code_null_ptr);
     cv_debug_construct_(g_class, p_this);
     p_this->i_seconds = 0;
     p_this->i_fraction = 0;
@@ -57,7 +57,7 @@ void cv_clock_init( cv_clock * p_this) {
  */
 
 void cv_clock_cleanup( cv_clock * p_this) {
-    cv_debug_assert_(!!p_this, cv_debug_code_null_ptr);
+    cv_debug_assert_(p_this, cv_debug_code_null_ptr);
     /* ... */
     cv_debug_destruct_(g_class, p_this);
 }
@@ -98,7 +98,7 @@ static void cv_clock_to_linux_timespec( cv_clock const * p_this,
 static cv_bool cv_clock_read_linux( cv_clock * p_this,
     int e_epoch) {
     cv_bool b_result = cv_false;
-    cv_debug_assert_(!!p_this, cv_debug_code_null_ptr);
+    cv_debug_assert_(p_this, cv_debug_code_null_ptr);
     if (cv_clock_epoch_mono == e_epoch) {
         struct timespec o_linux_timespec;
         int const i_linux_result = clock_gettime(
@@ -131,7 +131,7 @@ static cv_bool cv_clock_read_linux( cv_clock * p_this,
 
 cv_bool cv_clock_read( cv_clock * p_this, int e_epoch) {
     cv_bool b_result = cv_false;
-    cv_debug_assert_(!!p_this, cv_debug_code_null_ptr);
+    cv_debug_assert_(p_this, cv_debug_code_null_ptr);
 #if defined cv_linux_
     b_result = cv_clock_read_linux(p_this, e_epoch);
 #else /* #if defined cv_linux_ */

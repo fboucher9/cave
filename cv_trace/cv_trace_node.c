@@ -49,7 +49,7 @@ void cv_trace_node_dispatch( cv_trace_node * p_trace_node,
     /* print of type */
     unsigned char a_line[80u];
     cv_array_it o_array_it = cv_array_it_initializer_;
-    cv_debug_assert_(!!p_trace_node, cv_debug_code_null_ptr);
+    cv_debug_assert_(p_trace_node, cv_debug_code_null_ptr);
     cv_mutex_impl_lock(&g_trace_mutex);
     cv_trace_node_register(p_trace_node);
     cv_array_it_init_range(&o_array_it, a_line, a_line+sizeof(a_line));

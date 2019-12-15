@@ -46,7 +46,7 @@ cv_bool cv_mutex_init(
 {
     cv_bool b_result = cv_false;
     cv_debug_assert_(g_mutex_loaded, cv_debug_code_not_loaded);
-    cv_debug_assert_(!!p_this, cv_debug_code_null_ptr);
+    cv_debug_assert_(p_this, cv_debug_code_null_ptr);
     cv_debug_construct_(g_class, p_this);
     {
         int i_pthread_result = 0;
@@ -69,7 +69,7 @@ void cv_mutex_cleanup(
     cv_mutex * p_this)
 {
     cv_debug_assert_(g_mutex_loaded, cv_debug_code_not_loaded);
-    cv_debug_assert_(!!p_this, cv_debug_code_null_ptr);
+    cv_debug_assert_(p_this, cv_debug_code_null_ptr);
     {
         int i_pthread_result = 0;
         i_pthread_result = cv_mutex_impl_cleanup(p_this);
@@ -87,7 +87,7 @@ void cv_mutex_lock(
     cv_mutex * p_this)
 {
     cv_debug_assert_(g_mutex_loaded, cv_debug_code_not_loaded);
-    cv_debug_assert_(!!p_this, cv_debug_code_null_ptr);
+    cv_debug_assert_(p_this, cv_debug_code_null_ptr);
     {
         int i_pthread_result = 0;
         i_pthread_result = cv_mutex_impl_lock(p_this);
@@ -104,7 +104,7 @@ void cv_mutex_unlock(
     cv_mutex * p_this)
 {
     cv_debug_assert_(g_mutex_loaded, cv_debug_code_not_loaded);
-    cv_debug_assert_(!!p_this, cv_debug_code_null_ptr);
+    cv_debug_assert_(p_this, cv_debug_code_null_ptr);
     {
         int i_pthread_result = 0;
         i_pthread_result = cv_mutex_impl_unlock(p_this);

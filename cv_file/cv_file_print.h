@@ -13,6 +13,15 @@ void cv_file_print_char( cv_file const * p_file,
 void cv_file_print_array( cv_file const * p_file,
     cv_array const * p_array);
 
+void cv_file_print_range( cv_file const * p_file,
+    void const * p_range_min, void const * p_range_max);
+
+void cv_file_print_vector( cv_file const * p_file,
+    void const * p_buffer, long i_buffer_len);
+
+void cv_file_print_0( cv_file const * p_file,
+    char const * p_buffer, long i_max_len);
+
 void cv_file_print_number( cv_file const * p_file,
     cv_number_desc const * p_desc);
 

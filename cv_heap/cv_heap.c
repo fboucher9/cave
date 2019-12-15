@@ -168,7 +168,7 @@ void * cv_heap_alloc( long i_buffer_length) {
 void cv_heap_free( void * p_buffer) {
     cv_heap_mgr * const p_this = &g_heap_mgr;
     cv_debug_assert_(g_heap_loaded, cv_debug_code_not_loaded);
-    cv_debug_assert_(!!p_buffer, cv_debug_code_null_ptr);
+    cv_debug_assert_(p_buffer, cv_debug_code_null_ptr);
     {
         cv_heap_node * const p_heap_node = cv_heap_used_lookup(&p_this->o_used,
             p_buffer);

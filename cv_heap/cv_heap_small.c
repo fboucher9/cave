@@ -20,7 +20,7 @@ cv_debug_decl_(g_class);
 
 cv_bool cv_heap_small_init(cv_heap_small * p_this) {
     cv_bool b_result = cv_false;
-    cv_debug_assert_(!!p_this, cv_debug_code_null_ptr);
+    cv_debug_assert_(p_this, cv_debug_code_null_ptr);
     cv_debug_construct_(g_class, p_this);
     {
         long i_pool_index = 0;
@@ -43,7 +43,7 @@ cv_bool cv_heap_small_init(cv_heap_small * p_this) {
 }
 
 void cv_heap_small_cleanup(cv_heap_small * p_this) {
-    cv_debug_assert_(!!p_this, cv_debug_code_null_ptr);
+    cv_debug_assert_(p_this, cv_debug_code_null_ptr);
     {
         long i_pool_index = 0;
         while (i_pool_index < cv_heap_small_count_) {
@@ -94,7 +94,7 @@ cv_heap_node * cv_heap_small_alloc(
 }
 
 void cv_heap_small_free( cv_heap_small * p_this, cv_heap_node * p_heap_node) {
-    cv_debug_assert_(!!p_heap_node, cv_debug_code_null_ptr);
+    cv_debug_assert_(p_heap_node, cv_debug_code_null_ptr);
     {
         long const i_len = cv_array_len(&p_heap_node->o_payload);
         long const i_pool_index = (i_len - 1) / cv_heap_small_align_;

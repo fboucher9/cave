@@ -15,7 +15,7 @@ cv_debug_decl_(g_class);
 void cv_array_init(
     cv_array * p_this)
 {
-    cv_debug_assert_( !!p_this, cv_debug_code_null_ptr);
+    cv_debug_assert_( p_this, cv_debug_code_null_ptr);
     cv_array_init_range(p_this,
             cv_null_, cv_null_);
 }
@@ -35,7 +35,7 @@ void cv_array_init_vector(
     void const * p_buf,
     long i_buf_len)
 {
-    cv_debug_assert_( !!p_this, cv_debug_code_null_ptr);
+    cv_debug_assert_( p_this, cv_debug_code_null_ptr);
     cv_debug_assert_( 0 <= i_buf_len, cv_debug_code_invalid_length);
     {
         cv_array_ptr o_buf_ptr = cv_ptr_null_;
@@ -49,7 +49,7 @@ void cv_array_init_vector(
 void cv_array_cleanup(
     cv_array * p_this)
 {
-    cv_debug_assert_( !!p_this, cv_debug_code_null_ptr);
+    cv_debug_assert_( p_this, cv_debug_code_null_ptr);
     p_this->o_min.pc_void = cv_null_;
     p_this->o_max.pc_void = cv_null_;
     cv_debug_destruct_(g_class, p_this);
@@ -60,7 +60,7 @@ void cv_array_init_range(
     void const * p_ref_min,
     void const * p_ref_max)
 {
-    cv_debug_assert_( !!p_this, cv_debug_code_null_ptr);
+    cv_debug_assert_( p_this, cv_debug_code_null_ptr);
     cv_debug_construct_(g_class, p_this);
     p_this->o_min.pc_void = p_ref_min;
     p_this->o_max.pc_void = p_ref_max;
@@ -88,7 +88,7 @@ long cv_array_len(
     cv_array const * p_this)
 {
     long i_count = 0;
-    cv_debug_assert_( !!p_this, cv_debug_code_null_ptr);
+    cv_debug_assert_( p_this, cv_debug_code_null_ptr);
     i_count = ((
         p_this->o_max.pc_char
         - p_this->o_min.pc_char) & cv_signed_long_max_);

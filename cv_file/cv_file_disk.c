@@ -58,7 +58,7 @@ cv_bool cv_file_disk_init(
 void cv_file_disk_cleanup(
     cv_file_disk * p_this)
 {
-    cv_debug_assert_(!!p_this, cv_debug_code_null_ptr);
+    cv_debug_assert_(p_this, cv_debug_code_null_ptr);
     /* Setup call to close */
     if (p_this->o_file.i_index >= 0) {
         cv_runtime_close(p_this->o_file.i_index);

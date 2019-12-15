@@ -46,7 +46,7 @@ void * cv_heap_section_lock_alloc(
     cv_heap_section_lock * p_this,
     long i_len) {
     void * p_result = cv_null_;
-    cv_debug_assert_(!!p_this, cv_debug_code_null_ptr);
+    cv_debug_assert_(p_this, cv_debug_code_null_ptr);
     cv_debug_assert_(i_len > 0, cv_debug_code_invalid_length);
     cv_mutex_lock(&p_this->o_mutex);
     p_result = cv_heap_section_alloc(&p_this->o_heap_section, i_len);

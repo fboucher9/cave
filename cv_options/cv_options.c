@@ -49,7 +49,7 @@ void cv_options_unload(void)
 static void cv_options_cleanup_list(
     cv_options * p_this)
 {
-    cv_debug_assert_( !!p_this, cv_debug_code_null_ptr);
+    cv_debug_assert_( p_this, cv_debug_code_null_ptr);
     {
         cv_list_it o_list_it = cv_list_it_initializer_;
         cv_list_it_init(&o_list_it, &p_this->o_list);
@@ -69,7 +69,7 @@ during entire lifetime of object.  */
 void cv_options_cleanup(
     cv_options * p_this)
 {
-    cv_debug_assert_( !!p_this, cv_debug_code_null_ptr);
+    cv_debug_assert_( p_this, cv_debug_code_null_ptr);
     cv_options_cleanup_list(p_this);
     cv_list_root_cleanup(&p_this->o_list);
     cv_debug_destruct_(g_class, p_this);
@@ -82,7 +82,7 @@ void cv_options_cleanup(
 void cv_options_init(
     cv_options * p_this)
 {
-    cv_debug_assert_( !!p_this, cv_debug_code_null_ptr);
+    cv_debug_assert_( p_this, cv_debug_code_null_ptr);
     cv_debug_construct_(g_class, p_this);
     cv_list_root_init(&p_this->o_list);
 }

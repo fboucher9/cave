@@ -13,7 +13,7 @@ cv_debug_decl_(g_class);
 
 cv_bool cv_heap_large_init( cv_heap_large * p_this ) {
     cv_bool b_result = cv_false;
-    cv_debug_assert_(!!p_this, cv_debug_code_null_ptr);
+    cv_debug_assert_(p_this, cv_debug_code_null_ptr);
     cv_debug_construct_(g_class, p_this);
     if (cv_mutex_init(&p_this->o_mutex)) {
         cv_list_root_init(&p_this->o_free_list);
@@ -26,7 +26,7 @@ cv_bool cv_heap_large_init( cv_heap_large * p_this ) {
 
 static void cv_heap_large_empty_free_list( cv_heap_large * p_this) {
     cv_list_it o_list_it = cv_list_it_initializer_;
-    cv_debug_assert_(!!p_this, cv_debug_code_null_ptr);
+    cv_debug_assert_(p_this, cv_debug_code_null_ptr);
     cv_list_it_init(&o_list_it, &p_this->o_free_list);
     {
         cv_heap_node_ptr o_heap_ptr = cv_ptr_null_;
@@ -46,7 +46,7 @@ static void cv_heap_large_empty_free_list( cv_heap_large * p_this) {
 }
 
 void cv_heap_large_cleanup( cv_heap_large * p_this) {
-    cv_debug_assert_(!!p_this, cv_debug_code_null_ptr);
+    cv_debug_assert_(p_this, cv_debug_code_null_ptr);
     /* Free all items ... */
     cv_heap_large_empty_free_list(p_this);
     cv_list_root_cleanup(&p_this->o_free_list);
@@ -107,7 +107,7 @@ static cv_heap_node * cv_heap_large_lookup_cb( cv_heap_large * p_this,
 
 static void cv_heap_large_free_cb( cv_heap_large * p_this,
     cv_heap_node * p_heap_node) {
-    cv_debug_assert_(!!p_heap_node, cv_debug_code_null_ptr);
+    cv_debug_assert_(p_heap_node, cv_debug_code_null_ptr);
     /* Detach from used list */
     cv_list_join( &p_heap_node->o_node, &p_heap_node->o_node);
     /* Attach to free list */
@@ -145,7 +145,7 @@ cv_heap_node * cv_heap_large_alloc( cv_heap_secondary * p_heap_secondary,
 
 void cv_heap_large_free( cv_heap_large * p_this,
     cv_heap_node * p_heap_node) {
-    cv_debug_assert_(!!p_heap_node, cv_debug_code_null_ptr);
+    cv_debug_assert_(p_heap_node, cv_debug_code_null_ptr);
     cv_mutex_lock(&p_this->o_mutex);
     cv_heap_large_free_cb(p_this, p_heap_node);
     cv_mutex_unlock(&p_this->o_mutex);

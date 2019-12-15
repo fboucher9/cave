@@ -24,7 +24,7 @@ void cv_array_it_init_vector(
     void const * p_buf,
     long i_len)
 {
-    cv_debug_assert_( !!p_this, cv_debug_code_null_ptr);
+    cv_debug_assert_( p_this, cv_debug_code_null_ptr);
     cv_debug_construct_(g_class, p_this);
     cv_array_init_vector(&p_this->o_array, p_buf, i_len);
 }
@@ -33,7 +33,7 @@ void cv_array_it_init_range(
     cv_array_it * p_this,
     void const * p_range_min,
     void const * p_range_max) {
-    cv_debug_assert_( !!p_this, cv_debug_code_null_ptr);
+    cv_debug_assert_( p_this, cv_debug_code_null_ptr);
     cv_debug_construct_(g_class, p_this);
     cv_array_init_range(&p_this->o_array, p_range_min, p_range_max);
 }
@@ -41,7 +41,7 @@ void cv_array_it_init_range(
 void cv_array_it_cleanup(
     cv_array_it * p_this)
 {
-    cv_debug_assert_( !!p_this, cv_debug_code_null_ptr);
+    cv_debug_assert_( p_this, cv_debug_code_null_ptr);
     cv_array_cleanup(&p_this->o_array);
     cv_debug_destruct_(g_class, p_this);
 }
@@ -145,7 +145,7 @@ cv_bool cv_array_it_write_next_char(
     unsigned char c_data)
 {
     cv_bool b_result = cv_false;
-    cv_debug_assert_( !!p_this, cv_debug_code_null_ptr);
+    cv_debug_assert_( p_this, cv_debug_code_null_ptr);
     if (p_this->o_array.o_min.p_uchar !=
         p_this->o_array.o_max.p_uchar) {
         *(p_this->o_array.o_min.p_uchar) = c_data;
@@ -160,7 +160,7 @@ cv_bool cv_array_it_write_next_ptr(
     void const * pc_void)
 {
     cv_bool b_result = cv_false;
-    cv_debug_assert_( !!p_this, cv_debug_code_null_ptr);
+    cv_debug_assert_( p_this, cv_debug_code_null_ptr);
     if (p_this->o_array.o_min.ppc_void !=
         p_this->o_array.o_max.ppc_void) {
         *(p_this->o_array.o_min.ppc_void) = pc_void;

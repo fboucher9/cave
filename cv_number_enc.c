@@ -42,7 +42,7 @@ static cv_bool cv_number_enc_init_digits(
     cv_number_enc * p_this)
 {
     cv_bool b_result = cv_false;
-    cv_debug_assert_(!!p_this, cv_debug_code_null_ptr);
+    cv_debug_assert_(p_this, cv_debug_code_null_ptr);
     {
         unsigned long i_unsigned = 0;
         i_unsigned = p_this->o_desc.o_data.i_unsigned;
@@ -162,7 +162,7 @@ cv_bool cv_number_enc_init(
 void cv_number_enc_cleanup(
     cv_number_enc * p_this)
 {
-    cv_debug_assert_(!!p_this, cv_debug_code_null_ptr);
+    cv_debug_assert_(p_this, cv_debug_code_null_ptr);
     cv_debug_destruct_(g_class, p_this);
 }
 

@@ -23,7 +23,7 @@ cv_bool cv_heap_pool_init(
     long i_len)
 {
     cv_bool b_result = cv_false;
-    cv_debug_assert_(!!p_this, cv_debug_code_null_ptr);
+    cv_debug_assert_(p_this, cv_debug_code_null_ptr);
     cv_debug_assert_(i_len > 0, cv_debug_code_invalid_length);
     cv_debug_construct_(g_class, p_this);
     if (cv_mutex_init(&p_this->o_mutex)) {
@@ -40,7 +40,7 @@ cv_bool cv_heap_pool_init(
 void cv_heap_pool_cleanup(
     cv_heap_pool * p_this)
 {
-    cv_debug_assert_(!!p_this, cv_debug_code_null_ptr);
+    cv_debug_assert_(p_this, cv_debug_code_null_ptr);
     /* Detect leaks ... */
     /* Discard all free nodes */
     {
@@ -66,7 +66,7 @@ void cv_heap_pool_cleanup(
 static cv_heap_node * cv_heap_pool_lookup_cb(
     cv_heap_pool * p_this) {
     cv_heap_node * p_result = cv_null_;
-    cv_debug_assert_(!!p_this, cv_debug_code_null_ptr);
+    cv_debug_assert_(p_this, cv_debug_code_null_ptr);
     {
         /* Look for free compatible item */
         cv_heap_it o_heap_it = cv_heap_it_initializer_;
@@ -89,7 +89,7 @@ static cv_heap_node * cv_heap_pool_lookup_cb(
 cv_heap_node * cv_heap_pool_lookup(
     cv_heap_pool * p_this) {
     cv_heap_node * p_result = cv_null_;
-    cv_debug_assert_(!!p_this, cv_debug_code_null_ptr);
+    cv_debug_assert_(p_this, cv_debug_code_null_ptr);
     cv_mutex_lock(&p_this->o_mutex);
     p_result = cv_heap_pool_lookup_cb(p_this);
     cv_mutex_unlock(&p_this->o_mutex);
@@ -102,7 +102,7 @@ cv_heap_node * cv_heap_pool_alloc(
     long i_len)
 {
     cv_heap_node * p_result = cv_null_;
-    cv_debug_assert_(!!p_heap_secondary, cv_debug_code_null_ptr);
+    cv_debug_assert_(p_heap_secondary, cv_debug_code_null_ptr);
     {
         /* Allocate memory from primary */
         void * const p_payload = cv_heap_primary_alloc(p_heap_primary, i_len);

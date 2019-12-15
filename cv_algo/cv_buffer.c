@@ -17,7 +17,7 @@ static cv_bool cv_buffer_realloc(
     long i_length)
 {
     cv_bool b_result = cv_false;
-    cv_debug_assert_( !!p_this, cv_debug_code_null_ptr);
+    cv_debug_assert_( p_this, cv_debug_code_null_ptr);
     cv_debug_assert_( i_length > 0, cv_debug_code_invalid_length);
     {
         cv_array_ptr o_array_ptr = cv_ptr_null_;
@@ -41,7 +41,7 @@ cv_bool cv_buffer_init(
     long i_length)
 {
     cv_bool b_result = cv_false;
-    cv_debug_assert_( !!p_this, cv_debug_code_null_ptr);
+    cv_debug_assert_( p_this, cv_debug_code_null_ptr);
     cv_debug_assert_( i_length > 0, cv_debug_code_invalid_length);
     {
         cv_debug_construct_(g_class, p_this);
@@ -63,7 +63,7 @@ Free resources allocated for cv_buffer object.
 void cv_buffer_cleanup(
     cv_buffer * p_this)
 {
-    cv_debug_assert_( !!p_this, cv_debug_code_null_ptr);
+    cv_debug_assert_( p_this, cv_debug_code_null_ptr);
     if (p_this->o_array.o_min.pc_void) {
         cv_heap_free(p_this->o_array.o_min.p_void);
     }
@@ -76,7 +76,7 @@ long cv_buffer_len(
     cv_buffer const * p_this)
 {
     long i_len = 0;
-    cv_debug_assert_( !!p_this, cv_debug_code_null_ptr);
+    cv_debug_assert_( p_this, cv_debug_code_null_ptr);
     i_len = cv_array_len( &p_this->o_array);
     return i_len;
 }

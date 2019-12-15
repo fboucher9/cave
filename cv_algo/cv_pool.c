@@ -46,7 +46,7 @@ void cv_pool_cleanup( cv_pool * p_this) {
 void * cv_pool_alloc( cv_pool * p_this) {
     void * p_result = cv_null_;
     cv_stack_ptr o_stack_ptr = cv_ptr_null_;
-    cv_debug_assert_(!!p_this, cv_debug_code_null_ptr);
+    cv_debug_assert_(p_this, cv_debug_code_null_ptr);
     if (cv_stack_pop(&p_this->o_free_list, &o_stack_ptr)) {
         cv_stack_cleanup(o_stack_ptr.p_stack);
         p_result = o_stack_ptr.p_void;

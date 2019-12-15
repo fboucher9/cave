@@ -29,7 +29,7 @@ void cv_stack_it_init(
 
 void cv_stack_it_cleanup(
     cv_stack_it * p_this) {
-    cv_debug_assert_(!!p_this, cv_debug_code_null_ptr);
+    cv_debug_assert_(p_this, cv_debug_code_null_ptr);
     cv_debug_destruct_(g_class, p_this);
 }
 
