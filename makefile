@@ -80,6 +80,7 @@ cv_test_srcs = \
     cv_trace/cv_trace_func.c \
     cv_trace/cv_trace_func0.c \
     cv_trace/cv_trace_event.c \
+    cv_trace/cv_trace_test.c \
     cv_runtime.c \
     cv_linux.c \
     cv_windows.c \

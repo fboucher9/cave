@@ -305,6 +305,8 @@ static cv_bool cv_test_main_cb(
                     'l', 'e', 'a', 'k', '2' };
                 static char const g_leak3_text[] = {
                     'l', 'e', 'a', 'k', '3' };
+                static char const g_trace_text[] = {
+                    't', 'r', 'a', 'c', 'e' };
 
                 static cv_array const g_number_array =
                     cv_array_text_initializer_(g_number_text);
@@ -332,6 +334,8 @@ static cv_bool cv_test_main_cb(
                     cv_array_text_initializer_(g_leak2_text);
                 static cv_array const g_leak3_array =
                     cv_array_text_initializer_(g_leak3_text);
+                static cv_array const g_trace_array =
+                    cv_array_text_initializer_(g_trace_text);
 
                 if (cv_array_compare(&o_string, &g_number_array)) {
                     cv_test_number();
@@ -359,6 +363,8 @@ static cv_bool cv_test_main_cb(
                     cv_test_leak2();
                 } else if (cv_array_compare(&o_string, &g_leak3_array)) {
                     cv_test_leak3();
+                } else if (cv_array_compare(&o_string, &g_trace_array)) {
+                    cv_trace_test();
                 } else {
                     /* invalid command */
                     static unsigned char const a_text[] = {

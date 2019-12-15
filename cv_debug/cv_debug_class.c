@@ -15,6 +15,7 @@
 #include <cv_runtime.h>
 #include <cv_misc/cv_limits.h>
 #include <cv_number_desc.h>
+#include <cv_misc/cv_thread_local.h>
 
 static long g_debug_class_count = 0;
 
@@ -46,12 +47,17 @@ static void cv_debug_class_register( cv_debug_class * p_class,
 void xx_debug_class_construct( cv_debug_class * p_class,
     char const * p_file, int i_line,
     void * p_buf, long i_buf_len) {
-    cv_mutex_impl_lock(&g_debug_class_mutex);
+    static cv_thread_local_ long i_recursive = 0;
+    if (0 == (i_recursive++)) {
+        cv_mutex_impl_lock(&g_debug_class_mutex);
+    }
     cv_runtime_memset(p_buf, 0xcc, i_buf_len);
     cv_debug_class_register(p_class, p_file, i_line);
     p_class->i_init_count ++;
     g_debug_class_count ++;
-    cv_mutex_impl_unlock(&g_debug_class_mutex);
+    if (0 == (--i_recursive)) {
+        cv_mutex_impl_unlock(&g_debug_class_mutex);
+    }
 }
 
 /*
@@ -61,12 +67,17 @@ void xx_debug_class_construct( cv_debug_class * p_class,
 void xx_debug_class_destruct( cv_debug_class * p_class,
     char const * p_file, int i_line,
     void * p_buf, long i_buf_len) {
-    cv_mutex_impl_lock(&g_debug_class_mutex);
+    static cv_thread_local_ long i_recursive = 0;
+    if (0 == (i_recursive++)) {
+        cv_mutex_impl_lock(&g_debug_class_mutex);
+    }
     cv_runtime_memset(p_buf, 0xcd, i_buf_len);
     cv_debug_class_register(p_class, p_file, i_line);
     p_class->i_init_count --;
     g_debug_class_count --;
-    cv_mutex_impl_unlock(&g_debug_class_mutex);
+    if (0 == (--i_recursive)) {
+        cv_mutex_impl_unlock(&g_debug_class_mutex);
+    }
 }
 
 /*
