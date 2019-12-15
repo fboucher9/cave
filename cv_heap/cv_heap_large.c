@@ -50,6 +50,7 @@ void cv_heap_large_cleanup( cv_heap_large * p_this) {
     /* Free all items ... */
     cv_heap_large_empty_free_list(p_this);
     cv_list_root_cleanup(&p_this->o_free_list);
+    cv_mutex_cleanup(&p_this->o_mutex);
     cv_debug_destruct_(g_class, p_this);
 }
 
