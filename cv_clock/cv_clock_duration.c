@@ -5,7 +5,7 @@
  */
 
 #include <cv_clock/cv_clock_duration.h>
-#include <cv_debug.h>
+#include <cv_debug/cv_debug.h>
 #include <cv_misc/cv_limits.h>
 #include <cv_misc/cv_types.h>
 #include <cv_clock/cv_clock_tool.h>

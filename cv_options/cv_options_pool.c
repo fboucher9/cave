@@ -13,7 +13,7 @@ Description: Memory allocation pool for cv_options_node objects.
 #include <cv_options/cv_options_node.h>
 #include <cv_options/cv_options_node_ptr.h>
 #include <cv_misc/cv_sizeof.h>
-#include <cv_debug.h>
+#include <cv_debug/cv_debug.h>
 
 cv_debug_decl_(g_class);
 

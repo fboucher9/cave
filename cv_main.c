@@ -6,7 +6,7 @@
 
 #include <cv_options/cv_options.h>
 
-#include <cv_debug.h>
+#include <cv_debug/cv_debug.h>
 
 #include <cv_misc/cv_bool.h>
 

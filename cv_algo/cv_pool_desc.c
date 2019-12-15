@@ -5,7 +5,7 @@
  */
 
 #include <cv_algo/cv_pool_desc.h>
-#include <cv_debug.h>
+#include <cv_debug/cv_debug.h>
 #include <cv_misc/cv_sizeof.h>
 
 cv_debug_decl_(g_class);

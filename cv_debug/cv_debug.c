@@ -4,7 +4,7 @@
  *
  */
 
-#include <cv_debug.h>
+#include <cv_debug/cv_debug.h>
 
 #if defined cv_debug_
 

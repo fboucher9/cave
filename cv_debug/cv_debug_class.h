@@ -7,7 +7,7 @@
  *
  */
 
-#include <cv_debug_pred.h>
+#include <cv_debug/cv_debug_pred.h>
 #include <cv_misc/cv_sizeof.h>
 #include <cv_misc/cv_null.h>
 #include <cv_misc/cv_unused.h>

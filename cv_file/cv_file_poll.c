@@ -9,7 +9,7 @@
 #include <cv_misc/cv_unused.h>
 #include <cv_memory.h>
 #include <cv_misc/cv_sizeof.h>
-#include <cv_debug.h>
+#include <cv_debug/cv_debug.h>
 #include <cv_heap/cv_heap.h>
 #include <cv_misc/cv_convert.h>
 #if defined cv_linux_

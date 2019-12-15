@@ -4,7 +4,7 @@
 
 #include <cv_memory.h>
 
-#include <cv_debug.h>
+#include <cv_debug/cv_debug.h>
 
 cv_bool cv_array_compare(
     cv_array const * p_left,

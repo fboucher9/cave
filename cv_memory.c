@@ -12,7 +12,7 @@
 
 #include <cv_runtime.h>
 
-#include <cv_debug.h>
+#include <cv_debug/cv_debug.h>
 
 void cv_memory_zero(
     void * p_buf,

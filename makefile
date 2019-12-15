@@ -41,9 +41,9 @@ cv_test_srcs = \
     cv_heap/cv_heap_small.c \
     cv_heap/cv_heap_large.c \
     cv_heap/cv_heap_used.c \
-    cv_debug.c \
-    cv_debug_code.c \
-    cv_debug_class.c \
+    cv_debug/cv_debug.c \
+    cv_debug/cv_debug_code.c \
+    cv_debug/cv_debug_class.c \
     cv_misc/cv_sizeof.c \
     cv_thread/cv_thread_desc.c \
     cv_thread/cv_thread.c \

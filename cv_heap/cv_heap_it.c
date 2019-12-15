@@ -4,7 +4,7 @@
 
 #include <cv_heap/cv_heap_node_ptr.h>
 
-#include <cv_debug.h>
+#include <cv_debug/cv_debug.h>
 
 #include <cv_misc/cv_sizeof.h>
 

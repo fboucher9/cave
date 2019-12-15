@@ -2,7 +2,7 @@
 
 #include <cv_clock/cv_clock_mono_it.h>
 #include <cv_clock/cv_clock_duration.h>
-#include <cv_debug.h>
+#include <cv_debug/cv_debug.h>
 
 cv_debug_decl_(g_class);
 

@@ -7,7 +7,7 @@
 #include <cv_misc/cv_sizeof.h>
 #include <cv_misc/cv_unused.h>
 #include <cv_runtime.h>
-#include <cv_debug.h>
+#include <cv_debug/cv_debug.h>
 
 cv_debug_decl_(g_class);
 

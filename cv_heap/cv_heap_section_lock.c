@@ -5,7 +5,7 @@
  */
 
 #include <cv_heap/cv_heap_section_lock.h>
-#include <cv_debug.h>
+#include <cv_debug/cv_debug.h>
 #include <cv_misc/cv_sizeof.h>
 
 cv_debug_decl_(g_class);

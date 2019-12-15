@@ -5,7 +5,7 @@
 #include <cv_options/cv_options_desc.h>
 #include <cv_options/cv_options.h>
 #include <cv_options/cv_options_it.h>
-#include <cv_debug.h>
+#include <cv_debug/cv_debug.h>
 #include <cv_algo/cv_array.h>
 #include <cv_thread/cv_thread.h>
 #include <cv_thread/cv_thread_desc.h>

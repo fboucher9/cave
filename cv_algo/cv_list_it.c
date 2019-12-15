@@ -6,7 +6,7 @@
 
 #include <cv_algo/cv_list_root.h>
 
-#include <cv_debug.h>
+#include <cv_debug/cv_debug.h>
 
 #include <cv_misc/cv_sizeof.h>
 

@@ -6,7 +6,7 @@
 
 #include <cv_algo/cv_pool.h>
 #include <cv_heap/cv_heap.h>
-#include <cv_debug.h>
+#include <cv_debug/cv_debug.h>
 #include <cv_misc/cv_sizeof.h>
 
 cv_debug_decl_(g_class);

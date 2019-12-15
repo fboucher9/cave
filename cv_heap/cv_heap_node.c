@@ -5,7 +5,7 @@
 #include <cv_heap/cv_heap_primary.h>
 #include <cv_heap/cv_heap_node_ptr.h>
 #include <cv_misc/cv_null.h>
-#include <cv_debug.h>
+#include <cv_debug/cv_debug.h>
 #include <cv_heap/cv_heap_secondary.h>
 
 cv_debug_decl_(g_class);

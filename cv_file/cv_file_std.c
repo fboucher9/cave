@@ -4,7 +4,7 @@
 #include <cv_file/cv_file.h>
 #include <cv_algo/cv_array.h>
 #include <cv_algo/cv_array_tool.h>
-#include <cv_debug.h>
+#include <cv_debug/cv_debug.h>
 #include <cv_runtime.h>
 
 static cv_file g_file_std_in = cv_file_initializer_;

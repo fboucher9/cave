@@ -12,7 +12,7 @@
 #include <cv_misc/cv_sizeof.h>
 #include <cv_clock/cv_clock_mono.h>
 #include <cv_clock/cv_clock_tool.h>
-#include <cv_debug.h>
+#include <cv_debug/cv_debug.h>
 #include <cv_algo/cv_array_it.h>
 #include <cv_algo/cv_array_print.h>
 #include <cv_number_desc.h>
