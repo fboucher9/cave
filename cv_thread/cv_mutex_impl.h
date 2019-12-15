@@ -5,10 +5,10 @@
 
 #include <cv_thread/cv_mutex_pred.h>
 
-#include <cv_misc/cv_types.h>
-
 #if defined cv_have_pthread_
 #include <pthread.h>
+#else /* #if defined cv_have_pthread_ */
+#include <cv_misc/cv_null.h>
 #endif /* #if defined cv_have_pthread_ */
 
 /*
@@ -36,5 +36,17 @@ union cv_mutex
 #else /* #if defined cv_have_pthread_ */
 #define cv_mutex_initializer_ { cv_null_ }
 #endif /* #if defined cv_have_pthread_ */
+
+int cv_mutex_impl_init(
+    cv_mutex * p_this);
+
+int cv_mutex_impl_cleanup(
+    cv_mutex * p_this);
+
+int cv_mutex_impl_lock(
+    cv_mutex * p_this);
+
+int cv_mutex_impl_unlock(
+    cv_mutex * p_this);
 
 #endif /* #ifndef cv_mutex_impl_h_ */

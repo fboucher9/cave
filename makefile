@@ -63,6 +63,7 @@ cv_test_srcs = \
     cv_algo/cv_stack_it.c \
     cv_algo/cv_stack_test.c \
     cv_thread/cv_mutex.c \
+    cv_thread/cv_mutex_impl.c \
     cv_algo/cv_pool.c \
     cv_algo/cv_pool_desc.c \
     cv_algo/cv_pool_lock.c \
