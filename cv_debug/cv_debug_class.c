@@ -25,6 +25,8 @@ static cv_debug_class * g_debug_class_list = &g_debug_class_footer;
 
 static cv_mutex g_debug_class_mutex = cv_mutex_initializer_;
 
+static cv_thread_local_ long i_recursive = 0;
+
 /*
  *
  */
@@ -47,7 +49,6 @@ static void cv_debug_class_register( cv_debug_class * p_class,
 void xx_debug_class_construct( cv_debug_class * p_class,
     char const * p_file, int i_line,
     void * p_buf, long i_buf_len) {
-    static cv_thread_local_ long i_recursive = 0;
     if (0 == (i_recursive++)) {
         cv_mutex_impl_lock(&g_debug_class_mutex);
     }
@@ -67,7 +68,6 @@ void xx_debug_class_construct( cv_debug_class * p_class,
 void xx_debug_class_destruct( cv_debug_class * p_class,
     char const * p_file, int i_line,
     void * p_buf, long i_buf_len) {
-    static cv_thread_local_ long i_recursive = 0;
     if (0 == (i_recursive++)) {
         cv_mutex_impl_lock(&g_debug_class_mutex);
     }

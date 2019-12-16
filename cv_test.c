@@ -25,6 +25,7 @@
 #include <cv_file/cv_file.h>
 #include <cv_misc/cv_convert_test.h>
 #include <cv_clock/cv_clock_test.h>
+#include <cv_trace/cv_trace_test.h>
 
 static void cv_test_job(
     void * p_context)
