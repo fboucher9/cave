@@ -8,122 +8,33 @@
 
 #if defined cv_debug_
 
-#include <cv_algo/cv_array.h>
-#include <cv_algo/cv_array_tool.h>
+cv_debug_code cv_debug_code_null_ptr = "null ptr";
 
-static unsigned char const a_debug_code_null_ptr[] = {
-    'n', 'u', 'l', 'l', ' ', 'p', 't', 'r' };
+cv_debug_code cv_debug_code_error = "error";
 
-static unsigned char const a_debug_code_error[] = {
-    'e', 'r', 'r', 'o', 'r' };
+cv_debug_code cv_debug_code_already_loaded = "already loaded";
 
-static unsigned char const a_debug_code_already_loaded[] = {
-    'a', 'l', 'r', 'e', 'a', 'd', 'y', ' ',
-    'l', 'o', 'a', 'd', 'e', 'd' };
+cv_debug_code cv_debug_code_already_unloaded = "already unloaded";
 
-static unsigned char const a_debug_code_already_unloaded[] = {
-    'a', 'l', 'r', 'e', 'a', 'd', 'y', ' ',
-    'u', 'n', 'l', 'o', 'a', 'd', 'e', 'd' };
+cv_debug_code cv_debug_code_not_loaded = "not loaded";
 
-static unsigned char const a_debug_code_not_loaded[] = {
-    'n', 'o', 't', ' ',
-    'l', 'o', 'a', 'd', 'e', 'd' };
+cv_debug_code cv_debug_code_invalid_length = "invalid length";
 
-static unsigned char const a_debug_code_invalid_length[] = {
-    'i', 'n', 'v', 'a', 'l', 'i', 'd', ' ',
-    'l', 'e', 'n', 'g', 't', 'h' };
+cv_debug_code cv_debug_code_alternative = "alternative";
 
-static unsigned char const a_debug_code_alternative[] = {
-    'a', 'l', 't', 'e', 'r', 'n', 'a', 't', 'i', 'v', 'e' };
+cv_debug_code cv_debug_code_out_of_memory = "out of memory";
 
-static unsigned char const a_debug_code_out_of_memory[] = {
-    'o', 'u', 't', ' ', 'o', 'f', ' ', 'm', 'e', 'm', 'o', 'r', 'y' };
+cv_debug_code cv_debug_code_not_empty = "not empty";
 
-static unsigned char const a_debug_code_not_empty[] = {
-    'n', 'o', 't', ' ',
-    'e', 'm', 'p', 't', 'y' };
+cv_debug_code cv_debug_code_not_implemented = "not implemented";
 
-static unsigned char const a_debug_code_not_implemented[] = {
-    'n', 'o', 't', ' ',
-    'i', 'm', 'p', 'l', 'e', 'm', 'e', 'n', 't', 'e', 'd' };
+cv_debug_code cv_debug_code_invalid_parameter = "invalid parameter";
 
-static unsigned char const a_debug_code_invalid_parameter[] = {
-    'i', 'n', 'v', 'a', 'l', 'i', 'd', ' ',
-    'p', 'a', 'r', 'a', 'm', 'e', 't', 'e', 'r'
-};
+cv_debug_code cv_debug_code_dont_panic = "dont panic!";
 
-static unsigned char const a_debug_code_dont_panic[] = {
-    'd', 'o', 'n', 't', ' ', 'p', 'a', 'n', 'i', 'c'
-};
+cv_debug_code cv_debug_code_leak = "leak";
 
-static unsigned char const a_debug_code_leak[] = {
-    'l', 'e', 'a', 'k'
-};
-
-static cv_array const g_debug_code_null_ptr =
-cv_array_text_initializer_(a_debug_code_null_ptr);
-
-static cv_array const g_debug_code_error =
-cv_array_text_initializer_(a_debug_code_error);
-
-static cv_array const g_debug_code_already_loaded =
-cv_array_text_initializer_(a_debug_code_already_loaded);
-
-static cv_array const g_debug_code_already_unloaded =
-cv_array_text_initializer_(a_debug_code_already_unloaded);
-
-static cv_array const g_debug_code_not_loaded =
-cv_array_text_initializer_(a_debug_code_not_loaded);
-
-static cv_array const g_debug_code_invalid_length =
-cv_array_text_initializer_(a_debug_code_invalid_length);
-
-static cv_array const g_debug_code_alternative =
-cv_array_text_initializer_(a_debug_code_alternative);
-
-static cv_array const g_debug_code_out_of_memory =
-cv_array_text_initializer_(a_debug_code_out_of_memory);
-
-static cv_array const g_debug_code_not_empty =
-cv_array_text_initializer_(a_debug_code_not_empty);
-
-static cv_array const g_debug_code_not_implemented =
-cv_array_text_initializer_(a_debug_code_not_implemented);
-
-static cv_array const g_debug_code_invalid_parameter =
-cv_array_text_initializer_(a_debug_code_invalid_parameter);
-
-static cv_array const g_debug_code_dont_panic =
-cv_array_text_initializer_(a_debug_code_dont_panic);
-
-static cv_array const g_debug_code_leak =
-cv_array_text_initializer_(a_debug_code_leak);
-
-cv_debug_code cv_debug_code_null_ptr = &g_debug_code_null_ptr;
-
-cv_debug_code cv_debug_code_error = &g_debug_code_error;
-
-cv_debug_code cv_debug_code_already_loaded = &g_debug_code_already_loaded;
-
-cv_debug_code cv_debug_code_already_unloaded = &g_debug_code_already_unloaded;
-
-cv_debug_code cv_debug_code_not_loaded = &g_debug_code_not_loaded;
-
-cv_debug_code cv_debug_code_invalid_length = &g_debug_code_invalid_length;
-
-cv_debug_code cv_debug_code_alternative = &g_debug_code_alternative;
-
-cv_debug_code cv_debug_code_out_of_memory = &g_debug_code_out_of_memory;
-
-cv_debug_code cv_debug_code_not_empty = &g_debug_code_not_empty;
-
-cv_debug_code cv_debug_code_not_implemented = &g_debug_code_not_implemented;
-
-cv_debug_code cv_debug_code_invalid_parameter = &g_debug_code_invalid_parameter;
-
-cv_debug_code cv_debug_code_dont_panic = &g_debug_code_dont_panic;
-
-cv_debug_code cv_debug_code_leak = &g_debug_code_leak;
+cv_debug_code cv_debug_code_recursive = "recursive";
 
 #else /* #if defined cv_debug_ */
 

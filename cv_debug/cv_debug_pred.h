@@ -5,9 +5,7 @@
 
 #if defined cv_debug_
 
-#include <cv_algo/cv_array_pred.h>
-
-typedef cv_array const * cv_debug_code;
+typedef char const * cv_debug_code;
 
 typedef struct cv_debug_class cv_debug_class;
 

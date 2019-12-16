@@ -16,8 +16,10 @@
 #include <cv_number_desc.h>
 #include <cv_thread/cv_mutex.h>
 #include <cv_misc/cv_thread_local.h>
-#include <cv_file/cv_file_std.h>
-#include <cv_file/cv_file_print.h>
+
+#if defined cv_have_libc_
+#include <stdio.h>
+#endif /* #if defined cv_have_libc_ */
 
 static cv_trace_node g_trace_footer =
 cv_trace_node_initializer_(cv_trace_level_0, "footer");
@@ -51,7 +53,6 @@ void cv_trace_node_dispatch( cv_trace_node * p_trace_node,
         /* link node into global list */
         /* read current clock */
         /* print of type */
-        cv_file const * p_stdout = cv_file_std_out();
         cv_debug_assert_(p_trace_node, cv_debug_code_null_ptr);
         cv_mutex_impl_lock(&g_trace_mutex);
         cv_trace_node_register(p_trace_node);
@@ -61,23 +62,20 @@ void cv_trace_node_dispatch( cv_trace_node * p_trace_node,
         /* process leave */
         /* process signal */
         {
+            unsigned short const us_type = i_type;
             cv_clock_mono o_value = cv_clock_mono_initializer_;
             if (cv_clock_mono_read(&o_value)) {
                 cv_clock_msec o_value_msec = cv_clock_msec_initializer_;
                 cv_clock_get_msec(&o_value.o_clock, &o_value_msec);
-                cv_file_print_unsigned(p_stdout,
-                    o_value_msec.i_seconds, cv_number_format_dec());
-                cv_file_print_char(p_stdout, '.');
-                cv_file_print_unsigned(p_stdout,
-                    o_value_msec.i_mseconds, cv_number_format_dec());
-                cv_file_print_char(p_stdout, ':');
+#if defined cv_have_libc_
+                fprintf(stdout, "%ld.%03ld:%hu:%s\n", o_value_msec.i_seconds,
+                    o_value_msec.i_mseconds, us_type,
+                    p_trace_node->pc_text);
+#endif /* #if defined cv_have_libc_ */
             }
         }
-        cv_file_print_unsigned(p_stdout, i_type, cv_number_format_dec());
-        cv_file_print_char(p_stdout, ':');
-        cv_file_print_0(p_stdout,
-            p_trace_node->pc_text, cv_signed_short_max_);
-        cv_file_print_nl(p_stdout);
+    } else {
+        cv_debug_break_(cv_debug_code_recursive);
     }
     i_recursive --;
 }
@@ -88,10 +86,11 @@ void cv_trace_node_dispatch( cv_trace_node * p_trace_node,
 
 static void cv_trace_node_profile_report_cb(
     cv_trace_node * p_iterator) {
-    cv_file const * p_stdout = cv_file_std_out();
-    cv_file_print_0(p_stdout, p_iterator->pc_text,
-        cv_signed_short_max_);
-    cv_file_print_nl(p_stdout);
+#if defined cv_have_libc_
+    printf("%s\n", p_iterator->pc_text);
+#else /* #if defined cv_have_libc_ */
+    cv_unused_(p_iterator);
+#endif /* #if defined cv_have_libc_ */
 }
 
 /*
@@ -99,14 +98,11 @@ static void cv_trace_node_profile_report_cb(
  */
 
 void cv_trace_node_profile_report(void) {
-    if (0 == (i_recursive++)) {
-        cv_trace_node * p_iterator = g_trace_list;
-        while (p_iterator && (p_iterator != &g_trace_footer)) {
-            cv_trace_node_profile_report_cb(p_iterator);
-            p_iterator = p_iterator->p_next;
-        }
+    cv_trace_node * p_iterator = g_trace_list;
+    while (p_iterator && (p_iterator != &g_trace_footer)) {
+        cv_trace_node_profile_report_cb(p_iterator);
+        p_iterator = p_iterator->p_next;
     }
-    i_recursive --;
 }
 
 /* end-of-file: cv_trace_node.c */

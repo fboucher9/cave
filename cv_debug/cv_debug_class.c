@@ -9,13 +9,13 @@
 
 #if defined cv_debug_
 
-#include <cv_file/cv_file_std.h>
-#include <cv_file/cv_file_print.h>
 #include <cv_thread/cv_mutex_impl.h>
 #include <cv_runtime.h>
 #include <cv_misc/cv_limits.h>
-#include <cv_number_desc.h>
-#include <cv_misc/cv_thread_local.h>
+
+#if defined cv_have_libc_
+#include <stdio.h>
+#endif /* #if defined cv_have_libc_ */
 
 static long g_debug_class_count = 0;
 
@@ -24,8 +24,6 @@ static cv_debug_class g_debug_class_footer = cv_debug_class_initializer_;
 static cv_debug_class * g_debug_class_list = &g_debug_class_footer;
 
 static cv_mutex g_debug_class_mutex = cv_mutex_initializer_;
-
-static cv_thread_local_ long i_recursive = 0;
 
 /*
  *
@@ -49,16 +47,12 @@ static void cv_debug_class_register( cv_debug_class * p_class,
 void xx_debug_class_construct( cv_debug_class * p_class,
     char const * p_file, int i_line,
     void * p_buf, long i_buf_len) {
-    if (0 == (i_recursive++)) {
-        cv_mutex_impl_lock(&g_debug_class_mutex);
-    }
+    cv_mutex_impl_lock(&g_debug_class_mutex);
     cv_runtime_memset(p_buf, 0xcc, i_buf_len);
     cv_debug_class_register(p_class, p_file, i_line);
     p_class->i_init_count ++;
     g_debug_class_count ++;
-    if (0 == (--i_recursive)) {
-        cv_mutex_impl_unlock(&g_debug_class_mutex);
-    }
+    cv_mutex_impl_unlock(&g_debug_class_mutex);
 }
 
 /*
@@ -68,16 +62,12 @@ void xx_debug_class_construct( cv_debug_class * p_class,
 void xx_debug_class_destruct( cv_debug_class * p_class,
     char const * p_file, int i_line,
     void * p_buf, long i_buf_len) {
-    if (0 == (i_recursive++)) {
-        cv_mutex_impl_lock(&g_debug_class_mutex);
-    }
+    cv_mutex_impl_lock(&g_debug_class_mutex);
     cv_runtime_memset(p_buf, 0xcd, i_buf_len);
     cv_debug_class_register(p_class, p_file, i_line);
     p_class->i_init_count --;
     g_debug_class_count --;
-    if (0 == (--i_recursive)) {
-        cv_mutex_impl_unlock(&g_debug_class_mutex);
-    }
+    cv_mutex_impl_unlock(&g_debug_class_mutex);
 }
 
 /*
@@ -86,15 +76,12 @@ void xx_debug_class_destruct( cv_debug_class * p_class,
 
 static void cv_debug_class_report_node(cv_debug_class const * p_iterator) {
     if (p_iterator->i_init_count) {
-        cv_file const * p_stderr = cv_file_std_err();
-        cv_file_print_0(p_stderr, p_iterator->p_file, cv_signed_short_max_);
-        cv_file_print_char(p_stderr, ':');
-        cv_file_print_signed(p_stderr, p_iterator->i_line,
-            cv_number_format_dec());
-        cv_file_print_char(p_stderr, ':');
-        cv_file_print_signed(p_stderr, p_iterator->i_init_count,
-            cv_number_format_dec());
-        cv_file_print_nl(p_stderr);
+#if defined cv_have_libc_
+        fprintf(stderr, "%s:%ld:%ld\n",
+            p_iterator->p_file,
+            p_iterator->i_line,
+            p_iterator->i_init_count);
+#endif /* #if defined cv_have_libc_ */
     }
 }
 

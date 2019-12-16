@@ -24,6 +24,7 @@ extern cv_debug_code cv_debug_code_not_implemented;
 extern cv_debug_code cv_debug_code_invalid_parameter;
 extern cv_debug_code cv_debug_code_dont_panic;
 extern cv_debug_code cv_debug_code_leak;
+extern cv_debug_code cv_debug_code_recursive;
 
 #endif /* #if defined cv_debug_ */
 
