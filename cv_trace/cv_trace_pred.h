@@ -13,6 +13,8 @@ typedef struct cv_trace_stats cv_trace_stats;
 
 typedef struct cv_trace_node cv_trace_node;
 
+typedef struct cv_trace_msg cv_trace_msg;
+
 typedef struct cv_trace_func cv_trace_func;
 
 typedef struct cv_trace_func0 cv_trace_func0;

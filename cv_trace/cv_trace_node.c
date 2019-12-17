@@ -16,6 +16,8 @@
 #include <cv_number_desc.h>
 #include <cv_thread/cv_mutex.h>
 #include <cv_misc/cv_thread_local.h>
+#include <cv_trace/cv_trace_msg.h>
+#include <cv_clock/cv_clock_duration.h>
 
 #if defined cv_have_libc_
 #include <stdio.h>
@@ -29,6 +31,10 @@ static cv_trace_node * g_trace_list = &g_trace_footer;
 static cv_mutex g_trace_mutex = cv_mutex_initializer_;
 
 static cv_thread_local_ long i_recursive = 0;
+
+static cv_thread_local_ cv_trace_msg g_trace_stack[8u];
+
+static cv_thread_local_ long g_trace_stack_index = 0;
 
 /*
  *
@@ -53,27 +59,59 @@ void cv_trace_node_dispatch( cv_trace_node * p_trace_node,
         /* link node into global list */
         /* read current clock */
         /* print of type */
+        cv_trace_msg * p_trace_msg = cv_null_;
         cv_debug_assert_(p_trace_node, cv_debug_code_null_ptr);
-        cv_mutex_impl_lock(&g_trace_mutex);
-        cv_trace_node_register(p_trace_node);
-        cv_mutex_impl_unlock(&g_trace_mutex);
+        if (cv_trace_type_func_enter == i_type) {
+            if (g_trace_stack_index < 8) {
+                p_trace_msg = g_trace_stack + g_trace_stack_index;
+            }
+            g_trace_stack_index ++;
+        } else if (cv_trace_type_func_leave == i_type) {
+            g_trace_stack_index --;
+            if (g_trace_stack_index < 8) {
+                p_trace_msg = g_trace_stack + g_trace_stack_index;
+            }
+        } else if (cv_trace_type_event_signal == i_type) {
+            if (g_trace_stack_index < 8) {
+                p_trace_msg = g_trace_stack + g_trace_stack_index;
+            }
+            g_trace_stack_index ++;
+        } else {
+            p_trace_msg = cv_null_;
+        }
         /* Update stats */
         /* process enter */
         /* process leave */
         /* process signal */
-        {
-            unsigned short const us_type = i_type;
-            cv_clock_mono o_value = cv_clock_mono_initializer_;
-            if (cv_clock_mono_read(&o_value)) {
-                cv_clock_msec o_value_msec = cv_clock_msec_initializer_;
-                cv_clock_get_msec(&o_value.o_clock, &o_value_msec);
-#if defined cv_have_libc_
-                fprintf(stdout, "%ld.%03ld:%hu:%s\n", o_value_msec.i_seconds,
-                    o_value_msec.i_mseconds, us_type,
-                    p_trace_node->pc_text);
-#else /* #if defined cv_have_libc_ */
-                cv_unused_(us_type);
-#endif /* #if defined cv_have_libc_ */
+        if (p_trace_msg) {
+            cv_clock_mono o_now = cv_clock_mono_initializer_;
+            if (cv_clock_mono_read(&o_now)) {
+                cv_mutex_impl_lock(&g_trace_mutex);
+                cv_trace_node_register(p_trace_node);
+                if (cv_trace_type_func_enter == i_type) {
+                } else if (cv_trace_type_func_leave == i_type) {
+                    /* Calculate elapsed time */
+                    cv_clock_duration o_duration =
+                        cv_clock_duration_initializer_;
+                    cv_clock_counter_inc(&p_trace_node->o_trace_stats.o_count);
+                    if (0 < cv_clock_diff(&o_now.o_clock,
+                        &p_trace_msg->o_clock_mono.o_clock,
+                        &o_duration)) {
+                        cv_ull ll_elapsed = cv_clock_get(
+                            &p_trace_node->o_trace_stats.o_elapsed);
+                        ll_elapsed += cv_clock_get(&o_duration.o_clock);
+                        cv_clock_set(&p_trace_node->o_trace_stats.o_elapsed,
+                            ll_elapsed);
+                    }
+                } else if (cv_trace_type_event_signal == i_type) {
+                    cv_clock_counter_inc(&p_trace_node->o_trace_stats.o_count);
+                } else {
+                }
+                cv_mutex_impl_unlock(&g_trace_mutex);
+                p_trace_msg->o_clock_mono = o_now;
+                p_trace_msg->p_trace_node = p_trace_node;
+                p_trace_msg->i_type = i_type;
+                cv_trace_msg_dispatch(p_trace_msg);
             }
         }
     } else {
@@ -89,7 +127,19 @@ void cv_trace_node_dispatch( cv_trace_node * p_trace_node,
 static void cv_trace_node_profile_report_cb(
     cv_trace_node * p_iterator) {
 #if defined cv_have_libc_
-    printf("%s\n", p_iterator->pc_text);
+    {
+        cv_ull const ll_count = cv_clock_counter_get(
+            &p_iterator->o_trace_stats.o_count);
+        unsigned long int const u_count = (ll_count & cv_unsigned_long_max_);
+        cv_clock_usec o_clock_usec = cv_clock_usec_initializer_;
+        cv_clock_get_usec(&p_iterator->o_trace_stats.o_elapsed,
+            &o_clock_usec);
+        printf("%10lu.%06lu:%lu:%s\n",
+            o_clock_usec.i_seconds,
+            o_clock_usec.i_useconds,
+            u_count,
+            p_iterator->pc_text);
+    }
 #else /* #if defined cv_have_libc_ */
     cv_unused_(p_iterator);
 #endif /* #if defined cv_have_libc_ */
