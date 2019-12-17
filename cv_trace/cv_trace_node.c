@@ -71,6 +71,8 @@ void cv_trace_node_dispatch( cv_trace_node * p_trace_node,
                 fprintf(stdout, "%ld.%03ld:%hu:%s\n", o_value_msec.i_seconds,
                     o_value_msec.i_mseconds, us_type,
                     p_trace_node->pc_text);
+#else /* #if defined cv_have_libc_ */
+                cv_unused_(us_type);
 #endif /* #if defined cv_have_libc_ */
             }
         }

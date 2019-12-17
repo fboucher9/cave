@@ -4,7 +4,7 @@
 
 #include <cv_windows.h>
 #include <cv_misc/cv_unused.h>
-#include <cv_misc/cv_convert.h>
+#include <cv_misc/cv_limits.h>
 #include <io.h>
 #include <stdio.h>
 
@@ -23,18 +23,22 @@ int cv_windows_stderr_fileno(void) {
 long cv_windows_read( int i_file_index, void * p_buffer,
     long i_buffer_length) {
     long i_result = -1;
-    unsigned long int const u_buffer_length =
-        cv_convert_l2u_(i_buffer_length);
-    i_result = _read(i_file_index, p_buffer, u_buffer_length);
+    if (i_buffer_length > 0) {
+        unsigned long int const u_buffer_length =
+            (i_buffer_length & cv_signed_long_max_);
+        i_result = _read(i_file_index, p_buffer, u_buffer_length);
+    }
     return i_result;
 }
 
 long cv_windows_write( int i_file_index, void const * p_buffer,
     long i_buffer_length) {
     long i_result = -1;
-    unsigned long int const u_buffer_length =
-        cv_convert_l2u_(i_buffer_length);
-    i_result = _write(i_file_index, p_buffer, u_buffer_length);
+    if (i_buffer_length > 0) {
+        unsigned long int const u_buffer_length =
+            (i_buffer_length & cv_signed_long_max_);
+        i_result = _write(i_file_index, p_buffer, u_buffer_length);
+    }
     return i_result;
 }
 

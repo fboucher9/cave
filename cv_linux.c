@@ -3,8 +3,6 @@
 #if defined cv_linux_
 
 #include <cv_linux.h>
-#include <cv_misc/cv_cast.h>
-#include <cv_misc/cv_convert.h>
 #include <cv_misc/cv_limits.h>
 #include <stdlib.h>
 #include <unistd.h>
@@ -36,15 +34,15 @@ long cv_linux_read(
     long i_buffer_length)
 {
     long i_result = -1;
-    ssize_t i_read_result = -1;
-    unsigned long const u_buffer_length =
-        cv_convert_l2u_(i_buffer_length);
-    size_t const i_read_len = u_buffer_length;
-    i_read_result = read(
-        i_file_index,
-        p_buffer,
-        i_read_len);
-    i_result = (i_read_result & cv_signed_long_max_);
+    if (i_buffer_length > 0) {
+        ssize_t i_read_result = -1;
+        size_t const i_read_len = (i_buffer_length & cv_signed_long_max_);
+        i_read_result = read(
+            i_file_index,
+            p_buffer,
+            i_read_len);
+        i_result = (i_read_result & cv_signed_long_max_);
+    }
     return i_result;
 }
 
@@ -59,14 +57,14 @@ long cv_linux_write(
 {
     long i_result = -1;
     ssize_t i_write_result = -1;
-    unsigned long const u_buffer_length =
-        cv_convert_l2u_(i_buffer_length);
-    size_t i_write_len = u_buffer_length;
-    i_write_result = write(
-        i_file_index,
-        p_buffer,
-        i_write_len);
-    i_result = (i_write_result & cv_signed_long_max_);
+    if (i_buffer_length > 0) {
+        size_t i_write_len = (i_buffer_length & cv_signed_long_max_);
+        i_write_result = write(
+            i_file_index,
+            p_buffer,
+            i_write_len);
+        i_result = (i_write_result & cv_signed_long_max_);
+    }
     return i_result;
 }
 

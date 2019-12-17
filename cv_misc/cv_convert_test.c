@@ -19,7 +19,8 @@ void cv_convert_test(void) {
     signed int const i_value = 20000;
     signed long const l_value = 1000000L;
     cv_sptr p_value = 2000000L;
-    cv_sll ll_value = cv_cast_(cv_sll, 2000000L) * cv_cast_(cv_sll, 1000000L);
+    cv_sll ll_value = 2000000L;
+    ll_value *= 1000000L;
     /* Verify cast to unsigned char */ {
         unsigned char u_result = 0;
         u_result = cv_convert_c2u_(c_value);
