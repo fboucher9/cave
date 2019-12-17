@@ -57,6 +57,8 @@ struct cv_trace_node {
 void cv_trace_node_dispatch( cv_trace_node * p_trace_node,
     unsigned char i_type);
 
+void cv_trace_node_stack_report(void);
+
 void cv_trace_node_profile_report(void);
 
 #endif /* #ifndef cv_trace_node_h_ */

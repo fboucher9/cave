@@ -124,6 +124,35 @@ void cv_trace_node_dispatch( cv_trace_node * p_trace_node,
  *
  */
 
+static void cv_trace_node_stack_report_cb(cv_trace_msg const * p_trace_msg) {
+#if defined cv_have_libc_
+    printf("[%s]\n", p_trace_msg->p_trace_node->pc_text);
+#else /* #if defined cv_have_libc_ */
+    cv_unused_(p_trace_msg);
+#endif /* #if defined cv_have_libc_ */
+}
+
+/*
+ *
+ */
+
+void cv_trace_node_stack_report(void) {
+    long i_index = g_trace_stack_index;
+    while (i_index > 0) {
+        i_index --;
+        {
+            if (i_index < 8) {
+                cv_trace_msg const * const p_trace_msg = g_trace_stack + i_index;
+                cv_trace_node_stack_report_cb(p_trace_msg);
+            }
+        }
+    }
+}
+
+/*
+ *
+ */
+
 static void cv_trace_node_profile_report_cb(
     cv_trace_node * p_iterator) {
 #if defined cv_have_libc_
@@ -134,7 +163,7 @@ static void cv_trace_node_profile_report_cb(
         cv_clock_usec o_clock_usec = cv_clock_usec_initializer_;
         cv_clock_get_usec(&p_iterator->o_trace_stats.o_elapsed,
             &o_clock_usec);
-        printf("%10lu.%06lu:%lu:%s\n",
+        printf("%10lu.%06lu:%lu:[%s]\n",
             o_clock_usec.i_seconds,
             o_clock_usec.i_useconds,
             u_count,

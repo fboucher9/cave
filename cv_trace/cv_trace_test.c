@@ -11,6 +11,7 @@
 #include <cv_trace/cv_trace_node.h>
 #include <cv_clock/cv_clock_duration.h>
 #include <cv_clock/cv_clock_tool.h>
+#include <cv_test_print.h>
 
 /*
  *
@@ -39,6 +40,11 @@ void cv_trace_test(void) {
             cv_trace_func0_enter_(f2);
             cv_trace_func0_enter_(f2);
             cv_trace_func0_enter_(f2);
+            cv_print_0("--- stack ---", 80);
+            cv_print_nl();
+            cv_trace_node_stack_report();
+            cv_print_0("--- end ---", 80);
+            cv_print_nl();
             cv_clock_duration_until(&o_duration);
             cv_trace_func0_leave_(f2);
             cv_trace_func0_leave_(f2);
@@ -55,7 +61,11 @@ void cv_trace_test(void) {
         cv_trace_func0_leave_(f1);
     }
     cv_clock_duration_cleanup(&o_duration);
+    cv_print_0("--- profile ---", 80);
+    cv_print_nl();
     cv_trace_node_profile_report();
+    cv_print_0("--- end ---", 80);
+    cv_print_nl();
 }
 
 /* end-of-file: cv_trace_test.c */
