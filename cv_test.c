@@ -269,7 +269,7 @@ static void cv_test_leak2(void) {
 }
 
 static void cv_test_leak3(void) {
-    cv_trace_func0_decl_(g_func);
+    cv_trace_func0_decl_(g_func, "cv_test_leak3");
     cv_trace_func0_enter_(g_func);
     cv_heap_alloc(123);
     cv_trace_func0_leave_(g_func);

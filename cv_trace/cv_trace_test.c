@@ -25,11 +25,11 @@ void cv_trace_test(void) {
     o_clock_msec.i_mseconds = 100;
     cv_clock_set_msec(&o_duration.o_clock, &o_clock_msec);
     {
-        cv_trace_func0_decl_(f1);
+        cv_trace_func0_decl_(f1, "f1");
         cv_trace_func0_enter_(f1);
         cv_clock_duration_until(&o_duration);
         {
-            cv_trace_func0_decl_(f2);
+            cv_trace_func0_decl_(f2, "f2");
             cv_trace_func0_enter_(f2);
             cv_trace_func0_enter_(f2);
             cv_trace_func0_enter_(f2);

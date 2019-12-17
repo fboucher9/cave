@@ -19,8 +19,8 @@ struct cv_trace_func {
     cv_trace_node o_trace_node;
 };
 
-#define cv_trace_func_initializer_(level) \
-{ cv_trace_node_initializer_(level, cv_function_) }
+#define cv_trace_func_initializer_(level, name) \
+{ cv_trace_node_initializer_(level, name) }
 
 void cv_trace_func_enter(cv_trace_func * p_trace_func);
 void cv_trace_func_leave(cv_trace_func * p_trace_func);
