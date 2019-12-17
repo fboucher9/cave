@@ -26,6 +26,7 @@
 #include <cv_misc/cv_convert_test.h>
 #include <cv_clock/cv_clock_test.h>
 #include <cv_trace/cv_trace_test.h>
+#include <cv_trace/cv_trace_func0.h>
 
 static void cv_test_job(
     void * p_context)
@@ -268,7 +269,10 @@ static void cv_test_leak2(void) {
 }
 
 static void cv_test_leak3(void) {
+    cv_trace_func0_decl_(g_func);
+    cv_trace_func0_enter_(g_func);
     cv_heap_alloc(123);
+    cv_trace_func0_leave_(g_func);
 }
 
 static cv_bool cv_test_main_cb(

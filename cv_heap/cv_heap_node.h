@@ -13,6 +13,8 @@
 #include <cv_misc/cv_bool.h>
 #include <cv_heap/cv_heap_section_lock.h>
 
+#define cv_heap_node_stack_max_ (4)
+
 /*
  *
  */
@@ -24,6 +26,7 @@ struct cv_heap_node {
     /* -- */
     /* statistics ... */
     /* stack ... */
+    char const * a_stack[cv_heap_node_stack_max_];
 };
 
 void cv_heap_node_cleanup( cv_heap_node * p_heap_node);

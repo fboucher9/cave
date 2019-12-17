@@ -22,7 +22,7 @@ void cv_trace_msg_dispatch( cv_trace_msg * p_trace_msg) {
     cv_clock_usec o_value_usec = cv_clock_usec_initializer_;
     cv_clock_get_usec(&p_trace_msg->o_clock_mono.o_clock, &o_value_usec);
 #if defined cv_have_libc_
-    fprintf(stdout, "%10ld.%06ld:%c%hu:%s\n", o_value_usec.i_seconds,
+    fprintf(stdout, "%10ld.%06ld:%c%hu:[%s]\n", o_value_usec.i_seconds,
         o_value_usec.i_useconds,
         cv_trace_type_func_enter == uc_type ? '{' :
         cv_trace_type_func_leave == uc_type ? '}' : '!',

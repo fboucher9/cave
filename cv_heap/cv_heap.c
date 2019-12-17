@@ -29,6 +29,7 @@ are thread-safe.
 #include <cv_algo/cv_list_root.h>
 #include <cv_algo/cv_list_it.h>
 #include <cv_misc/cv_sizeof.h>
+#include <cv_trace/cv_trace_node.h>
 
 cv_debug_decl_(g_class);
 
@@ -155,6 +156,9 @@ void * cv_heap_alloc( long i_buffer_length) {
             }
         }
         if (p_heap_node) {
+            /* Fill in stack info */
+            cv_trace_node_stack_query(p_heap_node->a_stack,
+                cv_heap_node_stack_max_);
             /* Attach node to used list */
             cv_heap_used_join(&p_this->o_used, p_heap_node);
             p_buffer = p_heap_node->o_payload.o_min.p_void;

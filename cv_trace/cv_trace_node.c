@@ -62,17 +62,19 @@ void cv_trace_node_dispatch( cv_trace_node * p_trace_node,
         cv_trace_msg * p_trace_msg = cv_null_;
         cv_debug_assert_(p_trace_node, cv_debug_code_null_ptr);
         if (cv_trace_type_func_enter == i_type) {
-            if (g_trace_stack_index < 8) {
+            if ((g_trace_stack_index >= 0) && (g_trace_stack_index < 8)) {
                 p_trace_msg = g_trace_stack + g_trace_stack_index;
             }
             g_trace_stack_index ++;
         } else if (cv_trace_type_func_leave == i_type) {
-            g_trace_stack_index --;
-            if (g_trace_stack_index < 8) {
-                p_trace_msg = g_trace_stack + g_trace_stack_index;
+            if (g_trace_stack_index > 0) {
+                g_trace_stack_index --;
+                if (g_trace_stack_index < 8) {
+                    p_trace_msg = g_trace_stack + g_trace_stack_index;
+                }
             }
         } else if (cv_trace_type_event_signal == i_type) {
-            if (g_trace_stack_index < 8) {
+            if ((g_trace_stack_index >= 0) && (g_trace_stack_index < 8)) {
                 p_trace_msg = g_trace_stack + g_trace_stack_index;
             }
             g_trace_stack_index ++;
@@ -113,11 +115,38 @@ void cv_trace_node_dispatch( cv_trace_node * p_trace_node,
                 p_trace_msg->i_type = i_type;
                 cv_trace_msg_dispatch(p_trace_msg);
             }
+        } else {
+            cv_debug_msg_(cv_debug_code_error);
         }
     } else {
         cv_debug_break_(cv_debug_code_recursive);
     }
     i_recursive --;
+}
+
+/*
+ *
+ */
+
+long cv_trace_node_stack_query(
+    char const * * p_buffer,
+    long i_count_max) {
+    long i_count = 0;
+    long i_index = g_trace_stack_index;
+    if (i_index > 8) {
+        i_index = 8;
+    }
+    while (i_index > 0) {
+        i_index --;
+        {
+            cv_trace_msg const * const p_trace_msg = g_trace_stack + i_index;
+            if (i_count < i_count_max) {
+                p_buffer[i_count] = p_trace_msg->p_trace_node->pc_text;
+                i_count ++;
+            }
+        }
+    }
+    return i_count;
 }
 
 /*
@@ -138,13 +167,14 @@ static void cv_trace_node_stack_report_cb(cv_trace_msg const * p_trace_msg) {
 
 void cv_trace_node_stack_report(void) {
     long i_index = g_trace_stack_index;
+    if (i_index > 8) {
+        i_index = 8;
+    }
     while (i_index > 0) {
         i_index --;
         {
-            if (i_index < 8) {
-                cv_trace_msg const * const p_trace_msg = g_trace_stack + i_index;
-                cv_trace_node_stack_report_cb(p_trace_msg);
-            }
+            cv_trace_msg const * const p_trace_msg = g_trace_stack + i_index;
+            cv_trace_node_stack_report_cb(p_trace_msg);
         }
     }
 }

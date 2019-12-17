@@ -17,6 +17,13 @@ static void cv_heap_node_init( cv_heap_node * p_this,
     cv_debug_construct_(g_class, p_this);
     cv_list_node_init(&p_this->o_node);
     cv_array_init_ref(&p_this->o_payload, p_payload);
+    {
+        long i_index = 0;
+        while (i_index < cv_heap_node_stack_max_) {
+            p_this->a_stack[i_index] = cv_null_;
+            i_index ++;
+        }
+    }
 }
 
 void cv_heap_node_cleanup( cv_heap_node * p_this) {

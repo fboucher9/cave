@@ -45,6 +45,22 @@ void cv_trace_test(void) {
             cv_trace_node_stack_report();
             cv_print_0("--- end ---", 80);
             cv_print_nl();
+            {
+                char const * a_stack[4u];
+                long i_count = cv_trace_node_stack_query(
+                    a_stack,
+                    4u);
+                if ((i_count > 0) && (i_count <= 4)) {
+                    long i_index = 0;
+                    while (i_index < i_count) {
+                        cv_print_char('[');
+                        cv_print_0(a_stack[i_index], 80);
+                        cv_print_char(']');
+                        cv_print_nl();
+                        i_index ++;
+                    }
+                }
+            }
             cv_clock_duration_until(&o_duration);
             cv_trace_func0_leave_(f2);
             cv_trace_func0_leave_(f2);
@@ -54,6 +70,22 @@ void cv_trace_test(void) {
             cv_trace_func0_leave_(f2);
             cv_trace_func0_leave_(f2);
             cv_trace_func0_leave_(f2);
+            {
+                char const * a_stack[4u];
+                long i_count = cv_trace_node_stack_query(
+                    a_stack,
+                    4u);
+                if ((i_count > 0) && (i_count <= 4)) {
+                    long i_index = 0;
+                    while (i_index < i_count) {
+                        cv_print_char('[');
+                        cv_print_0(a_stack[i_index], 80);
+                        cv_print_char(']');
+                        cv_print_nl();
+                        i_index ++;
+                    }
+                }
+            }
             cv_trace_func0_leave_(f2);
             cv_trace_func0_leave_(f2);
         }

@@ -36,6 +36,48 @@ cv_bool cv_heap_used_init(
     return b_result;
 }
 
+/*
+ *
+ */
+
+static void cv_heap_print_leak_node(cv_heap_node const * p_heap_node) {
+    cv_file const * const p_std_err = cv_file_std_err();
+    long const i_payload_len =
+        cv_array_len(&p_heap_node->o_payload);
+    cv_file_print_char(p_std_err, 'L');
+    cv_file_print_signed(p_std_err, i_payload_len,
+        cv_number_format_dec());
+    cv_file_print_nl(p_std_err);
+    {
+        long i_index = 0;
+        while (i_index < cv_heap_node_stack_max_) {
+            char const * const p_text = p_heap_node->a_stack[i_index];
+            if (p_text) {
+                cv_file_print_char(p_std_err, '[');
+                cv_file_print_0(p_std_err, p_text, 80);
+                cv_file_print_char(p_std_err, ']');
+                cv_file_print_nl(p_std_err);
+            }
+            i_index ++;
+        }
+    }
+}
+
+/*
+ *
+ */
+
+static void cv_heap_print_leak_list(cv_heap_used * p_this) {
+    cv_list_it o_iterator = cv_list_it_initializer_;
+    cv_heap_node_ptr o_heap_ptr = cv_ptr_null_;
+    cv_list_it_init(&o_iterator, &p_this->o_used_list);
+    while (cv_list_it_next(&o_iterator, &o_heap_ptr.o_list_ptr)) {
+        cv_heap_node const * const p_heap_node = o_heap_ptr.pc_heap_node;
+        cv_heap_print_leak_node(p_heap_node);
+    }
+    cv_list_it_cleanup(&o_iterator);
+}
+
 static cv_array const * report_prefix(void) {
     static unsigned char a_text[] = {
         '*', '*', '*', ' ' };
@@ -62,9 +104,11 @@ static void cv_heap_print_leak_report(cv_heap_used * p_this) {
     if (p_this->i_count) {
         cv_file const * const p_std_err = cv_file_std_err();
         cv_file_print_array(p_std_err, report_prefix());
-        cv_file_print_signed(p_std_err, p_this->i_count, cv_number_format_dec());
+        cv_file_print_signed(p_std_err, p_this->i_count,
+            cv_number_format_dec());
         cv_file_print_array(p_std_err, report_suffix());
         cv_file_print_nl(p_std_err);
+        cv_heap_print_leak_list(p_this);
     }
     cv_debug_assert_(0 == p_this->i_count, cv_debug_code_leak);
 }
