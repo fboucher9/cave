@@ -179,7 +179,7 @@ static cv_number_status cv_number_enc_step(
                 p_this->i_before_space --;
                 e_status = cv_number_status_continue;
             } else {
-                e_status = cv_number_status_full;
+                e_status = cv_number_status_more_data;
             }
         } else {
             p_this->i_state = cv_number_machine_sign;
@@ -192,7 +192,7 @@ static cv_number_status cv_number_enc_step(
                 p_this->b_sign = 0;
                 e_status = cv_number_status_continue;
             } else {
-                e_status = cv_number_status_full;
+                e_status = cv_number_status_more_data;
             }
         } else {
             p_this->i_state = cv_number_machine_prefix_a;
@@ -205,7 +205,7 @@ static cv_number_status cv_number_enc_step(
                 p_this->i_state = cv_number_machine_prefix_b;
                 e_status = cv_number_status_continue;
             } else {
-                e_status = cv_number_status_full;
+                e_status = cv_number_status_more_data;
             }
         } else {
             p_this->i_state = cv_number_machine_before_zero;
@@ -219,7 +219,7 @@ static cv_number_status cv_number_enc_step(
                 p_this->i_state = cv_number_machine_before_zero;
                 e_status = cv_number_status_continue;
             } else {
-                e_status = cv_number_status_full;
+                e_status = cv_number_status_more_data;
             }
         } else {
             p_this->i_state = cv_number_machine_before_zero;
@@ -231,7 +231,7 @@ static cv_number_status cv_number_enc_step(
                 p_this->i_before_zero --;
                 e_status = cv_number_status_continue;
             } else {
-                e_status = cv_number_status_full;
+                e_status = cv_number_status_more_data;
             }
         } else {
             p_this->i_state = cv_number_machine_before_dot;
@@ -246,7 +246,7 @@ static cv_number_status cv_number_enc_step(
                 p_this->i_digit_count --;
                 e_status = cv_number_status_continue;
             } else {
-                e_status = cv_number_status_full;
+                e_status = cv_number_status_more_data;
             }
         } else {
             p_this->i_state = cv_number_machine_dot;
@@ -258,7 +258,7 @@ static cv_number_status cv_number_enc_step(
                 p_this->b_dot = 0;
                 e_status = cv_number_status_continue;
             } else {
-                e_status = cv_number_status_full;
+                e_status = cv_number_status_more_data;
             }
         } else {
             p_this->i_state = cv_number_machine_after_zero;
@@ -270,7 +270,7 @@ static cv_number_status cv_number_enc_step(
                 p_this->i_after_zero --;
                 e_status = cv_number_status_continue;
             } else {
-                e_status = cv_number_status_full;
+                e_status = cv_number_status_more_data;
             }
         } else {
             p_this->i_state = cv_number_machine_after_dot;
@@ -285,7 +285,7 @@ static cv_number_status cv_number_enc_step(
                 p_this->i_digit_count --;
                 e_status = cv_number_status_continue;
             } else {
-                e_status = cv_number_status_full;
+                e_status = cv_number_status_more_data;
             }
         } else {
             p_this->i_state = cv_number_machine_after_space;
@@ -297,7 +297,7 @@ static cv_number_status cv_number_enc_step(
                 p_this->i_after_space --;
                 e_status = cv_number_status_continue;
             } else {
-                e_status = cv_number_status_full;
+                e_status = cv_number_status_more_data;
             }
         } else {
             p_this->i_state = cv_number_machine_done;

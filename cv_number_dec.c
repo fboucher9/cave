@@ -257,7 +257,7 @@ int cv_number_dec_step(
                 return cv_number_status_fail;
             }
         } else {
-            return cv_number_status_empty;
+            return cv_number_status_more_data;
         }
     }
 }
