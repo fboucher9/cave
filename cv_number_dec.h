@@ -9,18 +9,37 @@
  *  Description: Decode text buffer and output a number.
  */
 
+#include <cv_number_pred.h>
+#include <cv_algo/cv_array_pred.h>
+#include <cv_number_desc.h>
+#include <cv_number_status.h>
+
+/*
+ *
+ */
+
 struct cv_number_dec {
     cv_number_desc o_desc;
     /* -- */
+    int i_state;
+    unsigned int i_base;
 };
 
+#define cv_number_dec_initializer_ \
+{ cv_number_desc_initializer_, 0, 0 }
+
+/*
+ *
+ */
+
 void cv_number_dec_init(
-    cv_number_dec * p_this);
+    cv_number_dec * p_this,
+    unsigned int i_base);
 
 void cv_number_dec_cleanup(
     cv_number_dec * p_this);
 
-/*  States:
+/*  Returns:
  *      -   continue
  *      -   more data
  *      -   done

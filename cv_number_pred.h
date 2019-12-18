@@ -7,6 +7,9 @@
 typedef struct cv_number_desc cv_number_desc;
 
 /* Predefine */
+typedef struct cv_number_dec cv_number_dec;
+
+/* Predefine */
 typedef struct cv_number_enc cv_number_enc;
 
 /* Predefine */

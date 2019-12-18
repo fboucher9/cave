@@ -27,6 +27,9 @@
 #include <cv_clock/cv_clock_test.h>
 #include <cv_trace/cv_trace_test.h>
 #include <cv_trace/cv_trace_func0.h>
+#include <cv_number_dec.h>
+#include <cv_algo/cv_array_it.h>
+#include <cv_number_scan.h>
 
 static void cv_test_job(
     void * p_context)
@@ -138,63 +141,76 @@ static void cv_test_number_step(
 
 static void cv_test_number(void)
 {
-    cv_number_desc o_desc = cv_number_desc_initializer_;
-    o_desc.o_data.i_unsigned = 12345;
-    o_desc.o_data.b_negative = 0;
-    o_desc.o_format.i_flags = 0;
-    cv_test_number_step(&o_desc);
-    o_desc.o_data.i_unsigned = 12345;
-    o_desc.o_data.b_negative = 1;
-    o_desc.o_format.i_flags = 0;
-    cv_test_number_step(&o_desc);
-    o_desc.o_data.i_unsigned = 0xabcd;
-    o_desc.o_data.b_negative = 0;
-    o_desc.o_format.i_flags = cv_number_flag_hexadecimal;
-    cv_test_number_step(&o_desc);
-    o_desc.o_data.i_unsigned = 0xabcd;
-    o_desc.o_data.b_negative = 0;
-    o_desc.o_format.i_flags = cv_number_flag_hexadecimal
-        | cv_number_flag_upper;
-    cv_test_number_step(&o_desc);
-    o_desc.o_data.i_unsigned = 12345;
-    o_desc.o_format.i_flags = 0;
-    o_desc.o_format.i_width = 10;
-    cv_test_number_step(&o_desc);
-    o_desc.o_data.i_unsigned = 12345;
-    o_desc.o_data.b_negative = 1;
-    o_desc.o_format.i_flags = 0;
-    o_desc.o_format.i_width = 10;
-    cv_test_number_step(&o_desc);
-    o_desc.o_data.i_unsigned = 12345;
-    o_desc.o_data.b_negative = 0;
-    o_desc.o_format.i_flags = cv_number_flag_left;
-    o_desc.o_format.i_width = 10;
-    cv_test_number_step(&o_desc);
-    o_desc.o_data.i_unsigned = 12345;
-    o_desc.o_data.b_negative = 0;
-    o_desc.o_format.i_flags = cv_number_flag_center;
-    o_desc.o_format.i_width = 10;
-    cv_test_number_step(&o_desc);
-    o_desc.o_data.i_unsigned = 12345;
-    o_desc.o_data.b_negative = 0;
-    o_desc.o_format.i_flags = 0;
-    o_desc.o_format.i_digits = 7;
-    o_desc.o_format.i_width = 10;
-    cv_test_number_step(&o_desc);
-    o_desc.o_data.i_unsigned = 123;
-    o_desc.o_data.b_negative = 0;
-    o_desc.o_format.i_flags = 0;
-    o_desc.o_format.i_digits = 0;
-    o_desc.o_format.i_width = 10;
-    o_desc.o_format.i_precision = 2;
-    cv_test_number_step(&o_desc);
-    o_desc.o_data.i_unsigned = 123;
-    o_desc.o_data.b_negative = 0;
-    o_desc.o_format.i_flags = 0;
-    o_desc.o_format.i_digits = 0;
-    o_desc.o_format.i_width = 10;
-    o_desc.o_format.i_precision = 5;
-    cv_test_number_step(&o_desc);
+    if (0)
+    {
+        cv_number_desc o_desc = cv_number_desc_initializer_;
+        o_desc.o_data.i_unsigned = 12345;
+        o_desc.o_data.b_negative = 0;
+        o_desc.o_format.i_flags = 0;
+        cv_test_number_step(&o_desc);
+        o_desc.o_data.i_unsigned = 12345;
+        o_desc.o_data.b_negative = 1;
+        o_desc.o_format.i_flags = 0;
+        cv_test_number_step(&o_desc);
+        o_desc.o_data.i_unsigned = 0xabcd;
+        o_desc.o_data.b_negative = 0;
+        o_desc.o_format.i_flags = cv_number_flag_hexadecimal;
+        cv_test_number_step(&o_desc);
+        o_desc.o_data.i_unsigned = 0xabcd;
+        o_desc.o_data.b_negative = 0;
+        o_desc.o_format.i_flags = cv_number_flag_hexadecimal
+            | cv_number_flag_upper;
+        cv_test_number_step(&o_desc);
+        o_desc.o_data.i_unsigned = 12345;
+        o_desc.o_format.i_flags = 0;
+        o_desc.o_format.i_width = 10;
+        cv_test_number_step(&o_desc);
+        o_desc.o_data.i_unsigned = 12345;
+        o_desc.o_data.b_negative = 1;
+        o_desc.o_format.i_flags = 0;
+        o_desc.o_format.i_width = 10;
+        cv_test_number_step(&o_desc);
+        o_desc.o_data.i_unsigned = 12345;
+        o_desc.o_data.b_negative = 0;
+        o_desc.o_format.i_flags = cv_number_flag_left;
+        o_desc.o_format.i_width = 10;
+        cv_test_number_step(&o_desc);
+        o_desc.o_data.i_unsigned = 12345;
+        o_desc.o_data.b_negative = 0;
+        o_desc.o_format.i_flags = cv_number_flag_center;
+        o_desc.o_format.i_width = 10;
+        cv_test_number_step(&o_desc);
+        o_desc.o_data.i_unsigned = 12345;
+        o_desc.o_data.b_negative = 0;
+        o_desc.o_format.i_flags = 0;
+        o_desc.o_format.i_digits = 7;
+        o_desc.o_format.i_width = 10;
+        cv_test_number_step(&o_desc);
+        o_desc.o_data.i_unsigned = 123;
+        o_desc.o_data.b_negative = 0;
+        o_desc.o_format.i_flags = 0;
+        o_desc.o_format.i_digits = 0;
+        o_desc.o_format.i_width = 10;
+        o_desc.o_format.i_precision = 2;
+        cv_test_number_step(&o_desc);
+        o_desc.o_data.i_unsigned = 123;
+        o_desc.o_data.b_negative = 0;
+        o_desc.o_format.i_flags = 0;
+        o_desc.o_format.i_digits = 0;
+        o_desc.o_format.i_width = 10;
+        o_desc.o_format.i_precision = 5;
+        cv_test_number_step(&o_desc);
+    }
+
+    if (1)
+    {
+        static unsigned char const a_number[] = {
+            ' ', ' ', '+', '0', '1', '2', '3', '4', ' ' };
+        long const i_result = cv_number_scan_range(
+            a_number, a_number + sizeof(a_number), 10);
+        cv_print_signed(i_result, cv_number_format_dec());
+        cv_print_nl();
+    }
 }
 
 static void cv_test_stdin(void)

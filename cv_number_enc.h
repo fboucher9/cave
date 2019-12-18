@@ -23,6 +23,8 @@ structure instead of a format string.
 
 #include <cv_number_desc.h>
 
+#include <cv_number_status.h>
+
 struct cv_number_enc {
     cv_number_desc o_desc;
     /* -- */
@@ -43,13 +45,6 @@ struct cv_number_enc {
 
 #define cv_number_enc_initializer_ \
 { cv_number_desc_initializer_, 0, 0, 0, 0, 0, 0, {0}, 0, 0, {0}, {0} }
-
-typedef enum cv_number_status {
-    cv_number_status_continue = 0,
-    cv_number_status_done = 1,
-    cv_number_status_full = 2,
-    cv_number_status_fail = 3
-} cv_number_status;
 
 /* state-machine services */
 cv_bool cv_number_enc_init(

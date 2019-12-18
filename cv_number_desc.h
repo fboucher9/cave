@@ -58,6 +58,10 @@ struct cv_number_desc
 #define cv_number_desc_initializer_ \
 { cv_number_data_initializer_, cv_number_format_initializer_ }
 
+void cv_number_desc_init( cv_number_desc * p_this);
+
+void cv_number_desc_cleanup( cv_number_desc * p_this);
+
 #endif /* #ifndef cv_number_desc_h_ */
 
 /* end-of-file: cv_number_desc.h */
