@@ -167,130 +167,229 @@ void cv_number_enc_cleanup(
     cv_debug_destruct_(g_class, p_this);
 }
 
+/*
+ *
+ */
+
+static cv_number_status cv_number_enc_process_after_dot(
+    cv_number_enc * p_this, cv_array_it * p_array_it) {
+    cv_number_status e_status = cv_number_status_fail;
+    if (p_this->i_digit_count > 0) {
+        unsigned char const c = p_this->a_digit[
+            p_this->i_digit_count - 1];
+        if (cv_array_it_write_next_char(p_array_it, c)) {
+            p_this->i_digit_count --;
+            e_status = cv_number_status_continue;
+        } else {
+            e_status = cv_number_status_more_data;
+        }
+    } else {
+        p_this->i_state = cv_number_machine_after_space;
+        e_status = cv_number_status_continue;
+    }
+    return e_status;
+}
+
+/*
+ *
+ */
+
+static cv_number_status cv_number_enc_process_after_zero(
+    cv_number_enc * p_this, cv_array_it * p_array_it) {
+    cv_number_status e_status = cv_number_status_fail;
+    if (p_this->i_after_zero > 0) {
+        if (cv_array_it_write_next_char(p_array_it, '0')) {
+            p_this->i_after_zero --;
+            e_status = cv_number_status_continue;
+        } else {
+            e_status = cv_number_status_more_data;
+        }
+    } else {
+        p_this->i_state = cv_number_machine_after_dot;
+        e_status = cv_number_status_continue;
+    }
+    return e_status;
+}
+
+/*
+ *
+ */
+
+static cv_number_status cv_number_enc_process_dot(
+    cv_number_enc * p_this, cv_array_it * p_array_it) {
+    cv_number_status e_status = cv_number_status_fail;
+    if (p_this->b_dot) {
+        if (cv_array_it_write_next_char(p_array_it, '.')) {
+            p_this->b_dot = 0;
+            e_status = cv_number_status_continue;
+        } else {
+            e_status = cv_number_status_more_data;
+        }
+    } else {
+        p_this->i_state = cv_number_machine_after_zero;
+        e_status = cv_number_status_continue;
+    }
+    return e_status;
+}
+
+/*
+ *
+ */
+
+static cv_number_status cv_number_enc_process_before_dot(
+    cv_number_enc * p_this, cv_array_it * p_array_it) {
+    cv_number_status e_status = cv_number_status_fail;
+    if (p_this->i_digit_count > p_this->o_desc.o_format.i_precision) {
+        unsigned char const c = p_this->a_digit[
+            p_this->i_digit_count - 1];
+        if (cv_array_it_write_next_char(p_array_it, c)) {
+            p_this->i_digit_count --;
+            e_status = cv_number_status_continue;
+        } else {
+            e_status = cv_number_status_more_data;
+        }
+    } else {
+        p_this->i_state = cv_number_machine_dot;
+        e_status = cv_number_status_continue;
+    }
+    return e_status;
+}
+
+/*
+ *
+ */
+
+static cv_number_status cv_number_enc_process_before_zero(
+    cv_number_enc * p_this, cv_array_it * p_array_it) {
+    cv_number_status e_status = cv_number_status_fail;
+    if (p_this->i_before_zero > 0) {
+        if (cv_array_it_write_next_char(p_array_it, '0')) {
+            p_this->i_before_zero --;
+            e_status = cv_number_status_continue;
+        } else {
+            e_status = cv_number_status_more_data;
+        }
+    } else {
+        p_this->i_state = cv_number_machine_before_dot;
+        e_status = cv_number_status_continue;
+    }
+    return e_status;
+}
+
+/*
+ *
+ */
+
+static cv_number_status cv_number_enc_process_prefix_b(
+    cv_number_enc * p_this, cv_array_it * p_array_it) {
+    cv_number_status e_status = cv_number_status_fail;
+    if (cv_number_flag_prefix & p_this->o_desc.o_format.i_flags) {
+        if (cv_array_it_write_next_char(p_array_it,
+                cv_number_flag_upper & p_this->o_desc.o_format.i_flags ?
+                'X' : 'x')) {
+            p_this->i_state = cv_number_machine_before_zero;
+            e_status = cv_number_status_continue;
+        } else {
+            e_status = cv_number_status_more_data;
+        }
+    } else {
+        p_this->i_state = cv_number_machine_before_zero;
+        e_status = cv_number_status_continue;
+    }
+    return e_status;
+}
+
+/*
+ *
+ */
+
+static cv_number_status cv_number_enc_process_prefix_a(
+    cv_number_enc * p_this, cv_array_it * p_array_it) {
+    cv_number_status e_status = cv_number_status_fail;
+    if (cv_number_flag_prefix & p_this->o_desc.o_format.i_flags) {
+        if (cv_array_it_write_next_char(p_array_it,
+                '0')) {
+            p_this->i_state = cv_number_machine_prefix_b;
+            e_status = cv_number_status_continue;
+        } else {
+            e_status = cv_number_status_more_data;
+        }
+    } else {
+        p_this->i_state = cv_number_machine_before_zero;
+        e_status = cv_number_status_continue;
+    }
+    return e_status;
+}
+
+/*
+ *
+ */
+
+static cv_number_status cv_number_enc_process_sign(
+    cv_number_enc * p_this, cv_array_it * p_array_it) {
+    cv_number_status e_status = cv_number_status_fail;
+    if (p_this->b_sign) {
+        if (cv_array_it_write_next_char(p_array_it,
+                p_this->a_sign[0u])) {
+            p_this->b_sign = 0;
+            e_status = cv_number_status_continue;
+        } else {
+            e_status = cv_number_status_more_data;
+        }
+    } else {
+        p_this->i_state = cv_number_machine_prefix_a;
+        e_status = cv_number_status_continue;
+    }
+    return e_status;
+}
+
+/*
+ *
+ */
+
+static cv_number_status cv_number_enc_process_before_space(
+    cv_number_enc * p_this, cv_array_it * p_array_it) {
+    cv_number_status e_status = cv_number_status_fail;
+    if (p_this->i_before_space > 0) {
+        if (cv_array_it_write_next_char(p_array_it, ' ')) {
+            p_this->i_before_space --;
+            e_status = cv_number_status_continue;
+        } else {
+            e_status = cv_number_status_more_data;
+        }
+    } else {
+        p_this->i_state = cv_number_machine_sign;
+        e_status = cv_number_status_continue;
+    }
+    return e_status;
+}
+
+/*
+ *
+ */
+
 static cv_number_status cv_number_enc_step(
-    cv_number_enc * p_this,
-    cv_array_it * p_array_it)
-{
+    cv_number_enc * p_this, cv_array_it * p_array_it) {
     cv_number_status e_status = cv_number_status_fail;
     cv_debug_assert_(p_this && p_array_it, cv_debug_code_null_ptr);
     if (cv_number_machine_before_space == p_this->i_state) {
-        if (p_this->i_before_space > 0) {
-            if (cv_array_it_write_next_char(p_array_it, ' ')) {
-                p_this->i_before_space --;
-                e_status = cv_number_status_continue;
-            } else {
-                e_status = cv_number_status_more_data;
-            }
-        } else {
-            p_this->i_state = cv_number_machine_sign;
-            e_status = cv_number_status_continue;
-        }
+        e_status = cv_number_enc_process_before_space(p_this, p_array_it);
     } else if (cv_number_machine_sign == p_this->i_state) {
-        if (p_this->b_sign) {
-            if (cv_array_it_write_next_char(p_array_it,
-                    p_this->a_sign[0u])) {
-                p_this->b_sign = 0;
-                e_status = cv_number_status_continue;
-            } else {
-                e_status = cv_number_status_more_data;
-            }
-        } else {
-            p_this->i_state = cv_number_machine_prefix_a;
-            e_status = cv_number_status_continue;
-        }
+        e_status = cv_number_enc_process_sign(p_this, p_array_it);
     } else if (cv_number_machine_prefix_a == p_this->i_state) {
-        if (cv_number_flag_prefix & p_this->o_desc.o_format.i_flags) {
-            if (cv_array_it_write_next_char(p_array_it,
-                    '0')) {
-                p_this->i_state = cv_number_machine_prefix_b;
-                e_status = cv_number_status_continue;
-            } else {
-                e_status = cv_number_status_more_data;
-            }
-        } else {
-            p_this->i_state = cv_number_machine_before_zero;
-            e_status = cv_number_status_continue;
-        }
+        e_status = cv_number_enc_process_prefix_a(p_this, p_array_it);
     } else if (cv_number_machine_prefix_b == p_this->i_state) {
-        if (cv_number_flag_prefix & p_this->o_desc.o_format.i_flags) {
-            if (cv_array_it_write_next_char(p_array_it,
-                    cv_number_flag_upper & p_this->o_desc.o_format.i_flags ?
-                    'X' : 'x')) {
-                p_this->i_state = cv_number_machine_before_zero;
-                e_status = cv_number_status_continue;
-            } else {
-                e_status = cv_number_status_more_data;
-            }
-        } else {
-            p_this->i_state = cv_number_machine_before_zero;
-            e_status = cv_number_status_continue;
-        }
+        e_status = cv_number_enc_process_prefix_b(p_this, p_array_it);
     } else if (cv_number_machine_before_zero == p_this->i_state) {
-        if (p_this->i_before_zero > 0) {
-            if (cv_array_it_write_next_char(p_array_it, '0')) {
-                p_this->i_before_zero --;
-                e_status = cv_number_status_continue;
-            } else {
-                e_status = cv_number_status_more_data;
-            }
-        } else {
-            p_this->i_state = cv_number_machine_before_dot;
-            e_status = cv_number_status_continue;
-        }
+        e_status = cv_number_enc_process_before_zero(p_this, p_array_it);
     } else if (cv_number_machine_before_dot == p_this->i_state) {
-        if (p_this->i_digit_count > p_this->o_desc.o_format.i_precision) {
-            unsigned char const c = p_this->a_digit[
-                p_this->i_digit_count - 1];
-
-            if (cv_array_it_write_next_char(p_array_it, c)) {
-                p_this->i_digit_count --;
-                e_status = cv_number_status_continue;
-            } else {
-                e_status = cv_number_status_more_data;
-            }
-        } else {
-            p_this->i_state = cv_number_machine_dot;
-            e_status = cv_number_status_continue;
-        }
+        e_status = cv_number_enc_process_before_dot(p_this, p_array_it);
     } else if (cv_number_machine_dot == p_this->i_state) {
-        if (p_this->b_dot) {
-            if (cv_array_it_write_next_char(p_array_it, '.')) {
-                p_this->b_dot = 0;
-                e_status = cv_number_status_continue;
-            } else {
-                e_status = cv_number_status_more_data;
-            }
-        } else {
-            p_this->i_state = cv_number_machine_after_zero;
-            e_status = cv_number_status_continue;
-        }
+        e_status = cv_number_enc_process_dot(p_this, p_array_it);
     } else if (cv_number_machine_after_zero == p_this->i_state) {
-        if (p_this->i_after_zero > 0) {
-            if (cv_array_it_write_next_char(p_array_it, '0')) {
-                p_this->i_after_zero --;
-                e_status = cv_number_status_continue;
-            } else {
-                e_status = cv_number_status_more_data;
-            }
-        } else {
-            p_this->i_state = cv_number_machine_after_dot;
-            e_status = cv_number_status_continue;
-        }
+        e_status = cv_number_enc_process_after_zero(p_this, p_array_it);
     } else if (cv_number_machine_after_dot == p_this->i_state) {
-        if (p_this->i_digit_count > 0) {
-            unsigned char const c = p_this->a_digit[
-                p_this->i_digit_count - 1];
-
-            if (cv_array_it_write_next_char(p_array_it, c)) {
-                p_this->i_digit_count --;
-                e_status = cv_number_status_continue;
-            } else {
-                e_status = cv_number_status_more_data;
-            }
-        } else {
-            p_this->i_state = cv_number_machine_after_space;
-            e_status = cv_number_status_continue;
-        }
+        e_status = cv_number_enc_process_after_dot(p_this, p_array_it);
     } else if (cv_number_machine_after_space == p_this->i_state) {
         if (p_this->i_after_space > 0) {
             if (cv_array_it_write_next_char(p_array_it, ' ')) {
@@ -310,10 +409,12 @@ static cv_number_status cv_number_enc_step(
     return e_status;
 }
 
+/*
+ *
+ */
+
 cv_number_status cv_number_enc_read(
-    cv_number_enc * p_this,
-    cv_array_it * p_array_it)
-{
+    cv_number_enc * p_this, cv_array_it * p_array_it) {
     cv_number_status e_status = cv_number_status_continue;
     while (cv_number_status_continue == e_status) {
         e_status = cv_number_enc_step(p_this, p_array_it);
