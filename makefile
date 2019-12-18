@@ -50,6 +50,7 @@ cv_test_srcs = \
     cv_thread/cv_thread_impl.c \
     cv_memory.c \
     cv_number_desc.c \
+    cv_number_format.c \
     cv_number_enc.c \
     cv_number_dec.c \
     cv_number_scan.c \
