@@ -3,12 +3,19 @@
 #ifndef cv_number_desc_h_
 #define cv_number_desc_h_
 
+/*
+ *
+ */
+
 #include <cv_number_pred.h>
 #include <cv_misc/cv_types.h>
 #include <cv_misc/cv_bool.h>
 
-struct cv_number_data
-{
+/*
+ *
+ */
+
+struct cv_number_data {
     unsigned long i_unsigned;
     unsigned long b_negative;
 };
@@ -21,7 +28,7 @@ typedef char cv_verify_sizeof_number_data [
     ? 1 : -1 ];
 
 enum cv_number_flag {
-    cv_number_flag_hexadecimal = 1,
+    cv_number_flag_prefix = 1,
     cv_number_flag_upper = 2,
     cv_number_flag_left = 4,
     cv_number_flag_center = 8,
@@ -34,9 +41,12 @@ struct cv_number_format {
     short i_width;
     short i_digits;
     short i_precision;
+    /* -- */
+    unsigned int i_base;
+    unsigned int i_padding[1u];
 };
 
-#define cv_number_format_initializer_ { 0, 0, 0, 0 }
+#define cv_number_format_initializer_ { 0, 0, 0, 0, 0, {0} }
 
 cv_number_format const * cv_number_format_dec(void);
 

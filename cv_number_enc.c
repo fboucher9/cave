@@ -19,6 +19,8 @@ enum cv_number_machine {
     cv_number_machine_invalid = 0,
     cv_number_machine_before_space,
     cv_number_machine_sign,
+    cv_number_machine_prefix_a,
+    cv_number_machine_prefix_b,
     cv_number_machine_before_zero,
     cv_number_machine_before_dot,
     cv_number_machine_dot,
@@ -52,9 +54,8 @@ static cv_bool cv_number_enc_init_digits(
         }
         p_this->i_digit_count = 0;
         {
-            unsigned long const i_base =
-                (cv_number_flag_hexadecimal & p_this->o_desc.o_format.i_flags)
-                ? 16UL : 10UL;
+            unsigned long const i_base = (p_this->o_desc.o_format.i_base) ?
+                p_this->o_desc.o_format.i_base : 10;
             unsigned char const * p_digit_ascii =
                 (cv_number_flag_upper & p_this->o_desc.o_format.i_flags)
                 ? g_number_digit_upper : g_number_digit_lower;
@@ -189,6 +190,33 @@ static cv_number_status cv_number_enc_step(
             if (cv_array_it_write_next_char(p_array_it,
                     p_this->a_sign[0u])) {
                 p_this->b_sign = 0;
+                e_status = cv_number_status_continue;
+            } else {
+                e_status = cv_number_status_full;
+            }
+        } else {
+            p_this->i_state = cv_number_machine_prefix_a;
+            e_status = cv_number_status_continue;
+        }
+    } else if (cv_number_machine_prefix_a == p_this->i_state) {
+        if (cv_number_flag_prefix & p_this->o_desc.o_format.i_flags) {
+            if (cv_array_it_write_next_char(p_array_it,
+                    '0')) {
+                p_this->i_state = cv_number_machine_prefix_b;
+                e_status = cv_number_status_continue;
+            } else {
+                e_status = cv_number_status_full;
+            }
+        } else {
+            p_this->i_state = cv_number_machine_before_zero;
+            e_status = cv_number_status_continue;
+        }
+    } else if (cv_number_machine_prefix_b == p_this->i_state) {
+        if (cv_number_flag_prefix & p_this->o_desc.o_format.i_flags) {
+            if (cv_array_it_write_next_char(p_array_it,
+                    cv_number_flag_upper & p_this->o_desc.o_format.i_flags ?
+                    'X' : 'x')) {
+                p_this->i_state = cv_number_machine_before_zero;
                 e_status = cv_number_status_continue;
             } else {
                 e_status = cv_number_status_full;

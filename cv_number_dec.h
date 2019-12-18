@@ -22,11 +22,11 @@ struct cv_number_dec {
     cv_number_desc o_desc;
     /* -- */
     int i_state;
-    unsigned int i_base;
+    int i_padding[1u];
 };
 
 #define cv_number_dec_initializer_ \
-{ cv_number_desc_initializer_, 0, 0 }
+{ cv_number_desc_initializer_, 0, {0} }
 
 /*
  *

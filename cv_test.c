@@ -141,75 +141,106 @@ static void cv_test_number_step(
 
 static void cv_test_number(void)
 {
-    if (0)
-    {
-        cv_number_desc o_desc = cv_number_desc_initializer_;
-        o_desc.o_data.i_unsigned = 12345;
-        o_desc.o_data.b_negative = 0;
-        o_desc.o_format.i_flags = 0;
-        cv_test_number_step(&o_desc);
-        o_desc.o_data.i_unsigned = 12345;
-        o_desc.o_data.b_negative = 1;
-        o_desc.o_format.i_flags = 0;
-        cv_test_number_step(&o_desc);
-        o_desc.o_data.i_unsigned = 0xabcd;
-        o_desc.o_data.b_negative = 0;
-        o_desc.o_format.i_flags = cv_number_flag_hexadecimal;
-        cv_test_number_step(&o_desc);
-        o_desc.o_data.i_unsigned = 0xabcd;
-        o_desc.o_data.b_negative = 0;
-        o_desc.o_format.i_flags = cv_number_flag_hexadecimal
-            | cv_number_flag_upper;
-        cv_test_number_step(&o_desc);
-        o_desc.o_data.i_unsigned = 12345;
-        o_desc.o_format.i_flags = 0;
-        o_desc.o_format.i_width = 10;
-        cv_test_number_step(&o_desc);
-        o_desc.o_data.i_unsigned = 12345;
-        o_desc.o_data.b_negative = 1;
-        o_desc.o_format.i_flags = 0;
-        o_desc.o_format.i_width = 10;
-        cv_test_number_step(&o_desc);
-        o_desc.o_data.i_unsigned = 12345;
-        o_desc.o_data.b_negative = 0;
-        o_desc.o_format.i_flags = cv_number_flag_left;
-        o_desc.o_format.i_width = 10;
-        cv_test_number_step(&o_desc);
-        o_desc.o_data.i_unsigned = 12345;
-        o_desc.o_data.b_negative = 0;
-        o_desc.o_format.i_flags = cv_number_flag_center;
-        o_desc.o_format.i_width = 10;
-        cv_test_number_step(&o_desc);
-        o_desc.o_data.i_unsigned = 12345;
-        o_desc.o_data.b_negative = 0;
-        o_desc.o_format.i_flags = 0;
-        o_desc.o_format.i_digits = 7;
-        o_desc.o_format.i_width = 10;
-        cv_test_number_step(&o_desc);
-        o_desc.o_data.i_unsigned = 123;
-        o_desc.o_data.b_negative = 0;
-        o_desc.o_format.i_flags = 0;
-        o_desc.o_format.i_digits = 0;
-        o_desc.o_format.i_width = 10;
-        o_desc.o_format.i_precision = 2;
-        cv_test_number_step(&o_desc);
-        o_desc.o_data.i_unsigned = 123;
-        o_desc.o_data.b_negative = 0;
-        o_desc.o_format.i_flags = 0;
-        o_desc.o_format.i_digits = 0;
-        o_desc.o_format.i_width = 10;
-        o_desc.o_format.i_precision = 5;
-        cv_test_number_step(&o_desc);
-    }
+    cv_number_desc o_desc = cv_number_desc_initializer_;
+    o_desc.o_format.i_base = 10;
+    o_desc.o_data.i_unsigned = 12345;
+    o_desc.o_data.b_negative = 0;
+    o_desc.o_format.i_flags = 0;
+    cv_test_number_step(&o_desc);
+    o_desc.o_data.i_unsigned = 12345;
+    o_desc.o_data.b_negative = 1;
+    o_desc.o_format.i_flags = 0;
+    cv_test_number_step(&o_desc);
+    o_desc.o_data.i_unsigned = 0xabcd;
+    o_desc.o_data.b_negative = 0;
+    o_desc.o_format.i_flags = 0;
+    o_desc.o_format.i_base = 16;
+    cv_test_number_step(&o_desc);
+    o_desc.o_data.i_unsigned = 0xabcd;
+    o_desc.o_data.b_negative = 0;
+    o_desc.o_format.i_flags = cv_number_flag_upper;
+    o_desc.o_format.i_base = 16;
+    cv_test_number_step(&o_desc);
+    o_desc.o_data.i_unsigned = 0xabcd;
+    o_desc.o_data.b_negative = 0;
+    o_desc.o_format.i_flags = cv_number_flag_prefix;
+    o_desc.o_format.i_base = 16;
+    cv_test_number_step(&o_desc);
+    o_desc.o_data.i_unsigned = 0xabcd;
+    o_desc.o_data.b_negative = 0;
+    o_desc.o_format.i_flags = cv_number_flag_prefix | cv_number_flag_upper;
+    o_desc.o_format.i_base = 16;
+    cv_test_number_step(&o_desc);
+    o_desc.o_data.i_unsigned = 12345;
+    o_desc.o_format.i_flags = 0;
+    o_desc.o_format.i_base = 10;
+    o_desc.o_format.i_width = 10;
+    cv_test_number_step(&o_desc);
+    o_desc.o_data.i_unsigned = 12345;
+    o_desc.o_data.b_negative = 1;
+    o_desc.o_format.i_flags = 0;
+    o_desc.o_format.i_base = 10;
+    o_desc.o_format.i_width = 10;
+    cv_test_number_step(&o_desc);
+    o_desc.o_data.i_unsigned = 12345;
+    o_desc.o_data.b_negative = 0;
+    o_desc.o_format.i_flags = cv_number_flag_left;
+    o_desc.o_format.i_base = 10;
+    o_desc.o_format.i_width = 10;
+    cv_test_number_step(&o_desc);
+    o_desc.o_data.i_unsigned = 12345;
+    o_desc.o_data.b_negative = 0;
+    o_desc.o_format.i_flags = cv_number_flag_center;
+    o_desc.o_format.i_base = 10;
+    o_desc.o_format.i_width = 10;
+    cv_test_number_step(&o_desc);
+    o_desc.o_data.i_unsigned = 12345;
+    o_desc.o_data.b_negative = 0;
+    o_desc.o_format.i_flags = 0;
+    o_desc.o_format.i_base = 10;
+    o_desc.o_format.i_digits = 7;
+    o_desc.o_format.i_width = 10;
+    cv_test_number_step(&o_desc);
+    o_desc.o_data.i_unsigned = 123;
+    o_desc.o_data.b_negative = 0;
+    o_desc.o_format.i_flags = 0;
+    o_desc.o_format.i_base = 10;
+    o_desc.o_format.i_digits = 0;
+    o_desc.o_format.i_width = 10;
+    o_desc.o_format.i_precision = 2;
+    cv_test_number_step(&o_desc);
+    o_desc.o_data.i_unsigned = 123;
+    o_desc.o_data.b_negative = 0;
+    o_desc.o_format.i_flags = 0;
+    o_desc.o_format.i_base = 10;
+    o_desc.o_format.i_digits = 0;
+    o_desc.o_format.i_width = 10;
+    o_desc.o_format.i_precision = 5;
+    cv_test_number_step(&o_desc);
+}
 
-    if (1)
-    {
-        static unsigned char const a_number[] = {
-            ' ', ' ', '+', '0', '1', '2', '3', '4', ' ' };
-        long const i_result = cv_number_scan_range(
-            a_number, a_number + sizeof(a_number), 10);
-        cv_print_signed(i_result, cv_number_format_dec());
+/*
+ *
+ */
+
+static void cv_test_number_dec(
+    cv_options_it * p_options_it,
+    unsigned int i_base) {
+    cv_array o_string = cv_array_null_;
+    while (cv_options_it_next(p_options_it, &o_string)) {
+        cv_number_dec o_number_dec = cv_number_dec_initializer_;
+        cv_array_it o_string_it = cv_array_it_initializer_;
+        cv_array_it_init(&o_string_it, &o_string);
+        cv_number_dec_init(&o_number_dec, i_base);
+        while (cv_number_status_continue == cv_number_dec_step(&o_number_dec,
+                &o_string_it)) {
+        }
+        cv_print_char('[');
+        cv_print_number(&o_number_dec.o_desc);
+        cv_print_char(']');
         cv_print_nl();
+        cv_number_dec_cleanup(&o_number_dec);
+        cv_array_it_cleanup(&o_string_it);
     }
 }
 
@@ -328,6 +359,10 @@ static cv_bool cv_test_main_cb(
                     'l', 'e', 'a', 'k', '3' };
                 static char const g_trace_text[] = {
                     't', 'r', 'a', 'c', 'e' };
+                static char const g_ndec_text[] = {
+                    'n', 'd', 'e', 'c' };
+                static char const g_nhex_text[] = {
+                    'n', 'h', 'e', 'x' };
 
                 static cv_array const g_number_array =
                     cv_array_text_initializer_(g_number_text);
@@ -357,6 +392,10 @@ static cv_bool cv_test_main_cb(
                     cv_array_text_initializer_(g_leak3_text);
                 static cv_array const g_trace_array =
                     cv_array_text_initializer_(g_trace_text);
+                static cv_array const g_ndec_array =
+                    cv_array_text_initializer_(g_ndec_text);
+                static cv_array const g_nhex_array =
+                    cv_array_text_initializer_(g_nhex_text);
 
                 if (cv_array_compare(&o_string, &g_number_array)) {
                     cv_test_number();
@@ -386,6 +425,10 @@ static cv_bool cv_test_main_cb(
                     cv_test_leak3();
                 } else if (cv_array_compare(&o_string, &g_trace_array)) {
                     cv_trace_test();
+                } else if (cv_array_compare(&o_string, &g_ndec_array)) {
+                    cv_test_number_dec(&o_options_it, 10);
+                } else if (cv_array_compare(&o_string, &g_nhex_array)) {
+                    cv_test_number_dec(&o_options_it, 16);
                 } else {
                     /* invalid command */
                     static unsigned char const a_text[] = {
