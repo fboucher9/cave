@@ -10,8 +10,8 @@
 #include <cv_algo/cv_array_tool.h>
 #include <cv_debug/cv_debug.h>
 #include <cv_misc/cv_sizeof.h>
-#include <cv_number_print.h>
-#include <cv_number_desc.h>
+#include <cv_number/cv_number_print.h>
+#include <cv_number/cv_number_desc.h>
 #include <cv_misc/cv_limits.h>
 
 /*

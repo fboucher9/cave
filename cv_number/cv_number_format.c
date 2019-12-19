@@ -1,6 +1,6 @@
 /* See LICENSE for license details */
 
-#include <cv_number_format.h>
+#include <cv_number/cv_number_format.h>
 
 cv_number_format const * cv_number_format_dec(void) {
     static cv_number_format g_format_dec = {

@@ -19,11 +19,11 @@ structure instead of a format string.
 
 #include <cv_algo/cv_array_pred.h>
 
-#include <cv_number_pred.h>
+#include <cv_number/cv_number_pred.h>
 
-#include <cv_number_desc.h>
+#include <cv_number/cv_number_desc.h>
 
-#include <cv_number_status.h>
+#include <cv_number/cv_number_status.h>
 
 struct cv_number_enc {
     cv_number_desc o_desc;

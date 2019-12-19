@@ -14,8 +14,8 @@
 #include <cv_file/cv_file_poll.h>
 #include <cv_misc/cv_null.h>
 #include <cv_misc/cv_unused.h>
-#include <cv_number_enc.h>
-#include <cv_number_desc.h>
+#include <cv_number/cv_number_enc.h>
+#include <cv_number/cv_number_desc.h>
 #include <cv_test_print.h>
 #include <cv_algo/cv_array_tool.h>
 #include <cv_memory.h>
@@ -27,9 +27,9 @@
 #include <cv_clock/cv_clock_test.h>
 #include <cv_trace/cv_trace_test.h>
 #include <cv_trace/cv_trace_func0.h>
-#include <cv_number_dec.h>
+#include <cv_number/cv_number_dec.h>
 #include <cv_algo/cv_array_it.h>
-#include <cv_number_scan.h>
+#include <cv_number/cv_number_scan.h>
 
 static void cv_test_job(
     void * p_context)

@@ -7,7 +7,7 @@
  *
  */
 
-#include <cv_number_pred.h>
+#include <cv_number/cv_number_pred.h>
 
 /*
  *

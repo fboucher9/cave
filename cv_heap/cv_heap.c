@@ -25,7 +25,7 @@ are thread-safe.
 #include <cv_file/cv_file_std.h>
 #include <cv_algo/cv_array.h>
 #include <cv_algo/cv_array_tool.h>
-#include <cv_number_desc.h>
+#include <cv_number/cv_number_desc.h>
 #include <cv_algo/cv_list_root.h>
 #include <cv_algo/cv_list_it.h>
 #include <cv_misc/cv_sizeof.h>

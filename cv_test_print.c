@@ -4,7 +4,7 @@
 #include <cv_file/cv_file_std.h>
 #include <cv_file/cv_file_print.h>
 #include <cv_algo/cv_array.h>
-#include <cv_number_desc.h>
+#include <cv_number/cv_number_desc.h>
 #include <cv_misc/cv_cast.h>
 
 void cv_print_char( unsigned char i_value) {

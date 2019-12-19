@@ -4,8 +4,8 @@
 
 */
 
-#include <cv_number_enc.h>
-#include <cv_number_desc.h>
+#include <cv_number/cv_number_enc.h>
+#include <cv_number/cv_number_desc.h>
 #include <cv_algo/cv_array_it.h>
 #include <cv_misc/cv_sizeof.h>
 #include <cv_memory.h>

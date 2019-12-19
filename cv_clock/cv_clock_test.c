@@ -11,7 +11,7 @@
 #include <cv_clock/cv_clock_duration.h>
 #include <cv_clock/cv_clock_tool.h>
 #include <cv_test_print.h>
-#include <cv_number_desc.h>
+#include <cv_number/cv_number_desc.h>
 #include <cv_misc/cv_sizeof.h>
 
 /*

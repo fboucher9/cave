@@ -6,7 +6,7 @@
  *  Description: Decode the text representation of numbers.
  */
 
-#include <cv_number_dec.h>
+#include <cv_number/cv_number_dec.h>
 #include <cv_debug/cv_debug.h>
 #include <cv_algo/cv_array_it.h>
 

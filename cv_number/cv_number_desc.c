@@ -1,6 +1,6 @@
 /* See LICENSE for license details */
 
-#include <cv_number_desc.h>
+#include <cv_number/cv_number_desc.h>
 #include <cv_misc/cv_unused.h>
 
 /*

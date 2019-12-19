@@ -7,7 +7,7 @@
  *
  */
 
-#include <cv_number_pred.h>
+#include <cv_number/cv_number_pred.h>
 
 long cv_number_print( cv_number_desc const * p_desc,
     void * p_buffer, long i_max_len);

@@ -13,7 +13,7 @@
 #include <cv_algo/cv_array_tool.h>
 #include <cv_file/cv_file_std.h>
 #include <cv_file/cv_file_print.h>
-#include <cv_number_desc.h>
+#include <cv_number/cv_number_desc.h>
 
 cv_debug_decl_(g_class);
 

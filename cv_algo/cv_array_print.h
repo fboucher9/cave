@@ -8,7 +8,7 @@
  */
 
 #include <cv_algo/cv_array_pred.h>
-#include <cv_number_pred.h>
+#include <cv_number/cv_number_pred.h>
 #include <cv_misc/cv_bool.h>
 
 cv_bool cv_array_print( cv_array_it * p_array_it,
