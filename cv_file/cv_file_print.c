@@ -95,11 +95,18 @@ void cv_file_print_0( cv_file const * p_file,
 void cv_file_print_number( cv_file const * p_file,
     cv_number_desc const * p_desc) {
     char c_buffer[64u];
-    long i_buffer_len = 0;
     cv_debug_assert_(p_file && p_desc, cv_debug_code_null_ptr);
-    i_buffer_len = cv_number_print(p_desc, c_buffer, cv_sizeof_(c_buffer));
-    if ((i_buffer_len > 0) && (i_buffer_len <= cv_sizeof_(c_buffer))) {
-        cv_file_print_vector(p_file, c_buffer, i_buffer_len);
+    {
+        cv_array o_array = cv_array_null_;
+        cv_array_init_vector(&o_array, c_buffer, cv_sizeof_(c_buffer));
+        {
+            long const i_buffer_len = cv_number_print(p_desc, &o_array);
+            if ((i_buffer_len > 0) &&
+                (i_buffer_len <= cv_sizeof_(c_buffer))) {
+                cv_file_print_vector(p_file, c_buffer, i_buffer_len);
+            }
+        }
+        cv_array_cleanup(&o_array);
     }
 }
 

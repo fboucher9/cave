@@ -8,17 +8,18 @@
  */
 
 #include <cv_number/cv_number_pred.h>
+#include <cv_algo/cv_array_pred.h>
 
 long cv_number_print( cv_number_desc const * p_desc,
-    void * p_buffer, long i_max_len);
+    cv_array const * p_array);
 
 long cv_number_print_signed( long i_number,
     cv_number_format const * p_format,
-    void * p_buffer, long i_max_len);
+    cv_array const * p_array);
 
 long cv_number_print_unsigned( unsigned long i_number,
     cv_number_format const * p_format,
-    void * p_buffer, long i_max_len);
+    cv_array const * p_array);
 
 #endif /* #ifndef cv_number_print_h_ */
 

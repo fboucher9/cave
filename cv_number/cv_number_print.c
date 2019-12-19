@@ -14,18 +14,15 @@
  */
 
 long cv_number_print( cv_number_desc const * p_desc,
-    void * p_buffer, long i_max_len) {
+    cv_array const * p_array) {
     long i_result = 0;
-    cv_array o_array_in = cv_array_null_;
     cv_array o_array_out = cv_array_null_;
-    cv_array_init_vector(&o_array_in, p_buffer, i_max_len);
     cv_array_init(&o_array_out);
     if (cv_number_status_done == cv_number_enc_convert(
-            p_desc, &o_array_in, &o_array_out)) {
+            p_desc, p_array, &o_array_out)) {
         i_result = cv_array_len(&o_array_out);
     }
     cv_array_cleanup(&o_array_out);
-    cv_array_cleanup(&o_array_in);
     return i_result;
 }
 
@@ -35,7 +32,7 @@ long cv_number_print( cv_number_desc const * p_desc,
 
 long cv_number_print_signed( long i_number,
     cv_number_format const * p_format,
-    void * p_buffer, long i_max_len) {
+    cv_array const * p_array) {
     long i_result = 0;
     cv_number_desc o_desc = cv_number_desc_initializer_;
     cv_number_desc_init(&o_desc);
@@ -47,7 +44,7 @@ long cv_number_print_signed( long i_number,
         o_desc.o_data.b_negative = 0;
     }
     o_desc.o_format = *p_format;
-    i_result = cv_number_print( &o_desc, p_buffer, i_max_len);
+    i_result = cv_number_print( &o_desc, p_array);
     cv_number_desc_cleanup(&o_desc);
     return i_result;
 }
@@ -58,14 +55,14 @@ long cv_number_print_signed( long i_number,
 
 long cv_number_print_unsigned( unsigned long i_number,
     cv_number_format const * p_format,
-    void * p_buffer, long i_max_len) {
+    cv_array const * p_array) {
     long i_result = 0;
     cv_number_desc o_desc = cv_number_desc_initializer_;
     cv_number_desc_init(&o_desc);
     o_desc.o_data.i_unsigned = i_number;
     o_desc.o_data.b_negative = 0;
     o_desc.o_format = *p_format;
-    i_result = cv_number_print( &o_desc, p_buffer, i_max_len);
+    i_result = cv_number_print( &o_desc, p_array);
     cv_number_desc_cleanup(&o_desc);
     return i_result;
 }
