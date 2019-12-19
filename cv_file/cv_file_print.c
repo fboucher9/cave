@@ -10,7 +10,8 @@
 #include <cv_algo/cv_array_tool.h>
 #include <cv_debug/cv_debug.h>
 #include <cv_misc/cv_sizeof.h>
-#include <cv_number_enc.h>
+#include <cv_number_print.h>
+#include <cv_number_desc.h>
 #include <cv_misc/cv_limits.h>
 
 /*
@@ -94,19 +95,12 @@ void cv_file_print_0( cv_file const * p_file,
 void cv_file_print_number( cv_file const * p_file,
     cv_number_desc const * p_desc) {
     char c_buffer[64u];
-    cv_array o_buffer = cv_array_null_;
+    long i_buffer_len = 0;
     cv_debug_assert_(p_file && p_desc, cv_debug_code_null_ptr);
-    cv_array_init_vector(&o_buffer, c_buffer, cv_sizeof_(c_buffer));
-    {
-        cv_array o_result = cv_array_null_;
-        cv_array_init(&o_result);
-        if (cv_number_status_done ==
-            cv_number_enc_convert(p_desc, &o_buffer, &o_result)) {
-            cv_file_print_array(p_file, &o_result);
-        }
-        cv_array_cleanup(&o_result);
+    i_buffer_len = cv_number_print(p_desc, c_buffer, cv_sizeof_(c_buffer));
+    if ((i_buffer_len > 0) && (i_buffer_len <= cv_sizeof_(c_buffer))) {
+        cv_file_print_vector(p_file, c_buffer, i_buffer_len);
     }
-    cv_array_cleanup(&o_buffer);
 }
 
 /*
@@ -142,19 +136,13 @@ void cv_file_print_unsigned( cv_file const * p_file,
     cv_file_print_number(p_file, &o_desc);
 }
 
-static cv_array const * get_nl_array(void) {
-    static unsigned char a_text[] = { '\n' };
-    static cv_array const g_text = cv_array_text_initializer_(a_text);
-    return &g_text;
-}
-
 /*
  *
  */
 
 void cv_file_print_nl( cv_file const * p_file) {
     cv_debug_assert_(p_file, cv_debug_code_null_ptr);
-    cv_file_print_array(p_file, get_nl_array());
+    cv_file_print_char(p_file, '\n');
 }
 
 /* end-of-file: cv_file_print.c */
