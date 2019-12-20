@@ -55,6 +55,7 @@ cv_test_srcs = \
     cv_number/cv_number_dec.c \
     cv_number/cv_number_scan.c \
     cv_number/cv_number_print.c \
+    cv_number/cv_number_test.c \
     cv_clock/cv_clock.c \
     cv_clock/cv_clock_it.c \
     cv_clock/cv_clock_mono.c \

@@ -30,6 +30,7 @@
 #include <cv_number/cv_number_dec.h>
 #include <cv_algo/cv_array_it.h>
 #include <cv_number/cv_number_scan.h>
+#include <cv_number/cv_number_test.h>
 
 static void cv_test_job(
     void * p_context)
@@ -398,7 +399,10 @@ static cv_bool cv_test_main_cb(
                     cv_array_text_initializer_(g_nhex_text);
 
                 if (cv_array_compare(&o_string, &g_number_array)) {
-                    cv_test_number();
+                    if (0) {
+                        cv_test_number();
+                    }
+                    cv_number_test();
                 } else if (cv_array_compare(&o_string, &g_heap_large_array)) {
                     cv_test_heap_large();
                 } else if (cv_array_compare(&o_string, &g_debug_array)) {
