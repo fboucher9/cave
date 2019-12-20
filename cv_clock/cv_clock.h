@@ -25,6 +25,15 @@ struct cv_clock {
 
 void cv_clock_init( cv_clock * p_this);
 
+void cv_clock_init_msec( cv_clock * p_this,
+    unsigned long i_seconds, unsigned long i_mseconds);
+
+void cv_clock_init_usec( cv_clock * p_this,
+    unsigned long i_seconds, unsigned long i_useconds);
+
+void cv_clock_init_nsec( cv_clock * p_this,
+    unsigned long i_seconds, unsigned long i_nseconds);
+
 void cv_clock_cleanup( cv_clock * p_this);
 
 cv_bool cv_clock_read( cv_clock * p_this, int e_epoch);

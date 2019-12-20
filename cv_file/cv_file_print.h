@@ -3,6 +3,12 @@
 #ifndef cv_file_print_h_
 #define cv_file_print_h_
 
+/*
+ *  Module: cv_file_print.h
+ *
+ *  Description: Helper functions to print data to a file descriptor.
+ */
+
 #include <cv_file/cv_file_pred.h>
 #include <cv_algo/cv_array_pred.h>
 #include <cv_number/cv_number_pred.h>

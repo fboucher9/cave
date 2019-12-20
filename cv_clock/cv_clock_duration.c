@@ -45,6 +45,39 @@ void cv_clock_duration_init( cv_clock_duration * p_this) {
  *
  */
 
+void cv_clock_duration_init_msec( cv_clock_duration * p_this,
+    unsigned long i_seconds, unsigned long i_mseconds) {
+    cv_debug_assert_(p_this, cv_debug_code_null_ptr);
+    cv_debug_construct_(g_class, p_this);
+    cv_clock_init_msec(&p_this->o_clock, i_seconds, i_mseconds);
+}
+
+/*
+ *
+ */
+
+void cv_clock_duration_init_usec( cv_clock_duration * p_this,
+    unsigned long i_seconds, unsigned long i_useconds) {
+    cv_debug_assert_(p_this, cv_debug_code_null_ptr);
+    cv_debug_construct_(g_class, p_this);
+    cv_clock_init_usec(&p_this->o_clock, i_seconds, i_useconds);
+}
+
+/*
+ *
+ */
+
+void cv_clock_duration_init_nsec( cv_clock_duration * p_this,
+    unsigned long i_seconds, unsigned long i_nseconds) {
+    cv_debug_assert_(p_this, cv_debug_code_null_ptr);
+    cv_debug_construct_(g_class, p_this);
+    cv_clock_init_nsec(&p_this->o_clock, i_seconds, i_nseconds);
+}
+
+/*
+ *
+ */
+
 void cv_clock_duration_cleanup( cv_clock_duration * p_this) {
     cv_debug_assert_(p_this, cv_debug_code_null_ptr);
     cv_clock_cleanup(&p_this->o_clock);

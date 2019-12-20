@@ -7,24 +7,19 @@
  */
 
 #include <cv_file/cv_file_test.h>
-
 #include <cv_file/cv_file.h>
-
 #include <cv_file/cv_file_disk.h>
-
 #include <cv_file/cv_file_disk_desc.h>
-
 #include <cv_file/cv_file_print.h>
-
+#include <cv_file/cv_file_std.h>
+#include <cv_file/cv_file_poll.h>
 #include <cv_algo/cv_array.h>
-
 #include <cv_algo/cv_array_it.h>
-
 #include <cv_algo/cv_array_tool.h>
-
 #include <cv_misc/cv_sizeof.h>
-
+#include <cv_misc/cv_unused.h>
 #include <cv_test_print.h>
+#include <cv_number/cv_number_desc.h>
 
 /*
  *  Function: cv_file_test_dump_buffer()
@@ -91,20 +86,43 @@ static cv_array const * get_input_bin_name(void) {
     return &g_text;
 }
 
-/* */
-static void cv_file_test_disk_read(void) {
+static cv_array const * get_input_fail_name(void) {
+    static unsigned char const a_text[] = {
+        'i', 'n', 'p', 'u', 't', '.', 'b', 'a', 'd' };
+    static cv_array const g_text =
+        cv_array_text_initializer_(a_text);
+    return &g_text;
+}
+
+/*
+ *
+ */
+
+static cv_bool cv_file_test_init_disk_read(cv_file_disk * p_file_disk,
+    cv_array const * p_name) {
+    cv_bool b_result = cv_false;
     cv_file_disk_desc o_desc = cv_file_disk_desc_initializer_;
     cv_file_disk_desc_init(&o_desc);
-    o_desc.p_name = get_input_bin_name();
+    o_desc.p_name = p_name;
     o_desc.e_mode = cv_file_disk_mode_read;
-    {
-        cv_file_disk o_file_disk = cv_file_disk_initializer_;
-        if (cv_file_disk_init(&o_file_disk, &o_desc)) {
-            process_file_contents(&o_file_disk);
-            cv_file_disk_cleanup(&o_file_disk);
-        }
-    }
+    b_result = cv_file_disk_init(p_file_disk, &o_desc);
     cv_file_disk_desc_cleanup(&o_desc);
+    return b_result;
+}
+
+/* */
+static void cv_file_test_disk_read(void) {
+    cv_file_disk o_file_disk = cv_file_disk_initializer_;
+    if (cv_file_test_init_disk_read(&o_file_disk, get_input_bin_name())) {
+        process_file_contents(&o_file_disk);
+        cv_file_disk_cleanup(&o_file_disk);
+    }
+}
+
+/* */
+static void cv_file_test_disk_read_fail(void) {
+    cv_file_disk o_file_disk = cv_file_disk_initializer_;
+    cv_file_test_init_disk_read(&o_file_disk, get_input_fail_name());
 }
 
 static cv_array const * get_output_bin_name(void) {
@@ -118,6 +136,14 @@ static cv_array const * get_output_bin_name(void) {
 static cv_array const * get_output_body(void) {
     static unsigned char const a_text[] = {
         'h', 'e', 'l', 'l', 'o', ' ', 't', 'h', 'e', 'r', 'e', '!' };
+    static cv_array const g_text =
+        cv_array_text_initializer_(a_text);
+    return &g_text;
+}
+
+static cv_array const * get_append_body(void) {
+    static unsigned char const a_text[] = {
+        'a', 'g', 'a', 'i', 'n' };
     static cv_array const g_text =
         cv_array_text_initializer_(a_text);
     return &g_text;
@@ -139,19 +165,180 @@ static void cv_file_test_disk_write(void) {
     cv_file_disk_desc_cleanup(&o_desc);
 }
 
-/*
+static void cv_file_test_disk_append(void) {
+    cv_file_disk_desc o_desc = cv_file_disk_desc_initializer_;
+    cv_file_disk_desc_init(&o_desc);
+    o_desc.p_name = get_output_bin_name();
+    o_desc.e_mode = cv_file_disk_mode_append;
+    {
+        cv_file_disk o_file_disk = cv_file_disk_initializer_;
+        if (cv_file_disk_init(&o_file_disk, &o_desc)) {
+            cv_file_print_array(&o_file_disk.o_file, get_append_body());
+            cv_file_print_nl(&o_file_disk.o_file);
+            cv_file_disk_cleanup(&o_file_disk);
+        }
+    }
+    cv_file_disk_desc_cleanup(&o_desc);
+}
 
-*/
+static cv_array const * get_line_buf(void) {
+    static unsigned char a_line[80u];
+    static cv_array const g_array =
+        cv_array_text_initializer_(a_line);
+    return &g_array;
+}
+
+/*
+ *
+ */
+
+static void cv_file_test_stdin(void) {
+    cv_file const * p_stdin = cv_file_std_in();
+    cv_print_0("type something ...", 80);
+    cv_print_nl();
+    {
+        long const i_read_result = cv_file_read(p_stdin,
+            get_line_buf());
+        cv_unused_(i_read_result);
+    }
+}
+
+/*
+ *
+ */
+
+static cv_array const * get_hello_msg(void) {
+    static unsigned char const a_text[] = {
+        'h', 'e', 'l', 'l', 'o', '!', '\n' };
+    static cv_array const g_array =
+        cv_array_text_initializer_(a_text);
+    return &g_array;
+}
+
+/*
+ *
+ */
+
+static void cv_file_test_stdout(void) {
+    cv_file const * p_stdout = cv_file_std_out();
+    long const i_write_result = cv_file_write(p_stdout,
+        get_hello_msg());
+    cv_unused_(i_write_result);
+}
+
+/*
+ *
+ */
+
+static void cv_file_test_stderr(void) {
+    cv_file const * p_stderr = cv_file_std_err();
+    long const i_write_result = cv_file_write(p_stderr,
+        get_hello_msg());
+    cv_unused_(i_write_result);
+}
+
+/*
+ *
+ */
+
+static void cv_file_test_print(void) {
+    cv_file const * p_stdout = cv_file_std_out();
+    cv_file_print_char(p_stdout, '!');
+    cv_file_print_array(p_stdout, get_hello_msg());
+    {
+        static unsigned char a_range[] = {
+            'a', 'b', 'c' };
+        cv_file_print_range(p_stdout, a_range, a_range + sizeof(a_range));
+        cv_file_print_nl(p_stdout);
+        cv_file_print_vector(p_stdout, a_range, cv_sizeof_(a_range));
+        cv_file_print_nl(p_stdout);
+    }
+    cv_file_print_0(p_stdout, "abc", 10);
+    cv_file_print_nl(p_stdout);
+    {
+        cv_number_desc o_number_desc = cv_number_desc_initializer_;
+        o_number_desc.o_data.i_unsigned = 12345;
+        o_number_desc.o_data.b_negative = 1;
+        o_number_desc.o_format = *cv_number_format_dec();
+        cv_file_print_number(p_stdout, &o_number_desc);
+        cv_file_print_nl(p_stdout);
+        cv_file_print_signed(p_stdout, -12345, cv_number_format_dec());
+        cv_file_print_nl(p_stdout);
+        cv_file_print_signed(p_stdout, 12345, cv_number_format_dec());
+        cv_file_print_nl(p_stdout);
+        cv_file_print_unsigned(p_stdout, 12345, cv_number_format_dec());
+        cv_file_print_nl(p_stdout);
+    }
+}
+
+/*
+ *
+ */
+
+static void cv_file_test_poll(void) {
+    cv_file_disk o_disk_read = cv_file_disk_initializer_;
+    cv_file const * p_stdin = cv_file_std_in();
+    cv_file const * p_stdout = cv_file_std_out();
+    {
+        cv_file_poll a_poll[1u] = { cv_file_poll_initializer_ };
+        a_poll[0u].p_file = p_stdin;
+        a_poll[0u].i_flags_in = cv_file_poll_flag_read;
+        if (cv_file_poll_dispatch(a_poll, 1, 0)) {
+        }
+    }
+    {
+        if (cv_file_test_init_disk_read(&o_disk_read, get_input_bin_name())) {
+            cv_file_poll a_poll[1u] = { cv_file_poll_initializer_ };
+            a_poll[0u].p_file = &o_disk_read.o_file;
+            a_poll[0u].i_flags_in = cv_file_poll_flag_read;
+            if (cv_file_poll_dispatch(a_poll, 1, 0)) {
+            }
+            cv_file_disk_cleanup(&o_disk_read);
+        }
+    }
+    {
+        cv_file_poll a_poll[1u] = { cv_file_poll_initializer_ };
+        a_poll[0u].p_file = p_stdout;
+        a_poll[0u].i_flags_in = cv_file_poll_flag_write;
+        if (cv_file_poll_dispatch(a_poll, 1, 0)) {
+        }
+    }
+    {
+        cv_file_poll a_poll[2u] = { cv_file_poll_initializer_,
+            cv_file_poll_initializer_ };
+        a_poll[0u].p_file = p_stdin;
+        a_poll[0u].i_flags_in = cv_file_poll_flag_read;
+        a_poll[1u].p_file = p_stdout;
+        a_poll[1u].i_flags_in = cv_file_poll_flag_write;
+        if (cv_file_poll_dispatch(a_poll, 2, 0)) {
+        }
+    }
+}
+
+/*
+ *
+ */
+
 void cv_file_test(void)
 {
     /* Test stdin */
+    cv_file_test_stdin();
     /* Test stdout */
+    cv_file_test_stdout();
     /* Test stderr */
+    cv_file_test_stderr();
     /* Test disk read */
     cv_file_test_disk_read();
     /* Test disk write */
     cv_file_test_disk_write();
     /* Test disk append */
+    cv_file_test_disk_append();
+    /* Test print */
+    cv_file_test_print();
+    /* Test poll */
+    cv_file_test_poll();
+    /* Test disk read failure */
+    cv_file_test_disk_read_fail();
 }
 
 /* end-of-file: cv_file_test.c */

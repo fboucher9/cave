@@ -1,7 +1,9 @@
 /* See LICENSE for license details */
 
 /*
+ *  Module: cv_file_poll.h
  *
+ *  Description: Poll read and write events for file descriptors.
  */
 
 #include <cv_file/cv_file_poll.h>
@@ -17,7 +19,13 @@
 #endif /* #if defined cv_linux_ */
 
 #if defined cv_linux_
+
+/* Predefine */
 typedef union pollfd_ptr pollfd_ptr;
+
+/*
+ *
+ */
 
 union pollfd_ptr {
     void const * pc_void;
@@ -27,9 +35,12 @@ union pollfd_ptr {
     cv_ptr o_ptr;
 };
 
-static void cv_file_poll_linux_prepare(
-    struct pollfd * p_pollfd, cv_file_poll * p_poll_min, long i_count)
-{
+/*
+ *
+ */
+
+static void cv_file_poll_linux_prepare( struct pollfd * p_pollfd,
+    cv_file_poll * p_poll_min, long i_count) {
     long i_index = 0;
     for (i_index = 0; i_index < i_count; i_index++) {
         cv_file_poll * const p_file_poll = p_poll_min + i_index;
@@ -44,9 +55,12 @@ static void cv_file_poll_linux_prepare(
     }
 }
 
-static void cv_file_poll_linux_return(
-    struct pollfd * p_pollfd, cv_file_poll * p_poll_min, long i_count)
-{
+/*
+ *
+ */
+
+static void cv_file_poll_linux_return( struct pollfd * p_pollfd,
+    cv_file_poll * p_poll_min, long i_count) {
     long i_index = 0;
     for (i_index = 0; i_index < i_count; i_index++) {
         cv_file_poll * const p_file_poll = p_poll_min + i_index;
@@ -59,11 +73,12 @@ static void cv_file_poll_linux_return(
     }
 }
 
-static cv_bool cv_file_poll_linux_dispatch(
-    cv_file_poll * p_poll_min,
-    long i_count,
-    cv_clock const * p_timeout)
-{
+/*
+ *
+ */
+
+static cv_bool cv_file_poll_linux_dispatch( cv_file_poll * p_poll_min,
+    long i_count, cv_clock const * p_timeout) {
     cv_bool b_result = cv_false;
     cv_unused_(p_timeout);
     cv_debug_assert_(p_poll_min && i_count > 0, cv_debug_code_null_ptr);

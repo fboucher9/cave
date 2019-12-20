@@ -3,6 +3,12 @@
 #ifndef cv_file_pred_h_
 #define cv_file_pred_h_
 
+/*
+ *  Module: cv_file_pred.h
+ *
+ *  Description: Predefine types for all cv_file modules.
+ */
+
 /* Predefine */
 typedef union cv_file cv_file;
 

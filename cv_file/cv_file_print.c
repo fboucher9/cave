@@ -1,7 +1,9 @@
 /* See LICENSE for license details */
 
 /*
+ *  Module: cv_file_print.h
  *
+ *  Description: Helper functions to print data to a file descriptor.
  */
 
 #include <cv_file/cv_file_print.h>
@@ -43,10 +45,10 @@ void cv_file_print_array( cv_file const * p_file,
         long const i_write_result = cv_file_write(
             p_file,
             & o_array_it);
+        b_result = cv_false;
         if (i_write_result > 0) {
             o_array_it.o_min.pc_char += i_write_result;
-        } else {
-            b_result = cv_false;
+            b_result = cv_true;
         }
     }
     cv_array_cleanup(&o_array_it);

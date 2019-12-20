@@ -7,7 +7,7 @@
  *
  */
 
-#include <cv_clock_pred.h>
+#include <cv_clock/cv_clock_pred.h>
 
 /*
  *
@@ -31,6 +31,9 @@ struct cv_clock_info {
         unsigned long l_padding[1u];
     } o_time;
 };
+
+#define cv_clock_info_initializer_ \
+{ { 0, 0, 0, {0} }, { 0, 0, 0, {0}, 0, {0} } }
 
 #endif /* #ifndef cv_clock_info_h_ */
 

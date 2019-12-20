@@ -18,12 +18,8 @@
  */
 
 void cv_trace_test(void) {
-    cv_clock_msec o_clock_msec = cv_clock_msec_initializer_;
     cv_clock_duration o_duration = cv_clock_duration_initializer_;
-    cv_clock_duration_init(&o_duration);
-    o_clock_msec.i_seconds = 0;
-    o_clock_msec.i_mseconds = 100;
-    cv_clock_set_msec(&o_duration.o_clock, &o_clock_msec);
+    cv_clock_duration_init_msec(&o_duration, 0, 100);
     {
         cv_trace_func0_decl_(f1, "f1");
         cv_trace_func0_enter_(f1);

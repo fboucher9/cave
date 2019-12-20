@@ -56,6 +56,51 @@ void cv_clock_init( cv_clock * p_this) {
  *
  */
 
+void cv_clock_init_msec( cv_clock * p_this,
+    unsigned long i_seconds, unsigned long i_mseconds) {
+    cv_clock_init(p_this);
+    {
+        cv_clock_msec o_clock_msec = cv_clock_msec_initializer_;
+        o_clock_msec.i_seconds = i_seconds;
+        o_clock_msec.i_mseconds = i_mseconds % 1000UL;
+        cv_clock_set_msec(p_this, &o_clock_msec);
+    }
+}
+
+/*
+ *
+ */
+
+void cv_clock_init_usec( cv_clock * p_this,
+    unsigned long i_seconds, unsigned long i_useconds) {
+    cv_clock_init(p_this);
+    {
+        cv_clock_usec o_clock_usec = cv_clock_usec_initializer_;
+        o_clock_usec.i_seconds = i_seconds;
+        o_clock_usec.i_useconds = i_useconds % 1000000UL;
+        cv_clock_set_usec(p_this, &o_clock_usec);
+    }
+}
+
+/*
+ *
+ */
+
+void cv_clock_init_nsec( cv_clock * p_this,
+    unsigned long i_seconds, unsigned long i_nseconds) {
+    cv_clock_init(p_this);
+    {
+        cv_clock_nsec o_clock_nsec = cv_clock_nsec_initializer_;
+        o_clock_nsec.i_seconds = i_seconds;
+        o_clock_nsec.i_nseconds = i_nseconds % 1000000000UL;
+        cv_clock_set_nsec(p_this, &o_clock_nsec);
+    }
+}
+
+/*
+ *
+ */
+
 void cv_clock_cleanup( cv_clock * p_this) {
     cv_debug_assert_(p_this, cv_debug_code_null_ptr);
     /* ... */
