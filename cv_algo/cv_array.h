@@ -10,13 +10,10 @@ Utilities for arrays.
 */
 
 #include <cv_algo/cv_array_pred.h>
-
 #include <cv_algo/cv_array_ptr.h>
+#include <cv_misc/cv_types.h>
 
-#include <cv_misc/cv_bool.h>
-
-struct cv_array
-{
+struct cv_array {
     cv_array_ptr o_min;
     cv_array_ptr o_max;
 };
@@ -44,17 +41,17 @@ void cv_array_init_range(
 void cv_array_init_0(
     cv_array * p_array,
     char const * p_ref0,
-    long i_ref0_max_len);
+    cv_uptr i_ref0_max_len);
 
 void cv_array_init_vector(
     cv_array * p_array,
     void const * p_buf,
-    long i_buf_len);
+    cv_uptr i_buf_len);
 
 void cv_array_cleanup(
     cv_array * p_array);
 
-long cv_array_len(
+cv_uptr cv_array_len(
     cv_array const * p_array);
 
 #endif /* #ifndef cv_array_h_ */

@@ -5,11 +5,9 @@
  */
 
 #include <cv_trace/cv_trace_node.h>
-#include <cv_misc/cv_unused.h>
 #include <cv_runtime.h>
 #include <cv_memory.h>
 #include <cv_misc/cv_limits.h>
-#include <cv_misc/cv_sizeof.h>
 #include <cv_clock/cv_clock_mono.h>
 #include <cv_clock/cv_clock_tool.h>
 #include <cv_debug/cv_debug.h>
@@ -59,7 +57,7 @@ void cv_trace_node_dispatch( cv_trace_node * p_trace_node,
         /* link node into global list */
         /* read current clock */
         /* print of type */
-        cv_trace_msg * p_trace_msg = cv_null_;
+        cv_trace_msg * p_trace_msg = 0;
         cv_debug_assert_(p_trace_node, cv_debug_code_null_ptr);
         if (cv_trace_type_func_enter == i_type) {
             if ((g_trace_stack_index >= 0) && (g_trace_stack_index < 8)) {
@@ -79,7 +77,7 @@ void cv_trace_node_dispatch( cv_trace_node * p_trace_node,
             }
             g_trace_stack_index ++;
         } else {
-            p_trace_msg = cv_null_;
+            p_trace_msg = 0;
         }
         /* Update stats */
         /* process enter */
@@ -157,7 +155,7 @@ static void cv_trace_node_stack_report_cb(cv_trace_msg const * p_trace_msg) {
 #if defined cv_have_libc_
     printf("[%s]\n", p_trace_msg->p_trace_node->pc_text);
 #else /* #if defined cv_have_libc_ */
-    cv_unused_(p_trace_msg);
+    (void)(p_trace_msg);
 #endif /* #if defined cv_have_libc_ */
 }
 
@@ -200,7 +198,7 @@ static void cv_trace_node_profile_report_cb(
             p_iterator->pc_text);
     }
 #else /* #if defined cv_have_libc_ */
-    cv_unused_(p_iterator);
+    (void)(p_iterator);
 #endif /* #if defined cv_have_libc_ */
 }
 

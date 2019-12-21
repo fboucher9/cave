@@ -3,8 +3,6 @@
 #ifndef cv_ptr_h_
 #define cv_ptr_h_
 
-#include <cv_misc/cv_null.h>
-
 typedef union cv_ptr cv_ptr;
 
 union cv_ptr
@@ -13,7 +11,7 @@ union cv_ptr
     void * p_void;
 };
 
-#define cv_ptr_null_ { cv_null_ }
+#define cv_ptr_null_ { 0 }
 
 #define cv_ptr_initializer_(pc_void) { (pc_void) }
 

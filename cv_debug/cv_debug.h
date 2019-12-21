@@ -6,7 +6,6 @@
 #include <cv_debug/cv_debug_pred.h>
 #include <cv_debug/cv_debug_code.h>
 #include <cv_debug/cv_debug_class.h>
-#include <cv_misc/cv_unused.h>
 #include <cv_misc/cv_bool.h>
 
 #if defined cv_debug_
@@ -40,7 +39,7 @@ void xx_debug_break(
 
 #define cv_debug_msg_(p_msg0)
 
-#define cv_debug_assert_(expr, p_msg0) cv_unused_(expr)
+#define cv_debug_assert_(expr, p_msg0) (void)(expr)
 
 #define cv_debug_break_(p_msg0)
 

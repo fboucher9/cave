@@ -6,15 +6,11 @@
 
 #include <cv_options/cv_options_pool.h>
 
-#include <cv_misc/cv_null.h>
-
 #include <cv_algo/cv_array.h>
 
 #include <cv_memory.h>
 
 #include <cv_algo/cv_list_root.h>
-
-#include <cv_misc/cv_sizeof.h>
 
 #include <cv_debug/cv_debug.h>
 
@@ -43,7 +39,7 @@ static cv_bool cv_options_node_init_buffer(
     cv_bool b_result = cv_false;
     cv_debug_assert_( p_this && p_array, cv_debug_code_null_ptr);
     {
-        long const i_array_len = cv_array_len(p_array);
+        cv_uptr const i_array_len = cv_array_len(p_array);
         if (cv_buffer_init(&p_this->o_buffer, i_array_len)) {
             cv_array_copy( &p_this->o_buffer.o_array, p_array);
             b_result = cv_true;
@@ -95,7 +91,7 @@ static void cv_options_node_cleanup(
 cv_options_node * cv_options_node_create(
     cv_options_node_desc const * p_desc)
 {
-    cv_options_node * p_this = cv_null_;
+    cv_options_node * p_this = 0;
     cv_debug_assert_(p_desc, cv_debug_code_null_ptr);
     p_this = cv_options_pool_alloc();
     if (p_this) {
@@ -103,7 +99,7 @@ cv_options_node * cv_options_node_create(
         } else {
             cv_debug_msg_(cv_debug_code_error);
             cv_options_pool_free(p_this);
-            p_this = cv_null_;
+            p_this = 0;
         }
     } else {
         cv_debug_msg_(cv_debug_code_out_of_memory);

@@ -11,7 +11,6 @@
 #include <cv_algo/cv_array.h>
 #include <cv_algo/cv_array_tool.h>
 #include <cv_debug/cv_debug.h>
-#include <cv_misc/cv_sizeof.h>
 #include <cv_number/cv_number_print.h>
 #include <cv_number/cv_number_desc.h>
 #include <cv_misc/cv_limits.h>
@@ -42,7 +41,7 @@ void cv_file_print_array( cv_file const * p_file,
     cv_array_init_ref(&o_array_it, p_array);
     while (b_result &&
         (o_array_it.o_min.pc_char != o_array_it.o_max.pc_char)) {
-        long const i_write_result = cv_file_write(
+        cv_sptr const i_write_result = cv_file_write(
             p_file,
             & o_array_it);
         b_result = cv_false;
@@ -71,7 +70,7 @@ void cv_file_print_range( cv_file const * p_file,
  */
 
 void cv_file_print_vector( cv_file const * p_file,
-    void const * p_buffer, long i_buffer_len) {
+    void const * p_buffer, cv_uptr i_buffer_len) {
     cv_array o_array = cv_array_null_;
     cv_array_init_vector(&o_array, p_buffer, i_buffer_len);
     cv_file_print_array( p_file, &o_array);
@@ -83,7 +82,7 @@ void cv_file_print_vector( cv_file const * p_file,
  */
 
 void cv_file_print_0( cv_file const * p_file,
-    char const * p_buffer, long i_max_len) {
+    char const * p_buffer, cv_uptr i_max_len) {
     cv_array o_array = cv_array_null_;
     cv_array_init_0(&o_array, p_buffer, i_max_len);
     cv_file_print_array( p_file, &o_array);
@@ -100,11 +99,11 @@ void cv_file_print_number( cv_file const * p_file,
     cv_debug_assert_(p_file && p_desc, cv_debug_code_null_ptr);
     {
         cv_array o_array = cv_array_null_;
-        cv_array_init_vector(&o_array, c_buffer, cv_sizeof_(c_buffer));
+        cv_array_init_vector(&o_array, c_buffer, sizeof(c_buffer));
         {
-            long const i_buffer_len = cv_number_print(p_desc, &o_array);
+            cv_uptr const i_buffer_len = cv_number_print(p_desc, &o_array);
             if ((i_buffer_len > 0) &&
-                (i_buffer_len <= cv_sizeof_(c_buffer))) {
+                (i_buffer_len <= sizeof(c_buffer))) {
                 cv_file_print_vector(p_file, c_buffer, i_buffer_len);
             }
         }

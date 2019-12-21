@@ -7,7 +7,6 @@
 #include <cv_number/cv_number_enc.h>
 #include <cv_number/cv_number_desc.h>
 #include <cv_algo/cv_array_it.h>
-#include <cv_misc/cv_sizeof.h>
 #include <cv_memory.h>
 #include <cv_misc/cv_limits.h>
 #include <cv_debug/cv_debug.h>
@@ -60,7 +59,7 @@ static cv_bool cv_number_enc_init_digits(
                 (cv_number_flag_upper & p_this->o_desc.o_format.i_flags)
                 ? g_number_digit_upper : g_number_digit_lower;
             while (i_unsigned && (p_this->i_digit_count <
-                (cv_sizeof_(p_this->a_digit) & cv_signed_short_max_))) {
+                cv_cast_(short, sizeof(p_this->a_digit)))) {
                 unsigned long const i_digit =
                     (i_unsigned % i_base) & cv_unsigned_long_max_;
                 p_this->a_digit[p_this->i_digit_count ++] =
@@ -84,7 +83,7 @@ cv_bool cv_number_enc_init(
     cv_bool b_result = cv_false;
     cv_debug_assert_(p_this && p_desc, cv_debug_code_null_ptr);
     cv_debug_construct_(g_class, p_this);
-    cv_memory_zero(p_this, cv_sizeof_(*p_this));
+    cv_memory_zero(p_this, sizeof(*p_this));
     p_this->o_desc = *(p_desc);
     if (cv_number_enc_init_digits(p_this)) {
         short i_width = 0;

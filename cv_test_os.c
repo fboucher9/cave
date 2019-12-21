@@ -2,8 +2,6 @@
 
 #include <cv_test.h>
 
-#include <cv_misc/cv_null.h>
-
 #if defined cv_have_libc_
 
 int main(
@@ -22,7 +20,7 @@ void _start(void);
 
 void _start(void)
 {
-    cv_test_main(0, cv_null_);
+    cv_test_main(0, 0);
     __asm("movl $1,%eax;"
         "xorl %ebx,%ebx;"
         "int $0x80"

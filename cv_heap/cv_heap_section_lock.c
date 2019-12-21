@@ -6,7 +6,6 @@
 
 #include <cv_heap/cv_heap_section_lock.h>
 #include <cv_debug/cv_debug.h>
-#include <cv_misc/cv_sizeof.h>
 
 cv_debug_decl_(g_class);
 
@@ -44,8 +43,8 @@ void cv_heap_section_lock_cleanup(
 
 void * cv_heap_section_lock_alloc(
     cv_heap_section_lock * p_this,
-    long i_len) {
-    void * p_result = cv_null_;
+    cv_uptr i_len) {
+    void * p_result = 0;
     cv_debug_assert_(p_this, cv_debug_code_null_ptr);
     cv_debug_assert_(i_len > 0, cv_debug_code_invalid_length);
     cv_mutex_lock(&p_this->o_mutex);

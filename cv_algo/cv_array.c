@@ -6,9 +6,7 @@
 
 #include <cv_debug/cv_debug.h>
 
-#include <cv_misc/cv_sizeof.h>
-
-#include <cv_misc/cv_limits.h>
+#include <cv_misc/cv_cast.h>
 
 cv_debug_decl_(g_class);
 
@@ -16,8 +14,7 @@ void cv_array_init(
     cv_array * p_this)
 {
     cv_debug_assert_( p_this, cv_debug_code_null_ptr);
-    cv_array_init_range(p_this,
-            cv_null_, cv_null_);
+    cv_array_init_range(p_this, 0, 0);
 }
 
 void cv_array_init_ref(
@@ -33,10 +30,9 @@ void cv_array_init_ref(
 void cv_array_init_vector(
     cv_array * p_this,
     void const * p_buf,
-    long i_buf_len)
+    cv_uptr i_buf_len)
 {
     cv_debug_assert_( p_this, cv_debug_code_null_ptr);
-    cv_debug_assert_( 0 <= i_buf_len, cv_debug_code_invalid_length);
     {
         cv_array_ptr o_buf_ptr = cv_ptr_null_;
         o_buf_ptr.pc_void = p_buf;
@@ -50,8 +46,8 @@ void cv_array_cleanup(
     cv_array * p_this)
 {
     cv_debug_assert_( p_this, cv_debug_code_null_ptr);
-    p_this->o_min.pc_void = cv_null_;
-    p_this->o_max.pc_void = cv_null_;
+    p_this->o_min.pc_void = 0;
+    p_this->o_max.pc_void = 0;
     cv_debug_destruct_(g_class, p_this);
 }
 
@@ -69,29 +65,25 @@ void cv_array_init_range(
 void cv_array_init_0(
     cv_array * p_this,
     char const * p_ref0,
-    long i_ref0_max_len)
+    cv_uptr i_ref0_max_len)
 {
     cv_debug_assert_( p_this && p_ref0, cv_debug_code_null_ptr);
     cv_debug_assert_( i_ref0_max_len > 0, cv_debug_code_invalid_length);
     {
-        long i_ref0_len = cv_memory_find_0(p_ref0, i_ref0_max_len);
-        if (i_ref0_len < 0) {
-            i_ref0_len = 0;
-        }
+        cv_uptr i_ref0_len = cv_memory_find_0(p_ref0, i_ref0_max_len);
         cv_array_init_range(p_this,
                 p_ref0,
                 p_ref0 + i_ref0_len);
     }
 }
 
-long cv_array_len(
+cv_uptr cv_array_len(
     cv_array const * p_this)
 {
-    long i_count = 0;
+    cv_uptr i_count = 0;
     cv_debug_assert_( p_this, cv_debug_code_null_ptr);
-    i_count = ((
-        p_this->o_max.pc_char
-        - p_this->o_min.pc_char) & cv_signed_long_max_);
+    i_count = cv_cast_(cv_uptr,
+        p_this->o_max.pc_char - p_this->o_min.pc_char);
     return i_count;
 }
 

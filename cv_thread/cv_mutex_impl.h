@@ -7,8 +7,6 @@
 
 #if defined cv_have_pthread_
 #include <pthread.h>
-#else /* #if defined cv_have_pthread_ */
-#include <cv_misc/cv_null.h>
 #endif /* #if defined cv_have_pthread_ */
 
 /*
@@ -34,7 +32,7 @@ union cv_mutex
 #if defined cv_have_pthread_
 #define cv_mutex_initializer_ { PTHREAD_MUTEX_INITIALIZER }
 #else /* #if defined cv_have_pthread_ */
-#define cv_mutex_initializer_ { cv_null_ }
+#define cv_mutex_initializer_ { 0 }
 #endif /* #if defined cv_have_pthread_ */
 
 int cv_mutex_impl_init(

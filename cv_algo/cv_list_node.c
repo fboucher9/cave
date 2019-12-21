@@ -2,11 +2,7 @@
 
 #include <cv_algo/cv_list_node.h>
 
-#include <cv_misc/cv_null.h>
-
 #include <cv_debug/cv_debug.h>
-
-#include <cv_misc/cv_sizeof.h>
 
 cv_debug_decl_(g_class);
 
@@ -24,8 +20,8 @@ void cv_list_node_cleanup(
 {
     cv_debug_assert_( p_this, cv_debug_code_null_ptr);
     cv_list_join(p_this, p_this);
-    p_this->o_next.p_node = cv_null_;
-    p_this->o_prev.p_node = cv_null_;
+    p_this->o_next.p_node = 0;
+    p_this->o_prev.p_node = 0;
     cv_debug_destruct_(g_class, p_this);
 }
 

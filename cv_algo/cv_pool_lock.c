@@ -8,7 +8,6 @@
 
 #include <cv_algo/cv_pool_lock.h>
 #include <cv_debug/cv_debug.h>
-#include <cv_misc/cv_sizeof.h>
 
 cv_debug_decl_(g_class);
 
@@ -49,7 +48,7 @@ void cv_pool_lock_cleanup(
 
 void * cv_pool_lock_alloc(
     cv_pool_lock * p_this) {
-    void * p_result = cv_null_;
+    void * p_result = 0;
     cv_debug_assert_(p_this, cv_debug_code_null_ptr);
     cv_mutex_lock(&p_this->o_mutex);
     p_result = cv_pool_alloc(&p_this->o_pool);

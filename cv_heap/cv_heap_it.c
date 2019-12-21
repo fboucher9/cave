@@ -6,8 +6,6 @@
 
 #include <cv_debug/cv_debug.h>
 
-#include <cv_misc/cv_sizeof.h>
-
 cv_debug_decl_(g_class);
 
 void cv_heap_it_init(

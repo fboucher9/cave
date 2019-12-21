@@ -11,10 +11,6 @@
 
 #include <cv_debug/cv_debug.h>
 
-#include <cv_misc/cv_sizeof.h>
-
-#include <cv_misc/cv_null.h>
-
 cv_debug_decl_(g_class);
 
 /*
@@ -26,7 +22,7 @@ void cv_stack_init(
 {
     cv_debug_assert_( p_this, cv_debug_code_null_ptr);
     cv_debug_construct_(g_class, p_this);
-    p_this->o_next.p_void = cv_null_;
+    p_this->o_next.p_void = 0;
 }
 
 /*
@@ -70,7 +66,7 @@ cv_bool cv_stack_pop(
         cv_stack_ptr o_next = p_this->o_next;
         if (o_next.p_stack) {
             p_this->o_next = o_next.p_stack->o_next;
-            o_next.p_stack->o_next.p_stack = cv_null_;
+            o_next.p_stack->o_next.p_stack = 0;
             *r_value = o_next;
             b_result = cv_true;
         }

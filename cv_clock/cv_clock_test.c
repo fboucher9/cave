@@ -15,8 +15,6 @@
 #include <cv_clock/cv_clock_counter.h>
 #include <cv_test_print.h>
 #include <cv_number/cv_number_desc.h>
-#include <cv_misc/cv_sizeof.h>
-#include <cv_misc/cv_unused.h>
 
 /*
  *
@@ -68,7 +66,7 @@ static void cv_clock_test_counter_1(void) {
     {
         cv_ull ll_value = 0;
         ll_value = cv_clock_counter_get(&o_clock_counter);
-        cv_unused_(ll_value);
+        (void)(ll_value);
     }
     cv_clock_counter_inc(&o_clock_counter);
     cv_clock_counter_dec(&o_clock_counter);
@@ -193,7 +191,7 @@ void cv_clock_test(void) {
                 while (cv_clock_it_next(&o_clock_it, &o_max_sleep)) {
                     static unsigned char const a_msg[] = {
                         'n', 'e', 'x', 't', '.', '.', '.' };
-                    cv_print_vector(a_msg, cv_sizeof_(a_msg));
+                    cv_print_vector(a_msg, sizeof(a_msg));
                     cv_print_nl();
                 }
                 cv_clock_duration_cleanup(&o_max_sleep);

@@ -24,7 +24,7 @@ cv_bool cv_array_print( cv_array_it * p_array_it,
  */
 
 cv_bool cv_array_print_0( cv_array_it * p_array_it,
-    char const * p_buf_0, long i_max_len) {
+    char const * p_buf_0, cv_uptr i_max_len) {
     cv_bool b_result = cv_false;
     cv_array o_array = cv_array_null_;
     cv_array_init_0(&o_array, p_buf_0, i_max_len);
@@ -38,7 +38,7 @@ cv_bool cv_array_print_0( cv_array_it * p_array_it,
  */
 
 cv_bool cv_array_print_vector( cv_array_it * p_array_it,
-    void const * p_buf, long i_buf_len) {
+    void const * p_buf, cv_uptr i_buf_len) {
     cv_bool b_result = cv_false;
     cv_array o_array = cv_array_null_;
     cv_array_init_vector(&o_array, p_buf, i_buf_len);

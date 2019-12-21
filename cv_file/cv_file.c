@@ -10,7 +10,6 @@
 #include <cv_algo/cv_array.h>
 #include <cv_runtime.h>
 #include <cv_debug/cv_debug.h>
-#include <cv_misc/cv_sizeof.h>
 
 /* Debugging information for cv_file structure */
 cv_debug_decl_(cv_file_class);
@@ -48,11 +47,11 @@ void cv_file_cleanup( cv_file * p_this) {
  *  less than expected length is read.
  */
 
-long cv_file_read( cv_file const * p_this, cv_array const * p_array) {
-    long i_result = -1;
+cv_sptr cv_file_read( cv_file const * p_this, cv_array const * p_array) {
+    cv_sptr i_result = -1;
     cv_debug_assert_( p_this && p_array, cv_debug_code_null_ptr);
     {
-        long const i_array_len = cv_array_len(p_array);
+        cv_uptr const i_array_len = cv_array_len(p_array);
         if (i_array_len > 0) {
             if (p_this->i_index >= 0) {
                 i_result = cv_runtime_read(
@@ -75,11 +74,11 @@ long cv_file_read( cv_file const * p_this, cv_array const * p_array) {
  *  less than expected length is written.
  */
 
-long cv_file_write( cv_file const * p_this, cv_array const * p_array) {
-    long i_result = -1;
+cv_sptr cv_file_write( cv_file const * p_this, cv_array const * p_array) {
+    cv_sptr i_result = -1;
     cv_debug_assert_(p_this && p_array, cv_debug_code_null_ptr);
     {
-        long const i_array_len = cv_array_len(p_array);
+        cv_uptr const i_array_len = cv_array_len(p_array);
         if (i_array_len > 0) {
             if (p_this->i_index >= 0) {
                 i_result = cv_runtime_write(

@@ -5,8 +5,6 @@
 
 #include <cv_options/cv_options_pred.h>
 
-#include <cv_misc/cv_null.h>
-
 #include <cv_misc/cv_bool.h>
 
 #include <cv_algo/cv_array.h>

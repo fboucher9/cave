@@ -36,12 +36,11 @@ union cv_heap_section_ptr
 
 struct cv_heap_section_node_desc
 {
-    long i_grow_len;
-    long l_padding[1u];
+    cv_uptr i_grow_len;
 };
 
 #define cv_heap_section_node_desc_initializer_ \
-{ 0, { 0 } }
+{ 0 }
 
 struct cv_heap_section_node
 {
@@ -60,8 +59,8 @@ struct cv_heap_section_node
     cv_node_initializer_, \
     cv_heap_section_node_desc_initializer_, \
     cv_array_initializer_, \
-    cv_null_, \
-    { cv_null_ } \
+    0, \
+    { 0 } \
 }
 #endif
 
@@ -91,7 +90,7 @@ static cv_heap_section_node * cv_heap_section_node_create(
     cv_heap_section_ptr o_ptr = cv_ptr_null_;
     cv_debug_assert_(p_desc, cv_debug_code_null_ptr);
     {
-        long const i_malloc_len = p_desc->i_grow_len;
+        cv_uptr const i_malloc_len = p_desc->i_grow_len;
         o_ptr.p_void = cv_runtime_malloc(i_malloc_len);
         if (o_ptr.p_void) {
             cv_heap_section_node_init(o_ptr.p_heap_section_node, p_desc);
@@ -131,7 +130,7 @@ void cv_heap_section_init(
     cv_debug_assert_( p_this && p_desc, cv_debug_code_null_ptr);
     p_this->o_desc = *p_desc;
     cv_list_root_init(&p_this->o_list);
-    cv_array_it_init_vector(&p_this->o_array_it, cv_null_, 0);
+    cv_array_it_init_vector(&p_this->o_array_it, 0, 0);
 }
 
 void cv_heap_section_cleanup(
@@ -181,14 +180,14 @@ static cv_bool cv_heap_section_grow(
 
 void * cv_heap_section_alloc(
     cv_heap_section * p_this,
-    long i_len)
+    cv_uptr i_len)
 {
     cv_array_ptr o_data_ptr = cv_ptr_null_;
     cv_debug_assert_( p_this, cv_debug_code_null_ptr);
     cv_debug_assert_( i_len > 0, cv_debug_code_invalid_length);
     {
         /* Align len */
-        long const i_aligned_len = cv_sizeof_align(i_len, 8);
+        cv_uptr const i_aligned_len = cv_sizeof_align(i_len, 8);
 
         /* Check for grow */
         if (cv_array_it_get_next_array(&p_this->o_array_it,

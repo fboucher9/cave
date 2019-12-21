@@ -38,9 +38,9 @@ struct cv_file_poll {
     long i_flags_out;
 };
 
-#define cv_file_poll_initializer_ { cv_null_, 0, 0 }
+#define cv_file_poll_initializer_ { 0, 0, 0 }
 
-cv_bool cv_file_poll_dispatch( cv_file_poll * p_poll_min, long i_count,
+cv_bool cv_file_poll_dispatch( cv_file_poll * p_poll_min, unsigned i_count,
     cv_clock const * p_timeout);
 
 #endif /* #ifndef cv_file_poll_h_ */

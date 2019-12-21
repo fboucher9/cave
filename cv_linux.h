@@ -5,21 +5,23 @@
 
 #if defined cv_linux_
 
+#include <cv_misc/cv_types.h>
+
 int cv_linux_stdin_fileno(void);
 
 int cv_linux_stdout_fileno(void);
 
 int cv_linux_stderr_fileno(void);
 
-long cv_linux_read(
+cv_sptr cv_linux_read(
     int i_file_index,
     void * p_buffer,
-    long i_buffer_length);
+    cv_uptr i_buffer_length);
 
-long cv_linux_write(
+cv_sptr cv_linux_write(
     int i_file_index,
     void const * p_buffer,
-    long i_buffer_length);
+    cv_uptr i_buffer_length);
 
 int cv_linux_open_read(
     char const * p_name_0);

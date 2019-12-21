@@ -39,7 +39,7 @@ struct cv_file_disk_desc {
 };
 
 /* Macro to default initialize a cv_file_disk_desc structure */
-#define cv_file_disk_desc_initializer_ { cv_null_, 0, {0} }
+#define cv_file_disk_desc_initializer_ { 0, 0, {0} }
 
 void cv_file_disk_desc_init( cv_file_disk_desc * p_this);
 

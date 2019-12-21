@@ -5,7 +5,6 @@
 #include <cv_heap/cv_heap_node_ptr.h>
 #include <cv_algo/cv_list_it.h>
 #include <cv_misc/cv_sizeof.h>
-#include <cv_misc/cv_unused.h>
 #include <cv_runtime.h>
 #include <cv_debug/cv_debug.h>
 
@@ -54,14 +53,14 @@ void cv_heap_large_cleanup( cv_heap_large * p_this) {
     cv_debug_destruct_(g_class, p_this);
 }
 
-static long cv_heap_large_align( long i_len) {
-    long const i_total_len = i_len;
-    long const i_aligned_len = cv_sizeof_align(i_total_len, 4096);
+static cv_uptr cv_heap_large_align( cv_uptr i_len) {
+    cv_uptr const i_total_len = i_len;
+    cv_uptr const i_aligned_len = cv_sizeof_align(i_total_len, 4096);
     return i_aligned_len;
 }
 
 static cv_heap_node * cv_heap_large_find_existing( cv_heap_large * p_this,
-    long i_aligned_len)
+    cv_uptr i_aligned_len)
 {
     cv_heap_node_ptr o_heap_ptr = cv_ptr_null_;
     cv_list_it o_free_it = cv_list_it_initializer_;
@@ -81,11 +80,11 @@ static cv_heap_node * cv_heap_large_find_existing( cv_heap_large * p_this,
 }
 
 static cv_heap_node * cv_heap_large_lookup_cb( cv_heap_large * p_this,
-    long i_len) {
-    cv_heap_node * p_result = cv_null_;
+    cv_uptr i_len) {
+    cv_heap_node * p_result = 0;
     cv_debug_assert_(i_len > 0, cv_debug_code_invalid_length);
     {
-        long const i_aligned_len = cv_heap_large_align(i_len);
+        cv_uptr const i_aligned_len = cv_heap_large_align(i_len);
         cv_heap_node_ptr o_heap_ptr = cv_ptr_null_;
         /* Look for free node */
         o_heap_ptr.p_heap_node = cv_heap_large_find_existing( p_this,
@@ -115,8 +114,8 @@ static void cv_heap_large_free_cb( cv_heap_large * p_this,
 }
 
 cv_heap_node * cv_heap_large_lookup( cv_heap_large * p_this,
-    long i_len) {
-    cv_heap_node * p_result = cv_null_;
+    cv_uptr i_len) {
+    cv_heap_node * p_result = 0;
     cv_debug_assert_(i_len > 4096L, cv_debug_code_invalid_length);
     cv_mutex_lock(&p_this->o_mutex);
     p_result = cv_heap_large_lookup_cb(p_this, i_len);
@@ -125,11 +124,11 @@ cv_heap_node * cv_heap_large_lookup( cv_heap_large * p_this,
 }
 
 cv_heap_node * cv_heap_large_alloc( cv_heap_secondary * p_heap_secondary,
-    long i_len) {
-    cv_heap_node * p_result = cv_null_;
+    cv_uptr i_len) {
+    cv_heap_node * p_result = 0;
     cv_debug_assert_(i_len > 0, cv_debug_code_invalid_length);
     {
-        long const i_aligned_len = cv_heap_large_align(i_len);
+        cv_uptr const i_aligned_len = cv_heap_large_align(i_len);
         void * const p_payload = cv_runtime_malloc(i_aligned_len);
         if (p_payload) {
             cv_array o_payload = cv_array_null_;

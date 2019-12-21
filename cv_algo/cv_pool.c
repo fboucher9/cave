@@ -7,7 +7,6 @@
 #include <cv_algo/cv_pool.h>
 #include <cv_heap/cv_heap.h>
 #include <cv_debug/cv_debug.h>
-#include <cv_misc/cv_sizeof.h>
 
 cv_debug_decl_(g_class);
 
@@ -44,7 +43,7 @@ void cv_pool_cleanup( cv_pool * p_this) {
  */
 
 void * cv_pool_alloc( cv_pool * p_this) {
-    void * p_result = cv_null_;
+    void * p_result = 0;
     cv_stack_ptr o_stack_ptr = cv_ptr_null_;
     cv_debug_assert_(p_this, cv_debug_code_null_ptr);
     if (cv_stack_pop(&p_this->o_free_list, &o_stack_ptr)) {

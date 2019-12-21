@@ -42,14 +42,14 @@ cv_bool cv_heap_used_init(
 
 static void cv_heap_print_leak_node(cv_heap_node const * p_heap_node) {
     cv_file const * const p_std_err = cv_file_std_err();
-    long const i_payload_len =
+    cv_uptr const i_payload_len =
         cv_array_len(&p_heap_node->o_payload);
     cv_file_print_char(p_std_err, 'L');
-    cv_file_print_signed(p_std_err, i_payload_len,
+    cv_file_print_unsigned(p_std_err, i_payload_len,
         cv_number_format_dec());
     cv_file_print_nl(p_std_err);
     {
-        long i_index = 0;
+        cv_uptr i_index = 0;
         while (i_index < cv_heap_node_stack_max_) {
             char const * const p_text = p_heap_node->a_stack[i_index];
             if (p_text) {
@@ -146,7 +146,7 @@ void cv_heap_used_join(
 cv_heap_node * cv_heap_used_lookup(
     cv_heap_used * p_this,
     void * p_buffer) {
-    cv_heap_node * p_result = cv_null_;
+    cv_heap_node * p_result = 0;
     cv_mutex_lock(&p_this->o_mutex);
     {
         cv_list_it o_list_it = cv_list_it_initializer_;

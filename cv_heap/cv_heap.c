@@ -19,7 +19,6 @@ are thread-safe.
 #include <cv_heap/cv_heap_primary.h>
 #include <cv_heap/cv_heap_secondary.h>
 #include <cv_heap/cv_heap_used.h>
-#include <cv_misc/cv_null.h>
 #include <cv_debug/cv_debug.h>
 #include <cv_file/cv_file_print.h>
 #include <cv_file/cv_file_std.h>
@@ -28,7 +27,6 @@ are thread-safe.
 #include <cv_number/cv_number_desc.h>
 #include <cv_algo/cv_list_root.h>
 #include <cv_algo/cv_list_it.h>
-#include <cv_misc/cv_sizeof.h>
 #include <cv_trace/cv_trace_node.h>
 
 cv_debug_decl_(g_class);
@@ -133,13 +131,13 @@ void cv_heap_unload(void) {
     g_heap_loaded = cv_false;
 }
 
-void * cv_heap_alloc( long i_buffer_length) {
-    void * p_buffer = cv_null_;
+void * cv_heap_alloc( cv_uptr i_buffer_length) {
+    void * p_buffer = 0;
     cv_heap_mgr * const p_this = &g_heap_mgr;
     cv_debug_assert_(g_heap_loaded, cv_debug_code_not_loaded);
     cv_debug_assert_(i_buffer_length > 0, cv_debug_code_invalid_length);
     {
-        cv_heap_node * p_heap_node = cv_null_;
+        cv_heap_node * p_heap_node = 0;
         if (i_buffer_length <= cv_heap_small_max_len_) {
             p_heap_node = cv_heap_small_lookup(&p_this->o_small,
                 i_buffer_length);
@@ -177,7 +175,7 @@ void cv_heap_free( void * p_buffer) {
         cv_heap_node * const p_heap_node = cv_heap_used_lookup(&p_this->o_used,
             p_buffer);
         if (p_heap_node) {
-            long const i_buffer_length = cv_array_len(&p_heap_node->o_payload);
+            cv_uptr const i_buffer_length = cv_array_len(&p_heap_node->o_payload);
             if (i_buffer_length <= cv_heap_small_max_len_) {
                 cv_heap_small_free(&p_this->o_small, p_heap_node);
             } else {

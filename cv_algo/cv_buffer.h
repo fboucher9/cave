@@ -18,12 +18,12 @@ struct cv_buffer
 
 cv_bool cv_buffer_init(
     cv_buffer * p_this,
-    long i_length);
+    cv_uptr i_length);
 
 void cv_buffer_cleanup(
     cv_buffer * p_this);
 
-long cv_buffer_len(
+cv_uptr cv_buffer_len(
     cv_buffer const * p_this);
 
 #endif /* #ifndef cv_buffer_h_ */

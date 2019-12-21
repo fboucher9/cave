@@ -50,8 +50,8 @@ void cv_file_init( cv_file * p_this);
 
 void cv_file_cleanup( cv_file * p_this);
 
-long cv_file_read( cv_file const * p_this, cv_array const * p_array);
+cv_sptr cv_file_read( cv_file const * p_this, cv_array const * p_array);
 
-long cv_file_write( cv_file const * p_this, cv_array const * p_array);
+cv_sptr cv_file_write( cv_file const * p_this, cv_array const * p_array);
 
 #endif /* #ifndef cv_file_h_ */

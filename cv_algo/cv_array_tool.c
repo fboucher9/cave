@@ -50,9 +50,9 @@ void cv_array_copy(
 {
     cv_debug_assert_( p_dst && p_src, cv_debug_code_null_ptr);
     {
-        long const i_dst_len = cv_array_len(p_dst);
-        long const i_src_len = cv_array_len(p_src);
-        long const i_copy_len = (i_dst_len < i_src_len) ?
+        cv_uptr const i_dst_len = cv_array_len(p_dst);
+        cv_uptr const i_src_len = cv_array_len(p_src);
+        cv_uptr const i_copy_len = (i_dst_len < i_src_len) ?
             i_dst_len : i_src_len;
         if (i_copy_len > 0) {
             cv_memory_copy(

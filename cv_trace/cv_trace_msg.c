@@ -7,7 +7,6 @@
 #include <cv_trace/cv_trace_msg.h>
 #include <cv_trace/cv_trace_node.h>
 #include <cv_clock/cv_clock_tool.h>
-#include <cv_misc/cv_unused.h>
 
 #if defined cv_have_libc_
 #include <stdio.h>
@@ -30,7 +29,7 @@ void cv_trace_msg_dispatch( cv_trace_msg * p_trace_msg) {
         us_level,
         p_trace_msg->p_trace_node->pc_text);
 #else /* #if defined cv_have_libc_ */
-    cv_unused_(p_trace_msg);
+    (void)(p_trace_msg);
 #endif /* #if defined cv_have_libc_ */
 }
 

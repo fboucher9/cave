@@ -4,17 +4,13 @@
 
 #include <cv_heap/cv_heap.h>
 
-#include <cv_misc/cv_null.h>
-
 #include <cv_debug/cv_debug.h>
-
-#include <cv_misc/cv_sizeof.h>
 
 cv_debug_decl_(g_class);
 
 static cv_bool cv_buffer_realloc(
     cv_buffer * p_this,
-    long i_length)
+    cv_uptr i_length)
 {
     cv_bool b_result = cv_false;
     cv_debug_assert_( p_this, cv_debug_code_null_ptr);
@@ -38,7 +34,7 @@ static cv_bool cv_buffer_realloc(
 */
 cv_bool cv_buffer_init(
     cv_buffer * p_this,
-    long i_length)
+    cv_uptr i_length)
 {
     cv_bool b_result = cv_false;
     cv_debug_assert_( p_this, cv_debug_code_null_ptr);
@@ -72,10 +68,10 @@ void cv_buffer_cleanup(
 } /* _cleanup() */
 
 /* Get length of buffer */
-long cv_buffer_len(
+cv_uptr cv_buffer_len(
     cv_buffer const * p_this)
 {
-    long i_len = 0;
+    cv_uptr i_len = 0;
     cv_debug_assert_( p_this, cv_debug_code_null_ptr);
     i_len = cv_array_len( &p_this->o_array);
     return i_len;

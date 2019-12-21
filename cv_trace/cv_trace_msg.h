@@ -20,7 +20,7 @@ struct cv_trace_msg {
 };
 
 #define cv_trace_msg_initializer_ \
-{ cv_clock_mono_initializer_, cv_null_, 0, {0} }
+{ cv_clock_mono_initializer_, 0, 0, {0} }
 
 void cv_trace_msg_dispatch( cv_trace_msg * p_trace_msg);
 

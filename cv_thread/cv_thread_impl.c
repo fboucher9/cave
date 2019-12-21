@@ -3,10 +3,7 @@
 #include <cv_thread/cv_thread.h>
 #include <cv_thread/cv_thread_ptr.h>
 #include <cv_memory.h>
-#include <cv_misc/cv_null.h>
-#include <cv_misc/cv_sizeof.h>
 #include <cv_debug/cv_debug.h>
-#include <cv_misc/cv_unused.h>
 #include <cv_heap/cv_heap.h>
 #include <cv_thread/cv_thread_plugin.h>
 
@@ -63,10 +60,10 @@ cv_bool cv_thread_init(
     cv_debug_assert_( p_this && p_thread_desc, cv_debug_code_null_ptr);
     {
         cv_debug_construct_(g_class, p_this);
-        cv_memory_zero(p_this, cv_sizeof_(cv_thread));
+        cv_memory_zero(p_this, sizeof(cv_thread));
         {
             cv_thread_desc_ptr o_desc_ptr = cv_ptr_null_;
-            o_desc_ptr.p_void = cv_heap_alloc(cv_sizeof_(cv_thread_desc));
+            o_desc_ptr.p_void = cv_heap_alloc(sizeof(cv_thread_desc));
             if (o_desc_ptr.p_void) {
                 cv_thread_desc_init(o_desc_ptr.p_thread_desc);
                 *(o_desc_ptr.p_thread_desc) = *(p_thread_desc);
@@ -75,7 +72,7 @@ cv_bool cv_thread_init(
 #if defined cv_have_pthread_
                     i_pthread_result = pthread_create(
                         &(p_this->o_handle),
-                        cv_null_,
+                        0,
                         & cv_thread_start,
                         o_desc_ptr.p_void);
 #endif /* #if defined cv_have_pthread_ */
@@ -106,11 +103,11 @@ void cv_thread_cleanup(
     {
         /* check detach flag */
         int i_pthread_result = 0;
-        void * p_result = cv_null_;
+        void * p_result = 0;
 #if defined cv_have_pthread_
         i_pthread_result = pthread_join(p_this->o_handle, &p_result);
 #endif /* #if defined cv_have_pthread_ */
-        cv_unused_(p_result);
+        (void)(p_result);
         if (0 == i_pthread_result) {
         } else {
             cv_debug_msg_(cv_debug_code_error);

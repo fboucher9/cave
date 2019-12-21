@@ -15,7 +15,6 @@
 #include <cv_algo/cv_array_it.h>
 #include <cv_algo/cv_array_tool.h>
 #include <cv_test_print.h>
-#include <cv_misc/cv_sizeof.h>
 #include <cv_debug/cv_debug.h>
 
 static long g_accum_pass = 0L;
@@ -157,7 +156,7 @@ static void cv_number_test_enc(void) {
  */
 
 static void cv_number_test_print(void) {
-    long i_result;
+    cv_uptr i_result;
     i_result = cv_number_print_signed(12345,
         cv_number_format_dec(), get_temp_buf());
     cv_accum_result(5 == i_result);
@@ -241,7 +240,7 @@ static void cv_number_test_scan(void) {
     i_result = cv_number_scan_range(a_sample,
         a_sample + sizeof(a_sample), 10);
     cv_accum_result(12345 == i_result);
-    i_result = cv_number_scan_vector(a_sample, cv_sizeof_(a_sample), 10);
+    i_result = cv_number_scan_vector(a_sample, sizeof(a_sample), 10);
     cv_accum_result(12345 == i_result);
     i_result = cv_number_scan_0("-12345", 80, 10);
     cv_accum_result(-12345 == i_result);

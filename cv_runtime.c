@@ -8,24 +8,21 @@
 #include <string.h>
 #endif /* #if defined cv_have_libc_ */
 #include <cv_misc/cv_bool.h>
-#include <cv_misc/cv_null.h>
-#include <cv_misc/cv_unused.h>
 #include <cv_linux.h>
 #include <cv_windows.h>
 #include <cv_misc/cv_convert.h>
 #include <cv_algo/cv_array_ptr.h>
-#include <cv_misc/cv_sizeof.h>
 #include <cv_misc/cv_limits.h>
 
-void * cv_runtime_malloc( long i_buffer_len) {
-    void * p_buffer = cv_null_;
+void * cv_runtime_malloc( cv_uptr i_buffer_len) {
+    void * p_buffer = 0;
 #if defined cv_have_libc_
     if (i_buffer_len > 0) {
-        size_t const i_malloc_len = (i_buffer_len & cv_signed_long_max_);
+        size_t const i_malloc_len = i_buffer_len;
         p_buffer = malloc(i_malloc_len);
     }
 #else /* #if defined cv_have_libc_ */
-    cv_unused_(i_buffer_len);
+    (void)(i_buffer_len);
 #endif /* #if defined cv_have_libc_ */
     return p_buffer;
 }
@@ -34,14 +31,14 @@ void cv_runtime_free( void * p_buffer) {
 #if defined cv_have_libc_
     free(p_buffer);
 #else /* #if defined cv_have_libc_ */
-    cv_unused_(p_buffer);
+    (void)(p_buffer);
 #endif /* #if defined cv_have_libc_ */
 }
 
-void cv_runtime_memset( void * p_buf, unsigned char c_value, long i_buf_len) {
+void cv_runtime_memset( void * p_buf, unsigned char c_value, cv_uptr i_buf_len) {
 #if defined cv_have_libc_
     if (i_buf_len > 0) {
-        size_t const i_memset_len = (i_buf_len & cv_signed_long_max_);
+        size_t const i_memset_len = i_buf_len;
         memset(p_buf, c_value, i_memset_len);
     }
 #else /* #if defined cv_have_libc_ */
@@ -57,16 +54,16 @@ void cv_runtime_memset( void * p_buf, unsigned char c_value, long i_buf_len) {
 #endif /* #if defined cv_have_libc_ */
 }
 
-void cv_runtime_memcpy( void * p_dst, void const * p_src, long i_copy_len) {
+void cv_runtime_memcpy( void * p_dst, void const * p_src, cv_uptr i_copy_len) {
 #if defined cv_have_libc_
     if (i_copy_len > 0) {
-        size_t const i_memcpy_len = (i_copy_len & cv_signed_long_max_);
+        size_t const i_memcpy_len = i_copy_len;
         memcpy(p_dst, p_src, i_memcpy_len);
     }
 #else /* #if defined cv_have_libc_ */
     cv_array_ptr o_dst_it = cv_ptr_null_;
     cv_array_ptr o_src_it = cv_ptr_null_;
-    long i_remain = i_copy_len;
+    cv_uptr i_remain = i_copy_len;
     o_dst_it.p_void = p_dst;
     o_src_it.pc_void = p_src;
     while (i_remain > 0) {
@@ -79,11 +76,11 @@ void cv_runtime_memcpy( void * p_dst, void const * p_src, long i_copy_len) {
 }
 
 void const * cv_runtime_memchr( void const * p_src, unsigned char c_value,
-    long i_src_len) {
-    void const * p_memchr_result = cv_null_;
+    cv_uptr i_src_len) {
+    void const * p_memchr_result = 0;
 #if defined cv_have_libc_
     if (i_src_len > 0) {
-        size_t const i_memchr_len = (i_src_len & cv_signed_long_max_);
+        size_t const i_memchr_len = i_src_len;
         p_memchr_result = memchr(p_src, c_value, i_memchr_len);
     }
 #else /* #if defined cv_have_libc_ */
@@ -106,17 +103,17 @@ void const * cv_runtime_memchr( void const * p_src, unsigned char c_value,
 }
 
 int cv_runtime_memcmp( void const * p_left, void const * p_right,
-    long i_len) {
+    cv_uptr i_len) {
     int i_memcmp_result = -1;
 #if defined cv_have_libc_
     if (i_len > 0) {
-        size_t const i_memcmp_len = (i_len & cv_signed_long_max_);
+        size_t const i_memcmp_len = i_len;
         i_memcmp_result = memcmp(p_left, p_right, i_memcmp_len);
     }
 #else /* #if defined cv_have_libc_ */
-    cv_unused_(p_left);
-    cv_unused_(p_right);
-    cv_unused_(i_len);
+    (void)(p_left);
+    (void)(p_right);
+    (void)(i_len);
 #endif /* #if defined cv_have_libc_ */
     return i_memcmp_result;
 }
@@ -158,7 +155,7 @@ int cv_runtime_open_read( char const * p_name_0) {
 #elif defined cv_windows_
     i_file_index = cv_windows_open_read(p_name_0);
 #else /* #if defined cv_linux_ */
-    cv_unused_(p_name_0);
+    (void)(p_name_0);
 #endif /* #if defined cv_linux_ */
     return i_file_index;
 }
@@ -170,7 +167,7 @@ int cv_runtime_open_write( char const * p_name_0) {
 #elif defined cv_windows_
     i_file_index = cv_windows_open_write(p_name_0);
 #else /* #if defined cv_linux_ */
-    cv_unused_(p_name_0);
+    (void)(p_name_0);
 #endif /* #if defined cv_linux_ */
     return i_file_index;
 }
@@ -182,7 +179,7 @@ int cv_runtime_open_append( char const * p_name_0) {
 #elif defined cv_windows_
     i_file_index = cv_windows_open_append(p_name_0);
 #else /* #if defined cv_linux_ */
-    cv_unused_(p_name_0);
+    (void)(p_name_0);
 #endif /* #if defined cv_linux_ */
     return i_file_index;
 }
@@ -193,38 +190,38 @@ int cv_runtime_close( int i_file_index) {
 #elif defined cv_windows_
     cv_windows_close(i_file_index);
 #else /* #if defined cv_linux_ */
-    cv_unused_(i_file_index);
+    (void)(i_file_index);
 #endif /* #if defined cv_linux_ */
     return 0;
 }
 
-long cv_runtime_read( int i_file_index, void * p_buffer,
-    long i_buffer_length) {
-    long i_result = -1;
+cv_sptr cv_runtime_read( int i_file_index, void * p_buffer,
+    cv_uptr i_buffer_length) {
+    cv_sptr i_result = -1;
 #if defined cv_linux_
     i_result = cv_linux_read(i_file_index, p_buffer, i_buffer_length);
 #elif defined cv_windows_
     i_result = cv_windows_read(i_file_index, p_buffer, i_buffer_length);
 #else /* #if defined cv_linux_ */
-    cv_unused_(i_file_index);
-    cv_unused_(p_buffer);
-    cv_unused_(i_buffer_length);
+    (void)(i_file_index);
+    (void)(p_buffer);
+    (void)(i_buffer_length);
 #endif /* #if defined cv_linux_ */
     return i_result;
 }
 
-long cv_runtime_write( int i_file_index, void const * p_buffer,
-    long i_buffer_length) {
-    long i_result = -1;
+cv_sptr cv_runtime_write( int i_file_index, void const * p_buffer,
+    cv_uptr i_buffer_length) {
+    cv_sptr i_result = -1;
 #if defined cv_linux_
     i_result = cv_linux_write(i_file_index, p_buffer, i_buffer_length);
 #else /* #if defined cv_linux_ */
 #if defined cv_windows_
     i_result = cv_windows_write(i_file_index, p_buffer, i_buffer_length);
 #else /* #if defined cv_linux_ */
-    cv_unused_(i_file_index);
-    cv_unused_(p_buffer);
-    cv_unused_(i_buffer_length);
+    (void)(i_file_index);
+    (void)(p_buffer);
+    (void)(i_buffer_length);
 #endif /* #if defined cv_windows_ */
 #endif /* #if defined cv_linux_ */
     return i_result;

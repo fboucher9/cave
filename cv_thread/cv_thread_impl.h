@@ -30,6 +30,6 @@ union cv_thread {
 #endif /* #if defined cv_have_pthread_ */
 };
 
-#define cv_thread_initializer_ { { cv_null_ } }
+#define cv_thread_initializer_ { { 0 } }
 
 #endif /* #ifndef cv_thread_impl_h_ */

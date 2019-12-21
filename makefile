@@ -165,12 +165,14 @@ cv_gnu_warnings = \
     -Wunused-result \
     -Wvariadic-macros \
     -Wvla \
-    -Wwrite-strings
+    -Wwrite-strings \
+    -Werror
 
 cv_clang_warnings = \
     -ansi \
     -pedantic \
-    -Weverything
+    -Weverything \
+    -Werror
 
 cv_cflags = \
     -g \

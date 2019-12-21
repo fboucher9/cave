@@ -9,8 +9,6 @@
 #include <cv_algo/cv_stack_it.h>
 #include <cv_heap/cv_heap.h>
 #include <cv_misc/cv_types.h>
-#include <cv_misc/cv_sizeof.h>
-#include <cv_misc/cv_limits.h>
 #include <cv_test_print.h>
 
 typedef struct cv_number_stack_node cv_number_stack_node;
@@ -62,14 +60,13 @@ void cv_stack_test(void) {
     {
         static long const g_test_vector[] = {
             12345, 31, 14, 77, 5432, 8554 };
-        static long const g_test_vector_count =
-            (sizeof(g_test_vector)/sizeof(g_test_vector[0u]))
-            & cv_signed_long_max_;
-        long i_index = 0;
+        static cv_uptr const g_test_vector_count =
+            (sizeof(g_test_vector)/sizeof(g_test_vector[0u]));
+        cv_uptr i_index = 0;
         for (i_index = 0; i_index < g_test_vector_count; i_index++) {
             cv_number_stack_ptr o_node_ptr = cv_ptr_null_;
             o_node_ptr.p_void = cv_heap_alloc(
-                cv_sizeof_(cv_number_stack_node));
+                sizeof(cv_number_stack_node));
             if (o_node_ptr.p_void) {
                 cv_stack_init(&o_node_ptr.p_number_stack_node->o_stack);
                 cv_stack_push(&o_root,
@@ -92,7 +89,7 @@ void cv_stack_test(void) {
                 {
                     static unsigned char const a_text[] = {
                         's', 't', 'a', 'c', 'k', ' ', '[' };
-                    cv_print_vector(a_text, cv_sizeof_(a_text));
+                    cv_print_vector(a_text, sizeof(a_text));
                 }
                 cv_print_dec(p_node->i_value);
                 cv_print_char(']');

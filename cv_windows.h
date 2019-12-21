@@ -5,17 +5,19 @@
 
 #if defined cv_windows_
 
+#include <cv_misc/cv_types.h>
+
 int cv_windows_stdin_fileno(void);
 
 int cv_windows_stdout_fileno(void);
 
 int cv_windows_stderr_fileno(void);
 
-long cv_windows_read( int i_file_index, void * p_buffer,
-    long i_buffer_length);
+cv_sptr cv_windows_read( int i_file_index, void * p_buffer,
+    cv_uptr i_buffer_length);
 
-long cv_windows_write( int i_file_index, void const * p_buffer,
-    long i_buffer_length);
+cv_sptr cv_windows_write( int i_file_index, void const * p_buffer,
+    cv_uptr i_buffer_length);
 
 int cv_windows_open_read( char const * p_name_0);
 

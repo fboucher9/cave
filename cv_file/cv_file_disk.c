@@ -8,7 +8,6 @@
 
 #include <cv_file/cv_file_disk.h>
 #include <cv_file/cv_file_disk_desc.h>
-#include <cv_misc/cv_sizeof.h>
 #include <cv_algo/cv_string0.h>
 #include <cv_debug/cv_debug.h>
 #include <cv_runtime.h>

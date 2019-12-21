@@ -12,7 +12,6 @@ Description: Memory allocation pool for cv_options_node objects.
 #include <cv_algo/cv_pool_lock.h>
 #include <cv_options/cv_options_node.h>
 #include <cv_options/cv_options_node_ptr.h>
-#include <cv_misc/cv_sizeof.h>
 #include <cv_debug/cv_debug.h>
 
 cv_debug_decl_(g_class);
@@ -39,7 +38,7 @@ cv_bool cv_options_pool_load(void) {
     cv_debug_construct_(g_class, &g_options_pool);
     {
         cv_pool_desc o_desc = cv_pool_desc_initializer_;
-        o_desc.i_len = cv_sizeof_(cv_options_node);
+        o_desc.i_len = sizeof(cv_options_node);
         if (cv_pool_lock_init(&g_options_pool.o_pool, &o_desc)) {
             g_options_pool_loaded = cv_true;
             b_result = cv_true;

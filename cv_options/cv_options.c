@@ -18,10 +18,6 @@
 
 #include <cv_heap/cv_heap.h>
 
-#include <cv_misc/cv_null.h>
-
-#include <cv_misc/cv_sizeof.h>
-
 #include <cv_algo/cv_array.h>
 
 #include <cv_algo/cv_array_it.h>
@@ -90,7 +86,7 @@ void cv_options_init(
 static cv_bool cv_options_setup_cb(
     cv_options * p_this,
     char const * p_arg0,
-    long i_arg0_max_len)
+    cv_uptr i_arg0_max_len)
 {
     cv_bool b_result = cv_false;
     cv_debug_assert_( p_this && p_arg0, cv_debug_code_null_ptr);
@@ -138,7 +134,7 @@ cv_bool cv_options_add(
             cv_options_node_desc_initializer_;
         o_options_node_desc.o_array = *p_array;
         {
-            cv_options_node * p_options_node = cv_null_;
+            cv_options_node * p_options_node = 0;
             p_options_node = cv_options_node_create(
                 &o_options_node_desc);
             if (p_options_node) {

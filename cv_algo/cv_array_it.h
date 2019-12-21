@@ -4,13 +4,11 @@
 #define cv_array_it_h_
 
 #include <cv_algo/cv_array_pred.h>
-
 #include <cv_algo/cv_array.h>
-
 #include <cv_misc/cv_bool.h>
+#include <cv_misc/cv_types.h>
 
-struct cv_array_it
-{
+struct cv_array_it {
     cv_array o_array;
 };
 
@@ -23,7 +21,7 @@ void cv_array_it_init(
 void cv_array_it_init_vector(
     cv_array_it * p_this,
     void const * p_buf,
-    long i_len);
+    cv_uptr i_len);
 
 void cv_array_it_init_range(
     cv_array_it * p_this,
@@ -43,7 +41,7 @@ cv_bool cv_array_it_get_next_ptr(
 
 cv_bool cv_array_it_get_next_array(
     cv_array_it * p_this,
-    long i_array_len,
+    cv_uptr i_array_len,
     cv_array_ptr * r_value);
 
 cv_bool cv_array_it_read_next_char(

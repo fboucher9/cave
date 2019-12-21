@@ -1,7 +1,6 @@
 /* See LICENSE for license details */
 
 #include <cv_number/cv_number_desc.h>
-#include <cv_misc/cv_unused.h>
 
 /*
  *
@@ -22,7 +21,7 @@ void cv_number_desc_init( cv_number_desc * p_this) {
  */
 
 void cv_number_desc_cleanup( cv_number_desc * p_this) {
-    cv_unused_(p_this);
+    (void)(p_this);
 }
 
 /* end-of-file: cv_number_desc.c */

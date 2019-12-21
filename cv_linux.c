@@ -10,7 +10,6 @@
 #include <sys/stat.h>
 #include <fcntl.h>
 #include <signal.h>
-#include <cv_misc/cv_unused.h>
 
 int cv_linux_stdin_fileno(void) {
     return STDIN_FILENO;
@@ -28,20 +27,20 @@ int cv_linux_stderr_fileno(void) {
  *
  */
 
-long cv_linux_read(
+cv_sptr cv_linux_read(
     int i_file_index,
     void * p_buffer,
-    long i_buffer_length)
+    cv_uptr i_buffer_length)
 {
-    long i_result = -1;
+    cv_sptr i_result = -1;
     if (i_buffer_length > 0) {
         ssize_t i_read_result = -1;
-        size_t const i_read_len = (i_buffer_length & cv_signed_long_max_);
+        size_t const i_read_len = i_buffer_length;
         i_read_result = read(
             i_file_index,
             p_buffer,
             i_read_len);
-        i_result = (i_read_result & cv_signed_long_max_);
+        i_result = i_read_result;
     }
     return i_result;
 }
@@ -50,20 +49,20 @@ long cv_linux_read(
  *
  */
 
-long cv_linux_write(
+cv_sptr cv_linux_write(
     int i_file_index,
     void const * p_buffer,
-    long i_buffer_length)
+    cv_uptr i_buffer_length)
 {
-    long i_result = -1;
+    cv_sptr i_result = -1;
     ssize_t i_write_result = -1;
     if (i_buffer_length > 0) {
-        size_t i_write_len = (i_buffer_length & cv_signed_long_max_);
+        size_t i_write_len = i_buffer_length;
         i_write_result = write(
             i_file_index,
             p_buffer,
             i_write_len);
-        i_result = (i_write_result & cv_signed_long_max_);
+        i_result = i_write_result;
     }
     return i_result;
 }

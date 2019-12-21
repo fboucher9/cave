@@ -9,7 +9,6 @@
 
 #include <cv_trace/cv_trace_pred.h>
 #include <cv_trace/cv_trace_stats.h>
-#include <cv_misc/cv_null.h>
 
 /*
  *
@@ -52,7 +51,7 @@ struct cv_trace_node {
 };
 
 #define cv_trace_node_initializer_(level, text) \
-{ cv_null_, (text), (level), {0}, cv_trace_stats_initializer_ }
+{ 0, (text), (level), {0}, cv_trace_stats_initializer_ }
 
 void cv_trace_node_dispatch( cv_trace_node * p_trace_node,
     unsigned char i_type);

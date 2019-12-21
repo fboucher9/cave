@@ -12,7 +12,6 @@
 #include <cv_misc/cv_types.h>
 #include <cv_misc/cv_limits.h>
 #include <cv_misc/cv_convert.h>
-#include <cv_misc/cv_unused.h>
 
 #if defined cv_have_libc_
 #include <time.h>
@@ -180,8 +179,8 @@ cv_bool cv_clock_read( cv_clock * p_this, int e_epoch) {
 #if defined cv_linux_
     b_result = cv_clock_read_linux(p_this, e_epoch);
 #else /* #if defined cv_linux_ */
-    cv_unused_(p_this);
-    cv_unused_(e_epoch);
+    (void)(p_this);
+    (void)(e_epoch);
     cv_debug_msg_(cv_debug_code_not_implemented);
 #endif /* #if defined cv_linux_ */
     return b_result;
@@ -230,8 +229,8 @@ cv_bool cv_clock_until( cv_clock const * p_this, int e_epoch) {
 #if defined cv_linux_
     b_result = cv_clock_until_linux(p_this, e_epoch);
 #else /* #if defined cv_linux_ */
-    cv_unused_(p_this);
-    cv_unused_(e_epoch);
+    (void)(p_this);
+    (void)(e_epoch);
 #endif /* #if defined cv_linux_ */
     return b_result;
 }
@@ -243,9 +242,9 @@ cv_bool cv_clock_until( cv_clock const * p_this, int e_epoch) {
 cv_bool cv_clock_query( cv_clock const * p_this,
     int e_epoch, cv_clock_info * r_info) {
     cv_bool b_result = cv_false;
-    cv_unused_(p_this);
-    cv_unused_(e_epoch);
-    cv_unused_(r_info);
+    (void)(p_this);
+    (void)(e_epoch);
+    (void)(r_info);
     return b_result;
 }
 

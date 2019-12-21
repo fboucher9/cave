@@ -16,8 +16,7 @@
 #include <cv_algo/cv_array.h>
 #include <cv_algo/cv_array_it.h>
 #include <cv_algo/cv_array_tool.h>
-#include <cv_misc/cv_sizeof.h>
-#include <cv_misc/cv_unused.h>
+#include <cv_misc/cv_cast.h>
 #include <cv_test_print.h>
 #include <cv_number/cv_number_desc.h>
 
@@ -29,7 +28,7 @@
 
 static void cv_file_test_dump_buffer(
     unsigned char const * a_read_buffer,
-    long i_read_result)
+    cv_uptr i_read_result)
 {
     cv_array o_read_result = cv_array_null_;
     cv_array_init_vector(&o_read_result,
@@ -61,15 +60,14 @@ static void process_file_contents(
         unsigned char a_read_buffer[8u];
         cv_array o_read_buffer = cv_array_null_;
         cv_array_init_vector(&o_read_buffer, a_read_buffer,
-                cv_sizeof_(a_read_buffer));
+                sizeof(a_read_buffer));
         {
-            long const i_read_result = cv_file_read(
+            cv_sptr const i_read_result = cv_file_read(
                 &p_file_disk->o_file,
                 &o_read_buffer);
             if (i_read_result > 0) {
-                cv_file_test_dump_buffer(
-                    a_read_buffer,
-                    i_read_result);
+                cv_uptr const i_buffer_len = cv_cast_(cv_uptr, i_read_result);
+                cv_file_test_dump_buffer( a_read_buffer, i_buffer_len);
             } else {
                 b_continue = cv_false;
             }
@@ -199,7 +197,7 @@ static void cv_file_test_stdin(void) {
     {
         long const i_read_result = cv_file_read(p_stdin,
             get_line_buf());
-        cv_unused_(i_read_result);
+        (void)(i_read_result);
     }
 }
 
@@ -223,7 +221,7 @@ static void cv_file_test_stdout(void) {
     cv_file const * p_stdout = cv_file_std_out();
     long const i_write_result = cv_file_write(p_stdout,
         get_hello_msg());
-    cv_unused_(i_write_result);
+    (void)(i_write_result);
 }
 
 /*
@@ -234,7 +232,7 @@ static void cv_file_test_stderr(void) {
     cv_file const * p_stderr = cv_file_std_err();
     long const i_write_result = cv_file_write(p_stderr,
         get_hello_msg());
-    cv_unused_(i_write_result);
+    (void)(i_write_result);
 }
 
 /*
@@ -250,7 +248,7 @@ static void cv_file_test_print(void) {
             'a', 'b', 'c' };
         cv_file_print_range(p_stdout, a_range, a_range + sizeof(a_range));
         cv_file_print_nl(p_stdout);
-        cv_file_print_vector(p_stdout, a_range, cv_sizeof_(a_range));
+        cv_file_print_vector(p_stdout, a_range, sizeof(a_range));
         cv_file_print_nl(p_stdout);
     }
     cv_file_print_0(p_stdout, "abc", 10);

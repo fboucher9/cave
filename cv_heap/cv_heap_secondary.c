@@ -10,7 +10,7 @@
 
 cv_debug_decl_(g_class);
 
-static long const g_heap_secondary_grow_len = 4096L;
+static cv_uptr const g_heap_secondary_grow_len = 4096;
 
 /*
  *
@@ -45,8 +45,8 @@ void cv_heap_secondary_cleanup( cv_heap_secondary * p_this) {
  *
  */
 
-void * cv_heap_secondary_alloc( cv_heap_secondary * p_this, long i_len) {
-    void * p_result = cv_null_;
+void * cv_heap_secondary_alloc( cv_heap_secondary * p_this, cv_uptr i_len) {
+    void * p_result = 0;
     cv_debug_assert_(p_this, cv_debug_code_null_ptr);
     p_result = cv_heap_section_lock_alloc(&p_this->o_heap_section_lock,
         i_len);

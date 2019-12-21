@@ -11,9 +11,9 @@ void cv_print_char( unsigned char i_value);
 
 void cv_print_array( cv_array const * p_array);
 
-void cv_print_vector( void const * p_buffer, long i_buffer_len );
+void cv_print_vector( void const * p_buffer, cv_uptr i_buffer_len );
 
-void cv_print_0( char const * p_array0, long i_array0_max_len);
+void cv_print_0( char const * p_array0, cv_uptr i_array0_max_len);
 
 void cv_print_number( cv_number_desc const * p_desc);
 

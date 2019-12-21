@@ -12,15 +12,12 @@
 #include <cv_heap/cv_heap.h>
 #include <cv_file/cv_file_std.h>
 #include <cv_file/cv_file_poll.h>
-#include <cv_misc/cv_null.h>
-#include <cv_misc/cv_unused.h>
 #include <cv_number/cv_number_enc.h>
 #include <cv_number/cv_number_desc.h>
 #include <cv_test_print.h>
 #include <cv_algo/cv_array_tool.h>
 #include <cv_memory.h>
 #include <cv_file/cv_file_test.h>
-#include <cv_misc/cv_sizeof.h>
 #include <cv_algo/cv_stack_test.h>
 #include <cv_file/cv_file.h>
 #include <cv_misc/cv_convert_test.h>
@@ -40,10 +37,10 @@ static void cv_test_job(
             't', 'h', 'r', 'e', 'a', 'd', ' ', 's',
             'a', 'y', 's', ' ', 'h', 'e', 'l', 'l',
             'o' };
-        cv_print_vector(a_text, cv_sizeof_(a_text));
+        cv_print_vector(a_text, sizeof(a_text));
     }
     cv_print_nl();
-    cv_unused_(p_context);
+    (void)(p_context);
 }
 
 static void cv_test_heap_large(void)
@@ -67,7 +64,7 @@ static void cv_test_dump_options(
             {
                 static unsigned char const a_text[] = {
                     'o', 'p', 't', 'i', 'o', 'n', ' ', '=', ' ', '[' };
-                cv_print_vector(a_text, cv_sizeof_(a_text));
+                cv_print_vector(a_text, sizeof(a_text));
             }
             cv_print_array(&o_cur);
             cv_print_char(']');
@@ -86,7 +83,7 @@ static void cv_test_poll_stdin(void)
 {
     static char g_buf[80u];
     cv_array o_string = cv_array_null_;
-    cv_array_init_vector(&o_string, g_buf, cv_sizeof_(g_buf));
+    cv_array_init_vector(&o_string, g_buf, sizeof(g_buf));
     {
         cv_file_poll o_poll_stdin = cv_file_poll_initializer_;
         cv_file const * p_std_in = cv_file_std_in();
@@ -94,10 +91,10 @@ static void cv_test_poll_stdin(void)
         o_poll_stdin.i_flags_in = cv_file_poll_flag_read;
         o_poll_stdin.i_flags_out = 0;
         if (cv_file_poll_dispatch(&o_poll_stdin,
-                1, cv_null_)) {
+                1, 0)) {
             long const i_file_read_result =
                 cv_file_read(p_std_in, &o_string);
-            cv_unused_(i_file_read_result);
+            (void)(i_file_read_result);
         } else {
             cv_debug_msg_(cv_debug_code_error);
         }
@@ -127,19 +124,22 @@ static void cv_test_thread(void)
     cv_thread_desc_cleanup(&o_desc);
 }
 
+#if 0
 static void cv_test_number_step(
     cv_number_desc const * p_desc)
 {
     {
         static unsigned char const a_text[] = {
             'n', 'u', 'm', 'b', 'e', 'r', ' ', '[' };
-        cv_print_vector(a_text, cv_sizeof_(a_text));
+        cv_print_vector(a_text, sizeof(a_text));
     }
     cv_print_number(p_desc);
     cv_print_char(']');
     cv_print_nl();
 }
+#endif
 
+#if 0
 static void cv_test_number(void)
 {
     cv_number_desc o_desc = cv_number_desc_initializer_;
@@ -219,6 +219,7 @@ static void cv_test_number(void)
     o_desc.o_format.i_precision = 5;
     cv_test_number_step(&o_desc);
 }
+#endif
 
 /*
  *
@@ -251,7 +252,7 @@ static void cv_test_stdin(void)
         static unsigned char const a_text[] = {
             't', 'e', 's', 't', ' ', 's', 't', 'd', 'i', 'n',
             '.', '.', '.' };
-        cv_print_vector(a_text, cv_sizeof_(a_text));
+        cv_print_vector(a_text, sizeof(a_text));
     }
     cv_print_nl();
 
@@ -260,7 +261,7 @@ static void cv_test_stdin(void)
         while (b_continue) {
             cv_array o_string = cv_array_null_;
             unsigned char a_buf[1u];
-            cv_array_init_vector(&o_string, a_buf, cv_sizeof_(a_buf));
+            cv_array_init_vector(&o_string, a_buf, sizeof(a_buf));
             {
                 cv_file const * p_std_in = cv_file_std_in();
                 long const i_file_read_result =
@@ -271,7 +272,7 @@ static void cv_test_stdin(void)
                         static unsigned char const a_text[] = {
                             '0', 'x'
                         };
-                        cv_print_vector(a_text, cv_sizeof_(a_text));
+                        cv_print_vector(a_text, sizeof(a_text));
                     }
                     cv_print_unsigned(a_buf[0u], cv_number_format_hex2());
                     cv_print_nl();
@@ -287,7 +288,7 @@ static void cv_test_stdin(void)
         static unsigned char const a_text[] = {
             't', 'e', 's', 't', ' ', 's', 't', 'd', 'i', 'n',
             ' ', 'd', 'o', 'n', 'e', '.' };
-        cv_print_vector(a_text, cv_sizeof_(a_text));
+        cv_print_vector(a_text, sizeof(a_text));
     }
     cv_print_nl();
 }
@@ -297,7 +298,7 @@ static void cv_test_hello(void) {
         /* welcome. */
         static unsigned char const a_text[] = {
             'h', 'e', 'l', 'l', 'o', '!' };
-        cv_print_vector(a_text, cv_sizeof_(a_text));
+        cv_print_vector(a_text, sizeof(a_text));
         cv_print_nl();
     }
 }
@@ -306,14 +307,14 @@ static void cv_test_leak1(void) {
     cv_debug_decl_(g_class);
     int i = 0;
     cv_debug_construct_(g_class, &i);
-    cv_unused_(i);
+    (void)(i);
 }
 
 static void cv_test_leak2(void) {
     cv_debug_decl_(g_class);
     int i = 0;
     cv_debug_destruct_(g_class, &i);
-    cv_unused_(i);
+    (void)(i);
 }
 
 static void cv_test_leak3(void) {
@@ -399,9 +400,9 @@ static cv_bool cv_test_main_cb(
                     cv_array_text_initializer_(g_nhex_text);
 
                 if (cv_array_compare(&o_string, &g_number_array)) {
-                    if (0) {
-                        cv_test_number();
-                    }
+#if 0
+                    cv_test_number();
+#endif
                     cv_number_test();
                 } else if (cv_array_compare(&o_string, &g_heap_large_array)) {
                     cv_test_heap_large();
@@ -438,7 +439,7 @@ static cv_bool cv_test_main_cb(
                     static unsigned char const a_text[] = {
                         'i', 'n', 'v', 'a', 'l', 'i', 'd', ' ',
                         'c', 'o', 'm', 'm', 'a', 'n', 'd' };
-                    cv_print_vector(a_text, cv_sizeof_(a_text));
+                    cv_print_vector(a_text, sizeof(a_text));
                     cv_print_nl();
                     cv_test_dump_options(p_options);
                 }
@@ -447,7 +448,7 @@ static cv_bool cv_test_main_cb(
                 static unsigned char const a_text[] = {
                     'm', 'i', 's', 's', 'i', 'n', 'g', ' ',
                     'c', 'o', 'm', 'm', 'a', 'n', 'd' };
-                cv_print_vector(a_text, cv_sizeof_(a_text));
+                cv_print_vector(a_text, sizeof(a_text));
                 cv_print_nl();
             }
         }

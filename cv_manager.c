@@ -15,7 +15,6 @@ Description: None.
 #include <cv_file/cv_file_std.h>
 #include <cv_clock/cv_clock_plugin.h>
 #include <cv_debug/cv_debug_plugin.h>
-#include <cv_misc/cv_null.h>
 
 /*
 

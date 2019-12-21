@@ -8,12 +8,6 @@
 
 #include <cv_heap/cv_heap.h>
 
-#include <cv_misc/cv_sizeof.h>
-
-#include <cv_misc/cv_unused.h>
-
-#include <cv_misc/cv_null.h>
-
 #include <cv_memory.h>
 
 #include <cv_debug/cv_debug.h>
@@ -34,7 +28,7 @@ cv_bool cv_string0_init(
     cv_debug_assert_(p_this, cv_debug_code_null_ptr);
     {
         /* Get length of string */
-        long const i_length = p_string ? cv_array_len(p_string) : 0;
+        cv_uptr const i_length = p_string ? cv_array_len(p_string) : 0;
         if (cv_buffer_init(
                 &p_this->o_buffer,
                 i_length + 1)) {
@@ -60,17 +54,17 @@ void cv_string0_cleanup(
 char const * cv_string0_get(
     cv_string0 const * p_this)
 {
-    char const * p_result = cv_null_;
+    char const * p_result = 0;
     cv_debug_assert_(p_this, cv_debug_code_null_ptr);
     p_result = p_this->o_buffer.o_array.o_min.pc_char;
     return p_result;
 }
 
 /* Get length of buffer without terminating null character */
-long cv_string0_len(
+cv_uptr cv_string0_len(
     cv_string0 const * p_this)
 {
-    long i_len = 0;
+    cv_uptr i_len = 0;
     cv_debug_assert_(p_this, cv_debug_code_null_ptr);
     i_len = cv_buffer_len(&p_this->o_buffer);
     if (i_len > 0) {

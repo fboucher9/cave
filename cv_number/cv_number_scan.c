@@ -51,7 +51,7 @@ long cv_number_scan_range( void const * p_range_min,
  *
  */
 
-long cv_number_scan_vector( void const * p_buffer, long i_buffer_len,
+long cv_number_scan_vector( void const * p_buffer, cv_uptr i_buffer_len,
     unsigned int i_base) {
     long i_result = 0;
     cv_array o_array = cv_array_null_;
@@ -65,7 +65,7 @@ long cv_number_scan_vector( void const * p_buffer, long i_buffer_len,
  *
  */
 
-long cv_number_scan_0( char const * p_text, long i_max_len,
+long cv_number_scan_0( char const * p_text, cv_uptr i_max_len,
     unsigned int i_base) {
     long i_result = 0;
     cv_array o_array = cv_array_null_;

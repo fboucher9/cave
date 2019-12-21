@@ -12,6 +12,7 @@
 #include <cv_heap/cv_heap_pred.h>
 #include <cv_thread/cv_mutex.h>
 #include <cv_heap/cv_heap_section.h>
+#include <cv_misc/cv_types.h>
 
 struct cv_heap_section_lock {
     cv_mutex o_mutex;
@@ -30,7 +31,7 @@ void cv_heap_section_lock_cleanup(
 
 void * cv_heap_section_lock_alloc(
     cv_heap_section_lock * p_this,
-    long i_len);
+    cv_uptr i_len);
 
 #endif /* #ifndef cv_heap_section_lock_h_ */
 

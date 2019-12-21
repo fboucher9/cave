@@ -12,8 +12,6 @@
 #include <cv_heap/cv_heap_it.h>
 #include <cv_thread/cv_mutex.h>
 #include <cv_memory.h>
-#include <cv_misc/cv_sizeof.h>
-#include <cv_misc/cv_null.h>
 #include <cv_debug/cv_debug.h>
 
 cv_debug_decl_(g_class);
@@ -65,7 +63,7 @@ void cv_heap_pool_cleanup(
 
 static cv_heap_node * cv_heap_pool_lookup_cb(
     cv_heap_pool * p_this) {
-    cv_heap_node * p_result = cv_null_;
+    cv_heap_node * p_result = 0;
     cv_debug_assert_(p_this, cv_debug_code_null_ptr);
     {
         /* Look for free compatible item */
@@ -88,7 +86,7 @@ static cv_heap_node * cv_heap_pool_lookup_cb(
 
 cv_heap_node * cv_heap_pool_lookup(
     cv_heap_pool * p_this) {
-    cv_heap_node * p_result = cv_null_;
+    cv_heap_node * p_result = 0;
     cv_debug_assert_(p_this, cv_debug_code_null_ptr);
     cv_mutex_lock(&p_this->o_mutex);
     p_result = cv_heap_pool_lookup_cb(p_this);
@@ -99,9 +97,9 @@ cv_heap_node * cv_heap_pool_lookup(
 cv_heap_node * cv_heap_pool_alloc(
     cv_heap_primary * p_heap_primary,
     cv_heap_secondary * p_heap_secondary,
-    long i_len)
+    cv_uptr i_len)
 {
-    cv_heap_node * p_result = cv_null_;
+    cv_heap_node * p_result = 0;
     cv_debug_assert_(p_heap_secondary, cv_debug_code_null_ptr);
     {
         /* Allocate memory from primary */

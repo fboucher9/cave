@@ -8,9 +8,7 @@
 
 #include <cv_file/cv_file_poll.h>
 #include <cv_file/cv_file.h>
-#include <cv_misc/cv_unused.h>
 #include <cv_memory.h>
-#include <cv_misc/cv_sizeof.h>
 #include <cv_debug/cv_debug.h>
 #include <cv_heap/cv_heap.h>
 #include <cv_misc/cv_limits.h>
@@ -40,8 +38,8 @@ union pollfd_ptr {
  */
 
 static void cv_file_poll_linux_prepare( struct pollfd * p_pollfd,
-    cv_file_poll * p_poll_min, long i_count) {
-    long i_index = 0;
+    cv_file_poll * p_poll_min, unsigned i_count) {
+    unsigned i_index = 0;
     for (i_index = 0; i_index < i_count; i_index++) {
         cv_file_poll * const p_file_poll = p_poll_min + i_index;
         p_pollfd[i_index].fd = p_file_poll->p_file->i_index;
@@ -60,8 +58,8 @@ static void cv_file_poll_linux_prepare( struct pollfd * p_pollfd,
  */
 
 static void cv_file_poll_linux_return( struct pollfd * p_pollfd,
-    cv_file_poll * p_poll_min, long i_count) {
-    long i_index = 0;
+    cv_file_poll * p_poll_min, unsigned i_count) {
+    unsigned i_index = 0;
     for (i_index = 0; i_index < i_count; i_index++) {
         cv_file_poll * const p_file_poll = p_poll_min + i_index;
         if (p_pollfd[i_index].revents & POLLIN) {
@@ -78,14 +76,14 @@ static void cv_file_poll_linux_return( struct pollfd * p_pollfd,
  */
 
 static cv_bool cv_file_poll_linux_dispatch( cv_file_poll * p_poll_min,
-    long i_count, cv_clock const * p_timeout) {
+    unsigned i_count, cv_clock const * p_timeout) {
     cv_bool b_result = cv_false;
-    cv_unused_(p_timeout);
+    (void)(p_timeout);
     cv_debug_assert_(p_poll_min && i_count > 0, cv_debug_code_null_ptr);
     {
         pollfd_ptr o_pollfd_ptr = cv_ptr_null_;
         struct pollfd a_pollfd[1u];
-        long const i_pollfd_len = cv_sizeof_(struct pollfd) * i_count;
+        cv_uptr const i_pollfd_len = sizeof(struct pollfd) * i_count;
         if (1 >= i_count) {
             o_pollfd_ptr.p_pollfd = a_pollfd;
         } else {
@@ -96,8 +94,7 @@ static cv_bool cv_file_poll_linux_dispatch( cv_file_poll * p_poll_min,
             cv_memory_zero(p_pollfd, i_pollfd_len);
             cv_file_poll_linux_prepare( p_pollfd, p_poll_min, i_count);
             {
-                unsigned long const u_count = (i_count & cv_signed_long_max_);
-                nfds_t const i_pollfd_count = u_count;
+                nfds_t const i_pollfd_count = i_count;
                 int const i_poll_result = poll(
                     p_pollfd, i_pollfd_count, 1000);
                 if (i_poll_result > 0) {
@@ -125,7 +122,7 @@ static cv_bool cv_file_poll_linux_dispatch( cv_file_poll * p_poll_min,
 
 cv_bool cv_file_poll_dispatch(
     cv_file_poll * p_poll_min,
-    long i_count,
+    unsigned i_count,
     cv_clock const * p_timeout)
 {
     cv_bool b_result = cv_false;
@@ -136,9 +133,9 @@ cv_bool cv_file_poll_dispatch(
         b_result = cv_true;
     }
 #else /* #if defined cv_linux_ */
-    cv_unused_(p_poll_min);
-    cv_unused_(i_count);
-    cv_unused_(p_timeout);
+    (void)(p_poll_min);
+    (void)(i_count);
+    (void)(p_timeout);
     cv_debug_msg_(cv_debug_code_not_implemented);
 #endif /* #if defined cv_linux_ */
     return b_result;

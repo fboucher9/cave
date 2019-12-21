@@ -5,6 +5,7 @@
 
 #include <cv_heap/cv_heap_pred.h>
 #include <cv_heap/cv_heap_pool_impl.h>
+#include <cv_misc/cv_types.h>
 
 cv_heap_node * cv_heap_pool_lookup(
     cv_heap_pool * p_this);
@@ -12,7 +13,7 @@ cv_heap_node * cv_heap_pool_lookup(
 cv_heap_node * cv_heap_pool_alloc(
     cv_heap_primary * p_heap_primary,
     cv_heap_secondary * p_heap_secondary,
-    long i_len);
+    cv_uptr i_len);
 
 void cv_heap_pool_free(
     cv_heap_pool * p_this,

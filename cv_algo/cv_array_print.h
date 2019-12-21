@@ -10,15 +10,16 @@
 #include <cv_algo/cv_array_pred.h>
 #include <cv_number/cv_number_pred.h>
 #include <cv_misc/cv_bool.h>
+#include <cv_misc/cv_types.h>
 
 cv_bool cv_array_print( cv_array_it * p_array_it,
     cv_array const * p_array);
 
 cv_bool cv_array_print_0( cv_array_it * p_array_it,
-    char const * p_buf_0, long i_max_len);
+    char const * p_buf_0, cv_uptr i_max_len);
 
 cv_bool cv_array_print_vector( cv_array_it * p_array_it,
-    void const * p_buf, long i_buf_len);
+    void const * p_buf, cv_uptr i_buf_len);
 
 cv_bool cv_array_print_range( cv_array_it * p_array_it,
     void const * p_range_min, void const * p_range_max);

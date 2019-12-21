@@ -25,7 +25,7 @@ cv_bool cv_heap_secondary_init( cv_heap_secondary * p_this);
 
 void cv_heap_secondary_cleanup( cv_heap_secondary * p_this);
 
-void * cv_heap_secondary_alloc( cv_heap_secondary * p_this, long i_len);
+void * cv_heap_secondary_alloc( cv_heap_secondary * p_this, cv_uptr i_len);
 
 #endif /* #ifndef cv_heap_secondary_h_ */
 

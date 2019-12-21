@@ -28,7 +28,7 @@ void cv_string0_cleanup(
 char const * cv_string0_get(
     cv_string0 const * p_this);
 
-long cv_string0_len(
+cv_uptr cv_string0_len(
     cv_string0 const * p_this);
 
 #endif /* #ifndef cv_string0_h_ */

@@ -12,6 +12,7 @@
 #include <cv_file/cv_file_pred.h>
 #include <cv_algo/cv_array_pred.h>
 #include <cv_number/cv_number_pred.h>
+#include <cv_misc/cv_types.h>
 
 void cv_file_print_char( cv_file const * p_file,
     unsigned char i_value);
@@ -23,10 +24,10 @@ void cv_file_print_range( cv_file const * p_file,
     void const * p_range_min, void const * p_range_max);
 
 void cv_file_print_vector( cv_file const * p_file,
-    void const * p_buffer, long i_buffer_len);
+    void const * p_buffer, cv_uptr i_buffer_len);
 
 void cv_file_print_0( cv_file const * p_file,
-    char const * p_buffer, long i_max_len);
+    char const * p_buffer, cv_uptr i_max_len);
 
 void cv_file_print_number( cv_file const * p_file,
     cv_number_desc const * p_desc);

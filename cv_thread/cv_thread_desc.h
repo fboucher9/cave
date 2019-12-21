@@ -16,7 +16,7 @@ typedef struct cv_thread_callback {
 } cv_thread_callback;
 
 #define cv_thread_callback_initializer_ \
-{ cv_null_, cv_null_ }
+{ 0, 0 }
 
 struct cv_thread_desc {
     cv_thread_callback o_callback;

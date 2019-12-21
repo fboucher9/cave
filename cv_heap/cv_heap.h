@@ -13,11 +13,11 @@ initialization phase of application.
 
 */
 
-void * cv_heap_alloc(
-    long i_buffer_length);
+#include <cv_misc/cv_types.h>
 
-void cv_heap_free(
-    void * p_buffer);
+void * cv_heap_alloc( cv_uptr i_buffer_length);
+
+void cv_heap_free( void * p_buffer);
 
 #endif /* #ifndef cv_heap_h_ */
 

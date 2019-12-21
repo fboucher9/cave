@@ -39,15 +39,12 @@ struct cv_heap_section_desc
 {
     /* Size in bytes of each section node, a part of size is lost to
     section node header */
-    long i_grow_len;
-
-    /* Align to 64-bits */
-    long l_padding[1u];
+    cv_uptr i_grow_len;
 
 };
 
 /* Initializer list for cv_heap_section_desc structure */
-#define cv_heap_section_desc_initializer_ { 0, {0} }
+#define cv_heap_section_desc_initializer_ { 0 }
 
 /*
 
@@ -84,7 +81,7 @@ void cv_heap_section_cleanup(
 
 void * cv_heap_section_alloc(
     cv_heap_section * p_this,
-    long i_len);
+    cv_uptr i_len);
 
 #endif /* #ifndef cv_heap_section_h_ */
 

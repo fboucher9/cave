@@ -12,6 +12,7 @@ Heap for allocations with small length, less than 4KB.
 #include <cv_heap/cv_heap_pred.h>
 #include <cv_misc/cv_bool.h>
 #include <cv_heap/cv_heap_pool.h>
+#include <cv_misc/cv_types.h>
 
 #define cv_heap_small_max_len_ (4096)
 
@@ -33,12 +34,12 @@ cv_bool cv_heap_small_init( cv_heap_small * p_this);
 
 void cv_heap_small_cleanup( cv_heap_small * p_this);
 
-cv_heap_node * cv_heap_small_lookup( cv_heap_small * p_this, long i_len);
+cv_heap_node * cv_heap_small_lookup( cv_heap_small * p_this, cv_uptr i_len);
 
 cv_heap_node * cv_heap_small_alloc(
     cv_heap_primary * p_heap_primary,
     cv_heap_secondary * p_heap_secondary,
-    long i_len);
+    cv_uptr i_len);
 
 void cv_heap_small_free( cv_heap_small * p_this, cv_heap_node * p_heap_node);
 

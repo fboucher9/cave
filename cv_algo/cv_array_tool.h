@@ -12,6 +12,7 @@ Description: Collection of tools related to arrays.
 */
 
 #include <cv_algo/cv_array.h>
+#include <cv_misc/cv_bool.h>
 
 #define cv_array_text_initializer_(name) \
 cv_array_initializer_(name, name + sizeof(name))

@@ -13,11 +13,7 @@ cast from void* to all other pointer types.
 */
 
 #if ! defined cv_null_
-#if defined __cplusplus
 #define cv_null_ (0)
-#else /* #if defined __cplusplus */
-#define cv_null_ ((void*)0)
-#endif /* #if defined __cplusplus */
 #endif /* #if ! defined cv_null_ */
 
 #endif /* #ifndef cv_null_h_ */

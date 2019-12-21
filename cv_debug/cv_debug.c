@@ -9,7 +9,6 @@
 #if defined cv_debug_
 
 #include <cv_runtime.h>
-#include <cv_misc/cv_unused.h>
 
 #if defined cv_have_libc_
 #include <stdio.h>
@@ -23,9 +22,9 @@ void xx_debug_msg( cv_debug_code e_code, char const * p_file, int i_line) {
 #if defined cv_have_libc_
     fprintf(stderr, "*** %s:%d:%s ***\n", p_file, i_line, e_code);
 #else /* #if defiend cv_have_libc_ */
-    cv_unused_(e_code);
-    cv_unused_(p_file);
-    cv_unused_(i_line);
+    (void)(e_code);
+    (void)(p_file);
+    (void)(i_line);
 #endif /* #if defined cv_have_libc_ */
 }
 

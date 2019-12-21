@@ -6,8 +6,6 @@
 
 #include <cv_debug/cv_debug.h>
 
-#include <cv_misc/cv_sizeof.h>
-
 cv_debug_decl_(g_class);
 
 void cv_array_it_init(
@@ -22,7 +20,7 @@ void cv_array_it_init(
 void cv_array_it_init_vector(
     cv_array_it * p_this,
     void const * p_buf,
-    long i_len)
+    cv_uptr i_len)
 {
     cv_debug_assert_( p_this, cv_debug_code_null_ptr);
     cv_debug_construct_(g_class, p_this);
@@ -78,7 +76,7 @@ cv_bool cv_array_it_get_next_ptr(
 
 cv_bool cv_array_it_get_next_array(
     cv_array_it * p_this,
-    long i_array_len,
+    cv_uptr i_array_len,
     cv_array_ptr * r_value)
 {
     cv_bool b_result = cv_false;
@@ -129,7 +127,7 @@ cv_bool cv_array_it_read_next_array(
     cv_bool b_result = cv_false;
     cv_debug_assert_( p_this && p_array, cv_debug_code_null_ptr);
     {
-        long const i_array_len = cv_array_len(p_array);
+        cv_uptr const i_array_len = cv_array_len(p_array);
         if ((p_this->o_array.o_min.pc_uchar + i_array_len)
             <= p_this->o_array.o_max.pc_uchar) {
             cv_array_copy( p_array, &p_this->o_array);
@@ -177,7 +175,7 @@ cv_bool cv_array_it_write_next_array(
     cv_bool b_result = cv_false;
     cv_debug_assert_( p_this && p_array, cv_debug_code_null_ptr);
     {
-        long const i_array_len = cv_array_len(p_array);
+        cv_uptr const i_array_len = cv_array_len(p_array);
         if ((p_this->o_array.o_min.p_uchar + i_array_len)
             <= p_this->o_array.o_max.p_uchar) {
             cv_array_copy( &p_this->o_array, p_array);

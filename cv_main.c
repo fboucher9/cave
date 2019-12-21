@@ -20,7 +20,7 @@ cv_options * cv_main_init(
     int argc,
     char const * const * argv)
 {
-    cv_options * p_options = cv_null_;
+    cv_options * p_options = 0;
     cv_debug_assert_(!g_main_init_done, cv_debug_code_already_loaded);
     /* load all plugins */
     if (cv_manager_load()) {
