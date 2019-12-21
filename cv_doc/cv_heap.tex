@@ -1,0 +1,100 @@
+% vim: indentexpr= nocindent spell
+
+\title{CAVE Project \\
+Heap Design}
+
+\input{cv_doc/cv_common.tex}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+
+Design notes for heap used by CAVE project.  Enumerate features of heap,
+describe how to test heap.
+
+\end{abstract}
+
+\section{Features}
+
+Enumerate features of heap design.
+
+\begin{itemize}
+
+\item \emph{Compatible} Interface is compatible with \verb|malloc| and
+\verb|free|.  This make it easy to replace code that was using standard memory
+management.
+
+\item \emph{Global Instance} Memory management is required from every corner of
+the project so it is not always possible to have access to a heap instance.
+For that reason the heap instance is global.
+
+\item \emph{Allocation Only} The simplest heap strategy is to allocate memory and to
+never free it.  With an object that implements this simple strategy we may use
+it to implement a more complex heap.
+
+\item \emph{Thread Safety} Memory management may be called from any thread so
+the heap state must be protected from race conditions.  Mutual exclusion
+objects are used to protect the heap state.  For that reason the Mutual
+exclusion object may not be allocated on the heap, to avoid recursion.
+
+\item \emph{Small and Large} The design must be optimized to handle many
+allocations of small size and few allocations of large size.  Some profiling
+may be required to determine what is small or large.
+
+\item \emph{Alignment} Small allocations are aligned to a multiple of 8 bytes.
+Large allocations are aligned to a multiple of 4096 bytes.
+
+\item \emph{Side Data} The data used to track state of heap must be stored in a
+separate area of memory.  This is to protect the state of the heap from
+corruption and also to improve alignment of memory allocations.  The heap state
+is required at allocation and free but not during use of data.  The heap state
+need not remain in cpu caches after initialization phase.  Another reason is
+for large allocations, by removing the heap header, the allocation may be
+aligned on a page without wasting a page.
+
+\item \emph{Fragmentation} The design must avoid fragmentation.  The heap
+becomes fragmented when an unused region of memory is split to provide memory
+to a new allocation.  After several split operations, we end up with holes and
+none of the holes match the desired size.  The unused region must remain at the
+original size so that it may be reused directly.
+
+\end{itemize}
+
+\section{Tests}
+
+How to test the heap?
+
+\begin{itemize}
+
+\item \emph{Code coverage}  Design a set of tests that use each line of the
+heap implementation.  In order to reach every line of the heap implementation
+it may be necessary to simulate errors.  It may even be necessary to cause
+segmentation faults during code coverage tests.
+
+\item \emph{Leak detection}  Use leak detector to signal either a problem with
+application or maybe a problem with the heap implementation.
+
+\item \emph{Stress}  Random sequence of memory management calls and
+verifications.  Create several threads and each thread must create and destroy
+many allocations.  Each allocation must detect corruption before being freed.
+At the end of the test there must not be any leaks are there must not be any
+failures.  The heap must be useable before and after the test.  The frequency
+of the actions must be high enough to stress the design.
+
+\item \emph{Reuse}  Verify that heap reuses memory.  On first allocation, fill
+memory with a unique pattern.  On next allocation the memory is reused if
+memory is filled with the same unique pattern.
+
+\item \emph{Fragmentation}  Find a way to detect fragmentation.  Fragmentation
+causes the total amount of memory to increase due to an increasing number of
+holes.  Select a set of allocation sizes.  Then do a random sequence of
+allocations and deallocations.  At the end of the sequence allocate all and
+verify total amount of memory.  The total amount of memory should be stable
+when random sequences are repeated.
+
+\end{itemize}
+
+\end{document}
+

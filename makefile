@@ -41,6 +41,7 @@ cv_test_srcs = \
     cv_heap/cv_heap_small.c \
     cv_heap/cv_heap_large.c \
     cv_heap/cv_heap_used.c \
+    cv_heap/cv_heap_test.c \
     cv_debug/cv_debug.c \
     cv_debug/cv_debug_code.c \
     cv_debug/cv_debug_class.c \
@@ -280,16 +281,22 @@ clean :
 	rm -rf $(cv_obj_path)/*
 
 .PHONY : doc
-doc : cv-template
+doc : cv-template cv-heap
 
 .PHONY : cv-template
 cv-template : $(cv_obj_path)/cv_template.pdf
 
-$(cv_obj_path)/cv_template.pdf : $(cv_src_path)/cv_doc/cv_common.tex
+$(cv_obj_path)/cv_template.pdf : $(cv_src_path)/makefile \
+    $(cv_src_path)/cv_doc/cv_common.tex
 
-$(cv_obj_path)/cv_template.pdf : $(cv_src_path)/makefile $(cv_src_path)/cv_doc/cv_template.tex
+.PHONY : cv-heap
+cv-heap : $(cv_obj_path)/cv_heap.pdf
+
+$(cv_obj_path)/cv_heap.pdf : $(cv_src_path)/makefile \
+    $(cv_src_path)/cv_doc/cv_common.tex
+
+$(cv_obj_path)/%.pdf : $(cv_src_path)/cv_doc/%.tex
 	@echo latex $(notdir $@)
 	$(cv_verbose)mkdir -p $(dir $@)
-	$(cv_verbose)pdflatex -output-directory=$(cv_obj_path) -halt-on-error $(cv_src_path)/cv_doc/cv_template.tex >/dev/null
-	$(cv_verbose)pdflatex -output-directory=$(cv_obj_path) -halt-on-error $(cv_src_path)/cv_doc/cv_template.tex >/dev/null
-
+	$(cv_verbose)pdflatex -output-directory=$(cv_obj_path) -halt-on-error $< >/dev/null
+	$(cv_verbose)pdflatex -output-directory=$(cv_obj_path) -halt-on-error $< >/dev/null
