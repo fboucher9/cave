@@ -186,7 +186,7 @@ static void cv_heap_stress_thread_entry(void * p_context) {
                 i_node_index = 0;
             }
             {
-                unsigned int const i_delay_usec = cv_heap_stress_pick(10000);
+                unsigned int const i_delay_usec = cv_heap_stress_pick(1000);
                 if (i_delay_usec) {
                     cv_heap_stress_sleep_usec(i_delay_usec);
                 }
@@ -207,6 +207,7 @@ static void cv_heap_stress_thread_entry(void * p_context) {
         while (i_node_index < cv_heap_stress_max_node) {
             struct cv_heap_stress_node * const p_stress_node =
                 a_node + i_node_index;
+#if 0 /* verbose */
             cv_print_0("node=", 80);
             cv_print_unsigned(i_node_index, cv_number_format_dec());
             cv_print_0(",alloc=", 80);
@@ -216,6 +217,13 @@ static void cv_heap_stress_thread_entry(void * p_context) {
             cv_print_unsigned(p_stress_node->i_free_count,
                 cv_number_format_dec());
             cv_print_nl();
+#endif /* verbose */
+            cv_debug_assert_(
+                p_stress_node->i_alloc_count,
+                cv_debug_code_error);
+            cv_debug_assert_(
+                p_stress_node->i_alloc_count == p_stress_node->i_free_count,
+                cv_debug_code_error);
             i_node_index ++;
         }
     }
