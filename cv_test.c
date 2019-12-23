@@ -28,6 +28,7 @@
 #include <cv_algo/cv_array_it.h>
 #include <cv_number/cv_number_scan.h>
 #include <cv_number/cv_number_test.h>
+#include <cv_heap/cv_heap_test.h>
 
 static void cv_test_job(
     void * p_context)
@@ -365,6 +366,8 @@ static cv_bool cv_test_main_cb(
                     'n', 'd', 'e', 'c' };
                 static char const g_nhex_text[] = {
                     'n', 'h', 'e', 'x' };
+                static char const g_heap_text[] = {
+                    'h', 'e', 'a', 'p' };
 
                 static cv_array const g_number_array =
                     cv_array_text_initializer_(g_number_text);
@@ -398,6 +401,8 @@ static cv_bool cv_test_main_cb(
                     cv_array_text_initializer_(g_ndec_text);
                 static cv_array const g_nhex_array =
                     cv_array_text_initializer_(g_nhex_text);
+                static cv_array const g_heap_array =
+                    cv_array_text_initializer_(g_heap_text);
 
                 if (cv_array_compare(&o_string, &g_number_array)) {
 #if 0
@@ -434,6 +439,8 @@ static cv_bool cv_test_main_cb(
                     cv_test_number_dec(&o_options_it, 10);
                 } else if (cv_array_compare(&o_string, &g_nhex_array)) {
                     cv_test_number_dec(&o_options_it, 16);
+                } else if (cv_array_compare(&o_string, &g_heap_array)) {
+                    cv_heap_test(&o_options_it);
                 } else {
                     /* invalid command */
                     static unsigned char const a_text[] = {
