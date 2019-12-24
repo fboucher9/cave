@@ -65,6 +65,36 @@ void cv_convert_test(void) {
         u_result = cv_convert_ll2u_(ll_value);
         (void)(u_result);
     }
+    /* Verify cast to signed char */ {
+        signed char i_result = 0;
+        i_result = cv_convert_u2c_(123u);
+        (void)i_result;
+    }
+    /* Verify cast to signed short */ {
+        signed short i_result = 0;
+        i_result = cv_convert_u2s_(123u);
+        (void)i_result;
+    }
+    /* Verify cast to signed int */ {
+        signed int i_result = 0;
+        i_result = cv_convert_u2i_(123u);
+        (void)i_result;
+    }
+    /* Verify cast to signed long */ {
+        signed long i_result = 0;
+        i_result = cv_convert_u2l_(123u);
+        (void)i_result;
+    }
+    /* Verify cast to signed ptr */ {
+        cv_sptr i_result = 0;
+        i_result = cv_convert_u2p_(123u);
+        (void)i_result;
+    }
+    /* Verify cast to sll */ {
+        cv_sll i_result = 0;
+        i_result = cv_convert_u2ll_(123u);
+        (void)i_result;
+    }
 }
 
 /* end-of-file: cv_convert_test.c */
