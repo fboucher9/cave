@@ -133,7 +133,7 @@ static void cv_heap_stress_node_toggle(struct cv_heap_stress_node * p_this) {
         /* allocate memory */
         /* select pattern */
         /* fill with pattern */
-        p_this->i_buffer_len = cv_heap_stress_pick(30000) + 8UL;
+        p_this->i_buffer_len = (30000UL * 100UL / (100UL + cv_heap_stress_pick(29901U)));
 #if 0 /* verbose */
         cv_print_0("alloc ", 80);
         cv_print_unsigned((p_this->i_buffer_len & 0x7fffU),
@@ -169,9 +169,9 @@ static void cv_heap_stress_thread_entry(void * p_context) {
     }
     i_node_index = 0;
     while (b_continue) {
-        cv_mutex_lock(&p_this->o_mutex);
+        /* cv_mutex_lock(&p_this->o_mutex); */
         b_continue = p_this->b_continue;
-        cv_mutex_unlock(&p_this->o_mutex);
+        /* cv_mutex_unlock(&p_this->o_mutex); */
         if (b_continue) {
             /* Allocate and free one buffer */
             i_node_index = cv_heap_stress_pick(cv_heap_stress_max_node);
@@ -187,8 +187,11 @@ static void cv_heap_stress_thread_entry(void * p_context) {
             }
             {
                 unsigned int const i_delay_usec = cv_heap_stress_pick(1000);
-                if (i_delay_usec) {
-                    cv_heap_stress_sleep_usec(i_delay_usec);
+                if (i_delay_usec > 800) {
+                    cv_heap_stress_sleep_usec(i_delay_usec - 800UL);
+                    cv_mutex_lock(&p_this->o_mutex);
+                    b_continue = p_this->b_continue;
+                    cv_mutex_unlock(&p_this->o_mutex);
                 }
             }
         }
