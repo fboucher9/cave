@@ -221,9 +221,11 @@ static void cv_heap_stress_thread_entry(void * p_context) {
                 cv_number_format_dec());
             cv_print_nl();
 #endif /* verbose */
+#if 0
             cv_debug_assert_(
                 p_stress_node->i_alloc_count,
                 cv_debug_code_error);
+#endif
             cv_debug_assert_(
                 p_stress_node->i_alloc_count == p_stress_node->i_free_count,
                 cv_debug_code_error);
@@ -313,16 +315,45 @@ static void cv_heap_stress_manager_cleanup(
 
 static void cv_heap_stress_manager_run(
     struct cv_heap_stress_manager * p_this) {
-    /* Randomly select a thread to start or stop */
-    unsigned int i_index = 0;
-    while (i_index < cv_heap_stress_max_thread) {
-        struct cv_heap_stress_thread * const p_stress_thread =
-            p_this->a_thread + i_index;
-        cv_heap_stress_thread_toggle(p_stress_thread);
-        i_index ++;
+    /* Start all threads */ {
+        unsigned int i_index = 0;
+        while (i_index < cv_heap_stress_max_thread) {
+            struct cv_heap_stress_thread * const p_stress_thread =
+                p_this->a_thread + i_index;
+            cv_heap_stress_thread_toggle(p_stress_thread);
+            i_index ++;
+        }
     }
-    /* wait a bit for thread to work */
-    cv_heap_stress_sleep_usec(2000000UL);
+    /* Loop */ {
+        unsigned long i_remain_usec = 0;
+        i_remain_usec = 2000000UL;
+        while (i_remain_usec) {
+            /* wait a bit for thread to work */
+            unsigned long i_sleep_usec = 0;
+            i_sleep_usec = cv_heap_stress_pick(1000UL * 100UL);
+            if (i_sleep_usec) {
+                if (i_sleep_usec > i_remain_usec) {
+                    i_sleep_usec = i_remain_usec;
+                }
+                cv_heap_stress_sleep_usec(i_sleep_usec);
+                i_remain_usec -= i_sleep_usec;
+            }
+            /* Toggle a thread */
+            {
+                /* Randomly select a thread to start or stop */
+                unsigned int i_index = cv_heap_stress_pick(
+                    cv_heap_stress_max_thread);
+                struct cv_heap_stress_thread * const p_stress_thread =
+                    p_this->a_thread + i_index;
+#if 0 /* verbose */
+                cv_print_0("toggle thread ", 80);
+                cv_print_unsigned(i_index, cv_number_format_dec());
+                cv_print_nl();
+#endif /* verbose */
+                cv_heap_stress_thread_toggle(p_stress_thread);
+            }
+        }
+    }
 }
 
 /*
