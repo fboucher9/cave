@@ -159,6 +159,7 @@ cv_heap_node * cv_heap_used_lookup(
                 cv_heap_node * p_heap_node =
                     o_heap_node_ptr.p_heap_node;
                 if (p_buffer == p_heap_node->o_payload.o_min.p_void) {
+                    cv_list_join(&p_heap_node->o_node, &p_heap_node->o_node);
                     p_this->i_count --;
                     p_result = p_heap_node;
                     b_found = cv_true;
