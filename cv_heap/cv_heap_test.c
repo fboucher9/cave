@@ -24,6 +24,7 @@
 #include <cv_number/cv_number_format.h>
 #include <cv_misc/cv_thread_local.h>
 #include <cv_random/cv_random.h>
+#include <cv_random/cv_random_crypto.h>
 
 #if defined cv_have_libc_
 #include <time.h>
@@ -391,10 +392,16 @@ static void cv_heap_test_stress(cv_options_it * p_options_it) {
     (void)p_options_it;
     /* Grab seed from options... */
     {
-        unsigned long i_manager_seed = 0;
-        cv_clock_mono o_clock_mono = cv_clock_mono_initializer_;
-        if (cv_clock_mono_read(&o_clock_mono)) {
-            i_manager_seed = o_clock_mono.o_clock.i_fraction;
+        unsigned long i_manager_seed = 12345;
+        struct cv_random_crypto o_crypto = cv_random_crypto_initializer_;
+        if (cv_random_crypto_init(&o_crypto)) {
+            i_manager_seed = cv_random_crypto_pick(&o_crypto, 0);
+            cv_random_crypto_cleanup(&o_crypto);
+        } else {
+            cv_clock_mono o_clock_mono = cv_clock_mono_initializer_;
+            if (cv_clock_mono_read(&o_clock_mono)) {
+                i_manager_seed = o_clock_mono.o_clock.i_fraction;
+            }
         }
         cv_heap_stress_manager_init(&o_stress_manager, i_manager_seed);
     }
