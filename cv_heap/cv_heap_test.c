@@ -15,6 +15,7 @@
 #include <cv_debug/cv_debug.h>
 #include <cv_memory.h>
 #include <cv_clock/cv_clock.h>
+#include <cv_clock/cv_clock_mono.h>
 #include <cv_clock/cv_clock_duration.h>
 #include <cv_clock/cv_clock_tool.h>
 #include <cv_misc/cv_cast.h>
@@ -22,6 +23,7 @@
 #include <cv_test_print.h>
 #include <cv_number/cv_number_format.h>
 #include <cv_misc/cv_thread_local.h>
+#include <cv_random/cv_random.h>
 
 #if defined cv_have_libc_
 #include <time.h>
@@ -38,6 +40,8 @@ enum cv_heap_stress_const {
  */
 
 struct cv_heap_stress_node {
+    struct cv_random o_random;
+    /* -- */
     void * p_buffer;
     /* -- */
     cv_uptr i_buffer_len;
@@ -57,6 +61,8 @@ struct cv_heap_stress_thread {
     /* -- */
     cv_mutex o_mutex;
     /* -- */
+    struct cv_random o_random;
+    /* -- */
     cv_bool b_continue;
     cv_bool b_valid;
     char ac_padding[6u];
@@ -69,7 +75,9 @@ static unsigned int cv_heap_stress_pick(
     int i_rand_result = 0;
     cv_mutex_lock(&g_random_lock);
     {
+#if defined cv_have_libc_
         i_rand_result = rand();
+#endif /* #if defined cv_have_libc_ */
         if (i_rand_result >= 0) {
             i_result = (i_rand_result & cv_signed_int_max_);
             if (i_modulo) {
@@ -91,7 +99,9 @@ static void cv_heap_stress_sleep_usec(
     cv_clock_duration_cleanup(&o_clock_duration);
 }
 
-static void cv_heap_stress_node_init(struct cv_heap_stress_node * p_this) {
+static void cv_heap_stress_node_init(struct cv_heap_stress_node * p_this,
+    unsigned long i_seed) {
+    cv_random_init(&p_this->o_random, i_seed);
     p_this->p_buffer = 0;
     p_this->i_alloc_count = 0;
     p_this->i_free_count = 0;
@@ -103,6 +113,7 @@ static void cv_heap_stress_node_cleanup(struct cv_heap_stress_node * p_this) {
         p_this->i_free_count ++;
         p_this->p_buffer = 0;
     }
+    cv_random_cleanup(&p_this->o_random);
 }
 
 static void cv_heap_stress_node_toggle(struct cv_heap_stress_node * p_this) {
@@ -133,7 +144,8 @@ static void cv_heap_stress_node_toggle(struct cv_heap_stress_node * p_this) {
         /* allocate memory */
         /* select pattern */
         /* fill with pattern */
-        p_this->i_buffer_len = (30000UL * 100UL / (100UL + cv_heap_stress_pick(29901U)));
+        p_this->i_buffer_len = (30000UL * 100UL / (100UL +
+                cv_random_pick(&p_this->o_random, 29901U)));
 #if 0 /* verbose */
         cv_print_0("alloc ", 80);
         cv_print_unsigned((p_this->i_buffer_len & 0x7fffU),
@@ -143,7 +155,7 @@ static void cv_heap_stress_node_toggle(struct cv_heap_stress_node * p_this) {
         p_this->p_buffer = cv_heap_alloc(p_this->i_buffer_len);
         if (p_this->p_buffer) {
             p_this->i_alloc_count ++;
-            p_this->a_pattern[0u] = (cv_heap_stress_pick(256) & 0xffU);
+            p_this->a_pattern[0u] = (cv_random_pick(&p_this->o_random, 256) & 0xffU);
             /* Fill in memory */
             cv_memory_fill(p_this->p_buffer, p_this->i_buffer_len,
                 p_this->a_pattern[0u]);
@@ -163,7 +175,8 @@ static void cv_heap_stress_thread_entry(void * p_context) {
         while (i_node_index < cv_heap_stress_max_node) {
             struct cv_heap_stress_node * const p_stress_node =
                 a_node + i_node_index;
-            cv_heap_stress_node_init(p_stress_node);
+            unsigned long i_node_seed = cv_random_pick(&p_this->o_random, 0);
+            cv_heap_stress_node_init(p_stress_node, i_node_seed);
             i_node_index ++;
         }
     }
@@ -237,9 +250,10 @@ static void cv_heap_stress_thread_entry(void * p_context) {
 cv_debug_decl_(cv_heap_stress_thread_class);
 
 static void cv_heap_stress_thread_init(
-    struct cv_heap_stress_thread * p_this) {
+    struct cv_heap_stress_thread * p_this, unsigned long i_seed) {
     cv_debug_construct_(cv_heap_stress_thread_class, p_this);
     cv_mutex_init(&p_this->o_mutex);
+    cv_random_init(&p_this->o_random, i_seed);
     p_this->b_continue = cv_true;
     p_this->b_valid = cv_false;
 }
@@ -253,6 +267,7 @@ static void cv_heap_stress_thread_cleanup(
         cv_thread_cleanup(&p_this->o_thread);
         p_this->b_valid = cv_false;
     }
+    cv_random_cleanup(&p_this->o_random);
     cv_mutex_cleanup(&p_this->o_mutex);
     cv_debug_destruct_(cv_heap_stress_thread_class, p_this);
 }
@@ -282,20 +297,24 @@ static void cv_heap_stress_thread_toggle(
  */
 
 struct cv_heap_stress_manager {
+    struct cv_random o_random;
     struct cv_heap_stress_thread a_thread[cv_heap_stress_max_thread];
 };
 
 cv_debug_decl_(cv_heap_stress_manager_class);
 
 static void cv_heap_stress_manager_init(
-    struct cv_heap_stress_manager * p_this) {
+    struct cv_heap_stress_manager * p_this,
+    unsigned long i_seed) {
     cv_debug_construct_(cv_heap_stress_manager_class, p_this);
+    cv_random_init(&p_this->o_random, i_seed);
     {
         unsigned int i_index = 0;
         while (i_index < cv_heap_stress_max_thread) {
             struct cv_heap_stress_thread * const p_stress_thread =
                 p_this->a_thread + i_index;
-            cv_heap_stress_thread_init(p_stress_thread);
+            unsigned long i_thread_seed = cv_random_pick(&p_this->o_random, 0);
+            cv_heap_stress_thread_init(p_stress_thread, i_thread_seed);
             i_index ++;
         }
     }
@@ -310,6 +329,7 @@ static void cv_heap_stress_manager_cleanup(
         cv_heap_stress_thread_cleanup(p_stress_thread);
         i_index ++;
     }
+    cv_random_cleanup(&p_this->o_random);
     cv_debug_destruct_(cv_heap_stress_manager_class, p_this);
 }
 
@@ -369,13 +389,15 @@ static void cv_heap_test_stress(cv_options_it * p_options_it) {
     /* free memory */
     /* sleep */
     (void)p_options_it;
-#if defined cv_have_libc_
+    /* Grab seed from options... */
     {
-        unsigned int const i_random_seed = (time(0) & cv_signed_int_max_);
-        srand(i_random_seed);
+        unsigned long i_manager_seed = 0;
+        cv_clock_mono o_clock_mono = cv_clock_mono_initializer_;
+        if (cv_clock_mono_read(&o_clock_mono)) {
+            i_manager_seed = o_clock_mono.o_clock.i_fraction;
+        }
+        cv_heap_stress_manager_init(&o_stress_manager, i_manager_seed);
     }
-#endif /* #if defined cv_have_libc_ */
-    cv_heap_stress_manager_init(&o_stress_manager);
     cv_heap_stress_manager_run(&o_stress_manager);
     cv_heap_stress_manager_cleanup(&o_stress_manager);
 }

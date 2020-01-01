@@ -66,6 +66,7 @@ cv_test_srcs = \
     cv_clock/cv_clock_duration.c \
     cv_clock/cv_clock_tool.c \
     cv_random/cv_random.c \
+    cv_random/cv_random_crypto.c \
     cv_random/cv_random_test.c \
     cv_algo/cv_list_node.c \
     cv_algo/cv_list_it.c \
