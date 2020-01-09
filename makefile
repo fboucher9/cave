@@ -77,6 +77,7 @@ cv_test_srcs = \
     cv_thread/cv_mutex.c \
     cv_thread/cv_mutex_impl.c \
     cv_thread/cv_once.c \
+    cv_thread/cv_specific.c \
     cv_algo/cv_pool.c \
     cv_algo/cv_pool_desc.c \
     cv_algo/cv_pool_lock.c \
@@ -88,12 +89,8 @@ cv_test_srcs = \
     cv_file/cv_file_print.c \
     cv_file/cv_file_test.c \
     cv_trace/cv_trace_node.c \
-    cv_trace/cv_trace_func.c \
-    cv_trace/cv_trace_func0.c \
-    cv_trace/cv_trace_func1.c \
-    cv_trace/cv_trace_func2.c \
-    cv_trace/cv_trace_event.c \
     cv_trace/cv_trace_msg.c \
+    cv_trace/cv_trace_plugin.c \
     cv_trace/cv_trace_test.c \
     cv_runtime.c \
     cv_linux.c \

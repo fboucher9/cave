@@ -10,10 +10,14 @@
 #include <cv_trace/cv_trace_pred.h>
 #include <cv_clock/cv_clock_mono.h>
 
+/*
+ *
+ */
+
 struct cv_trace_msg {
     cv_clock_mono o_clock_mono;
     /* -- */
-    cv_trace_node * p_trace_node;
+    cv_trace_local_node * p_local_node;
     /* -- */
     unsigned char i_type;
     unsigned char uc_padding[7u];

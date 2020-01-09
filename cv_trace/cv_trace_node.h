@@ -9,6 +9,7 @@
 
 #include <cv_trace/cv_trace_pred.h>
 #include <cv_trace/cv_trace_stats.h>
+#include <cv_misc/cv_thread_local.h>
 
 /*
  *
@@ -39,22 +40,57 @@ enum cv_trace_level {
  *
  */
 
-struct cv_trace_node {
-    cv_trace_node * p_next;
+struct cv_trace_global_node {
+    cv_trace_global_node * p_global_next;
+    /* -- */
+    cv_trace_stats o_global_stats;
     /* -- */
     char const * pc_text;
     /* -- */
+    unsigned char e_type;
     unsigned char i_level;
-    unsigned char uc_padding[7u];
-    /* -- */
-    cv_trace_stats o_trace_stats;
+    unsigned char uc_padding[6u];
 };
 
-#define cv_trace_node_initializer_(level, text) \
-{ 0, (text), (level), {0}, cv_trace_stats_initializer_ }
+#define cv_trace_global_node_initializer_(type, level, text) \
+{ 0, cv_trace_stats_initializer_, (text), (type), (level), {0} }
 
-void cv_trace_node_dispatch( cv_trace_node * p_trace_node,
+/*
+ *
+ */
+
+struct cv_trace_local_node {
+    cv_trace_local_node * p_local_next;
+    /* -- */
+    cv_trace_global_node * p_global_node;
+    /* -- */
+    cv_trace_stats o_local_stats;
+};
+
+#define cv_trace_local_node_initializer_(global_node) \
+{ 0, &(global_node), cv_trace_stats_initializer_ }
+
+#define cv_trace_node_decl_(type, level, name) \
+static cv_trace_global_node g_trace_##name = \
+cv_trace_global_node_initializer_( \
+    (type), (level), #name); \
+static cv_thread_local_ cv_trace_local_node l_trace_##name = \
+cv_trace_local_node_initializer_(g_trace_##name)
+
+void cv_trace_node_dispatch( cv_trace_local_node * p_trace_node,
     unsigned char i_type);
+
+#define cv_trace_node_enter_(name) \
+cv_trace_node_dispatch( \
+    &(l_trace_##name), cv_trace_type_func_enter)
+
+#define cv_trace_node_leave_(name) \
+cv_trace_node_dispatch( \
+    &(l_trace_##name), cv_trace_type_func_leave)
+
+#define cv_trace_node_signal_(name) \
+cv_trace_node_dispatch( \
+    &(l_trace_##name), cv_trace_type_event_signal)
 
 long cv_trace_node_stack_query(
     char const * * p_buffer,

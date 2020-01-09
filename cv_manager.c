@@ -15,6 +15,7 @@ Description: None.
 #include <cv_file/cv_file_std.h>
 #include <cv_clock/cv_clock_plugin.h>
 #include <cv_debug/cv_debug_plugin.h>
+#include <cv_trace/cv_trace_plugin.h>
 
 /*
 
@@ -23,6 +24,7 @@ cv_bool cv_manager_load(void)
 {
     cv_bool b_result = cv_false;
     cv_debug_load();
+    cv_trace_load();
     if (cv_heap_load()) {
         if (cv_thread_load()) {
             if (cv_clock_load()) {
@@ -53,6 +55,7 @@ void cv_manager_unload(void)
     cv_clock_unload();
     cv_thread_unload();
     cv_heap_unload();
+    cv_trace_unload();
     cv_debug_unload();
 }
 

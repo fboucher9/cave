@@ -6,12 +6,25 @@
 
 #include <cv_trace/cv_trace_test.h>
 #include <cv_trace/cv_trace_func.h>
-#include <cv_trace/cv_trace_func0.h>
 #include <cv_trace/cv_trace_event.h>
 #include <cv_trace/cv_trace_node.h>
 #include <cv_clock/cv_clock_duration.h>
 #include <cv_clock/cv_clock_tool.h>
+#include <cv_thread/cv_thread.h>
+#include <cv_thread/cv_thread_desc.h>
 #include <cv_test_print.h>
+
+/*
+ *
+ */
+
+static void cv_trace_test_async(
+    void * p_context) {
+    cv_trace_func0_decl_(fa);
+    (void)p_context;
+    cv_trace_func0_enter_(fa);
+    cv_trace_func0_leave_(fa);
+}
 
 /*
  *
@@ -21,11 +34,23 @@ void cv_trace_test(void) {
     cv_clock_duration o_duration = cv_clock_duration_initializer_;
     cv_clock_duration_init_msec(&o_duration, 0, 100);
     {
-        cv_trace_func0_decl_(f1, "f1");
+        /* Do trace from a thread */
+        cv_thread_desc o_thread_desc = cv_thread_desc_initializer_;
+        cv_thread o_thread = cv_thread_initializer_;
+        cv_thread_desc_init(&o_thread_desc);
+        o_thread_desc.o_callback.p_func = & cv_trace_test_async;
+        o_thread_desc.o_callback.p_context = 0;
+        if (cv_thread_init(&o_thread, &o_thread_desc)) {
+            cv_thread_cleanup(&o_thread);
+        }
+        cv_thread_desc_cleanup(&o_thread_desc);
+    }
+    {
+        cv_trace_func0_decl_(f1);
         cv_trace_func0_enter_(f1);
         cv_clock_duration_until(&o_duration);
         {
-            cv_trace_func0_decl_(f2, "f2");
+            cv_trace_func0_decl_(f2);
             cv_trace_func0_enter_(f2);
             cv_trace_func0_enter_(f2);
             cv_trace_func0_enter_(f2);
