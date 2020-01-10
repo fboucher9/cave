@@ -3,8 +3,6 @@
 #ifndef cv_trace_pred_h_
 #define cv_trace_pred_h_
 
-#define cv_trace_levels_ 1
-
 /*
  *
  */

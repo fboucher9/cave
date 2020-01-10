@@ -25,6 +25,15 @@ enum cv_trace_type {
  *
  */
 
+enum cv_trace_klass {
+    cv_trace_klass_func = 1,
+    cv_trace_klass_event
+};
+
+/*
+ *
+ */
+
 enum cv_trace_level {
     cv_trace_level_0 = 0,
     cv_trace_level_1,
@@ -47,13 +56,13 @@ struct cv_trace_global_node {
     /* -- */
     char const * pc_text;
     /* -- */
-    unsigned char e_type;
+    unsigned char i_klass;
     unsigned char i_level;
     unsigned char uc_padding[6u];
 };
 
-#define cv_trace_global_node_initializer_(type, level, text) \
-{ 0, cv_trace_stats_initializer_, (text), (type), (level), {0} }
+#define cv_trace_global_node_initializer_(klass, level, text) \
+{ 0, cv_trace_stats_initializer_, (text), (klass), (level), {0} }
 
 /*
  *

@@ -16,15 +16,13 @@
 #include <cv_misc/cv_thread_local.h>
 #include <cv_trace/cv_trace_msg.h>
 #include <cv_clock/cv_clock_duration.h>
+#include <cv_thread/cv_specific.h>
 
 #if defined cv_have_libc_
 #include <stdio.h>
 #endif /* #if defined cv_have_libc_ */
 
-#if defined cv_have_pthread_
-#include <pthread.h>
-extern pthread_key_t cv_trace_key;
-#endif /* #if defined cv_have_pthread_ */
+extern struct cv_specific cv_trace_key;
 
 static cv_trace_global_node g_trace_footer_global_node =
 cv_trace_global_node_initializer_(cv_trace_type_func_enter,
@@ -33,8 +31,11 @@ cv_trace_global_node_initializer_(cv_trace_type_func_enter,
 static cv_trace_local_node g_trace_footer_local_node =
 cv_trace_local_node_initializer_(g_trace_footer_global_node);
 
-static cv_thread_local_ cv_trace_local_node * g_trace_list =
+static cv_thread_local_ cv_trace_local_node * g_trace_local_list =
 &g_trace_footer_local_node;
+
+static cv_trace_global_node * g_trace_global_list =
+&g_trace_footer_global_node;
 
 #if 0
 static cv_mutex g_trace_mutex = cv_mutex_initializer_;
@@ -53,8 +54,17 @@ static cv_thread_local_ long g_trace_stack_index = 0;
 static void cv_trace_node_register( cv_trace_local_node * p_trace_node ) {
     if (p_trace_node->p_local_next) {
     } else {
-        p_trace_node->p_local_next = g_trace_list;
-        g_trace_list = p_trace_node;
+        p_trace_node->p_local_next = g_trace_local_list;
+        g_trace_local_list = p_trace_node;
+        /* Do register of tls */
+        {
+            void * p_specific;
+            p_specific = cv_specific_get(&cv_trace_key);
+            if (!p_specific) {
+                static unsigned char a_specific[8u];
+                cv_specific_set(&cv_trace_key, a_specific);
+            }
+        }
     }
 }
 
@@ -64,17 +74,6 @@ static void cv_trace_node_register( cv_trace_local_node * p_trace_node ) {
 
 void cv_trace_node_dispatch( cv_trace_local_node * p_trace_node,
     unsigned char i_type) {
-    /* Do register of tls */
-#if defined cv_have_pthread_
-    {
-        void * p_specific;
-        p_specific = pthread_getspecific(cv_trace_key);
-        if (!p_specific) {
-            static unsigned char a_specific[8u];
-            pthread_setspecific(cv_trace_key, a_specific);
-        }
-    }
-#endif /* #if defined cv_have_pthread_ */
     if (0 == (i_recursive++)) {
         /* mutex to protect list */
         /* link node into global list */
@@ -209,20 +208,20 @@ void cv_trace_node_stack_report(void) {
  */
 
 static void cv_trace_node_profile_report_cb(
-    cv_trace_local_node * p_iterator) {
+    cv_trace_global_node * p_iterator) {
 #if defined cv_have_libc_
     {
         cv_ull const ll_count = cv_clock_counter_get(
-            &p_iterator->o_local_stats.o_count);
+            &p_iterator->o_global_stats.o_count);
         unsigned long int const u_count = (ll_count & cv_unsigned_long_max_);
         cv_clock_usec o_clock_usec = cv_clock_usec_initializer_;
-        cv_clock_get_usec(&p_iterator->o_local_stats.o_elapsed,
+        cv_clock_get_usec(&p_iterator->o_global_stats.o_elapsed,
             &o_clock_usec);
         printf("%10lu.%06lu:%lu:[%s]\n",
             o_clock_usec.i_seconds,
             o_clock_usec.i_useconds,
             u_count,
-            p_iterator->p_global_node->pc_text);
+            p_iterator->pc_text);
     }
 #else /* #if defined cv_have_libc_ */
     (void)(p_iterator);
@@ -234,10 +233,10 @@ static void cv_trace_node_profile_report_cb(
  */
 
 void cv_trace_node_profile_report(void) {
-    cv_trace_local_node * p_iterator = g_trace_list;
-    while (p_iterator && (p_iterator != &g_trace_footer_local_node)) {
+    cv_trace_global_node * p_iterator = g_trace_global_list;
+    while (p_iterator && (p_iterator != &g_trace_footer_global_node)) {
         cv_trace_node_profile_report_cb(p_iterator);
-        p_iterator = p_iterator->p_local_next;
+        p_iterator = p_iterator->p_global_next;
     }
 }
 
