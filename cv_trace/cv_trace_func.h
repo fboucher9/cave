@@ -11,14 +11,14 @@
 #include <cv_trace/cv_trace_node.h>
 
 #define cv_trace_func_decl_(level, name) \
-    cv_trace_node_decl_( \
+    cv_trace_decl_( \
         cv_trace_klass_func, level, name)
 
 #define cv_trace_func_enter_(name) \
-    cv_trace_node_enter_(name)
+    cv_trace_enter_(name)
 
 #define cv_trace_func_leave_(name) \
-    cv_trace_node_leave_(name)
+    cv_trace_leave_(name)
 
 #define cv_trace_func0_decl_(name) \
     cv_trace_func_decl_( \

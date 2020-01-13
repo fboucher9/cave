@@ -11,11 +11,11 @@
 #include <cv_trace/cv_trace_node.h>
 
 #define cv_trace_event_decl_( level, name) \
-    cv_trace_node_decl_( \
+    cv_trace_decl_( \
         cv_trace_klass_event, level, name)
 
 #define cv_trace_event_signal_(name) \
-    cv_trace_node_signal_(name)
+    cv_trace_signal_(name)
 
 #define cv_trace_event0_decl_(name) \
     cv_trace_event_decl_(cv_trace_level_0, name)

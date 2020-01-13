@@ -17,7 +17,7 @@
 struct cv_trace_msg {
     cv_clock_mono o_clock_mono;
     /* -- */
-    cv_trace_local_node * p_local_node;
+    cv_trace * p_local;
     /* -- */
     unsigned char i_type;
     unsigned char uc_padding[7u];

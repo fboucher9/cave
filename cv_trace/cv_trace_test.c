@@ -63,12 +63,12 @@ void cv_trace_test(void) {
             cv_trace_func0_enter_(f2);
             cv_print_0("--- stack ---", 80);
             cv_print_nl();
-            cv_trace_node_stack_report();
+            cv_trace_stack_report();
             cv_print_0("--- end ---", 80);
             cv_print_nl();
             {
                 char const * a_stack[4u];
-                long i_count = cv_trace_node_stack_query(
+                long i_count = cv_trace_stack_query(
                     a_stack,
                     4u);
                 if ((i_count > 0) && (i_count <= 4)) {
@@ -93,7 +93,7 @@ void cv_trace_test(void) {
             cv_trace_func0_leave_(f2);
             {
                 char const * a_stack[4u];
-                long i_count = cv_trace_node_stack_query(
+                long i_count = cv_trace_stack_query(
                     a_stack,
                     4u);
                 if ((i_count > 0) && (i_count <= 4)) {
@@ -116,7 +116,7 @@ void cv_trace_test(void) {
     cv_clock_duration_cleanup(&o_duration);
     cv_print_0("--- profile ---", 80);
     cv_print_nl();
-    cv_trace_node_profile_report();
+    cv_trace_profile_report();
     cv_print_0("--- end ---", 80);
     cv_print_nl();
 }

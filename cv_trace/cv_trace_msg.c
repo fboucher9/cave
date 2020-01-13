@@ -19,7 +19,7 @@
 void cv_trace_msg_dispatch( cv_trace_msg * p_trace_msg) {
 #if defined cv_have_libc_
     unsigned char const uc_type = p_trace_msg->i_type;
-    unsigned short const us_level = p_trace_msg->p_local_node->p_global_node->i_level;
+    unsigned short const us_level = p_trace_msg->p_local->p_global->i_level;
     cv_clock_usec o_value_usec = cv_clock_usec_initializer_;
     cv_clock_get_usec(&p_trace_msg->o_clock_mono.o_clock, &o_value_usec);
     fprintf(stdout, "%10ld.%06ld:%c%hu:[%s]\n", o_value_usec.i_seconds,
@@ -27,7 +27,7 @@ void cv_trace_msg_dispatch( cv_trace_msg * p_trace_msg) {
         cv_trace_type_func_enter == uc_type ? '{' :
         cv_trace_type_func_leave == uc_type ? '}' : '!',
         us_level,
-        p_trace_msg->p_local_node->p_global_node->pc_text);
+        p_trace_msg->p_local->p_global->pc_text);
 #else /* #if defined cv_have_libc_ */
     (void)(p_trace_msg);
 #endif /* #if defined cv_have_libc_ */

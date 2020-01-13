@@ -24,18 +24,18 @@
 
 extern struct cv_specific cv_trace_key;
 
-static cv_trace_global_node g_trace_footer_global_node =
-cv_trace_global_node_initializer_(cv_trace_type_func_enter,
+static cv_trace_global g_trace_footer_global =
+cv_trace_global_initializer_(cv_trace_type_func_enter,
     cv_trace_level_0, "dummy");
 
-static cv_trace_local_node g_trace_footer_local_node =
-cv_trace_local_node_initializer_(g_trace_footer_global_node);
+static cv_trace g_trace_footer_local =
+cv_trace_initializer_(g_trace_footer_global);
 
-static cv_thread_local_ cv_trace_local_node * g_trace_local_list =
-&g_trace_footer_local_node;
+static cv_thread_local_ cv_trace * g_trace_list =
+&g_trace_footer_local;
 
-static cv_trace_global_node * g_trace_global_list =
-&g_trace_footer_global_node;
+static cv_trace_global * g_trace_global_list =
+&g_trace_footer_global;
 
 #if 0
 static cv_mutex g_trace_mutex = cv_mutex_initializer_;
@@ -51,11 +51,11 @@ static cv_thread_local_ long g_trace_stack_index = 0;
  *
  */
 
-static void cv_trace_node_register( cv_trace_local_node * p_trace_node ) {
-    if (p_trace_node->p_local_next) {
+static void cv_trace_register( cv_trace * p_trace ) {
+    if (p_trace->p_local_next) {
     } else {
-        p_trace_node->p_local_next = g_trace_local_list;
-        g_trace_local_list = p_trace_node;
+        p_trace->p_local_next = g_trace_list;
+        g_trace_list = p_trace;
         /* Do register of tls */
         {
             void * p_specific;
@@ -72,7 +72,7 @@ static void cv_trace_node_register( cv_trace_local_node * p_trace_node ) {
  *
  */
 
-void cv_trace_node_dispatch( cv_trace_local_node * p_trace_node,
+void cv_trace_dispatch( cv_trace * p_trace,
     unsigned char i_type) {
     if (0 == (i_recursive++)) {
         /* mutex to protect list */
@@ -80,7 +80,7 @@ void cv_trace_node_dispatch( cv_trace_local_node * p_trace_node,
         /* read current clock */
         /* print of type */
         cv_trace_msg * p_trace_msg = 0;
-        cv_debug_assert_(p_trace_node, cv_debug_code_null_ptr);
+        cv_debug_assert_(p_trace, cv_debug_code_null_ptr);
         if (cv_trace_type_func_enter == i_type) {
             if ((g_trace_stack_index >= 0) && (g_trace_stack_index < 8)) {
                 p_trace_msg = g_trace_stack + g_trace_stack_index;
@@ -111,31 +111,31 @@ void cv_trace_node_dispatch( cv_trace_local_node * p_trace_node,
 #if 0
                 cv_mutex_impl_lock(&g_trace_mutex);
 #endif
-                cv_trace_node_register(p_trace_node);
+                cv_trace_register(p_trace);
                 if (cv_trace_type_func_enter == i_type) {
                 } else if (cv_trace_type_func_leave == i_type) {
                     /* Calculate elapsed time */
                     cv_clock_duration o_duration =
                         cv_clock_duration_initializer_;
-                    cv_clock_counter_inc(&p_trace_node->o_local_stats.o_count);
+                    cv_clock_counter_inc(&p_trace->o_local_stats.o_count);
                     if (0 < cv_clock_diff(&o_now.o_clock,
                         &p_trace_msg->o_clock_mono.o_clock,
                         &o_duration)) {
                         cv_ull ll_elapsed = cv_clock_get(
-                            &p_trace_node->o_local_stats.o_elapsed);
+                            &p_trace->o_local_stats.o_elapsed);
                         ll_elapsed += cv_clock_get(&o_duration.o_clock);
-                        cv_clock_set(&p_trace_node->o_local_stats.o_elapsed,
+                        cv_clock_set(&p_trace->o_local_stats.o_elapsed,
                             ll_elapsed);
                     }
                 } else if (cv_trace_type_event_signal == i_type) {
-                    cv_clock_counter_inc(&p_trace_node->o_local_stats.o_count);
+                    cv_clock_counter_inc(&p_trace->o_local_stats.o_count);
                 } else {
                 }
 #if 0
                 cv_mutex_impl_unlock(&g_trace_mutex);
 #endif
                 p_trace_msg->o_clock_mono = o_now;
-                p_trace_msg->p_local_node = p_trace_node;
+                p_trace_msg->p_local = p_trace;
                 p_trace_msg->i_type = i_type;
                 cv_trace_msg_dispatch(p_trace_msg);
             }
@@ -152,7 +152,7 @@ void cv_trace_node_dispatch( cv_trace_local_node * p_trace_node,
  *
  */
 
-long cv_trace_node_stack_query(
+long cv_trace_stack_query(
     char const * * p_buffer,
     long i_count_max) {
     long i_count = 0;
@@ -165,7 +165,7 @@ long cv_trace_node_stack_query(
         {
             cv_trace_msg const * const p_trace_msg = g_trace_stack + i_index;
             if (i_count < i_count_max) {
-                p_buffer[i_count] = p_trace_msg->p_local_node->p_global_node->pc_text;
+                p_buffer[i_count] = p_trace_msg->p_local->p_global->pc_text;
                 i_count ++;
             }
         }
@@ -177,9 +177,9 @@ long cv_trace_node_stack_query(
  *
  */
 
-static void cv_trace_node_stack_report_cb(cv_trace_msg const * p_trace_msg) {
+static void cv_trace_stack_report_cb(cv_trace_msg const * p_trace_msg) {
 #if defined cv_have_libc_
-    printf("[%s]\n", p_trace_msg->p_local_node->p_global_node->pc_text);
+    printf("[%s]\n", p_trace_msg->p_local->p_global->pc_text);
 #else /* #if defined cv_have_libc_ */
     (void)(p_trace_msg);
 #endif /* #if defined cv_have_libc_ */
@@ -189,7 +189,7 @@ static void cv_trace_node_stack_report_cb(cv_trace_msg const * p_trace_msg) {
  *
  */
 
-void cv_trace_node_stack_report(void) {
+void cv_trace_stack_report(void) {
     long i_index = g_trace_stack_index;
     if (i_index > 8) {
         i_index = 8;
@@ -198,7 +198,7 @@ void cv_trace_node_stack_report(void) {
         i_index --;
         {
             cv_trace_msg const * const p_trace_msg = g_trace_stack + i_index;
-            cv_trace_node_stack_report_cb(p_trace_msg);
+            cv_trace_stack_report_cb(p_trace_msg);
         }
     }
 }
@@ -207,8 +207,8 @@ void cv_trace_node_stack_report(void) {
  *
  */
 
-static void cv_trace_node_profile_report_cb(
-    cv_trace_global_node * p_iterator) {
+static void cv_trace_profile_report_cb(
+    cv_trace_global * p_iterator) {
 #if defined cv_have_libc_
     {
         cv_ull const ll_count = cv_clock_counter_get(
@@ -232,10 +232,10 @@ static void cv_trace_node_profile_report_cb(
  *
  */
 
-void cv_trace_node_profile_report(void) {
-    cv_trace_global_node * p_iterator = g_trace_global_list;
-    while (p_iterator && (p_iterator != &g_trace_footer_global_node)) {
-        cv_trace_node_profile_report_cb(p_iterator);
+void cv_trace_profile_report(void) {
+    cv_trace_global * p_iterator = g_trace_global_list;
+    while (p_iterator && (p_iterator != &g_trace_footer_global)) {
+        cv_trace_profile_report_cb(p_iterator);
         p_iterator = p_iterator->p_global_next;
     }
 }

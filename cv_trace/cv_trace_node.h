@@ -49,8 +49,8 @@ enum cv_trace_level {
  *
  */
 
-struct cv_trace_global_node {
-    cv_trace_global_node * p_global_next;
+struct cv_trace_global {
+    cv_trace_global * p_global_next;
     /* -- */
     cv_trace_stats o_global_stats;
     /* -- */
@@ -61,53 +61,53 @@ struct cv_trace_global_node {
     unsigned char uc_padding[6u];
 };
 
-#define cv_trace_global_node_initializer_(klass, level, text) \
+#define cv_trace_global_initializer_(klass, level, text) \
 { 0, cv_trace_stats_initializer_, (text), (klass), (level), {0} }
 
 /*
  *
  */
 
-struct cv_trace_local_node {
-    cv_trace_local_node * p_local_next;
+struct cv_trace {
+    cv_trace * p_local_next;
     /* -- */
-    cv_trace_global_node * p_global_node;
+    cv_trace_global * p_global;
     /* -- */
     cv_trace_stats o_local_stats;
 };
 
-#define cv_trace_local_node_initializer_(global_node) \
-{ 0, &(global_node), cv_trace_stats_initializer_ }
+#define cv_trace_initializer_(global) \
+{ 0, &(global), cv_trace_stats_initializer_ }
 
-#define cv_trace_node_decl_(type, level, name) \
-static cv_trace_global_node g_trace_##name = \
-cv_trace_global_node_initializer_( \
+#define cv_trace_decl_(type, level, name) \
+static cv_trace_global g_trace_##name = \
+cv_trace_global_initializer_( \
     (type), (level), #name); \
-static cv_thread_local_ cv_trace_local_node l_trace_##name = \
-cv_trace_local_node_initializer_(g_trace_##name)
+static cv_thread_local_ cv_trace l_trace_##name = \
+cv_trace_initializer_(g_trace_##name)
 
-void cv_trace_node_dispatch( cv_trace_local_node * p_trace_node,
+void cv_trace_dispatch( cv_trace * p_trace,
     unsigned char i_type);
 
-#define cv_trace_node_enter_(name) \
-cv_trace_node_dispatch( \
+#define cv_trace_enter_(name) \
+cv_trace_dispatch( \
     &(l_trace_##name), cv_trace_type_func_enter)
 
-#define cv_trace_node_leave_(name) \
-cv_trace_node_dispatch( \
+#define cv_trace_leave_(name) \
+cv_trace_dispatch( \
     &(l_trace_##name), cv_trace_type_func_leave)
 
-#define cv_trace_node_signal_(name) \
-cv_trace_node_dispatch( \
+#define cv_trace_signal_(name) \
+cv_trace_dispatch( \
     &(l_trace_##name), cv_trace_type_event_signal)
 
-long cv_trace_node_stack_query(
+long cv_trace_stack_query(
     char const * * p_buffer,
     long i_count_max);
 
-void cv_trace_node_stack_report(void);
+void cv_trace_stack_report(void);
 
-void cv_trace_node_profile_report(void);
+void cv_trace_profile_report(void);
 
 #endif /* #ifndef cv_trace_node_h_ */
 
