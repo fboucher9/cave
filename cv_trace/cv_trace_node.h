@@ -86,8 +86,7 @@ cv_trace_global_initializer_( \
 static cv_thread_local_ cv_trace l_trace_##name = \
 cv_trace_initializer_(g_trace_##name)
 
-void cv_trace_dispatch( cv_trace * p_trace,
-    unsigned char i_type);
+void cv_trace_dispatch( cv_trace * p_trace, unsigned char i_type);
 
 #define cv_trace_enter_(name) \
 cv_trace_dispatch( \
@@ -100,6 +99,10 @@ cv_trace_dispatch( \
 #define cv_trace_signal_(name) \
 cv_trace_dispatch( \
     &(l_trace_##name), cv_trace_type_event_signal)
+
+void cv_trace_set_stack_levels( unsigned char i_stack_levels);
+
+void cv_trace_set_profile_levels( unsigned char i_profile_levels);
 
 long cv_trace_stack_query(
     char const * * p_buffer,

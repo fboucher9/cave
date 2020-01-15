@@ -37,15 +37,23 @@ static cv_thread_local_ cv_trace * g_trace_list =
 static cv_trace_global * g_trace_global_list =
 &g_trace_footer_global;
 
-#if 0
 static cv_mutex g_trace_mutex = cv_mutex_initializer_;
-#endif
+
+static unsigned char g_stack_levels = 8;
 
 static cv_thread_local_ long i_recursive = 0;
 
-static cv_thread_local_ cv_trace_msg g_trace_stack[8u];
+static cv_thread_local_ char const * g_stack_table[8u];
 
-static cv_thread_local_ long g_trace_stack_index = 0;
+static cv_thread_local_ long g_stack_index = 0;
+
+static unsigned char g_profile_levels = 8;
+
+static cv_thread_local_ cv_clock_mono g_profile_table[8u];
+
+static cv_thread_local_ long g_profile_index = 0;
+
+static cv_thread_local_ cv_trace_msg g_trace_msg = cv_trace_msg_initializer_;
 
 /*
  *
@@ -65,6 +73,17 @@ static void cv_trace_register( cv_trace * p_trace ) {
                 cv_specific_set(&cv_trace_key, a_specific);
             }
         }
+        /* Do register to global list */
+        if (p_trace->p_global->p_global_next) {
+        } else {
+            cv_mutex_impl_lock(&g_trace_mutex);
+            if (p_trace->p_global->p_global_next) {
+            } else {
+                p_trace->p_global->p_global_next = g_trace_global_list;
+                g_trace_global_list = p_trace->p_global;
+            }
+            cv_mutex_impl_unlock(&g_trace_mutex);
+        }
     }
 }
 
@@ -72,75 +91,106 @@ static void cv_trace_register( cv_trace * p_trace ) {
  *
  */
 
-void cv_trace_dispatch( cv_trace * p_trace,
-    unsigned char i_type) {
+static void cv_trace_flush_cb(cv_trace * p_trace) {
+    {
+        cv_ull const i_local_elapsed = cv_clock_get(
+            &p_trace->o_local_stats.o_elapsed);
+        cv_ull const i_global_elapsed = cv_clock_get(
+            &p_trace->p_global->o_global_stats.o_elapsed);
+        cv_clock_set(&p_trace->p_global->o_global_stats.o_elapsed,
+            i_global_elapsed + i_local_elapsed);
+    }
+    {
+        cv_ull const i_local_count = cv_clock_counter_get(
+            &p_trace->o_local_stats.o_count);
+        cv_ull const i_global_count = cv_clock_counter_get(
+            &p_trace->p_global->o_global_stats.o_count);
+        cv_clock_counter_set(&p_trace->p_global->o_global_stats.o_count,
+            i_global_count + i_local_count);
+    }
+    cv_clock_set(&p_trace->o_local_stats.o_elapsed, 0);
+    cv_clock_counter_set(&p_trace->o_local_stats.o_count, 0);
+}
+
+/*
+ *
+ */
+
+void cv_trace_flush(void);
+void cv_trace_flush(void) {
+    /* Merge of stats into global variables */
+    cv_trace * p_iterator = g_trace_list;
+    while (p_iterator && (p_iterator != &g_trace_footer_local)) {
+        cv_trace_flush_cb(p_iterator);
+        p_iterator = p_iterator->p_local_next;
+    }
+
+}
+
+/*
+ *
+ */
+
+void cv_trace_dispatch( cv_trace * p_trace, unsigned char i_type) {
     if (0 == (i_recursive++)) {
         /* mutex to protect list */
         /* link node into global list */
         /* read current clock */
         /* print of type */
-        cv_trace_msg * p_trace_msg = 0;
         cv_debug_assert_(p_trace, cv_debug_code_null_ptr);
-        if (cv_trace_type_func_enter == i_type) {
-            if ((g_trace_stack_index >= 0) && (g_trace_stack_index < 8)) {
-                p_trace_msg = g_trace_stack + g_trace_stack_index;
-            }
-            g_trace_stack_index ++;
-        } else if (cv_trace_type_func_leave == i_type) {
-            if (g_trace_stack_index > 0) {
-                g_trace_stack_index --;
-                if (g_trace_stack_index < 8) {
-                    p_trace_msg = g_trace_stack + g_trace_stack_index;
+        g_trace_msg.p_local = p_trace;
+        g_trace_msg.i_type = i_type;
+        if (cv_clock_mono_read(&g_trace_msg.o_clock_mono)) {
+            unsigned char const i_level = p_trace->p_global->i_level;
+            /* Stack processing */
+            if (i_level < g_stack_levels) {
+                if (cv_trace_type_func_enter == i_type) {
+                    if ((g_stack_index >= 0) && (g_stack_index < 8)) {
+                        g_stack_table[g_stack_index] = p_trace->p_global->pc_text;
+                    }
+                    g_stack_index ++;
+                } else if (cv_trace_type_func_leave == i_type) {
+                    if (g_stack_index > 0) {
+                        g_stack_index --;
+                    }
                 }
             }
-        } else if (cv_trace_type_event_signal == i_type) {
-            if ((g_trace_stack_index >= 0) && (g_trace_stack_index < 8)) {
-                p_trace_msg = g_trace_stack + g_trace_stack_index;
-            }
-            g_trace_stack_index ++;
-        } else {
-            p_trace_msg = 0;
-        }
-        /* Update stats */
-        /* process enter */
-        /* process leave */
-        /* process signal */
-        if (p_trace_msg) {
-            cv_clock_mono o_now = cv_clock_mono_initializer_;
-            if (cv_clock_mono_read(&o_now)) {
-#if 0
-                cv_mutex_impl_lock(&g_trace_mutex);
-#endif
+            /* Update stats */
+            /* process enter */
+            /* process leave */
+            /* process signal */
+            if (i_level < g_profile_levels) {
                 cv_trace_register(p_trace);
                 if (cv_trace_type_func_enter == i_type) {
+                    if ((g_profile_index >= 0) && (g_profile_index < 8)) {
+                        g_profile_table[g_profile_index] = g_trace_msg.o_clock_mono;
+                    }
+                    g_profile_index ++;
                 } else if (cv_trace_type_func_leave == i_type) {
                     /* Calculate elapsed time */
-                    cv_clock_duration o_duration =
-                        cv_clock_duration_initializer_;
-                    cv_clock_counter_inc(&p_trace->o_local_stats.o_count);
-                    if (0 < cv_clock_diff(&o_now.o_clock,
-                        &p_trace_msg->o_clock_mono.o_clock,
-                        &o_duration)) {
-                        cv_ull ll_elapsed = cv_clock_get(
-                            &p_trace->o_local_stats.o_elapsed);
-                        ll_elapsed += cv_clock_get(&o_duration.o_clock);
-                        cv_clock_set(&p_trace->o_local_stats.o_elapsed,
-                            ll_elapsed);
+                    if (g_profile_index > 0) {
+                        g_profile_index --;
+                        if ((g_profile_index >= 0) && (g_profile_index < 8)) {
+                            cv_clock_duration o_duration =
+                                cv_clock_duration_initializer_;
+                            cv_clock_counter_inc(&p_trace->o_local_stats.o_count);
+                            if (0 < cv_clock_diff(&g_trace_msg.o_clock_mono.o_clock,
+                                &(g_profile_table[g_profile_index].o_clock),
+                                &o_duration)) {
+                                cv_ull ll_elapsed = cv_clock_get(
+                                    &p_trace->o_local_stats.o_elapsed);
+                                ll_elapsed += cv_clock_get(&o_duration.o_clock);
+                                cv_clock_set(&p_trace->o_local_stats.o_elapsed,
+                                    ll_elapsed);
+                            }
+                        }
                     }
                 } else if (cv_trace_type_event_signal == i_type) {
                     cv_clock_counter_inc(&p_trace->o_local_stats.o_count);
                 } else {
                 }
-#if 0
-                cv_mutex_impl_unlock(&g_trace_mutex);
-#endif
-                p_trace_msg->o_clock_mono = o_now;
-                p_trace_msg->p_local = p_trace;
-                p_trace_msg->i_type = i_type;
-                cv_trace_msg_dispatch(p_trace_msg);
             }
-        } else {
-            cv_debug_msg_(cv_debug_code_error);
+            cv_trace_msg_dispatch(&g_trace_msg);
         }
     } else {
         cv_debug_break_(cv_debug_code_recursive);
@@ -152,20 +202,28 @@ void cv_trace_dispatch( cv_trace * p_trace,
  *
  */
 
+void cv_trace_set_stack_levels( unsigned char i_stack_levels) {
+    g_stack_levels = i_stack_levels;
+}
+
+/*
+ *
+ */
+
 long cv_trace_stack_query(
     char const * * p_buffer,
     long i_count_max) {
     long i_count = 0;
-    long i_index = g_trace_stack_index;
+    long i_index = g_stack_index;
     if (i_index > 8) {
         i_index = 8;
     }
     while (i_index > 0) {
         i_index --;
         {
-            cv_trace_msg const * const p_trace_msg = g_trace_stack + i_index;
+            char const * const p_trace_text = g_stack_table[i_index];
             if (i_count < i_count_max) {
-                p_buffer[i_count] = p_trace_msg->p_local->p_global->pc_text;
+                p_buffer[i_count] = p_trace_text;
                 i_count ++;
             }
         }
@@ -177,11 +235,11 @@ long cv_trace_stack_query(
  *
  */
 
-static void cv_trace_stack_report_cb(cv_trace_msg const * p_trace_msg) {
+static void cv_trace_stack_report_cb(char const * p_trace_text) {
 #if defined cv_have_libc_
-    printf("[%s]\n", p_trace_msg->p_local->p_global->pc_text);
+    printf("[%s]\n", p_trace_text);
 #else /* #if defined cv_have_libc_ */
-    (void)(p_trace_msg);
+    (void)(p_trace_text);
 #endif /* #if defined cv_have_libc_ */
 }
 
@@ -190,17 +248,22 @@ static void cv_trace_stack_report_cb(cv_trace_msg const * p_trace_msg) {
  */
 
 void cv_trace_stack_report(void) {
-    long i_index = g_trace_stack_index;
+    long i_index = g_stack_index;
     if (i_index > 8) {
         i_index = 8;
     }
     while (i_index > 0) {
         i_index --;
-        {
-            cv_trace_msg const * const p_trace_msg = g_trace_stack + i_index;
-            cv_trace_stack_report_cb(p_trace_msg);
-        }
+        cv_trace_stack_report_cb(g_stack_table[i_index]);
     }
+}
+
+/*
+ *
+ */
+
+void cv_trace_set_profile_levels( unsigned char i_profile_levels) {
+    g_profile_levels = i_profile_levels;
 }
 
 /*
@@ -233,10 +296,13 @@ static void cv_trace_profile_report_cb(
  */
 
 void cv_trace_profile_report(void) {
-    cv_trace_global * p_iterator = g_trace_global_list;
-    while (p_iterator && (p_iterator != &g_trace_footer_global)) {
-        cv_trace_profile_report_cb(p_iterator);
-        p_iterator = p_iterator->p_global_next;
+    cv_trace_flush();
+    {
+        cv_trace_global * p_iterator = g_trace_global_list;
+        while (p_iterator && (p_iterator != &g_trace_footer_global)) {
+            cv_trace_profile_report_cb(p_iterator);
+            p_iterator = p_iterator->p_global_next;
+        }
     }
 }
 

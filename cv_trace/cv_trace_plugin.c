@@ -10,13 +10,13 @@
 extern struct cv_specific cv_trace_key;
 struct cv_specific cv_trace_key;
 
+void cv_trace_flush(void);
+
 static void cv_trace_destructor(void * p_specific) {
     /* merge of thread data into global */
     /* no need to call pthread_setspecific(NULL) */
     (void)p_specific;
-#if defined cv_have_libc_
-    fprintf(stdout, "*** pthread_key_destructor ***\n");
-#endif /* #if defined cv_have_libc_ */
+    cv_trace_flush();
 }
 
 /*
