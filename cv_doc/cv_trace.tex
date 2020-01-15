@@ -1,0 +1,74 @@
+% vim: indentexpr= nocindent spell
+
+\title{CAVE Project \\
+Trace Design}
+
+\input{cv_doc/cv_common.tex}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+
+Design notes for trace used by CAVE project.  Enumerate features of trace,
+describe how to test trace.
+
+\end{abstract}
+
+\section{Features}
+
+Enumerate features of trace design.
+
+\begin{itemize}
+
+\item \emph{Log}
+
+Information is optionally stored into log files.  Each application has its own
+log file.  The file locking mechanism may be used to avoid more than one
+process per log file.  The application is responsible of cleaning the log files
+when they are no longer used.
+
+\item \emph{Echo}
+
+Information is optionally echoed to terminal or standard output file.  This is
+useful for debugging interactive applications and also may be necessary when
+all log files are locked by other processes.
+
+\item \emph{Stack}
+
+Information is optionally stored into a per-thread stack.  This information is
+used to generate a stack backtrace.  This is useful for memory leak detection
+and for debug assertions.
+
+\item \emph{Profile}
+
+Information is optionally accumulated into per-thread and per-process
+statistics.  A profile report may be generated typically on exit of the
+process.
+
+\item \emph{Locking}
+
+Design must avoid locking whenever possible.  Information must be stored
+into per-thread storage and then flushes to per-process storage only when
+necessary.
+
+\item \emph{Arguments}
+
+Each trace may optionally be extended with extra information.  Design must
+not use variable argument lists also known as \verb|printf|.
+
+\item \emph{Levels}
+
+Information is filtered using log levels.  When number of levels is zero then
+all traces are disabled.  The maximum number of levels is eight, same as
+\verb|syslog|.
+
+\end{itemize}
+
+\section{Tests}
+
+How to test the trace?
+
+\end{document}
+

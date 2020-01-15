@@ -281,7 +281,7 @@ clean :
 	rm -rf $(cv_obj_path)/*
 
 .PHONY : doc
-doc : cv-template cv-heap
+doc : cv-template cv-heap cv-trace
 
 .PHONY : cv-template
 cv-template : $(cv_obj_path)/cv_template.pdf
@@ -294,6 +294,12 @@ cv-heap : $(cv_obj_path)/cv_heap.pdf
 
 $(cv_obj_path)/cv_heap.pdf : $(cv_src_path)/makefile \
     $(cv_src_path)/cv_doc/cv_common.tex
+
+.PHONY : cv-trace
+cv-trace : $(cv_obj_path)/cv_trace.pdf
+
+$(cv_obj_path)/cv_trace.pdf : $(cv_src_path)/makefile \
+    $(cv_src_path)/cv_doc/cv_trace.tex
 
 $(cv_obj_path)/%.pdf : $(cv_src_path)/cv_doc/%.tex
 	@echo latex $(notdir $@)
