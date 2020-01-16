@@ -17,6 +17,7 @@
 #include <cv_trace/cv_trace_msg.h>
 #include <cv_clock/cv_clock_duration.h>
 #include <cv_thread/cv_specific.h>
+#include <cv_trace/cv_trace_level.h>
 
 #if defined cv_have_libc_
 #include <stdio.h>
@@ -39,15 +40,11 @@ static cv_trace_global * g_trace_global_list =
 
 static cv_mutex g_trace_mutex = cv_mutex_initializer_;
 
-static unsigned char g_stack_levels = 8;
-
 static cv_thread_local_ long i_recursive = 0;
 
 static cv_thread_local_ char const * g_stack_table[8u];
 
 static cv_thread_local_ long g_stack_index = 0;
-
-static unsigned char g_profile_levels = 8;
 
 static cv_thread_local_ cv_clock_mono g_profile_table[8u];
 
@@ -143,7 +140,7 @@ void cv_trace_dispatch( cv_trace * p_trace, unsigned char i_type) {
         if (cv_clock_mono_read(&g_trace_msg.o_clock_mono)) {
             unsigned char const i_level = p_trace->p_global->i_level;
             /* Stack processing */
-            if (i_level < g_stack_levels) {
+            if (cv_trace_test_stack_level(i_level)) {
                 if (cv_trace_type_func_enter == i_type) {
                     if ((g_stack_index >= 0) && (g_stack_index < 8)) {
                         g_stack_table[g_stack_index] = p_trace->p_global->pc_text;
@@ -159,7 +156,7 @@ void cv_trace_dispatch( cv_trace * p_trace, unsigned char i_type) {
             /* process enter */
             /* process leave */
             /* process signal */
-            if (i_level < g_profile_levels) {
+            if (cv_trace_test_profile_level(i_level)) {
                 cv_trace_register(p_trace);
                 if (cv_trace_type_func_enter == i_type) {
                     if ((g_profile_index >= 0) && (g_profile_index < 8)) {
@@ -196,14 +193,6 @@ void cv_trace_dispatch( cv_trace * p_trace, unsigned char i_type) {
         cv_debug_break_(cv_debug_code_recursive);
     }
     i_recursive --;
-}
-
-/*
- *
- */
-
-void cv_trace_set_stack_levels( unsigned char i_stack_levels) {
-    g_stack_levels = i_stack_levels;
 }
 
 /*
@@ -262,14 +251,6 @@ void cv_trace_stack_report(void) {
  *
  */
 
-void cv_trace_set_profile_levels( unsigned char i_profile_levels) {
-    g_profile_levels = i_profile_levels;
-}
-
-/*
- *
- */
-
 static void cv_trace_profile_report_cb(
     cv_trace_global * p_iterator) {
 #if defined cv_have_libc_
@@ -297,6 +278,7 @@ static void cv_trace_profile_report_cb(
 
 void cv_trace_profile_report(void) {
     cv_trace_flush();
+    cv_trace_msg_flush();
     {
         cv_trace_global * p_iterator = g_trace_global_list;
         while (p_iterator && (p_iterator != &g_trace_footer_global)) {

@@ -100,10 +100,6 @@ cv_trace_dispatch( \
 cv_trace_dispatch( \
     &(l_trace_##name), cv_trace_type_event_signal)
 
-void cv_trace_set_stack_levels( unsigned char i_stack_levels);
-
-void cv_trace_set_profile_levels( unsigned char i_profile_levels);
-
 long cv_trace_stack_query(
     char const * * p_buffer,
     long i_count_max);

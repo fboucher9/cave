@@ -2,6 +2,7 @@
 
 #include <cv_trace/cv_trace_plugin.h>
 #include <cv_thread/cv_specific.h>
+#include <cv_trace/cv_trace_msg.h>
 
 #if defined cv_have_libc_
 #include <stdio.h>
@@ -17,6 +18,8 @@ static void cv_trace_destructor(void * p_specific) {
     /* no need to call pthread_setspecific(NULL) */
     (void)p_specific;
     cv_trace_flush();
+    cv_trace_msg_flush();
+    cv_trace_msg_thread_detach();
 }
 
 /*

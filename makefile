@@ -91,6 +91,7 @@ cv_test_srcs = \
     cv_trace/cv_trace_node.c \
     cv_trace/cv_trace_msg.c \
     cv_trace/cv_trace_plugin.c \
+    cv_trace/cv_trace_level.c \
     cv_trace/cv_trace_test.c \
     cv_runtime.c \
     cv_linux.c \

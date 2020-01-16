@@ -28,6 +28,10 @@ struct cv_trace_msg {
 
 void cv_trace_msg_dispatch( cv_trace_msg * p_trace_msg);
 
+void cv_trace_msg_flush(void);
+
+void cv_trace_msg_thread_detach(void);
+
 #endif /* #ifndef cv_trace_msg_h_ */
 
 /* end-of-file: cv_trace_msg.h */
