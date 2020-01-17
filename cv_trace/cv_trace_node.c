@@ -128,6 +128,66 @@ void cv_trace_flush(void) {
  *
  */
 
+static void cv_trace_update_stack( cv_trace * p_trace, unsigned char i_type) {
+    unsigned char const i_level = p_trace->p_global->i_level;
+    if (cv_trace_test_stack_level(i_level)) {
+        if (cv_trace_type_func_enter == i_type) {
+            if ((g_stack_index >= 0) && (g_stack_index < 8)) {
+                g_stack_table[g_stack_index] = p_trace->p_global->pc_text;
+            }
+            g_stack_index ++;
+        } else if (cv_trace_type_func_leave == i_type) {
+            if (g_stack_index > 0) {
+                g_stack_index --;
+            }
+        }
+    }
+}
+
+/*
+ *
+ */
+
+static void cv_trace_update_profile( cv_trace * p_trace,
+    unsigned char i_type) {
+    unsigned char const i_level = p_trace->p_global->i_level;
+    if (cv_trace_test_profile_level(i_level)) {
+        cv_trace_register(p_trace);
+        if (cv_trace_type_func_enter == i_type) {
+            if ((g_profile_index >= 0) && (g_profile_index < 8)) {
+                g_profile_table[g_profile_index] = g_trace_msg.o_clock_mono;
+            }
+            g_profile_index ++;
+        } else if (cv_trace_type_func_leave == i_type) {
+            /* Calculate elapsed time */
+            if (g_profile_index > 0) {
+                g_profile_index --;
+                if ((g_profile_index >= 0) && (g_profile_index < 8)) {
+                    cv_clock_duration o_duration =
+                        cv_clock_duration_initializer_;
+                    cv_clock_counter_inc(&p_trace->o_local_stats.o_count);
+                    if (0 < cv_clock_diff(&g_trace_msg.o_clock_mono.o_clock,
+                        &(g_profile_table[g_profile_index].o_clock),
+                        &o_duration)) {
+                        cv_ull ll_elapsed = cv_clock_get(
+                            &p_trace->o_local_stats.o_elapsed);
+                        ll_elapsed += cv_clock_get(&o_duration.o_clock);
+                        cv_clock_set(&p_trace->o_local_stats.o_elapsed,
+                            ll_elapsed);
+                    }
+                }
+            }
+        } else if (cv_trace_type_event_signal == i_type) {
+            cv_clock_counter_inc(&p_trace->o_local_stats.o_count);
+        } else {
+        }
+    }
+}
+
+/*
+ *
+ */
+
 void cv_trace_dispatch( cv_trace * p_trace, unsigned char i_type) {
     if (0 == (i_recursive++)) {
         /* mutex to protect list */
@@ -138,55 +198,13 @@ void cv_trace_dispatch( cv_trace * p_trace, unsigned char i_type) {
         g_trace_msg.p_local = p_trace;
         g_trace_msg.i_type = i_type;
         if (cv_clock_mono_read(&g_trace_msg.o_clock_mono)) {
-            unsigned char const i_level = p_trace->p_global->i_level;
             /* Stack processing */
-            if (cv_trace_test_stack_level(i_level)) {
-                if (cv_trace_type_func_enter == i_type) {
-                    if ((g_stack_index >= 0) && (g_stack_index < 8)) {
-                        g_stack_table[g_stack_index] = p_trace->p_global->pc_text;
-                    }
-                    g_stack_index ++;
-                } else if (cv_trace_type_func_leave == i_type) {
-                    if (g_stack_index > 0) {
-                        g_stack_index --;
-                    }
-                }
-            }
+            cv_trace_update_stack(p_trace, i_type);
             /* Update stats */
             /* process enter */
             /* process leave */
             /* process signal */
-            if (cv_trace_test_profile_level(i_level)) {
-                cv_trace_register(p_trace);
-                if (cv_trace_type_func_enter == i_type) {
-                    if ((g_profile_index >= 0) && (g_profile_index < 8)) {
-                        g_profile_table[g_profile_index] = g_trace_msg.o_clock_mono;
-                    }
-                    g_profile_index ++;
-                } else if (cv_trace_type_func_leave == i_type) {
-                    /* Calculate elapsed time */
-                    if (g_profile_index > 0) {
-                        g_profile_index --;
-                        if ((g_profile_index >= 0) && (g_profile_index < 8)) {
-                            cv_clock_duration o_duration =
-                                cv_clock_duration_initializer_;
-                            cv_clock_counter_inc(&p_trace->o_local_stats.o_count);
-                            if (0 < cv_clock_diff(&g_trace_msg.o_clock_mono.o_clock,
-                                &(g_profile_table[g_profile_index].o_clock),
-                                &o_duration)) {
-                                cv_ull ll_elapsed = cv_clock_get(
-                                    &p_trace->o_local_stats.o_elapsed);
-                                ll_elapsed += cv_clock_get(&o_duration.o_clock);
-                                cv_clock_set(&p_trace->o_local_stats.o_elapsed,
-                                    ll_elapsed);
-                            }
-                        }
-                    }
-                } else if (cv_trace_type_event_signal == i_type) {
-                    cv_clock_counter_inc(&p_trace->o_local_stats.o_count);
-                } else {
-                }
-            }
+            cv_trace_update_profile(p_trace, i_type);
             cv_trace_msg_dispatch(&g_trace_msg);
         }
     } else {
