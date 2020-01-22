@@ -12,7 +12,7 @@
 #include <cv_clock/cv_clock_tool.h>
 #include <cv_debug/cv_debug.h>
 #include <cv_number/cv_number_desc.h>
-#include <cv_thread/cv_mutex.h>
+#include <cv_thread/cv_mutex_impl.h>
 #include <cv_misc/cv_thread_local.h>
 #include <cv_trace/cv_trace_msg.h>
 #include <cv_clock/cv_clock_duration.h>
@@ -296,7 +296,8 @@ static void cv_trace_profile_report_cb(
 
 void cv_trace_profile_report(void) {
     cv_trace_flush();
-    cv_trace_msg_flush();
+    cv_trace_msg_local_flush();
+    cv_trace_msg_global_flush();
     {
         cv_trace_global * p_iterator = g_trace_global_list;
         while (p_iterator && (p_iterator != &g_trace_footer_global)) {

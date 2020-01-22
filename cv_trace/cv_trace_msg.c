@@ -10,6 +10,7 @@
 #include <cv_clock/cv_clock_tool.h>
 #include <cv_misc/cv_thread_local.h>
 #include <cv_runtime.h>
+#include <cv_thread/cv_mutex_impl.h>
 
 #if defined cv_have_libc_
 #include <stdio.h>
@@ -19,11 +20,33 @@ static cv_thread_local_ cv_trace_msg * g_trace_msg_cache = 0;
 
 static cv_thread_local_ unsigned int g_trace_msg_cache_index = 0;
 
+static cv_trace_msg * g_trace_msg_queue = 0;
+
+static unsigned long g_trace_msg_queue_write = 0;
+
+static unsigned long g_trace_msg_queue_read = 0;
+
+static unsigned long g_trace_msg_queue_count = 0;
+
+static unsigned long const g_trace_msg_queue_max_count =
+((30000ul / sizeof(cv_trace_msg)) & 0x7ffffffful);
+
+static cv_mutex g_trace_msg_lock = cv_mutex_initializer_;
+
+static void cv_trace_msg_lock(void) {
+    cv_mutex_impl_lock(&g_trace_msg_lock);
+}
+
+static void cv_trace_msg_unlock(void) {
+    cv_mutex_impl_unlock(&g_trace_msg_lock);
+}
+
 /*
  *
  */
 
-static void cv_trace_msg_flush_cb(cv_trace_msg * p_trace_msg) {
+static void cv_trace_msg_global_flush_cb(
+    cv_trace_msg * p_trace_msg) {
 #if defined cv_have_libc_
     unsigned char const uc_level = p_trace_msg->p_local->p_global->i_level;
     unsigned short const us_level = uc_level;
@@ -58,10 +81,67 @@ static void cv_trace_msg_flush_cb(cv_trace_msg * p_trace_msg) {
  *
  */
 
-void cv_trace_msg_flush(void) {
+void cv_trace_msg_global_flush(void) {
+    /* lock */
+    cv_trace_msg_lock();
+    while (g_trace_msg_queue_count) {
+        cv_trace_msg_global_flush_cb(
+            g_trace_msg_queue + g_trace_msg_queue_read);
+        g_trace_msg_queue_count --;
+        g_trace_msg_queue_read ++;
+        if (g_trace_msg_queue_read >= g_trace_msg_queue_max_count) {
+            g_trace_msg_queue_read = 0;
+        }
+    }
+    /* unlock */
+    cv_trace_msg_unlock();
+}
+
+/*
+ *
+ */
+
+static void cv_trace_msg_local_flush_cb(cv_trace_msg * p_trace_msg) {
+    /* Second level flush, copy entries to global cache */
+    /* lock */
+    cv_trace_msg_lock();
+    if (!g_trace_msg_queue) {
+        g_trace_msg_queue = cv_runtime_malloc(30000u);
+    }
+    if (g_trace_msg_queue) {
+        /* Detect overflow */
+        if (g_trace_msg_queue_count >= g_trace_msg_queue_max_count) {
+            /* Try to print oldest message */
+            cv_trace_msg_global_flush_cb(
+                g_trace_msg_queue + g_trace_msg_queue_read);
+            /* Kill oldest message */
+            g_trace_msg_queue_count --;
+            g_trace_msg_queue_read ++;
+            if (g_trace_msg_queue_read >= g_trace_msg_queue_max_count) {
+                g_trace_msg_queue_read = 0;
+            }
+        }
+        /* write into queue */
+        g_trace_msg_queue[g_trace_msg_queue_write] = *p_trace_msg;
+        g_trace_msg_queue_write ++;
+        if (g_trace_msg_queue_write >= g_trace_msg_queue_max_count) {
+            g_trace_msg_queue_write = 0;
+        }
+        g_trace_msg_queue_count ++;
+    }
+    /* unlock */
+    cv_trace_msg_unlock();
+    /* Global flush is done from a thread */
+}
+
+/*
+ *
+ */
+
+void cv_trace_msg_local_flush(void) {
     unsigned int i_cache_iterator = 0;
     while (i_cache_iterator < g_trace_msg_cache_index) {
-        cv_trace_msg_flush_cb(g_trace_msg_cache + i_cache_iterator);
+        cv_trace_msg_local_flush_cb(g_trace_msg_cache + i_cache_iterator);
         i_cache_iterator ++;
     }
     g_trace_msg_cache_index = 0;
@@ -75,18 +155,20 @@ void cv_trace_msg_dispatch( cv_trace_msg * p_trace_msg) {
     /* cache of messages per thread */
     /* allocate cache at first use */
     if (!g_trace_msg_cache) {
-        g_trace_msg_cache = cv_runtime_malloc(30000u);
+        g_trace_msg_cache = cv_runtime_malloc(3000u);
     }
     if (g_trace_msg_cache) {
         /* setup a timer for flush of cache */
         /* flush of cache when full */
-        if (g_trace_msg_cache_index >= (30000u / sizeof(cv_trace_msg))) {
+        if (g_trace_msg_cache_index >= (3000u / sizeof(cv_trace_msg))) {
             /* flush... */
-            cv_trace_msg_flush();
-            cv_trace_msg_flush_cb(p_trace_msg);
+            cv_trace_msg_local_flush();
+            cv_trace_msg_local_flush_cb(p_trace_msg);
         } else {
             g_trace_msg_cache[g_trace_msg_cache_index] = *p_trace_msg;
             g_trace_msg_cache_index ++;
+            /* Active a timer for flush */
+            /* Do flush from sleep or other blocking api */
         }
     }
 }

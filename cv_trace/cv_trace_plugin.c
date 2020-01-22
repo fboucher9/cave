@@ -18,7 +18,7 @@ static void cv_trace_destructor(void * p_specific) {
     /* no need to call pthread_setspecific(NULL) */
     (void)p_specific;
     cv_trace_flush();
-    cv_trace_msg_flush();
+    cv_trace_msg_local_flush();
     cv_trace_msg_thread_detach();
 }
 
