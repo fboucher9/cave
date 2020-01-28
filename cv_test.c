@@ -236,12 +236,17 @@ static void cv_test_number_dec(
         cv_array_it o_string_it = cv_array_it_initializer_;
         cv_array_it_init(&o_string_it, &o_string);
         cv_number_dec_init(&o_number_dec, i_base);
-        while (cv_number_status_continue == cv_number_dec_step(&o_number_dec,
+        while (cv_number_status_continue == cv_number_dec_write(&o_number_dec,
                 &o_string_it)) {
         }
-        cv_print_char('[');
-        cv_print_number(&o_number_dec.o_desc);
-        cv_print_char(']');
+        {
+            cv_number_desc o_desc = cv_number_desc_initializer_;
+            if (cv_number_dec_read(&o_number_dec, &o_desc)) {
+                cv_print_char('[');
+                cv_print_number(&o_desc);
+                cv_print_char(']');
+            }
+        }
         cv_print_nl();
         cv_number_dec_cleanup(&o_number_dec);
         cv_array_it_cleanup(&o_string_it);

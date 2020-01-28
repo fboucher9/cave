@@ -13,13 +13,14 @@
 #include <cv_algo/cv_array_pred.h>
 #include <cv_number/cv_number_desc.h>
 #include <cv_number/cv_number_status.h>
+#include <cv_misc/cv_bool.h>
 
 /*
  *
  */
 
 struct cv_number_dec {
-    cv_number_desc o_desc;
+    cv_number_desc x_desc;
     /* -- */
     int i_state;
     int i_padding[1u];
@@ -50,9 +51,9 @@ void cv_number_dec_cleanup(
  *          at the end of the string.
  */
 
-int cv_number_dec_step(
-    cv_number_dec * p_this,
-    cv_array_it * p_array_it);
+int cv_number_dec_write( cv_number_dec * p_this, cv_array_it * p_array_it);
+
+cv_bool cv_number_dec_read( cv_number_dec * p_this, cv_number_desc * r_value);
 
 #endif /* #ifndef cv_number_dec_h_ */
 

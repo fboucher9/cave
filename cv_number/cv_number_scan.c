@@ -20,13 +20,18 @@ long cv_number_scan_array( cv_array const * p_array, unsigned int i_base) {
     cv_number_dec o_number_dec = cv_number_dec_initializer_;
     cv_array_it_init(&o_array_it, p_array);
     cv_number_dec_init(&o_number_dec, i_base);
-    while (cv_number_status_continue == cv_number_dec_step(&o_number_dec,
+    while (cv_number_status_continue == cv_number_dec_write(&o_number_dec,
             &o_array_it)) {
     }
-    i_result = (o_number_dec.o_desc.o_data.i_unsigned
-        & cv_signed_long_max_);
-    if (o_number_dec.o_desc.o_data.b_negative) {
-        i_result = -i_result;
+    {
+        cv_number_desc o_desc = cv_number_desc_initializer_;
+        if (cv_number_dec_read(&o_number_dec, &o_desc)) {
+            i_result = (o_desc.o_data.i_unsigned
+                & cv_signed_long_max_);
+            if (o_desc.o_data.b_negative) {
+                i_result = -i_result;
+            }
+        }
     }
     cv_number_dec_cleanup(&o_number_dec);
     cv_array_it_cleanup(&o_array_it);

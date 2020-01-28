@@ -35,9 +35,9 @@ void cv_number_dec_init(
     cv_number_dec * p_this,
     unsigned int i_base) {
     cv_debug_construct_(g_class, p_this);
-    cv_number_desc_init(&p_this->o_desc);
+    cv_number_desc_init(&p_this->x_desc);
     p_this->i_state = dec_machine_leading_whitespace;
-    p_this->o_desc.o_format.i_base = i_base;
+    p_this->x_desc.o_format.i_base = i_base;
 }
 
 /*
@@ -46,7 +46,7 @@ void cv_number_dec_init(
 
 void cv_number_dec_cleanup(
     cv_number_dec * p_this) {
-    cv_number_desc_cleanup(&p_this->o_desc);
+    cv_number_desc_cleanup(&p_this->x_desc);
     cv_debug_destruct_(g_class, p_this);
 }
 
@@ -88,15 +88,15 @@ static int cv_number_dec_process_after_digit(
     unsigned char i_value) {
     unsigned long i_digit = 0;
     if (cv_number_dec_lookup_digit(i_value, &i_digit)) {
-        if (i_digit < p_this->o_desc.o_format.i_base) {
+        if (i_digit < p_this->x_desc.o_format.i_base) {
             if (('A' <= i_value) && ('F' >= i_value)) {
-                p_this->o_desc.o_format.i_flags |= cv_number_flag_upper;
+                p_this->x_desc.o_format.i_flags |= cv_number_flag_upper;
             }
-            p_this->o_desc.o_format.i_width ++;
-            p_this->o_desc.o_format.i_digits ++;
-            p_this->o_desc.o_format.i_precision ++;
-            p_this->o_desc.o_data.i_unsigned =
-                ((p_this->o_desc.o_data.i_unsigned * p_this->o_desc.o_format.i_base)
+            p_this->x_desc.o_format.i_width ++;
+            p_this->x_desc.o_format.i_digits ++;
+            p_this->x_desc.o_format.i_precision ++;
+            p_this->x_desc.o_data.i_unsigned =
+                ((p_this->x_desc.o_data.i_unsigned * p_this->x_desc.o_format.i_base)
                     + i_digit);
             p_this->i_state = dec_machine_after_digit;
             return cv_number_status_continue;
@@ -129,14 +129,14 @@ static int cv_number_dec_process_before_digit(
     unsigned char i_value) {
     unsigned long i_digit = 0;
     if (cv_number_dec_lookup_digit(i_value, &i_digit)) {
-        if (i_digit < p_this->o_desc.o_format.i_base) {
+        if (i_digit < p_this->x_desc.o_format.i_base) {
             if (('A' <= i_value) && ('F' >= i_value)) {
-                p_this->o_desc.o_format.i_flags |= cv_number_flag_upper;
+                p_this->x_desc.o_format.i_flags |= cv_number_flag_upper;
             }
-            p_this->o_desc.o_format.i_width ++;
-            p_this->o_desc.o_format.i_digits ++;
-            p_this->o_desc.o_data.i_unsigned =
-                ((p_this->o_desc.o_data.i_unsigned * p_this->o_desc.o_format.i_base)
+            p_this->x_desc.o_format.i_width ++;
+            p_this->x_desc.o_format.i_digits ++;
+            p_this->x_desc.o_data.i_unsigned =
+                ((p_this->x_desc.o_data.i_unsigned * p_this->x_desc.o_format.i_base)
                     + i_digit);
             p_this->i_state = dec_machine_before_digit;
             return cv_number_status_continue;
@@ -145,7 +145,7 @@ static int cv_number_dec_process_before_digit(
             return cv_number_status_fail;
         }
     } else if ('.' == i_value) {
-        p_this->o_desc.o_format.i_width ++;
+        p_this->x_desc.o_format.i_width ++;
         p_this->i_state = dec_machine_dot;
         return cv_number_status_continue;
     } else {
@@ -164,12 +164,12 @@ static int cv_number_dec_process_first_zero(
     /* Ignore hex prefix? */
     if (('x' == i_value) || ('X' == i_value)) {
         if ('X' == i_value) {
-            p_this->o_desc.o_format.i_flags |= cv_number_flag_upper;
+            p_this->x_desc.o_format.i_flags |= cv_number_flag_upper;
         }
-        p_this->o_desc.o_format.i_flags |= cv_number_flag_prefix;
-        p_this->o_desc.o_format.i_base = 16;
-        p_this->o_desc.o_format.i_width --;
-        p_this->o_desc.o_format.i_digits --;
+        p_this->x_desc.o_format.i_flags |= cv_number_flag_prefix;
+        p_this->x_desc.o_format.i_base = 16;
+        p_this->x_desc.o_format.i_width --;
+        p_this->x_desc.o_format.i_digits --;
         p_this->i_state = dec_machine_before_digit;
         return cv_number_status_continue;
     } else {
@@ -185,8 +185,8 @@ static int cv_number_dec_process_sign(
     cv_number_dec * p_this,
     unsigned char i_value) {
     if ('0' == i_value) {
-        p_this->o_desc.o_format.i_width ++;
-        p_this->o_desc.o_format.i_digits ++;
+        p_this->x_desc.o_format.i_width ++;
+        p_this->x_desc.o_format.i_digits ++;
         p_this->i_state = dec_machine_first_zero;
         return cv_number_status_continue;
     } else {
@@ -203,15 +203,15 @@ static int cv_number_dec_process_leading_whitespace(
     unsigned char i_value) {
     if ((' ' == i_value) || ('\t' == i_value) ||
         ('\r' == i_value) || ('\n' == i_value)) {
-        p_this->o_desc.o_format.i_width ++;
+        p_this->x_desc.o_format.i_width ++;
         p_this->i_state = dec_machine_leading_whitespace;
         return cv_number_status_continue;
     } else if (('-' == i_value) || ('+' == i_value)) {
         if ('+' == i_value) {
-            p_this->o_desc.o_format.i_flags |= cv_number_flag_plus;
+            p_this->x_desc.o_format.i_flags |= cv_number_flag_plus;
         }
-        p_this->o_desc.o_data.b_negative = ('-' == i_value);
-        p_this->o_desc.o_format.i_width ++;
+        p_this->x_desc.o_data.b_negative = ('-' == i_value);
+        p_this->x_desc.o_format.i_width ++;
         p_this->i_state = dec_machine_sign;
         return cv_number_status_continue;
     } else {
@@ -223,9 +223,7 @@ static int cv_number_dec_process_leading_whitespace(
  *
  */
 
-int cv_number_dec_step(
-    cv_number_dec * p_this,
-    cv_array_it * p_array_it) {
+int cv_number_dec_write( cv_number_dec * p_this, cv_array_it * p_array_it) {
     if (dec_machine_invalid == p_this->i_state) {
         return cv_number_status_fail;
     } else if (dec_machine_trailing_whitespace == p_this->i_state) {
@@ -260,6 +258,22 @@ int cv_number_dec_step(
             return cv_number_status_more_data;
         }
     }
+}
+
+/*
+ *
+ */
+
+cv_bool cv_number_dec_read( cv_number_dec * p_this,
+    cv_number_desc * r_value) {
+    cv_bool b_result = cv_false;
+    if (dec_machine_invalid != p_this->i_state) {
+        *r_value = p_this->x_desc;
+        b_result = cv_true;
+    } else {
+        b_result = cv_false;
+    }
+    return b_result;
 }
 
 /* end-of-file: cv_number_dec.c */

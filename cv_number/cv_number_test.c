@@ -180,14 +180,19 @@ static void cv_number_test_dec_step(char const * p_text, unsigned int i_base,
     cv_array_init_0(&o_array, p_text, 0x7fff);
     cv_array_it_init(&o_array_it, &o_array);
     cv_number_dec_init(&o_number_dec, i_base);
-    while (cv_number_status_continue == cv_number_dec_step(&o_number_dec,
+    while (cv_number_status_continue == cv_number_dec_write(&o_number_dec,
             &o_array_it)) {
     }
     /* show result... */
-    cv_accum_result(i_expected_number ==
-        o_number_dec.o_desc.o_data.i_unsigned);
-    cv_accum_result(b_negative ==
-        o_number_dec.o_desc.o_data.b_negative);
+    {
+        cv_number_desc o_desc = cv_number_desc_initializer_;
+        if (cv_number_dec_read(&o_number_dec, &o_desc)) {
+            cv_accum_result(i_expected_number ==
+                o_desc.o_data.i_unsigned);
+            cv_accum_result(b_negative ==
+                o_desc.o_data.b_negative);
+        }
+    }
     cv_number_dec_cleanup(&o_number_dec);
     cv_array_it_cleanup(&o_array_it);
     cv_array_cleanup(&o_array);
