@@ -39,9 +39,18 @@ static unsigned char const g_number_digit_upper[16u] = {
     'D', 'E', 'F'
 };
 
-static cv_bool cv_number_enc_init_digits(
-    cv_number_enc * p_this)
-{
+void cv_number_enc_init( cv_number_enc * p_this) {
+    cv_debug_assert_(p_this, cv_debug_code_null_ptr);
+    cv_debug_construct_(g_class, p_this);
+    cv_memory_zero(p_this, sizeof(*p_this));
+}
+
+void cv_number_enc_cleanup( cv_number_enc * p_this) {
+    cv_debug_assert_(p_this, cv_debug_code_null_ptr);
+    cv_debug_destruct_(g_class, p_this);
+}
+
+static cv_bool cv_number_enc_init_digits( cv_number_enc * p_this) {
     cv_bool b_result = cv_false;
     cv_debug_assert_(p_this, cv_debug_code_null_ptr);
     {
@@ -76,14 +85,10 @@ static cv_bool cv_number_enc_init_digits(
     return b_result;
 }
 
-cv_bool cv_number_enc_init(
-    cv_number_enc * p_this,
-    cv_number_desc const * p_desc)
-{
+cv_bool cv_number_enc_write( cv_number_enc * p_this,
+    cv_number_desc const * p_desc) {
     cv_bool b_result = cv_false;
     cv_debug_assert_(p_this && p_desc, cv_debug_code_null_ptr);
-    cv_debug_construct_(g_class, p_this);
-    cv_memory_zero(p_this, sizeof(*p_this));
     p_this->o_desc = *(p_desc);
     if (cv_number_enc_init_digits(p_this)) {
         short i_width = 0;
@@ -157,13 +162,6 @@ cv_bool cv_number_enc_init(
         b_result = cv_true;
     }
     return b_result;
-}
-
-void cv_number_enc_cleanup(
-    cv_number_enc * p_this)
-{
-    cv_debug_assert_(p_this, cv_debug_code_null_ptr);
-    cv_debug_destruct_(g_class, p_this);
 }
 
 /*
@@ -434,14 +432,15 @@ cv_number_status cv_number_enc_convert(
         cv_array_it_init(&o_array_it, p_input_buffer);
         {
             cv_number_enc o_number_enc = cv_number_enc_initializer_;
-            if (cv_number_enc_init(&o_number_enc, p_desc)) {
+            cv_number_enc_init(&o_number_enc);
+            if (cv_number_enc_write(&o_number_enc, p_desc)) {
                 e_status = cv_number_enc_read(&o_number_enc, &o_array_it);
                 if (cv_number_status_done == e_status) {
                     p_output_buffer->o_min = p_input_buffer->o_min;
                     p_output_buffer->o_max = o_array_it.o_array.o_min;
                 }
-                cv_number_enc_cleanup(&o_number_enc);
             }
+            cv_number_enc_cleanup(&o_number_enc);
         }
         cv_array_it_cleanup(&o_array_it);
     }

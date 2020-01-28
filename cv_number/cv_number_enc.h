@@ -47,12 +47,15 @@ struct cv_number_enc {
 { cv_number_desc_initializer_, 0, 0, 0, 0, 0, 0, {0}, 0, 0, {0}, {0} }
 
 /* state-machine services */
-cv_bool cv_number_enc_init(
-    cv_number_enc * p_this,
-    cv_number_desc const * p_desc);
+void cv_number_enc_init(
+    cv_number_enc * p_this);
 
 void cv_number_enc_cleanup(
     cv_number_enc * p_this);
+
+cv_bool cv_number_enc_write(
+    cv_number_enc * p_this,
+    cv_number_desc const * p_desc);
 
 cv_number_status cv_number_enc_read(
     cv_number_enc * p_this,

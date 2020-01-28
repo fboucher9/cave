@@ -91,14 +91,15 @@ cv_bool cv_array_print_number(
     cv_number_desc const * p_number_desc) {
     cv_bool b_result = cv_false;
     cv_number_enc o_number_enc = cv_number_enc_initializer_;
-    if (cv_number_enc_init(&o_number_enc, p_number_desc)) {
+    cv_number_enc_init(&o_number_enc);
+    if (cv_number_enc_write(&o_number_enc, p_number_desc)) {
         cv_number_status const e_number_status = cv_number_enc_read(
             &o_number_enc, p_array_it);
         if (cv_number_status_done == e_number_status) {
             b_result = cv_true;
         }
-        cv_number_enc_cleanup(&o_number_enc);
     }
+    cv_number_enc_cleanup(&o_number_enc);
     return b_result;
 }
 
