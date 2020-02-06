@@ -85,6 +85,8 @@ void cv_trace_msg_global_flush(void) {
     /* lock */
     cv_trace_msg_lock();
     while (g_trace_msg_queue_count) {
+        /* copy the msg and do write outside of lock */
+        /* simulate serial port by sleeping between each write */
         cv_trace_msg_global_flush_cb(
             g_trace_msg_queue + g_trace_msg_queue_read);
         g_trace_msg_queue_count --;
@@ -115,6 +117,7 @@ static void cv_trace_msg_local_flush_cb(cv_trace_msg * p_trace_msg) {
             cv_trace_msg_global_flush_cb(
                 g_trace_msg_queue + g_trace_msg_queue_read);
             /* Kill oldest message */
+            /* increment a kill count */
             g_trace_msg_queue_count --;
             g_trace_msg_queue_read ++;
             if (g_trace_msg_queue_read >= g_trace_msg_queue_max_count) {
