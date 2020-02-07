@@ -23,6 +23,8 @@ cv_test_srcs = \
     cv_misc/cv_convert.c \
     cv_misc/cv_convert_test.c \
     cv_algo/cv_string0.c \
+    cv_algo/cv_chunk_root.c \
+    cv_algo/cv_chunk_node.c \
     cv_manager.c \
     cv_options/cv_options_desc.c \
     cv_options/cv_options.c \
