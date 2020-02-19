@@ -8,8 +8,8 @@
  */
 
 #include <cv_algo/cv_chunk_pred.h>
-
 #include <cv_algo/cv_list_pred.h>
+#include <cv_algo/cv_list_ptr.h>
 
 /*
  *
@@ -23,7 +23,7 @@ union cv_chunk_ptr {
     cv_list_ptr o_list_ptr;
 };
 
-#define cv_chunk_ptr_initializer_ { 0 }
+#define cv_chunk_ptr_initializer_ cv_ptr_null_
 
 #endif /* #ifndef cv_chunk_ptr_h_ */
 

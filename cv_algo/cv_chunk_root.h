@@ -24,7 +24,6 @@
 struct cv_chunk_root {
     cv_list_root o_root;
     cv_uptr i_total_len;
-    cv_uptr i_node_len;
 };
 
 #define cv_chunk_root_initializer_ { cv_list_root_initializer_, 0, 0 }

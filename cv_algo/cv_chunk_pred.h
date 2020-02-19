@@ -8,10 +8,9 @@
  */
 
 typedef union cv_chunk_ptr cv_chunk_ptr;
-
 typedef struct cv_chunk_node cv_chunk_node;
-
 typedef struct cv_chunk_root cv_chunk_root;
+typedef struct cv_chunk_it cv_chunk_it;
 
 #endif /* #ifndef cv_chunk_pred_h_ */
 

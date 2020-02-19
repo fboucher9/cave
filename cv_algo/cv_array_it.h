@@ -31,6 +31,9 @@ void cv_array_it_init_range(
 void cv_array_it_cleanup(
     cv_array_it * p_this);
 
+cv_bool cv_array_it_is_done(
+    cv_array_it const * p_this);
+
 cv_bool cv_array_it_get_next_char(
     cv_array_it * p_this,
     cv_array_ptr * r_value);
