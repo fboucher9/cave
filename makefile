@@ -26,6 +26,8 @@ cv_test_srcs = \
     cv_algo/cv_chunk_root.c \
     cv_algo/cv_chunk_node.c \
     cv_algo/cv_chunk_it.c \
+    cv_algo/cv_crc32.c \
+    cv_algo/cv_crc32_test.c \
     cv_manager.c \
     cv_options/cv_options_desc.c \
     cv_options/cv_options.c \
