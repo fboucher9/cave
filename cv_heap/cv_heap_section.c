@@ -87,7 +87,7 @@ static void cv_heap_section_node_cleanup(
 static cv_heap_section_node * cv_heap_section_node_create(
     cv_heap_section_node_desc const * p_desc)
 {
-    cv_heap_section_ptr o_ptr = cv_ptr_null_;
+    cv_heap_section_ptr o_ptr = {0};
     cv_debug_assert_(p_desc, cv_debug_code_null_ptr);
     {
         cv_uptr const i_malloc_len = p_desc->i_grow_len;
@@ -139,10 +139,10 @@ void cv_heap_section_cleanup(
     cv_debug_assert_( p_this, cv_debug_code_null_ptr);
     {
         /* Destroy all nodes */
-        cv_list_it o_list_it = cv_list_it_initializer_;
+        cv_list_it o_list_it = {0};
         cv_list_it_init(&o_list_it, &p_this->o_list);
         {
-            cv_heap_section_ptr o_ptr = cv_ptr_null_;
+            cv_heap_section_ptr o_ptr = {0};
             while (cv_list_it_first(&o_list_it, &o_ptr.o_list_ptr)) {
                 cv_heap_section_node_destroy(o_ptr.p_heap_section_node);
             }
@@ -159,7 +159,7 @@ static cv_bool cv_heap_section_grow(
     cv_bool b_result = cv_false;
     cv_debug_assert_( p_this, cv_debug_code_null_ptr);
     {
-        cv_heap_section_ptr o_ptr = cv_ptr_null_;
+        cv_heap_section_ptr o_ptr = {0};
         cv_heap_section_node_desc o_desc =
             cv_heap_section_node_desc_initializer_;
         o_desc.i_grow_len = p_this->o_desc.i_grow_len;
@@ -182,7 +182,7 @@ void * cv_heap_section_alloc(
     cv_heap_section * p_this,
     cv_uptr i_len)
 {
-    cv_array_ptr o_data_ptr = cv_ptr_null_;
+    cv_array_ptr o_data_ptr = {0};
     cv_debug_assert_( p_this, cv_debug_code_null_ptr);
     cv_debug_assert_( i_len > 0, cv_debug_code_invalid_length);
     {

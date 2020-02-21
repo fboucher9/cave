@@ -24,11 +24,11 @@ cv_bool cv_heap_large_init( cv_heap_large * p_this ) {
 }
 
 static void cv_heap_large_empty_free_list( cv_heap_large * p_this) {
-    cv_list_it o_list_it = cv_list_it_initializer_;
+    cv_list_it o_list_it = {0};
     cv_debug_assert_(p_this, cv_debug_code_null_ptr);
     cv_list_it_init(&o_list_it, &p_this->o_free_list);
     {
-        cv_heap_node_ptr o_heap_ptr = cv_ptr_null_;
+        cv_heap_node_ptr o_heap_ptr = {0};
         while (cv_list_it_first(&o_list_it, &o_heap_ptr.o_list_ptr)) {
             void * const p_payload =
                 o_heap_ptr.pc_heap_node->o_payload.o_min.p_void;
@@ -62,8 +62,8 @@ static cv_uptr cv_heap_large_align( cv_uptr i_len) {
 static cv_heap_node * cv_heap_large_find_existing( cv_heap_large * p_this,
     cv_uptr i_aligned_len)
 {
-    cv_heap_node_ptr o_heap_ptr = cv_ptr_null_;
-    cv_list_it o_free_it = cv_list_it_initializer_;
+    cv_heap_node_ptr o_heap_ptr = {0};
+    cv_list_it o_free_it = {0};
     cv_list_it_init(&o_free_it, &p_this->o_free_list);
     {
         cv_bool b_found_existing = cv_false;
@@ -85,7 +85,7 @@ static cv_heap_node * cv_heap_large_lookup_cb( cv_heap_large * p_this,
     cv_debug_assert_(i_len > 0, cv_debug_code_invalid_length);
     {
         cv_uptr const i_aligned_len = cv_heap_large_align(i_len);
-        cv_heap_node_ptr o_heap_ptr = cv_ptr_null_;
+        cv_heap_node_ptr o_heap_ptr = {0};
         /* Look for free node */
         o_heap_ptr.p_heap_node = cv_heap_large_find_existing( p_this,
             i_aligned_len);
@@ -131,7 +131,7 @@ cv_heap_node * cv_heap_large_alloc( cv_heap_secondary * p_heap_secondary,
         cv_uptr const i_aligned_len = cv_heap_large_align(i_len);
         void * const p_payload = cv_runtime_malloc(i_aligned_len);
         if (p_payload) {
-            cv_array o_payload = cv_array_null_;
+            cv_array o_payload = {0};
             cv_array_init_vector(&o_payload, p_payload, i_len);
             p_result = cv_heap_node_create(
                 p_heap_secondary, &o_payload);

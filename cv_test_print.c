@@ -19,7 +19,7 @@ void cv_print_array( cv_array const * p_array) {
 
 void cv_print_vector( void const * p_buffer, cv_uptr i_buffer_len ) {
     cv_file const * p_std_out = cv_file_std_out();
-    cv_array o_array = cv_array_null_;
+    cv_array o_array = {0};
     cv_array_init_vector(&o_array, p_buffer, i_buffer_len);
     cv_file_print_array( p_std_out, &o_array);
     cv_array_cleanup(&o_array);
@@ -27,7 +27,7 @@ void cv_print_vector( void const * p_buffer, cv_uptr i_buffer_len ) {
 
 void cv_print_0( char const * p_array0, cv_uptr i_array0_max_len) {
     cv_file const * p_std_out = cv_file_std_out();
-    cv_array o_array = cv_array_null_;
+    cv_array o_array = {0};
     cv_array_init_0(&o_array, p_array0, i_array0_max_len);
     cv_file_print_array( p_std_out, &o_array);
     cv_array_cleanup(&o_array);

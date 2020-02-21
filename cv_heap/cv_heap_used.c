@@ -68,8 +68,8 @@ static void cv_heap_print_leak_node(cv_heap_node const * p_heap_node) {
  */
 
 static void cv_heap_print_leak_list(cv_heap_used * p_this) {
-    cv_list_it o_iterator = cv_list_it_initializer_;
-    cv_heap_node_ptr o_heap_ptr = cv_ptr_null_;
+    cv_list_it o_iterator = {0};
+    cv_heap_node_ptr o_heap_ptr = {0};
     cv_list_it_init(&o_iterator, &p_this->o_used_list);
     while (cv_list_it_next(&o_iterator, &o_heap_ptr.o_list_ptr)) {
         cv_heap_node const * const p_heap_node = o_heap_ptr.pc_heap_node;
@@ -149,11 +149,11 @@ cv_heap_node * cv_heap_used_lookup(
     cv_heap_node * p_result = 0;
     cv_mutex_lock(&p_this->o_mutex);
     {
-        cv_list_it o_list_it = cv_list_it_initializer_;
+        cv_list_it o_list_it = {0};
         cv_list_it_init(&o_list_it, &p_this->o_used_list);
         {
             cv_bool b_found = cv_false;
-            cv_heap_node_ptr o_heap_node_ptr = cv_ptr_null_;
+            cv_heap_node_ptr o_heap_node_ptr = {0};
             while (!b_found && cv_list_it_next(&o_list_it,
                     &o_heap_node_ptr.o_list_ptr)) {
                 cv_heap_node * p_heap_node =

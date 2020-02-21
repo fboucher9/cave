@@ -14,8 +14,6 @@ struct cv_pool_desc {
     cv_uptr i_len;
 };
 
-#define cv_pool_desc_initializer_ { 0 }
-
 void cv_pool_desc_init( cv_pool_desc * p_desc);
 void cv_pool_desc_cleanup( cv_pool_desc * p_desc);
 

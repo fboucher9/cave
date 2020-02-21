@@ -18,7 +18,7 @@
 
 static long g_debug_class_count = 0;
 
-static cv_debug_class g_debug_class_footer = cv_debug_class_initializer_;
+static cv_debug_class g_debug_class_footer = {0};
 
 static cv_debug_class * g_debug_class_list = &g_debug_class_footer;
 

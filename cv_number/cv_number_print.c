@@ -16,7 +16,7 @@
 cv_uptr cv_number_print( cv_number_desc const * p_desc,
     cv_array const * p_array) {
     cv_uptr i_result = 0;
-    cv_array o_array_out = cv_array_null_;
+    cv_array o_array_out = {0};
     cv_array_init(&o_array_out);
     if (cv_number_status_done == cv_number_enc_convert(
             p_desc, p_array, &o_array_out)) {
@@ -34,7 +34,7 @@ cv_uptr cv_number_print_signed( long i_number,
     cv_number_format const * p_format,
     cv_array const * p_array) {
     cv_uptr i_result = 0;
-    cv_number_desc o_desc = cv_number_desc_initializer_;
+    cv_number_desc o_desc = {0};
     cv_number_desc_init(&o_desc);
     if (i_number < 0) {
         o_desc.o_data.i_unsigned = (-i_number) & cv_signed_long_max_;
@@ -57,7 +57,7 @@ cv_uptr cv_number_print_unsigned( unsigned long i_number,
     cv_number_format const * p_format,
     cv_array const * p_array) {
     cv_uptr i_result = 0;
-    cv_number_desc o_desc = cv_number_desc_initializer_;
+    cv_number_desc o_desc = {0};
     cv_number_desc_init(&o_desc);
     o_desc.o_data.i_unsigned = i_number;
     o_desc.o_data.b_negative = 0;

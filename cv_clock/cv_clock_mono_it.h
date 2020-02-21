@@ -18,8 +18,6 @@ struct cv_clock_mono_it {
     cv_clock_mono o_target;
 };
 
-#define cv_clock_mono_it_initializer_ { cv_clock_mono_initializer_ }
-
 void cv_clock_mono_it_init( cv_clock_mono_it * p_this,
     cv_clock_mono const * p_target);
 

@@ -37,7 +37,7 @@ cv_bool cv_options_pool_load(void) {
     cv_debug_assert_( !g_options_pool_loaded, cv_debug_code_already_loaded);
     cv_debug_construct_(g_class, &g_options_pool);
     {
-        cv_pool_desc o_desc = cv_pool_desc_initializer_;
+        cv_pool_desc o_desc = {0};
         o_desc.i_len = sizeof(cv_options_node);
         if (cv_pool_lock_init(&g_options_pool.o_pool, &o_desc)) {
             g_options_pool_loaded = cv_true;
@@ -63,7 +63,7 @@ void cv_options_pool_unload(void) {
  */
 
 cv_options_node * cv_options_pool_alloc(void) {
-    cv_options_node_ptr o_placement = cv_ptr_null_;
+    cv_options_node_ptr o_placement = {0};
     cv_debug_assert_( g_options_pool_loaded, cv_debug_code_not_loaded);
     o_placement.o_list_ptr.p_void = cv_pool_lock_alloc(
         &g_options_pool.o_pool);
@@ -78,7 +78,7 @@ void cv_options_pool_free( cv_options_node * p_options_node) {
     cv_debug_assert_( g_options_pool_loaded, cv_debug_code_not_loaded);
     cv_debug_assert_( p_options_node, cv_debug_code_null_ptr);
     {
-        cv_options_node_ptr o_placement = cv_ptr_null_;
+        cv_options_node_ptr o_placement = {0};
         o_placement.p_options_node = p_options_node;
         cv_pool_lock_free(&g_options_pool.o_pool,
             o_placement.o_list_ptr.p_void);

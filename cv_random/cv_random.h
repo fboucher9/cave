@@ -20,12 +20,8 @@ struct cv_random {
     } o_data;
 };
 
-#define cv_random_initializer_ { { 0 } }
-
 void cv_random_init( struct cv_random * p_this, unsigned long i_seed );
-
 void cv_random_cleanup( struct cv_random * p_this );
-
 unsigned long cv_random_pick( struct cv_random * p_this,
     unsigned long i_modulo);
 

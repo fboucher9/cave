@@ -25,21 +25,10 @@ struct cv_stack {
     cv_stack_ptr o_next;
 };
 
-#define cv_stack_initializer_ { cv_ptr_null_ }
-
-void cv_stack_init(
-    cv_stack * p_this);
-
-void cv_stack_cleanup(
-    cv_stack * p_this);
-
-void cv_stack_push(
-    cv_stack * p_this,
-    cv_stack * p_object);
-
-cv_bool cv_stack_pop(
-    cv_stack * p_this,
-    cv_stack_ptr * r_value);
+void cv_stack_init( cv_stack * p_this);
+void cv_stack_cleanup( cv_stack * p_this);
+void cv_stack_push( cv_stack * p_this, cv_stack * p_object);
+cv_bool cv_stack_pop( cv_stack * p_this, cv_stack_ptr * r_value);
 
 #endif /* #ifndef cv_stack_h_ */
 

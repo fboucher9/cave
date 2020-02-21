@@ -12,8 +12,6 @@ struct cv_array_it {
     cv_array o_array;
 };
 
-#define cv_array_it_initializer_ { cv_array_null_ }
-
 void cv_array_it_init(
     cv_array_it * p_this,
     cv_array const * p_array);

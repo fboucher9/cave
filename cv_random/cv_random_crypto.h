@@ -23,12 +23,6 @@ struct cv_random_crypto {
 #endif /* #if defined cv_linux_ */
 };
 
-#if defined cv_linux_
-#define cv_random_crypto_initializer_ { cv_file_disk_initializer_ }
-#else /* #if defined cv_linux_ */
-#define cv_random_crypto_initializer_ { 0 }
-#endif /* #if defined cv_linux_ */
-
 cv_bool cv_random_crypto_init(struct cv_random_crypto * p_this);
 void cv_random_crypto_cleanup(struct cv_random_crypto * p_this);
 unsigned long cv_random_crypto_pick( struct cv_random_crypto * p_this,

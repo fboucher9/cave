@@ -31,12 +31,12 @@ static void cv_trace_test_async(
  */
 
 void cv_trace_test(void) {
-    cv_clock_duration o_duration = cv_clock_duration_initializer_;
+    cv_clock_duration o_duration = {0};
     cv_clock_duration_init_msec(&o_duration, 0, 100);
     {
         /* Do trace from a thread */
-        cv_thread_desc o_thread_desc = cv_thread_desc_initializer_;
-        cv_thread o_thread = cv_thread_initializer_;
+        cv_thread_desc o_thread_desc = {0};
+        cv_thread o_thread = {0};
         cv_thread_desc_init(&o_thread_desc);
         o_thread_desc.o_callback.p_func = & cv_trace_test_async;
         o_thread_desc.o_callback.p_context = 0;

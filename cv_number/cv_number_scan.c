@@ -16,15 +16,15 @@
 
 long cv_number_scan_array( cv_array const * p_array, unsigned int i_base) {
     long i_result = 0;
-    cv_array_it o_array_it = cv_array_it_initializer_;
-    cv_number_dec o_number_dec = cv_number_dec_initializer_;
+    cv_array_it o_array_it = {0};
+    cv_number_dec o_number_dec = {0};
     cv_array_it_init(&o_array_it, p_array);
     cv_number_dec_init(&o_number_dec, i_base);
     while (cv_number_status_continue == cv_number_dec_write(&o_number_dec,
             &o_array_it)) {
     }
     {
-        cv_number_desc o_desc = cv_number_desc_initializer_;
+        cv_number_desc o_desc = {0};
         if (cv_number_dec_read(&o_number_dec, &o_desc)) {
             i_result = (o_desc.o_data.i_unsigned
                 & cv_signed_long_max_);
@@ -45,7 +45,7 @@ long cv_number_scan_array( cv_array const * p_array, unsigned int i_base) {
 long cv_number_scan_range( void const * p_range_min,
     void const * p_range_max, unsigned int i_base) {
     long i_result = 0;
-    cv_array o_array = cv_array_null_;
+    cv_array o_array = {0};
     cv_array_init_range(&o_array, p_range_min, p_range_max);
     i_result = cv_number_scan_array(&o_array, i_base);
     cv_array_cleanup(&o_array);
@@ -59,7 +59,7 @@ long cv_number_scan_range( void const * p_range_min,
 long cv_number_scan_vector( void const * p_buffer, cv_uptr i_buffer_len,
     unsigned int i_base) {
     long i_result = 0;
-    cv_array o_array = cv_array_null_;
+    cv_array o_array = {0};
     cv_array_init_vector(&o_array, p_buffer, i_buffer_len);
     i_result = cv_number_scan_array(&o_array, i_base);
     cv_array_cleanup(&o_array);
@@ -73,7 +73,7 @@ long cv_number_scan_vector( void const * p_buffer, cv_uptr i_buffer_len,
 long cv_number_scan_0( char const * p_text, cv_uptr i_max_len,
     unsigned int i_base) {
     long i_result = 0;
-    cv_array o_array = cv_array_null_;
+    cv_array o_array = {0};
     cv_array_init_0(&o_array, p_text, i_max_len);
     i_result = cv_number_scan_array(&o_array, i_base);
     cv_array_cleanup(&o_array);

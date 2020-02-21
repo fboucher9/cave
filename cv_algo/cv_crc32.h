@@ -22,17 +22,11 @@ struct cv_crc32 {
     unsigned long a_private[2u];
 }; /* struct cv_crc32 */
 
-#define cv_crc32_initializer_ { { 0, 0 } }
-
 unsigned long cv_crc32_convert( struct cv_array const * p_buffer);
-
 void cv_crc32_init(struct cv_crc32 * p_this);
-
 void cv_crc32_cleanup(struct cv_crc32 * p_this);
-
 void cv_crc32_write( struct cv_crc32 * p_this,
     struct cv_array const * p_buffer);
-
 unsigned long cv_crc32_result( struct cv_crc32 const * p_this);
 
 #endif /* #ifndef cv_crc32_h_ */

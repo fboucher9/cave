@@ -81,7 +81,7 @@ static unsigned long a_crc32_table[256u] = {
 
 unsigned long cv_crc32_convert(struct cv_array const * p_buffer) {
     unsigned long i_crc32_value = 0;
-    struct cv_crc32 o_crc32 = cv_crc32_initializer_;
+    struct cv_crc32 o_crc32 = {0};
     cv_crc32_init( &o_crc32);
     cv_crc32_write( &o_crc32, p_buffer);
     i_crc32_value = cv_crc32_result( &o_crc32);

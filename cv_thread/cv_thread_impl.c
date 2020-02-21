@@ -28,7 +28,7 @@ void cv_thread_unload(void) {
 static void * cv_thread_start(
     void * p_void)
 {
-    cv_thread_desc_ptr o_context_ptr = cv_ptr_null_;
+    cv_thread_desc_ptr o_context_ptr = {0};
     o_context_ptr.p_void = p_void;
 
     cv_debug_assert_(g_thread_loaded, cv_debug_code_not_loaded);
@@ -62,7 +62,7 @@ cv_bool cv_thread_init(
         cv_debug_construct_(g_class, p_this);
         cv_memory_zero(p_this, sizeof(cv_thread));
         {
-            cv_thread_desc_ptr o_desc_ptr = cv_ptr_null_;
+            cv_thread_desc_ptr o_desc_ptr = {0};
             o_desc_ptr.p_void = cv_heap_alloc(sizeof(cv_thread_desc));
             if (o_desc_ptr.p_void) {
                 cv_thread_desc_init(o_desc_ptr.p_thread_desc);

@@ -43,29 +43,17 @@ struct cv_number_enc {
     unsigned char a_digit[29u];
 };
 
-#define cv_number_enc_initializer_ \
-{ cv_number_desc_initializer_, 0, 0, 0, 0, 0, 0, {0}, 0, 0, {0}, {0} }
-
 /* state-machine services */
-void cv_number_enc_init(
-    cv_number_enc * p_this);
-
-void cv_number_enc_cleanup(
-    cv_number_enc * p_this);
-
-cv_bool cv_number_enc_write(
-    cv_number_enc * p_this,
+void cv_number_enc_init( cv_number_enc * p_this);
+void cv_number_enc_cleanup( cv_number_enc * p_this);
+cv_bool cv_number_enc_write( cv_number_enc * p_this,
     cv_number_desc const * p_desc);
-
-cv_number_status cv_number_enc_read(
-    cv_number_enc * p_this,
+cv_number_status cv_number_enc_read( cv_number_enc * p_this,
     cv_array_it * p_array_it);
 
 /* all-in-one service */
-cv_number_status cv_number_enc_convert(
-    cv_number_desc const * p_desc,
-    cv_array const * p_input_array,
-    cv_array * p_output_array);
+cv_number_status cv_number_enc_convert( cv_number_desc const * p_desc,
+    cv_array const * p_input_array, cv_array * p_output_array);
 
 #endif /* #ifndef cv_number_enc_h_ */
 

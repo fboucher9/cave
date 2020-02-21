@@ -428,10 +428,10 @@ cv_number_status cv_number_enc_convert(
     cv_number_status e_status = cv_number_status_fail;
     cv_debug_assert_(p_desc && p_input_buffer && p_output_buffer, cv_debug_code_null_ptr);
     {
-        cv_array_it o_array_it = cv_array_it_initializer_;
+        cv_array_it o_array_it = {0};
         cv_array_it_init(&o_array_it, p_input_buffer);
         {
-            cv_number_enc o_number_enc = cv_number_enc_initializer_;
+            cv_number_enc o_number_enc = {0};
             cv_number_enc_init(&o_number_enc);
             if (cv_number_enc_write(&o_number_enc, p_desc)) {
                 e_status = cv_number_enc_read(&o_number_enc, &o_array_it);

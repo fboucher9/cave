@@ -22,9 +22,6 @@ struct cv_pool {
     cv_stack o_free_list;
 };
 
-#define cv_pool_initializer_ \
-{ cv_pool_desc_initializer_, cv_stack_initializer_ }
-
 void cv_pool_init( cv_pool * p_this, cv_pool_desc const * p_desc);
 void cv_pool_cleanup( cv_pool * p_this);
 void * cv_pool_alloc( cv_pool * p_this);

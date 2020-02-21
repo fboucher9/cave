@@ -26,12 +26,13 @@ struct cv_chunk_root {
     cv_uptr i_total_len;
 };
 
-#define cv_chunk_root_initializer_ { cv_list_root_initializer_, 0, 0 }
-
 void cv_chunk_root_init(cv_chunk_root * p_this);
 void cv_chunk_root_cleanup(cv_chunk_root * p_this);
 void cv_chunk_root_empty(cv_chunk_root * p_this);
-cv_bool cv_chunk_root_write(cv_chunk_root * p_this, cv_array_it * p_array_it);
+cv_bool cv_chunk_root_write_char( cv_chunk_root * p_this,
+    unsigned char i_value);
+cv_bool cv_chunk_root_write_array(cv_chunk_root * p_this,
+    cv_array const * p_array);
 cv_uptr cv_chunk_root_len(cv_chunk_root const * p_this);
 void cv_chunk_root_read(cv_chunk_root const * p_this,
     cv_array_it * p_array_it);

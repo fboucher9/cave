@@ -56,7 +56,7 @@ static unsigned long cv_random_crypto_pick_linux(
     struct cv_random_crypto * p_this, unsigned long i_modulo) {
     unsigned long i_result = 0;
     unsigned char uc_data[4u];
-    cv_array o_data = cv_array_null_;
+    cv_array o_data = {0};
     cv_array_init_vector(&o_data, uc_data, sizeof(o_data));
     {
         cv_sptr const i_read_result = cv_file_read(

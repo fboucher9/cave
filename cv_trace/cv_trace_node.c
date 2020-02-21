@@ -50,7 +50,7 @@ static cv_thread_local_ cv_clock_mono g_profile_table[8u];
 
 static cv_thread_local_ long g_profile_index = 0;
 
-static cv_thread_local_ cv_trace_msg g_trace_msg = cv_trace_msg_initializer_;
+static cv_thread_local_ cv_trace_msg g_trace_msg = {0};
 
 /*
  *
@@ -163,8 +163,7 @@ static void cv_trace_update_profile( cv_trace * p_trace,
             if (g_profile_index > 0) {
                 g_profile_index --;
                 if ((g_profile_index >= 0) && (g_profile_index < 8)) {
-                    cv_clock_duration o_duration =
-                        cv_clock_duration_initializer_;
+                    cv_clock_duration o_duration = {0};
                     cv_clock_counter_inc(&p_trace->o_local_stats.o_count);
                     if (0 < cv_clock_diff(&g_trace_msg.o_clock_mono.o_clock,
                         &(g_profile_table[g_profile_index].o_clock),
@@ -276,7 +275,7 @@ static void cv_trace_profile_report_cb(
         cv_ull const ll_count = cv_clock_counter_get(
             &p_iterator->o_global_stats.o_count);
         unsigned long int const u_count = (ll_count & cv_unsigned_long_max_);
-        cv_clock_usec o_clock_usec = cv_clock_usec_initializer_;
+        cv_clock_usec o_clock_usec = {0};
         cv_clock_get_usec(&p_iterator->o_global_stats.o_elapsed,
             &o_clock_usec);
         printf("%10lu.%06lu:%lu:[%s]\n",

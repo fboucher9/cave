@@ -26,7 +26,7 @@ cv_bool cv_array_print( cv_array_it * p_array_it,
 cv_bool cv_array_print_0( cv_array_it * p_array_it,
     char const * p_buf_0, cv_uptr i_max_len) {
     cv_bool b_result = cv_false;
-    cv_array o_array = cv_array_null_;
+    cv_array o_array = {0};
     cv_array_init_0(&o_array, p_buf_0, i_max_len);
     b_result = cv_array_print(p_array_it, &o_array);
     cv_array_cleanup(&o_array);
@@ -40,7 +40,7 @@ cv_bool cv_array_print_0( cv_array_it * p_array_it,
 cv_bool cv_array_print_vector( cv_array_it * p_array_it,
     void const * p_buf, cv_uptr i_buf_len) {
     cv_bool b_result = cv_false;
-    cv_array o_array = cv_array_null_;
+    cv_array o_array = {0};
     cv_array_init_vector(&o_array, p_buf, i_buf_len);
     b_result = cv_array_print(p_array_it, &o_array);
     cv_array_cleanup(&o_array);
@@ -56,7 +56,7 @@ cv_bool cv_array_print_range(
     void const * p_range_min,
     void const * p_range_max) {
     cv_bool b_result = cv_false;
-    cv_array o_array = cv_array_null_;
+    cv_array o_array = {0};
     cv_array_init_range(&o_array, p_range_min, p_range_max);
     b_result = cv_array_print(p_array_it, &o_array);
     cv_array_cleanup(&o_array);
@@ -90,7 +90,7 @@ cv_bool cv_array_print_number(
     cv_array_it * p_array_it,
     cv_number_desc const * p_number_desc) {
     cv_bool b_result = cv_false;
-    cv_number_enc o_number_enc = cv_number_enc_initializer_;
+    cv_number_enc o_number_enc = {0};
     cv_number_enc_init(&o_number_enc);
     if (cv_number_enc_write(&o_number_enc, p_number_desc)) {
         cv_number_status const e_number_status = cv_number_enc_read(
@@ -111,7 +111,7 @@ cv_bool cv_array_print_signed(
     cv_array_it * p_array_it,
     long i_number,
     cv_number_format const * p_format) {
-    cv_number_desc o_number_desc = cv_number_desc_initializer_;
+    cv_number_desc o_number_desc = {0};
     if (i_number >= 0) {
         o_number_desc.o_data.i_unsigned = (i_number & cv_signed_long_max_);
         o_number_desc.o_data.b_negative = 0;
@@ -131,7 +131,7 @@ cv_bool cv_array_print_unsigned(
     cv_array_it * p_array_it,
     unsigned long i_number,
     cv_number_format const * p_format) {
-    cv_number_desc o_number_desc = cv_number_desc_initializer_;
+    cv_number_desc o_number_desc = {0};
     o_number_desc.o_data.i_unsigned = i_number;
     o_number_desc.o_data.b_negative = 0;
     o_number_desc.o_format = *p_format;

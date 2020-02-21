@@ -16,7 +16,7 @@ static cv_bool cv_buffer_realloc(
     cv_debug_assert_( p_this, cv_debug_code_null_ptr);
     cv_debug_assert_( i_length > 0, cv_debug_code_invalid_length);
     {
-        cv_array_ptr o_array_ptr = cv_ptr_null_;
+        cv_array_ptr o_array_ptr = {0};
         o_array_ptr.p_void = cv_heap_alloc(i_length);
         if (o_array_ptr.p_void) {
             cv_array_init_vector(&p_this->o_array,

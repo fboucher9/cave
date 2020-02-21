@@ -26,9 +26,6 @@ struct cv_number_dec {
     int i_padding[1u];
 };
 
-#define cv_number_dec_initializer_ \
-{ cv_number_desc_initializer_, 0, {0} }
-
 /*
  *
  */

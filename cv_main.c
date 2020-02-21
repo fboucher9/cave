@@ -10,7 +10,7 @@
 
 #include <cv_misc/cv_bool.h>
 
-static cv_options g_main_options = cv_options_initializer_;
+static cv_options g_main_options = {0};
 
 static cv_bool g_main_init_done = cv_false;
 
@@ -26,7 +26,7 @@ cv_options * cv_main_init(
     if (cv_manager_load()) {
         cv_options_init(&g_main_options);
         {
-            cv_options_desc o_options_desc = cv_options_desc_initializer_;
+            cv_options_desc o_options_desc = {0};
             cv_options_desc_init(&o_options_desc, argv, argv + argc);
             if (cv_options_setup(&g_main_options, &o_options_desc)) {
                 g_main_init_done = cv_true;

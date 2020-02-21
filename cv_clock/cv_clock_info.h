@@ -32,9 +32,6 @@ struct cv_clock_info {
     } o_time;
 };
 
-#define cv_clock_info_initializer_ \
-{ { 0, 0, 0, {0} }, { 0, 0, 0, {0}, 0, {0} } }
-
 #endif /* #ifndef cv_clock_info_h_ */
 
 /* end-of-file: cv_clock_pred.h */

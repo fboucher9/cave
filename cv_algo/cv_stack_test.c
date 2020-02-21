@@ -53,7 +53,7 @@ struct cv_number_stack_node {
 
 void cv_stack_test(void) {
     /* Create a stack */
-    cv_stack o_root = cv_stack_initializer_;
+    cv_stack o_root = {0};
     cv_stack_init(&o_root);
 
     /* Create some numbers and push on stack */
@@ -64,7 +64,7 @@ void cv_stack_test(void) {
             (sizeof(g_test_vector)/sizeof(g_test_vector[0u]));
         cv_uptr i_index = 0;
         for (i_index = 0; i_index < g_test_vector_count; i_index++) {
-            cv_number_stack_ptr o_node_ptr = cv_ptr_null_;
+            cv_number_stack_ptr o_node_ptr = {0};
             o_node_ptr.p_void = cv_heap_alloc(
                 sizeof(cv_number_stack_node));
             if (o_node_ptr.p_void) {
@@ -79,10 +79,10 @@ void cv_stack_test(void) {
 
     /* Dump stack */
     {
-        cv_stack_it o_stack_it = cv_stack_it_initializer_;
+        cv_stack_it o_stack_it = {0};
         cv_stack_it_init(&o_stack_it, &o_root);
         {
-            cv_number_stack_ptr o_node_ptr = cv_ptr_null_;
+            cv_number_stack_ptr o_node_ptr = {0};
             while (cv_stack_it_next(&o_stack_it, &o_node_ptr.o_stack_ptr)) {
                 cv_number_stack_node const * const p_node =
                     o_node_ptr.pc_number_stack_node;
@@ -101,7 +101,7 @@ void cv_stack_test(void) {
 
     /* Cleanup stack */
     {
-        cv_number_stack_ptr o_node_ptr = cv_ptr_null_;
+        cv_number_stack_ptr o_node_ptr = {0};
         while (cv_stack_pop(&o_root, &o_node_ptr.o_stack_ptr)) {
             cv_stack_cleanup(&o_node_ptr.p_number_stack_node->o_stack);
             cv_heap_free(o_node_ptr.p_void);

@@ -19,8 +19,6 @@ struct cv_clock_msec {
     unsigned long i_mseconds;
 };
 
-#define cv_clock_msec_initializer_ { 0, 0 }
-
 /*
  *
  */
@@ -30,8 +28,6 @@ struct cv_clock_usec {
     unsigned long i_useconds;
 };
 
-#define cv_clock_usec_initializer_ { 0, 0 }
-
 /*
  *
  */
@@ -40,8 +36,6 @@ struct cv_clock_nsec {
     unsigned long i_seconds;
     unsigned long i_nseconds;
 };
-
-#define cv_clock_nsec_initializer_ { 0, 0 }
 
 cv_ull cv_clock_get( cv_clock const * p_this);
 

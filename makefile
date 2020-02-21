@@ -34,6 +34,7 @@ cv_test_srcs = \
     cv_options/cv_options_it.c \
     cv_options/cv_options_node.c \
     cv_options/cv_options_pool.c \
+    cv_options/cv_options_decoder.c \
     cv_heap/cv_heap.c \
     cv_heap/cv_heap_primary.c \
     cv_heap/cv_heap_secondary.c \
@@ -154,6 +155,8 @@ cv_gnu_warnings = \
     -Wmissing-declarations \
     -Wmissing-format-attribute \
     -Wmissing-include-dirs \
+    -Wno-missing-field-initializers \
+    -Wno-missing-braces \
     -Wmultichar \
     -Woverflow \
     -Woverlength-strings \
@@ -180,6 +183,8 @@ cv_clang_warnings = \
     -ansi \
     -pedantic \
     -Weverything \
+    -Wno-missing-braces \
+    -Wno-missing-field-initializers \
     -Werror
 
 cv_cflags = \
@@ -277,7 +282,7 @@ $(cv_obj_path)/test.clangxx.exe : $(cv_src_path)/makefile $(cv_test_srcs_abs)
 $(cv_obj_path)/test.bare.exe : $(cv_src_path)/makefile $(cv_test_srcs_abs)
 	@echo ld $(notdir $@)
 	$(cv_verbose)mkdir -p $(dir $@)
-	$(cv_verbose)echo -m64 -x c -o $@ -I . -D cv_debug_ -ansi -pedantic -nostdinc -Wall -Wextra -fno-stack-protector $(cv_test_srcs_abs) -nodefaultlibs -nostartfiles > $@.cmd
+	$(cv_verbose)echo -m64 -x c -o $@ -I . -D cv_debug_ -ansi -pedantic -nostdinc -Wall -Wextra -Wno-missing-braces -Wno-missing-field-initializers -fno-stack-protector $(cv_test_srcs_abs) -nodefaultlibs -nostartfiles > $@.cmd
 	$(cv_verbose)gcc @$@.cmd
 
 -include $(cv_test_deps_abs)

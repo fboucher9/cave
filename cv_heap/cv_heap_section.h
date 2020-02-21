@@ -43,9 +43,6 @@ struct cv_heap_section_desc
 
 };
 
-/* Initializer list for cv_heap_section_desc structure */
-#define cv_heap_section_desc_initializer_ { 0 }
-
 /*
 
 Structure: cv_heap_section
@@ -61,14 +58,6 @@ struct cv_heap_section
     /* -- */
     cv_array_it o_array_it;
 };
-
-/* Initializer list for cv_heap_section structure */
-#define cv_heap_section_initializer_ \
-{ \
-    cv_heap_section_desc_initializer_, \
-    cv_list_root_initializer_, \
-    cv_array_it_initializer_ \
-}
 
 /* Functions: see cv_heap_section.c for more details */
 

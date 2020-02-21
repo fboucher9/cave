@@ -42,7 +42,7 @@ static void cv_file_poll_linux_prepare( struct pollfd * p_pollfd,
     unsigned i_index = 0;
     for (i_index = 0; i_index < i_count; i_index++) {
         cv_file_poll * const p_file_poll = p_poll_min + i_index;
-        p_pollfd[i_index].fd = p_file_poll->p_file->i_index;
+        p_pollfd[i_index].fd = p_file_poll->p_file->i_handle - 1;
         if (cv_file_poll_flag_read & p_file_poll->i_flags_in) {
             p_pollfd[i_index].events |= POLLIN;
         }
@@ -81,7 +81,7 @@ static cv_bool cv_file_poll_linux_dispatch( cv_file_poll * p_poll_min,
     (void)(p_timeout);
     cv_debug_assert_(p_poll_min && i_count > 0, cv_debug_code_null_ptr);
     {
-        pollfd_ptr o_pollfd_ptr = cv_ptr_null_;
+        pollfd_ptr o_pollfd_ptr = {0};
         struct pollfd a_pollfd[1u];
         cv_uptr const i_pollfd_len = sizeof(struct pollfd) * i_count;
         if (1 >= i_count) {

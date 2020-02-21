@@ -37,8 +37,6 @@ struct cv_specific {
     } u;
 };
 
-#define cv_specific_initializer_ { { { 0 } } }
-
 cv_bool cv_specific_init( struct cv_specific * p_this,
     cv_specific_destructor * p_destructor);
 

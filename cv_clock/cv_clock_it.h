@@ -22,8 +22,6 @@ struct cv_clock_it {
     int i_padding[3u];
 };
 
-#define cv_clock_it_initializer_ { cv_clock_initializer_, 0, {0} }
-
 void cv_clock_it_init( cv_clock_it * p_this,
     cv_clock const * p_target, int i_epoch);
 
@@ -39,8 +37,6 @@ cv_bool cv_clock_it_next( cv_clock_it * p_this,
 struct cv_clock_unix_it {
     cv_clock_unix o_target;
 };
-
-#define cv_clock_unix_it_initializer_ { cv_clock_unix_initializer_ }
 
 void cv_clock_unix_it_init( cv_clock_unix_it * p_this,
     cv_clock_unix const * p_target);

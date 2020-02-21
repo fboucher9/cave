@@ -25,8 +25,6 @@ struct cv_chunk_node {
     unsigned char a_data[cv_chunk_data_len];
 };
 
-#define cv_chunk_node_initializer_ { cv_list_node_initializer_, {0} }
-
 void cv_chunk_node_init(cv_chunk_node * p_this);
 void cv_chunk_node_cleanup(cv_chunk_node * p_this);
 cv_bool cv_chunk_node_is_full(cv_chunk_node const * p_this);

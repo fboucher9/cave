@@ -31,16 +31,6 @@ struct cv_list_root
     cv_list_node o_node;
 };
 
-/*
-
-Macro: cv_list_root_initializer_
-
-Description: Initializer list for cv_list_root structure.  This sets all members
-to null pointer values.
-
-*/
-#define cv_list_root_initializer_ { cv_list_node_initializer_ }
-
 /* see cv_list_root.c for more details. */
 void cv_list_root_init(
     cv_list_root * p_this);

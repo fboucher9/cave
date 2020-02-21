@@ -42,14 +42,13 @@ cv_bool cv_clock_it_next( cv_clock_it * p_this,
     cv_debug_assert_(p_this && p_max_sleep, cv_debug_code_null_ptr);
     /* Calculate duration from now to target */
     {
-        cv_clock o_now = cv_clock_initializer_;
+        cv_clock o_now = {0};
         cv_clock_init(&o_now);
         if (cv_clock_read(&o_now, p_this->i_epoch)) {
-            cv_clock_duration o_duration = cv_clock_duration_initializer_;
+            cv_clock_duration o_duration = {0};
             cv_clock_duration_init(&o_duration);
             if (0 <= cv_clock_diff(&p_this->o_target, &o_now, &o_duration)) {
-                cv_clock_duration o_min_sleep =
-                    cv_clock_duration_initializer_;
+                cv_clock_duration o_min_sleep = {0};
                 cv_clock_duration_init(&o_min_sleep);
                 if (cv_clock_duration_min(&o_duration, p_max_sleep,
                         &o_min_sleep)) {

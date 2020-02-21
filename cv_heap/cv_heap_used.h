@@ -28,7 +28,7 @@ struct cv_heap_used {
 };
 
 #define cv_heap_used_initializer_ \
-{ cv_mutex_initializer_, cv_list_root_initializer_, 0, {0} }
+{ cv_mutex_initializer_ }
 
 cv_bool cv_heap_used_init(
     cv_heap_used * p_this);

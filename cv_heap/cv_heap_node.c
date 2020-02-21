@@ -39,7 +39,7 @@ cv_heap_node * cv_heap_node_create(
     cv_debug_assert_( p_heap_secondary && p_payload,
         cv_debug_code_null_ptr);
     {
-        cv_heap_node_ptr o_heap_ptr = cv_ptr_null_;
+        cv_heap_node_ptr o_heap_ptr = {0};
         cv_uptr const i_node_len = sizeof(cv_heap_node);
         o_heap_ptr.o_list_ptr.p_void = cv_heap_secondary_alloc(
             p_heap_secondary, i_node_len);

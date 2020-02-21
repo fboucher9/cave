@@ -18,8 +18,6 @@ struct cv_list_it {
     cv_list_ptr o_list;
 };
 
-#define cv_list_it_initializer_ { cv_ptr_null_, cv_ptr_null_ }
-
 void cv_list_it_init( cv_list_it * p_this, cv_list_root const * p_list);
 void cv_list_it_cleanup( cv_list_it * p_this);
 cv_bool cv_list_it_first( cv_list_it * p_this, cv_list_ptr * r_cur);

@@ -18,7 +18,7 @@ static cv_uptr const g_heap_secondary_grow_len = 4096;
 
 cv_bool cv_heap_secondary_init( cv_heap_secondary * p_this) {
     cv_bool b_result = cv_false;
-    cv_heap_section_desc o_desc = cv_heap_section_desc_initializer_;
+    cv_heap_section_desc o_desc = {0};
     cv_debug_assert_(p_this, cv_debug_code_null_ptr);
     cv_debug_construct_(g_class, p_this);
     o_desc.i_grow_len = g_heap_secondary_grow_len;

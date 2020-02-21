@@ -21,8 +21,6 @@ struct cv_chunk_it {
     cv_list_it o_list_it;
 };
 
-#define cv_chunk_it_initializer_ { cv_list_it_initializer_ }
-
 void cv_chunk_it_init(cv_chunk_it * p_this, cv_chunk_root const * p_root);
 void cv_chunk_it_cleanup(cv_chunk_it * p_this);
 cv_bool cv_chunk_it_next(cv_chunk_it * p_this, cv_chunk_ptr * r_ptr);

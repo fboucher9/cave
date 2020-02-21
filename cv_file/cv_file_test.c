@@ -30,12 +30,12 @@ static void cv_file_test_dump_buffer(
     unsigned char const * a_read_buffer,
     cv_uptr i_read_result)
 {
-    cv_array o_read_result = cv_array_null_;
+    cv_array o_read_result = {0};
     cv_array_init_vector(&o_read_result,
             a_read_buffer,
             i_read_result);
     {
-        cv_array_it o_array_it = cv_array_it_initializer_;
+        cv_array_it o_array_it = {0};
         cv_array_it_init(&o_array_it, &o_read_result);
         {
             unsigned char c_data = 0;
@@ -58,7 +58,7 @@ static void process_file_contents(
     cv_bool b_continue = cv_true;
     while (b_continue) {
         unsigned char a_read_buffer[8u];
-        cv_array o_read_buffer = cv_array_null_;
+        cv_array o_read_buffer = {0};
         cv_array_init_vector(&o_read_buffer, a_read_buffer,
                 sizeof(a_read_buffer));
         {
@@ -110,7 +110,7 @@ static cv_bool cv_file_test_init_disk_read(cv_file_disk * p_file_disk,
 
 /* */
 static void cv_file_test_disk_read(void) {
-    cv_file_disk o_file_disk = cv_file_disk_initializer_;
+    cv_file_disk o_file_disk = {0};
     if (cv_file_test_init_disk_read(&o_file_disk, get_input_bin_name())) {
         process_file_contents(&o_file_disk);
         cv_file_disk_cleanup(&o_file_disk);
@@ -119,7 +119,7 @@ static void cv_file_test_disk_read(void) {
 
 /* */
 static void cv_file_test_disk_read_fail(void) {
-    cv_file_disk o_file_disk = cv_file_disk_initializer_;
+    cv_file_disk o_file_disk = {0};
     cv_file_test_init_disk_read(&o_file_disk, get_input_fail_name());
 }
 
@@ -153,7 +153,7 @@ static void cv_file_test_disk_write(void) {
     o_desc.p_name = get_output_bin_name();
     o_desc.e_mode = cv_file_disk_mode_write;
     {
-        cv_file_disk o_file_disk = cv_file_disk_initializer_;
+        cv_file_disk o_file_disk = {0};
         if (cv_file_disk_init(&o_file_disk, &o_desc)) {
             cv_file_print_array(&o_file_disk.o_file, get_output_body());
             cv_file_print_nl(&o_file_disk.o_file);
@@ -164,12 +164,12 @@ static void cv_file_test_disk_write(void) {
 }
 
 static void cv_file_test_disk_append(void) {
-    cv_file_disk_desc o_desc = cv_file_disk_desc_initializer_;
+    cv_file_disk_desc o_desc = {0};
     cv_file_disk_desc_init(&o_desc);
     o_desc.p_name = get_output_bin_name();
     o_desc.e_mode = cv_file_disk_mode_append;
     {
-        cv_file_disk o_file_disk = cv_file_disk_initializer_;
+        cv_file_disk o_file_disk = {0};
         if (cv_file_disk_init(&o_file_disk, &o_desc)) {
             cv_file_print_array(&o_file_disk.o_file, get_append_body());
             cv_file_print_nl(&o_file_disk.o_file);
@@ -254,7 +254,7 @@ static void cv_file_test_print(void) {
     cv_file_print_0(p_stdout, "abc", 10);
     cv_file_print_nl(p_stdout);
     {
-        cv_number_desc o_number_desc = cv_number_desc_initializer_;
+        cv_number_desc o_number_desc = {0};
         o_number_desc.o_data.i_unsigned = 12345;
         o_number_desc.o_data.b_negative = 1;
         o_number_desc.o_format = *cv_number_format_dec();
@@ -274,11 +274,11 @@ static void cv_file_test_print(void) {
  */
 
 static void cv_file_test_poll(void) {
-    cv_file_disk o_disk_read = cv_file_disk_initializer_;
+    cv_file_disk o_disk_read = {0};
     cv_file const * p_stdin = cv_file_std_in();
     cv_file const * p_stdout = cv_file_std_out();
     {
-        cv_file_poll a_poll[1u] = { cv_file_poll_initializer_ };
+        cv_file_poll a_poll[1u] = {0};
         a_poll[0u].p_file = p_stdin;
         a_poll[0u].i_flags_in = cv_file_poll_flag_read;
         if (cv_file_poll_dispatch(a_poll, 1, 0)) {
@@ -286,7 +286,7 @@ static void cv_file_test_poll(void) {
     }
     {
         if (cv_file_test_init_disk_read(&o_disk_read, get_input_bin_name())) {
-            cv_file_poll a_poll[1u] = { cv_file_poll_initializer_ };
+            cv_file_poll a_poll[1u] = {0};
             a_poll[0u].p_file = &o_disk_read.o_file;
             a_poll[0u].i_flags_in = cv_file_poll_flag_read;
             if (cv_file_poll_dispatch(a_poll, 1, 0)) {
@@ -295,15 +295,14 @@ static void cv_file_test_poll(void) {
         }
     }
     {
-        cv_file_poll a_poll[1u] = { cv_file_poll_initializer_ };
+        cv_file_poll a_poll[1u] = {0};
         a_poll[0u].p_file = p_stdout;
         a_poll[0u].i_flags_in = cv_file_poll_flag_write;
         if (cv_file_poll_dispatch(a_poll, 1, 0)) {
         }
     }
     {
-        cv_file_poll a_poll[2u] = { cv_file_poll_initializer_,
-            cv_file_poll_initializer_ };
+        cv_file_poll a_poll[2u] = {0};
         a_poll[0u].p_file = p_stdin;
         a_poll[0u].i_flags_in = cv_file_poll_flag_read;
         a_poll[1u].p_file = p_stdout;

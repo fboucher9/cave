@@ -37,11 +37,7 @@ struct cv_heap_pool
     long l_padding[1u];
 };
 
-#define cv_heap_pool_initializer_ { \
-    cv_mutex_initializer_, \
-    cv_list_root_initializer_, \
-    0, \
-    { 0 } }
+#define cv_heap_pool_initializer_ { cv_mutex_initializer_ }
 
 cv_bool cv_heap_pool_init(
     cv_heap_pool * p_this,

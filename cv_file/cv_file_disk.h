@@ -21,12 +21,8 @@ struct cv_file_disk {
     cv_file o_file;
 };
 
-/* Macro to initialize instance of cv_file_disk structure */
-#define cv_file_disk_initializer_ { cv_file_initializer_ }
-
 cv_bool cv_file_disk_init( cv_file_disk * p_this,
     cv_file_disk_desc const * p_desc);
-
 void cv_file_disk_cleanup( cv_file_disk * p_this);
 
 #endif /* #ifndef cv_file_disk_h_ */

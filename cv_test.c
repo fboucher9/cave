@@ -59,7 +59,7 @@ static void cv_test_heap_large(void)
 static void cv_test_dump_options(
     cv_options const * p_options)
 {
-    cv_options_it o_options_it = cv_options_it_initializer_;
+    cv_options_it o_options_it = {0};
     cv_options_it_init( &o_options_it, p_options);
     {
         cv_array o_cur;
@@ -85,10 +85,10 @@ static void cv_test_debug(void)
 static void cv_test_poll_stdin(void)
 {
     static char g_buf[80u];
-    cv_array o_string = cv_array_null_;
+    cv_array o_string = {0};
     cv_array_init_vector(&o_string, g_buf, sizeof(g_buf));
     {
-        cv_file_poll o_poll_stdin = cv_file_poll_initializer_;
+        cv_file_poll o_poll_stdin = {0};
         cv_file const * p_std_in = cv_file_std_in();
         o_poll_stdin.p_file = p_std_in;
         o_poll_stdin.i_flags_in = cv_file_poll_flag_read;
@@ -107,7 +107,7 @@ static void cv_test_poll_stdin(void)
 
 static void cv_test_thread(void)
 {
-    cv_thread_desc o_desc = cv_thread_desc_initializer_;
+    cv_thread_desc o_desc = {0};
     cv_thread_desc_init(&o_desc);
     {
         static unsigned char const a_thread_name[] = {
@@ -117,7 +117,7 @@ static void cv_test_thread(void)
         o_desc.o_callback.p_func = & cv_test_job;
         o_desc.o_name = g_thread_name;
         {
-            cv_thread o_thread = cv_thread_initializer_;
+            cv_thread o_thread = {0};
             if (cv_thread_init(&o_thread, &o_desc)) {
                 cv_test_poll_stdin();
                 cv_thread_cleanup(&o_thread);
@@ -145,7 +145,7 @@ static void cv_test_number_step(
 #if 0
 static void cv_test_number(void)
 {
-    cv_number_desc o_desc = cv_number_desc_initializer_;
+    cv_number_desc o_desc = {0};
     o_desc.o_format.i_base = 10;
     o_desc.o_data.i_unsigned = 12345;
     o_desc.o_data.b_negative = 0;
@@ -231,17 +231,17 @@ static void cv_test_number(void)
 static void cv_test_number_dec(
     cv_options_it * p_options_it,
     unsigned int i_base) {
-    cv_array o_string = cv_array_null_;
+    cv_array o_string = {0};
     while (cv_options_it_next(p_options_it, &o_string)) {
-        cv_number_dec o_number_dec = cv_number_dec_initializer_;
-        cv_array_it o_string_it = cv_array_it_initializer_;
+        cv_number_dec o_number_dec = {0};
+        cv_array_it o_string_it = {0};
         cv_array_it_init(&o_string_it, &o_string);
         cv_number_dec_init(&o_number_dec, i_base);
         while (cv_number_status_continue == cv_number_dec_write(&o_number_dec,
                 &o_string_it)) {
         }
         {
-            cv_number_desc o_desc = cv_number_desc_initializer_;
+            cv_number_desc o_desc = {0};
             if (cv_number_dec_read(&o_number_dec, &o_desc)) {
                 cv_print_char('[');
                 cv_print_number(&o_desc);
@@ -267,7 +267,7 @@ static void cv_test_stdin(void)
     {
         cv_bool b_continue = cv_true;
         while (b_continue) {
-            cv_array o_string = cv_array_null_;
+            cv_array o_string = {0};
             unsigned char a_buf[1u];
             cv_array_init_vector(&o_string, a_buf, sizeof(a_buf));
             {
@@ -335,10 +335,10 @@ static void cv_test_leak3(void) {
 static cv_bool cv_test_main_cb(
     cv_options const * p_options)
 {
-    cv_options_it o_options_it = cv_options_it_initializer_;
+    cv_options_it o_options_it = {0};
     cv_options_it_init(&o_options_it, p_options);
     {
-        cv_array o_string = cv_array_null_;
+        cv_array o_string = {0};
         if (cv_options_it_next(&o_options_it, &o_string)) {
             if (cv_options_it_next(&o_options_it, &o_string)) {
                 static char const g_number_text[] = {

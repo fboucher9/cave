@@ -34,7 +34,7 @@ void cv_array_init_vector(
 {
     cv_debug_assert_( p_this, cv_debug_code_null_ptr);
     {
-        cv_array_ptr o_buf_ptr = cv_ptr_null_;
+        cv_array_ptr o_buf_ptr = {0};
         o_buf_ptr.pc_void = p_buf;
         cv_array_init_range(p_this,
                 o_buf_ptr.pc_char,

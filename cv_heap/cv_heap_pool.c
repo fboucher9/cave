@@ -42,10 +42,10 @@ void cv_heap_pool_cleanup(
     /* Detect leaks ... */
     /* Discard all free nodes */
     {
-        cv_list_it o_list_it = cv_list_it_initializer_;
+        cv_list_it o_list_it = {0};
         cv_list_it_init(&o_list_it, &p_this->o_free_list);
         {
-            cv_heap_node_ptr o_ptr = cv_ptr_null_;
+            cv_heap_node_ptr o_ptr = {0};
             while (cv_list_it_first(&o_list_it, &o_ptr.o_list_ptr)) {
                 cv_heap_node_cleanup(o_ptr.p_heap_node);
             }
@@ -67,10 +67,10 @@ static cv_heap_node * cv_heap_pool_lookup_cb(
     cv_debug_assert_(p_this, cv_debug_code_null_ptr);
     {
         /* Look for free compatible item */
-        cv_heap_it o_heap_it = cv_heap_it_initializer_;
+        cv_heap_it o_heap_it = {0};
         cv_heap_it_init(&o_heap_it, &p_this->o_free_list);
         {
-            cv_heap_node_ptr o_heap_ptr = cv_ptr_null_;
+            cv_heap_node_ptr o_heap_ptr = {0};
             if (cv_heap_it_next(&o_heap_it, &o_heap_ptr)) {
                 /* Detach from free list */
                 cv_list_join(
@@ -106,7 +106,7 @@ cv_heap_node * cv_heap_pool_alloc(
         void * const p_payload = cv_heap_primary_alloc(p_heap_primary, i_len);
         if (p_payload) {
             /* Create new item */
-            cv_array o_payload = cv_array_null_;
+            cv_array o_payload = {0};
             cv_array_init_vector(&o_payload, p_payload, i_len);
             p_result = cv_heap_node_create(p_heap_secondary,
                 &o_payload);

@@ -42,7 +42,7 @@ void cv_runtime_memset( void * p_buf, unsigned char c_value, cv_uptr i_buf_len) 
         memset(p_buf, c_value, i_memset_len);
     }
 #else /* #if defined cv_have_libc_ */
-    cv_array_ptr o_buf_it = cv_ptr_null_;
+    cv_array_ptr o_buf_it = {0};
     o_buf_it.p_void = p_buf;
     if (i_buf_len > 0) {
         unsigned char * const p_buf_end = o_buf_it.p_uchar + i_buf_len;
@@ -61,8 +61,8 @@ void cv_runtime_memcpy( void * p_dst, void const * p_src, cv_uptr i_copy_len) {
         memcpy(p_dst, p_src, i_memcpy_len);
     }
 #else /* #if defined cv_have_libc_ */
-    cv_array_ptr o_dst_it = cv_ptr_null_;
-    cv_array_ptr o_src_it = cv_ptr_null_;
+    cv_array_ptr o_dst_it = {0};
+    cv_array_ptr o_src_it = {0};
     cv_uptr i_remain = i_copy_len;
     o_dst_it.p_void = p_dst;
     o_src_it.pc_void = p_src;
@@ -85,7 +85,7 @@ void const * cv_runtime_memchr( void const * p_src, unsigned char c_value,
     }
 #else /* #if defined cv_have_libc_ */
     cv_bool b_found = cv_false;
-    cv_array_ptr o_src_it = cv_ptr_null_;
+    cv_array_ptr o_src_it = {0};
     o_src_it.pc_void = p_src;
     {
         unsigned char const * p_src_end = o_src_it.pc_uchar + i_src_len;

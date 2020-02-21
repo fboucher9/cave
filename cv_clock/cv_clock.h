@@ -21,8 +21,6 @@ struct cv_clock {
     unsigned long i_fraction;
 };
 
-#define cv_clock_initializer_ { 0, 0 }
-
 void cv_clock_init( cv_clock * p_this);
 
 void cv_clock_init_msec( cv_clock * p_this,

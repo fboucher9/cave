@@ -16,9 +16,6 @@ struct cv_options_node
     cv_buffer o_buffer;
 };
 
-#define cv_options_node_initializer_ \
-{ cv_list_node_initializer_, cv_buffer_initializer_ }
-
 cv_options_node * cv_options_node_create(
     cv_options_node_desc const * p_desc);
 

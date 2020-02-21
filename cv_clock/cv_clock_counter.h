@@ -14,8 +14,6 @@ struct cv_clock_counter {
     cv_clock o_clock;
 };
 
-#define cv_clock_counter_initializer_ { cv_clock_initializer_ }
-
 void cv_clock_counter_init( cv_clock_counter * p_this );
 
 void cv_clock_counter_cleanup( cv_clock_counter * p_this );

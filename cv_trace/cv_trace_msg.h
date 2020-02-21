@@ -23,15 +23,9 @@ struct cv_trace_msg {
     unsigned char uc_padding[7u];
 };
 
-#define cv_trace_msg_initializer_ \
-{ cv_clock_mono_initializer_, 0, 0, {0} }
-
 void cv_trace_msg_dispatch( cv_trace_msg * p_trace_msg);
-
 void cv_trace_msg_local_flush(void);
-
 void cv_trace_msg_global_flush(void);
-
 void cv_trace_msg_thread_detach(void);
 
 #endif /* #ifndef cv_trace_msg_h_ */

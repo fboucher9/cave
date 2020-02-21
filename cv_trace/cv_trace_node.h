@@ -62,22 +62,22 @@ struct cv_trace_global {
 };
 
 #define cv_trace_global_initializer_(klass, level, text) \
-{ 0, cv_trace_stats_initializer_, (text), (klass), (level), {0} }
+{ 0, {0}, (text), (klass), (level), {0} }
 
 /*
  *
  */
 
 struct cv_trace {
-    cv_trace * p_local_next;
-    /* -- */
     cv_trace_global * p_global;
+    /* -- */
+    cv_trace * p_local_next;
     /* -- */
     cv_trace_stats o_local_stats;
 };
 
 #define cv_trace_initializer_(global) \
-{ 0, &(global), cv_trace_stats_initializer_ }
+{ &(global) }
 
 #define cv_trace_decl_(type, level, name) \
 static cv_trace_global g_trace_##name = \

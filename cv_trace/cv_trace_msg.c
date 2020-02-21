@@ -16,6 +16,13 @@
 #include <stdio.h>
 #endif /* #if defined cv_have_libc_ */
 
+union cv_trace_msg_ptr {
+    void const * pc_void;
+    void * p_void;
+    cv_trace_msg const * pc_trace_msg;
+    cv_trace_msg * p_trace_msg;
+};
+
 static cv_thread_local_ cv_trace_msg * g_trace_msg_cache = 0;
 
 static cv_thread_local_ unsigned int g_trace_msg_cache_index = 0;
@@ -52,7 +59,7 @@ static void cv_trace_msg_global_flush_cb(
     unsigned short const us_level = uc_level;
     if (cv_trace_test_echo_level(uc_level)) {
         unsigned char const uc_type = p_trace_msg->i_type;
-        cv_clock_usec o_value_usec = cv_clock_usec_initializer_;
+        cv_clock_usec o_value_usec = {0};
         cv_clock_get_usec(&p_trace_msg->o_clock_mono.o_clock, &o_value_usec);
         fprintf(stdout, "%10ld.%06ld:%c%hu:[%s]\n", o_value_usec.i_seconds,
             o_value_usec.i_useconds,
@@ -108,7 +115,9 @@ static void cv_trace_msg_local_flush_cb(cv_trace_msg * p_trace_msg) {
     /* lock */
     cv_trace_msg_lock();
     if (!g_trace_msg_queue) {
-        g_trace_msg_queue = cv_runtime_malloc(30000u);
+        union cv_trace_msg_ptr o_trace_msg_ptr = {0};
+        o_trace_msg_ptr.p_void = cv_runtime_malloc(30000u);
+        g_trace_msg_queue = o_trace_msg_ptr.p_trace_msg;
     }
     if (g_trace_msg_queue) {
         /* Detect overflow */
@@ -158,7 +167,9 @@ void cv_trace_msg_dispatch( cv_trace_msg * p_trace_msg) {
     /* cache of messages per thread */
     /* allocate cache at first use */
     if (!g_trace_msg_cache) {
-        g_trace_msg_cache = cv_runtime_malloc(3000u);
+        union cv_trace_msg_ptr o_trace_msg_ptr = {0};
+        o_trace_msg_ptr.p_void = cv_runtime_malloc(3000u);
+        g_trace_msg_cache = o_trace_msg_ptr.p_trace_msg;
     }
     if (g_trace_msg_cache) {
         /* setup a timer for flush of cache */

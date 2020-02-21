@@ -15,7 +15,7 @@ struct cv_heap_large {
 };
 
 #define cv_heap_large_initializer_ \
-{ cv_mutex_initializer_, cv_list_root_initializer_ }
+{ cv_mutex_initializer_ }
 
 cv_bool cv_heap_large_init( cv_heap_large * p_this);
 void cv_heap_large_cleanup( cv_heap_large * p_this);

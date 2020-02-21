@@ -20,7 +20,7 @@ struct cv_heap_section_lock {
 };
 
 #define cv_heap_section_lock_initializer_ \
-{ cv_mutex_initializer_, cv_heap_section_initializer_ }
+{ cv_mutex_initializer_ }
 
 cv_bool cv_heap_section_lock_init(
     cv_heap_section_lock * p_this,

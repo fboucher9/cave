@@ -18,8 +18,6 @@ struct cv_stack_it {
     cv_stack_ptr o_cur;
 };
 
-#define cv_stack_it_initializer_ { cv_ptr_null_ }
-
 void cv_stack_it_init(
     cv_stack_it * p_this,
     cv_stack const * p_root);

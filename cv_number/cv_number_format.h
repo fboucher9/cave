@@ -47,14 +47,6 @@ struct cv_number_format {
     unsigned int i_padding[1u];
 };
 
-#define cv_number_format_initializer_ \
-{   /* .i_flags */ 0, \
-    /* .i_width */ 0, \
-    /* .i_digits */ 0, \
-    /* .i_precision */ 0, \
-    /* .i_base */ 0u, \
-    /* .i_padding */ {0u} }
-
 cv_number_format const * cv_number_format_dec(void);
 
 cv_number_format const * cv_number_format_hex(void);

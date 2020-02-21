@@ -23,7 +23,7 @@ cv_debug_decl_(cv_file_class);
 void cv_file_init( cv_file * p_this) {
     cv_debug_assert_(p_this, cv_debug_code_null_ptr);
     cv_debug_construct_(cv_file_class, p_this);
-    p_this->i_index = -1;
+    p_this->i_handle = 0;
 }
 
 /*
@@ -53,9 +53,9 @@ cv_sptr cv_file_read( cv_file const * p_this, cv_array const * p_array) {
     {
         cv_uptr const i_array_len = cv_array_len(p_array);
         if (i_array_len > 0) {
-            if (p_this->i_index >= 0) {
+            if (p_this->i_handle > 0) {
                 i_result = cv_runtime_read(
-                    p_this->i_index,
+                    p_this->i_handle - 1,
                     p_array->o_min.p_void,
                     i_array_len);
             }
@@ -80,9 +80,9 @@ cv_sptr cv_file_write( cv_file const * p_this, cv_array const * p_array) {
     {
         cv_uptr const i_array_len = cv_array_len(p_array);
         if (i_array_len > 0) {
-            if (p_this->i_index >= 0) {
+            if (p_this->i_handle > 0) {
                 i_result = cv_runtime_write(
-                    p_this->i_index,
+                    p_this->i_handle - 1,
                     p_array->o_min.p_void,
                     i_array_len);
             }

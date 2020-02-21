@@ -17,8 +17,6 @@ struct cv_clock_unix {
     cv_clock o_clock;
 };
 
-#define cv_clock_unix_initializer_ { cv_clock_initializer_ }
-
 void cv_clock_unix_init(
     cv_clock_unix * p_this);
 

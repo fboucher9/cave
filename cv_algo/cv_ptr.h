@@ -5,13 +5,10 @@
 
 typedef union cv_ptr cv_ptr;
 
-union cv_ptr
-{
+union cv_ptr {
     void const * pc_void;
     void * p_void;
 };
-
-#define cv_ptr_null_ { 0 }
 
 #define cv_ptr_initializer_(pc_void) { (pc_void) }
 

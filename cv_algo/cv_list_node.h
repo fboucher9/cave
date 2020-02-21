@@ -24,8 +24,6 @@ struct cv_list_node
     cv_list_ptr o_prev;
 };
 
-#define cv_list_node_initializer_ { cv_ptr_null_, cv_ptr_null_ }
-
 void cv_list_node_init(
     cv_list_node * p_this);
 

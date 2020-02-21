@@ -24,11 +24,8 @@ struct cv_debug_class {
     long i_line;
 };
 
-#define cv_debug_class_initializer_ \
-{ 0, 0, 0, 0 }
-
 #define cv_debug_decl_(g_class) \
-static cv_debug_class g_class = cv_debug_class_initializer_
+static cv_debug_class g_class = {0}
 
 void xx_debug_class_construct(
     cv_debug_class * p_class,

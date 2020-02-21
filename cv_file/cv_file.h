@@ -30,15 +30,12 @@
 union cv_file {
 
     /* Storage for POSIX file descriptor */
-    int i_index;
+    int i_handle;
 
     /* Alignment to pointer */
     void * p_void;
 
 };
-
-/* Macro for initializer-list of cv_file structure */
-#define cv_file_initializer_ { -1 }
 
 /* Compile-time verification of cv_file handle */
 typedef char cv_verify_sizeof_file [

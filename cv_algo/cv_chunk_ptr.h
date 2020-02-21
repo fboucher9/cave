@@ -23,8 +23,6 @@ union cv_chunk_ptr {
     cv_list_ptr o_list_ptr;
 };
 
-#define cv_chunk_ptr_initializer_ cv_ptr_null_
-
 #endif /* #ifndef cv_chunk_ptr_h_ */
 
 /* end-of-file: cv_chunk_ptr.h */

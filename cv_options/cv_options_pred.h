@@ -21,4 +21,7 @@ typedef struct cv_options_node cv_options_node;
 /* Predefine */
 typedef union cv_options_node_ptr cv_options_node_ptr;
 
+/* Predefine */
+typedef struct cv_options_decoder cv_options_decoder;
+
 #endif /* #ifndef cv_options_pred_h_ */
