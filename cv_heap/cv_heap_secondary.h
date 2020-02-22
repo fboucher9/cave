@@ -18,9 +18,6 @@ struct cv_heap_secondary {
     cv_heap_section_lock o_heap_section_lock;
 };
 
-#define cv_heap_secondary_initializer_ \
-{ cv_heap_section_lock_initializer_ }
-
 cv_bool cv_heap_secondary_init( cv_heap_secondary * p_this);
 
 void cv_heap_secondary_cleanup( cv_heap_secondary * p_this);

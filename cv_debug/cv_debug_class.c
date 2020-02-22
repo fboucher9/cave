@@ -22,7 +22,7 @@ static cv_debug_class g_debug_class_footer = {0};
 
 static cv_debug_class * g_debug_class_list = &g_debug_class_footer;
 
-static cv_mutex g_debug_class_mutex = cv_mutex_initializer_;
+static cv_mutex g_debug_class_mutex = {0};
 
 /*
  *

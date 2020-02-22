@@ -39,9 +39,6 @@ struct cv_heap_section_node_desc
     cv_uptr i_grow_len;
 };
 
-#define cv_heap_section_node_desc_initializer_ \
-{ 0 }
-
 struct cv_heap_section_node
 {
     cv_list_node o_node;
@@ -160,8 +157,7 @@ static cv_bool cv_heap_section_grow(
     cv_debug_assert_( p_this, cv_debug_code_null_ptr);
     {
         cv_heap_section_ptr o_ptr = {0};
-        cv_heap_section_node_desc o_desc =
-            cv_heap_section_node_desc_initializer_;
+        cv_heap_section_node_desc o_desc = {0};
         o_desc.i_grow_len = p_this->o_desc.i_grow_len;
         o_ptr.p_heap_section_node =
             cv_heap_section_node_create(&o_desc);

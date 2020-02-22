@@ -71,7 +71,7 @@ struct cv_heap_stress_thread {
 
 static unsigned int cv_heap_stress_pick(
     unsigned int i_modulo) {
-    static cv_mutex g_random_lock = cv_mutex_initializer_;
+    static cv_mutex g_random_lock = {0};
     unsigned int i_result = 0;
     int i_rand_result = 0;
     cv_mutex_lock(&g_random_lock);

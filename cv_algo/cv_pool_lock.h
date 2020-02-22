@@ -18,9 +18,6 @@ struct cv_pool_lock {
     cv_pool o_pool;
 };
 
-#define cv_pool_lock_initializer_ \
-{ cv_mutex_initializer_ }
-
 cv_bool cv_pool_lock_init(
     cv_pool_lock * p_this,
     cv_pool_desc const * p_desc);

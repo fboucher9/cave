@@ -24,9 +24,6 @@ struct cv_heap_primary {
     cv_heap_section_lock o_heap_section_lock;
 };
 
-#define cv_heap_primary_initializer_ \
-{ cv_heap_section_lock_initializer_ }
-
 cv_bool cv_heap_primary_init(cv_heap_primary * p_this);
 
 void cv_heap_primary_cleanup(cv_heap_primary * p_this);

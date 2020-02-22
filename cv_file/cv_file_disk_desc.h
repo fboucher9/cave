@@ -38,9 +38,6 @@ struct cv_file_disk_desc {
     int ai_padding[3u];
 };
 
-/* Macro to default initialize a cv_file_disk_desc structure */
-#define cv_file_disk_desc_initializer_ { 0, 0, {0} }
-
 void cv_file_disk_desc_init( cv_file_disk_desc * p_this);
 
 void cv_file_disk_desc_cleanup( cv_file_disk_desc * p_this);

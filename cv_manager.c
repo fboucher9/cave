@@ -12,7 +12,6 @@ Description: None.
 #include <cv_heap/cv_heap_plugin.h>
 #include <cv_thread/cv_thread_plugin.h>
 #include <cv_options/cv_options_plugin.h>
-#include <cv_file/cv_file_std.h>
 #include <cv_clock/cv_clock_plugin.h>
 #include <cv_debug/cv_debug_plugin.h>
 #include <cv_trace/cv_trace_plugin.h>

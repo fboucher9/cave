@@ -14,8 +14,7 @@
 Members for cv_mutex object.
 
 */
-union cv_mutex
-{
+union cv_mutex_data {
 #if defined cv_have_pthread_
     pthread_mutex_t o_private;
 
@@ -28,12 +27,14 @@ union cv_mutex
 
 };
 
-/* Macro used to initialize a static instance of cv_mutex object */
-#if defined cv_have_pthread_
-#define cv_mutex_initializer_ { PTHREAD_MUTEX_INITIALIZER }
-#else /* #if defined cv_have_pthread_ */
-#define cv_mutex_initializer_ { 0 }
-#endif /* #if defined cv_have_pthread_ */
+/*
+ *
+ */
+
+struct cv_mutex {
+    union cv_mutex_data * p_data;
+    union cv_mutex_data o_storage;
+};
 
 int cv_mutex_impl_init(
     cv_mutex * p_this);

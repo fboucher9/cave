@@ -99,7 +99,7 @@ static cv_array const * get_input_fail_name(void) {
 static cv_bool cv_file_test_init_disk_read(cv_file_disk * p_file_disk,
     cv_array const * p_name) {
     cv_bool b_result = cv_false;
-    cv_file_disk_desc o_desc = cv_file_disk_desc_initializer_;
+    cv_file_disk_desc o_desc = {0};
     cv_file_disk_desc_init(&o_desc);
     o_desc.p_name = p_name;
     o_desc.e_mode = cv_file_disk_mode_read;
@@ -148,7 +148,7 @@ static cv_array const * get_append_body(void) {
 }
 
 static void cv_file_test_disk_write(void) {
-    cv_file_disk_desc o_desc = cv_file_disk_desc_initializer_;
+    cv_file_disk_desc o_desc = {0};
     cv_file_disk_desc_init(&o_desc);
     o_desc.p_name = get_output_bin_name();
     o_desc.e_mode = cv_file_disk_mode_write;

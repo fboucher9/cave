@@ -51,4 +51,8 @@ cv_sptr cv_file_read( cv_file const * p_this, cv_array const * p_array);
 
 cv_sptr cv_file_write( cv_file const * p_this, cv_array const * p_array);
 
+int cv_file_get_index( cv_file const * p_this);
+
+void cv_file_set_index( cv_file * p_this, int i_index);
+
 #endif /* #ifndef cv_file_h_ */

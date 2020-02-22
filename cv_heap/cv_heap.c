@@ -45,13 +45,6 @@ struct cv_heap_mgr {
     cv_heap_used o_used;
 };
 
-#define cv_heap_mgr_initializer_ { \
-    cv_heap_primary_initializer_, \
-    cv_heap_secondary_initializer_, \
-    cv_heap_small_initializer_, \
-    cv_heap_large_initializer_, \
-    cv_heap_used_initializer_ }
-
 static cv_bool cv_heap_mgr_init(cv_heap_mgr * p_this) {
     cv_bool b_result = cv_false;
     cv_debug_construct_(g_class, p_this);
@@ -97,7 +90,7 @@ static void cv_heap_mgr_cleanup(cv_heap_mgr * p_this) {
     cv_debug_destruct_(g_class, p_this);
 }
 
-static cv_heap_mgr g_heap_mgr = cv_heap_mgr_initializer_;
+static cv_heap_mgr g_heap_mgr = {0};
 
 cv_bool cv_heap_load(void) {
     cv_bool b_result = cv_false;

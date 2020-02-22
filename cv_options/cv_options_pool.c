@@ -22,11 +22,8 @@ struct cv_options_pool {
     cv_pool_lock o_pool;
 };
 
-#define cv_options_pool_initializer_ \
-{ cv_pool_lock_initializer_ }
-
 static cv_bool g_options_pool_loaded = cv_false;
-static cv_options_pool g_options_pool = cv_options_pool_initializer_;
+static cv_options_pool g_options_pool = {0};
 
 /*
  *

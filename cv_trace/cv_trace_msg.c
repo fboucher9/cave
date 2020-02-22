@@ -38,7 +38,7 @@ static unsigned long g_trace_msg_queue_count = 0;
 static unsigned long const g_trace_msg_queue_max_count =
 ((30000ul / sizeof(cv_trace_msg)) & 0x7ffffffful);
 
-static cv_mutex g_trace_msg_lock = cv_mutex_initializer_;
+static cv_mutex g_trace_msg_lock = {0};
 
 static void cv_trace_msg_lock(void) {
     cv_mutex_impl_lock(&g_trace_msg_lock);

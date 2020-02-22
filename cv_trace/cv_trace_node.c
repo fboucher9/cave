@@ -38,7 +38,7 @@ static cv_thread_local_ cv_trace * g_trace_list =
 static cv_trace_global * g_trace_global_list =
 &g_trace_footer_global;
 
-static cv_mutex g_trace_mutex = cv_mutex_initializer_;
+static cv_mutex g_trace_mutex = {0};
 
 static cv_thread_local_ long i_recursive = 0;
 

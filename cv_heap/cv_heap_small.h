@@ -28,8 +28,6 @@ struct cv_heap_small {
     cv_heap_pool a_pool[cv_heap_small_count_];
 };
 
-#define cv_heap_small_initializer_ { { cv_heap_pool_initializer_ } }
-
 cv_bool cv_heap_small_init( cv_heap_small * p_this);
 
 void cv_heap_small_cleanup( cv_heap_small * p_this);

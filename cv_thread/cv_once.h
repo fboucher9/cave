@@ -28,8 +28,6 @@ struct cv_once {
     } o_done;
 };
 
-#define cv_once_initializer_ { cv_mutex_initializer_ }
-
 void cv_once_init(struct cv_once * p_this);
 
 void cv_once_cleanup(struct cv_once * p_this);
