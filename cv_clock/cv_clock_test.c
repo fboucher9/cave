@@ -13,6 +13,7 @@
 #include <cv_clock/cv_clock_tool.h>
 #include <cv_clock/cv_clock_info.h>
 #include <cv_clock/cv_clock_counter.h>
+#include <cv_clock/cv_clock_tick.h>
 #include <cv_test_print.h>
 #include <cv_number/cv_number_desc.h>
 
@@ -119,11 +120,25 @@ static void cv_clock_test_duration_1(void) {
  *
  */
 
+static void cv_clock_test_tick_1(void) {
+    cv_clock_tick o_value = {0};
+    cv_bool b_result = cv_false;
+    b_result = cv_clock_tick_is_supported();
+    if (b_result) {
+        b_result = cv_clock_tick_read(&o_value);
+    }
+}
+
+/*
+ *
+ */
+
 void cv_clock_test(void) {
     cv_clock_test_unix_1();
     cv_clock_test_mono_1();
     cv_clock_test_counter_1();
     cv_clock_test_duration_1();
+    cv_clock_test_tick_1();
     {
         cv_clock o_value = {0};
         if (cv_clock_read(&o_value, cv_clock_epoch_mono)) {
