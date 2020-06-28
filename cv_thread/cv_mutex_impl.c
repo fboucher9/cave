@@ -7,7 +7,7 @@
 #include <cv_thread/cv_mutex_impl.h>
 
 #if defined cv_have_pthread_
-pthread_mutex_t g_one_time_lock = PTHREAD_MUTEX_INITIALIZER;
+static pthread_mutex_t g_one_time_lock = PTHREAD_MUTEX_INITIALIZER;
 #endif /* #if defined cv_have_pthread_ */
 
 /*

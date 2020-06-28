@@ -71,6 +71,7 @@ cv_test_srcs = \
     cv_clock/cv_clock_test.c \
     cv_clock/cv_clock_duration.c \
     cv_clock/cv_clock_tool.c \
+    cv_clock/cv_clock_tick.c \
     cv_random/cv_random.c \
     cv_random/cv_random_crypto.c \
     cv_random/cv_random_test.c \
@@ -99,6 +100,9 @@ cv_test_srcs = \
     cv_trace/cv_trace_plugin.c \
     cv_trace/cv_trace_level.c \
     cv_trace/cv_trace_test.c \
+    cv_screen/cv_screen_device_desc.c \
+    cv_screen/cv_screen_device.c \
+    cv_screen/cv_screen_linux.c \
     cv_runtime.c \
     cv_linux.c \
     cv_windows.c \

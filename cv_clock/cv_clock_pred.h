@@ -46,6 +46,9 @@ typedef struct cv_clock_nsec cv_clock_nsec;
 /* Predefine */
 typedef struct cv_clock_counter cv_clock_counter;
 
+/* Predefine */
+typedef struct cv_clock_tick cv_clock_tick;
+
 #endif /* #ifndef cv_clock_pred_h_ */
 
 /* end-of-file: cv_clock_pred.h */
