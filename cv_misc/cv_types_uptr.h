@@ -17,9 +17,16 @@
 #if ! defined cv_typeof_uptr_
 #if defined __SIZE_TYPE__
 #define cv_typeof_uptr_ __SIZE_TYPE__
-#else
+#elif ! defined __GNUC__ && defined _MSC_VER && defined _WIN64
+#define cv_typeof_uptr_ unsigned __int64
+#elif ! defined __GNUC__ && defined _MSC_VER && ! defined _WIN64
+#define cv_typeof_uptr_ unsigned __int32
+#elif defined cv_have_stddef_h_
+#include <stddef.h>
+#define cv_typeof_uptr_ size_t
+#else /* #if defined __SIZE_TYPE__ */
 #define cv_typeof_uptr_ unsigned long
-#endif
+#endif /* #if defined __SIZE_TYPE__ */
 #endif /* #if ! defined cv_typeof_uptr_ */
 
 #include <cv_misc/cv_warning_ll_ignore.h>

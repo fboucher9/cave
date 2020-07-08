@@ -18,8 +18,13 @@
  */
 
 #if ! defined cv_typeof_sll_
-#if ! defined __GNUC__ && defined _MSC_VER
+#if defined __INT64_TYPE__
+#define cv_typeof_sll_ __INT64_TYPE__
+#elif ! defined __GNUC__ && defined _MSC_VER
 #define cv_typeof_sll_ signed __int64
+#elif defined cv_have_stdint_h_
+#include <stdint.h>
+#define cv_typeof_sll_ int64_t
 #else /* #if ... */
 #define cv_typeof_sll_ signed long long
 #endif /* #if ... */

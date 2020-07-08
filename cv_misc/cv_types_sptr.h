@@ -17,9 +17,16 @@
 #if ! defined cv_typeof_sptr_
 #if defined __PTRDIFF_TYPE__
 #define cv_typeof_sptr_ __PTRDIFF_TYPE__
-#else
+#elif ! defined __GNUC__ && defined _MSC_VER && defined _WIN64
+#define cv_typeof_sptr_ signed __int64
+#elif ! defined __GNUC__ && defined _MSC_VER && ! defined _WIN64
+#define cv_typeof_sptr_ signed __int32
+#elif defined cv_have_stddef_h_
+#include <stddef.h>
+#define cv_typeof_sptr_ ptrdiff_t
+#else /* #if ... */
 #define cv_typeof_sptr_ signed long
-#endif
+#endif /* #if ... */
 #endif /* #if ! defined cv_typeof_sptr_ */
 
 #include <cv_misc/cv_warning_ll_ignore.h>

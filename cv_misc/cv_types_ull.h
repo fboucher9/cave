@@ -18,8 +18,13 @@
  */
 
 #if ! defined cv_typeof_ull_
-#if ! defined __GNUC__ && defined _MSC_VER
+#if defined __UINT64_TYPE__
+#define cv_typeof_ull_ __UINT64_TYPE__
+#elif ! defined __GNUC__ && defined _MSC_VER
 #define cv_typeof_ull_ unsigned __int64
+#elif defined cv_have_stdint_h_
+#include <stdint.h>
+#define cv_typeof_ull_ uint64_t
 #else /* #if ... */
 #define cv_typeof_ull_ unsigned long long
 #endif /* #if ... */
