@@ -6,10 +6,15 @@
 #include <cv_debug/cv_debug.h>
 #include <cv_heap/cv_heap.h>
 #include <cv_thread/cv_thread_plugin.h>
+#include <cv_misc/cv_thread_local.h>
 
 cv_debug_decl_(g_class);
 
 static cv_bool g_thread_loaded = cv_false;
+
+static cv_thread_local_ cv_bool t_thread_self_initialized = cv_false;
+
+static cv_thread_local_ cv_thread t_thread_self = { 0 };
 
 cv_bool cv_thread_load(void) {
     cv_bool b_result = cv_false;
@@ -114,5 +119,30 @@ void cv_thread_cleanup(
         }
         cv_debug_destruct_(g_class, p_this);
     }
+}
+
+cv_thread const * cv_thread_self(void) {
+    if (!t_thread_self_initialized) {
+        t_thread_self_initialized = cv_true;
+#if defined cv_have_pthread_
+        t_thread_self.o_handle = pthread_self();
+#else /* #if defined cv_have_pthread_ */
+        t_thread_self.o_handle = 0;
+#endif /* #if defined cv_have_pthread_ */
+    }
+    return &t_thread_self;
+}
+
+cv_bool cv_thread_equal(
+    cv_thread const * p_thread_1,
+    cv_thread const * p_thread_2) {
+    cv_bool b_result = cv_false;
+#if defined cv_have_pthread_
+    b_result = (0 != pthread_equal(p_thread_1->o_handle,
+            p_thread_2->o_handle));
+#else /* #if defined cv_have_pthread_ */
+    b_result = cv_false;
+#endif /* #if defined cv_have_pthread_ */
+    return b_result;
 }
 

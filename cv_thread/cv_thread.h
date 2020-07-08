@@ -23,6 +23,12 @@ cv_bool cv_thread_init(
 void cv_thread_cleanup(
     cv_thread * p_this);
 
+cv_thread const * cv_thread_self(void);
+
+cv_bool cv_thread_equal(
+    cv_thread const * p_thread_1,
+    cv_thread const * p_thread_2);
+
 /*
 
 Note: use of interrupt is not portable.  Look into more portable ways of
