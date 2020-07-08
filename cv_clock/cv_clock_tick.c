@@ -11,9 +11,9 @@
 /* Detect if RDTSC is available for compiler and architected */
 #if defined __GNUC__
 #if defined __x86_64__
-#define CV_HAVE_RDTSC
+#define cv_have_rdtsc_
 #elif defined __i386__
-#define CV_HAVE_RDTSC
+#define cv_have_rdtsc_
 #endif
 #endif /* #if defined __GNUC__ */
 
@@ -24,11 +24,11 @@
 
 cv_bool cv_clock_tick_is_supported(void) {
     cv_bool b_supported = cv_false;
-#if defined CV_HAVE_RDTSC
+#if defined cv_have_rdtsc_
     b_supported = cv_true;
-#else /* #if defined CV_HAVE_RDTSC */
+#else /* #if defined cv_have_rdtsc_ */
     b_supported = cv_false;
-#endif /* #if defined CV_HAVE_RDTSC */
+#endif /* #if defined cv_have_rdtsc_ */
     return b_supported;
 }
 
@@ -39,15 +39,15 @@ cv_bool cv_clock_tick_is_supported(void) {
 cv_bool cv_clock_tick_read(
     cv_clock_tick * r_value) {
     cv_bool b_result = cv_false;
-#if defined CV_HAVE_RDTSC
+#if defined cv_have_rdtsc_
     {
         cv_ull const ll_value = __builtin_ia32_rdtsc();
         cv_clock_set(&r_value->o_clock, ll_value);
         b_result = cv_true;
     }
-#else /* #if defined CV_HAVE_RDTSC */
+#else /* #if defined cv_have_rdtsc_ */
     b_result = cv_false;
-#endif /* #if defined CV_HAVE_RDTSC */
+#endif /* #if defined cv_have_rdtsc_ */
     return b_result;
 }
 
