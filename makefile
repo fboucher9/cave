@@ -103,6 +103,7 @@ cv_test_srcs = \
     cv_screen/cv_screen_device_desc.c \
     cv_screen/cv_screen_device.c \
     cv_screen/cv_screen_linux.c \
+    cv_json/cv_json.c \
     cv_runtime.c \
     cv_linux.c \
     cv_windows.c \
