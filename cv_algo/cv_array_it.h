@@ -69,6 +69,11 @@ cv_bool cv_array_it_write_next_array(
     cv_array_it * p_this,
     cv_array const * p_array);
 
+cv_bool cv_array_it_preview_next_char( cv_array_it * p_this,
+    unsigned char * r_value);
+
+cv_bool cv_array_it_skip_next_char( cv_array_it * p_this);
+
 #endif /* #ifndef cv_array_it_h_ */
 
 /* end-of-file: cv_array_it.h */

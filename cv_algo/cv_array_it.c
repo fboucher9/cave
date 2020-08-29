@@ -196,4 +196,31 @@ cv_bool cv_array_it_write_next_array(
     return b_result;
 }
 
+cv_bool cv_array_it_preview_next_char( cv_array_it * p_this,
+    unsigned char * r_value) {
+    cv_bool b_result = cv_false;
+    cv_debug_assert_( p_this, cv_debug_code_null_ptr);
+    {
+        if (p_this->o_array.o_min.pc_uchar !=
+            p_this->o_array.o_max.pc_uchar) {
+            *r_value = *p_this->o_array.o_min.pc_uchar;
+            b_result = cv_true;
+        }
+    }
+    return b_result;
+}
+
+cv_bool cv_array_it_skip_next_char( cv_array_it * p_this) {
+    cv_bool b_result = cv_false;
+    cv_debug_assert_( p_this, cv_debug_code_null_ptr);
+    {
+        if (p_this->o_array.o_min.pc_uchar !=
+            p_this->o_array.o_max.pc_uchar) {
+            p_this->o_array.o_min.pc_uchar ++;
+            b_result = cv_true;
+        }
+    }
+    return b_result;
+}
+
 /* end-of-file: cv_array_it.c */
