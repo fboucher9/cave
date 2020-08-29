@@ -13,8 +13,7 @@
 #include <cv_algo/cv_array_it.h>
 #include <cv_misc/cv_bool.h>
 
-cv_bool cv_json_dec( cv_array_it * p_document,
-    cv_json * p_value);
+cv_json * cv_json_dec( cv_array_it * p_document );
 
 #endif /* #ifndef cv_json_dec_h_ */
 
