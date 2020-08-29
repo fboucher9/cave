@@ -141,6 +141,8 @@ cv_bool cv_thread_equal(
     b_result = (0 != pthread_equal(p_thread_1->o_handle,
             p_thread_2->o_handle));
 #else /* #if defined cv_have_pthread_ */
+    (void)p_thread_1;
+    (void)p_thread_2;
     b_result = cv_false;
 #endif /* #if defined cv_have_pthread_ */
     return b_result;
