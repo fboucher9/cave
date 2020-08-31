@@ -81,6 +81,8 @@ cv_test_srcs = \
     cv_algo/cv_stack.c \
     cv_algo/cv_stack_it.c \
     cv_algo/cv_stack_test.c \
+    cv_algo/cv_callstack.c \
+    cv_algo/cv_symbol.c \
     cv_thread/cv_mutex.c \
     cv_thread/cv_mutex_impl.c \
     cv_thread/cv_once.c \
