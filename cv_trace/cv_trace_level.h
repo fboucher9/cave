@@ -1,30 +1,43 @@
 /* See LICENSE for license details */
 
-#ifndef cv_trace_level_
-#define cv_trace_level_
+#ifndef cv_trace_level_h_
+#define cv_trace_level_h_
 
 /*
  *
  */
 
-#include <cv_misc/cv_bool.h>
+#include <cv_trace/cv_trace_pred.h>
+#include <cv_trace/cv_trace_sect.h>
 
-void cv_trace_set_stack_levels(unsigned char i_stack_levels);
+enum cv_trace_level_const {
+    cv_trace_level_error = 0,
+    cv_trace_level_warning,
+    cv_trace_level_info,
+    cv_trace_level_verbose,
+    cv_trace_level_process,
+    cv_trace_level_thread,
+    cv_trace_level_summary,
+    cv_trace_level_period,
+    cv_trace_level_debug,
+    cv_trace_level_max
+};
 
-void cv_trace_set_profile_levels( unsigned char i_profile_levels);
+struct cv_trace_level {
+    cv_trace_sect a_level[cv_trace_level_max];
+};
 
-void cv_trace_set_echo_levels(unsigned char i_echo_levels);
+cv_bool cv_trace_level_init(
+    cv_trace_level * p_this,
+    unsigned long i_echo_flags);
 
-void cv_trace_set_log_levels(unsigned char i_log_levels);
+void cv_trace_level_cleanup(
+    cv_trace_level * p_this);
 
-cv_bool cv_trace_test_stack_level(unsigned char i_level);
+cv_trace_sect * cv_trace_level_get(
+    cv_trace_level * p_this,
+    int e_trace_level);
 
-cv_bool cv_trace_test_profile_level(unsigned char i_level);
-
-cv_bool cv_trace_test_echo_level(unsigned char i_level);
-
-cv_bool cv_trace_test_log_level(unsigned char i_level);
-
-#endif /* #ifndef cv_trace_level_ */
+#endif /* #ifndef cv_trace_level_h_ */
 
 /* end-of-file: cv_trace_level.h */

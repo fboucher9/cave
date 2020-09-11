@@ -82,7 +82,6 @@ cv_test_srcs = \
     cv_algo/cv_stack_it.c \
     cv_algo/cv_stack_test.c \
     cv_algo/cv_callstack.c \
-    cv_algo/cv_symbol.c \
     cv_thread/cv_mutex.c \
     cv_thread/cv_mutex_impl.c \
     cv_thread/cv_once.c \
@@ -97,11 +96,10 @@ cv_test_srcs = \
     cv_file/cv_file_poll.c \
     cv_file/cv_file_print.c \
     cv_file/cv_file_test.c \
-    cv_trace/cv_trace_node.c \
-    cv_trace/cv_trace_msg.c \
-    cv_trace/cv_trace_plugin.c \
-    cv_trace/cv_trace_level.c \
     cv_trace/cv_trace_test.c \
+    cv_trace/cv_trace_plugin.c \
+    cv_trace/cv_trace_map.c \
+    cv_trace/cv_trace_func.c \
     cv_screen/cv_screen_device_desc.c \
     cv_screen/cv_screen_device.c \
     cv_screen/cv_screen_linux.c \

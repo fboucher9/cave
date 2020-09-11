@@ -23,7 +23,7 @@
 #include <cv_misc/cv_convert_test.h>
 #include <cv_clock/cv_clock_test.h>
 #include <cv_trace/cv_trace_test.h>
-#include <cv_trace/cv_trace_func.h>
+#include <cv_algo/cv_callstack.h>
 #include <cv_number/cv_number_dec.h>
 #include <cv_algo/cv_array_it.h>
 #include <cv_number/cv_number_scan.h>
@@ -326,10 +326,12 @@ static void cv_test_leak2(void) {
 }
 
 static void cv_test_leak3(void) {
-    cv_trace_func0_decl_(cv_test_leak3);
-    cv_trace_func0_enter_(cv_test_leak3);
+    static char const a_leak3_name[] = { 'l', 'e', 'a', 'k', '3' };
+    static cv_array const g_leak3_name = cv_array_initializer_(a_leak3_name,
+        a_leak3_name + sizeof a_leak3_name);
+    cv_callstack_push(&g_leak3_name);
     cv_heap_alloc(123);
-    cv_trace_func0_leave_(cv_test_leak3);
+    cv_callstack_pop();
 }
 
 static cv_bool cv_test_main_cb(

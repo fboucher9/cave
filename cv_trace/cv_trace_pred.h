@@ -7,13 +7,20 @@
  *
  */
 
-typedef struct cv_trace_stats cv_trace_stats;
+/* Predefine */
+typedef struct cv_trace_map cv_trace_map;
 
-typedef struct cv_trace_global cv_trace_global;
+/* Predefine */
+typedef struct cv_trace_func cv_trace_func;
 
-typedef struct cv_trace cv_trace;
+/* Predefine */
+typedef struct cv_trace_event cv_trace_event;
 
-typedef struct cv_trace_msg cv_trace_msg;
+/* Predefine */
+typedef struct cv_trace_sect cv_trace_sect;
+
+/* Predefine */
+typedef struct cv_trace_level cv_trace_level;
 
 #endif /* #ifndef cv_trace_pred_h_ */
 

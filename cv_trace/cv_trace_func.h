@@ -8,97 +8,49 @@
  */
 
 #include <cv_trace/cv_trace_pred.h>
-#include <cv_trace/cv_trace_node.h>
+#include <cv_algo/cv_array.h>
+#include <cv_misc/cv_types.h>
+#include <cv_misc/cv_bool.h>
+#include <cv_algo/cv_list_node.h>
 
-#define cv_trace_func_decl_(level, name) \
-    cv_trace_decl_( \
-        cv_trace_klass_func, level, name)
+/*
+ *
+ */
 
-#define cv_trace_func_enter_(name) \
-    cv_trace_enter_(name)
+struct cv_trace_func {
 
-#define cv_trace_func_leave_(name) \
-    cv_trace_leave_(name)
+    /* Linked list of functions */
+    cv_list_node o_node;
 
-#define cv_trace_func0_decl_(name) \
-    cv_trace_func_decl_( \
-        cv_trace_level_0, name)
+    /* -- */
 
-#define cv_trace_func0_enter_(name) \
-    cv_trace_func_enter_(name)
+    /* Symbol for name */
+    cv_array o_symbol;
 
-#define cv_trace_func0_leave_(name) \
-    cv_trace_func_leave_(name)
+    /* -- */
 
-#define cv_trace_func1_decl_(name) \
-    cv_trace_func_decl_( \
-        cv_trace_level_1, name)
+    /* Counter for number of calls */
+    cv_ull i_count;
 
-#define cv_trace_func1_enter_(name) \
-    cv_trace_func_enter_(name)
+    /* -- */
 
-#define cv_trace_func1_leave_(name) \
-    cv_trace_func_leave_(name)
+    /* Elapsed time in ticks */
+    cv_ull i_elapsed;
 
-#define cv_trace_func2_decl_(name) \
-    cv_trace_func_decl_( \
-        cv_trace_level_2, name)
+};
 
-#define cv_trace_func2_enter_(name) \
-    cv_trace_func_enter_(name)
-
-#define cv_trace_func2_leave_(name) \
-    cv_trace_func_leave_(name)
-
-#define cv_trace_func3_decl_(name) \
-    cv_trace_func_decl_( \
-        cv_trace_level_3, name)
-
-#define cv_trace_func3_enter_(name) \
-    cv_trace_func_enter_(name)
-
-#define cv_trace_func3_leave_(name) \
-    cv_trace_func_leave_(name)
-
-#define cv_trace_func4_decl_(name) \
-    cv_trace_func_decl_( \
-        cv_trace_level_4, name)
-
-#define cv_trace_func4_enter_(name) \
-    cv_trace_func_enter_(name)
-
-#define cv_trace_func4_leave_(name) \
-    cv_trace_func_leave_(name)
-
-#define cv_trace_func5_decl_(name) \
-    cv_trace_func_decl_( \
-        cv_trace_level_5, name)
-
-#define cv_trace_func5_enter_(name) \
-    cv_trace_func_enter_(name)
-
-#define cv_trace_func5_leave_(name) \
-    cv_trace_func_leave_(name)
-
-#define cv_trace_func6_decl_(name) \
-    cv_trace_func_decl_( \
-        cv_trace_level_6, name)
-
-#define cv_trace_func6_enter_(name) \
-    cv_trace_func_enter_(name)
-
-#define cv_trace_func6_leave_(name) \
-    cv_trace_func_leave_(name)
-
-#define cv_trace_func7_decl_(name) \
-    cv_trace_func_decl_( \
-        cv_trace_level_7, name)
-
-#define cv_trace_func7_enter_(name) \
-    cv_trace_func_enter_(name)
-
-#define cv_trace_func7_leave_(name) \
-    cv_trace_func_leave_(name)
+void cv_trace_func_load(void);
+void cv_trace_func_unload(void);
+void cv_trace_func_init( cv_trace_func * p_trace_func,
+    cv_array const * p_name);
+void cv_trace_func_cleanup( cv_trace_func * p_this);
+cv_array const * cv_trace_func_get_symbol( cv_trace_func const * p_this);
+void cv_trace_func_enter( cv_trace_func * p_this);
+void cv_trace_func_leave(void);
+/* this is used to substract time spent in sub functions */
+void cv_trace_func_pause(void);
+/* on return from subfunctions, resume clock */
+void cv_trace_func_resume(void);
 
 #endif /* #ifndef cv_trace_func_h_ */
 

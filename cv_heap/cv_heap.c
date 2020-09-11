@@ -20,14 +20,7 @@ are thread-safe.
 #include <cv_heap/cv_heap_secondary.h>
 #include <cv_heap/cv_heap_used.h>
 #include <cv_debug/cv_debug.h>
-#include <cv_file/cv_file_print.h>
-#include <cv_file/cv_file_std.h>
-#include <cv_algo/cv_array.h>
-#include <cv_algo/cv_array_tool.h>
-#include <cv_number/cv_number_desc.h>
-#include <cv_algo/cv_list_root.h>
-#include <cv_algo/cv_list_it.h>
-#include <cv_trace/cv_trace_node.h>
+#include <cv_algo/cv_callstack.h>
 
 cv_debug_decl_(g_class);
 
@@ -148,8 +141,12 @@ void * cv_heap_alloc( cv_uptr i_buffer_length) {
         }
         if (p_heap_node) {
             /* Fill in stack info */
-            cv_trace_stack_query(p_heap_node->a_stack,
-                cv_heap_node_stack_max_);
+            unsigned char i_stack_index = 0;
+            while (i_stack_index < cv_heap_node_stack_max_) {
+                p_heap_node->a_stack[i_stack_index] =
+                    cv_callstack_query(i_stack_index);
+                i_stack_index ++;
+            }
             /* Attach node to used list */
             cv_heap_used_join(&p_this->o_used, p_heap_node);
             p_buffer = p_heap_node->o_payload.o_min.p_void;
