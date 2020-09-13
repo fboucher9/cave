@@ -39,6 +39,14 @@ void cv_list_root_init(
 void cv_list_root_cleanup(
     cv_list_root * p_this);
 
+void cv_list_root_append(
+    cv_list_root * p_this,
+    cv_list_node * p_node);
+
+void cv_list_root_prepend(
+    cv_list_root * p_this,
+    cv_list_node * p_node);
+
 #endif /* #ifndef cv_list_root_h_ */
 
 /* end-of-file: cv_list_root.h */

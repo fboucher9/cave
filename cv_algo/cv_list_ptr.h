@@ -23,11 +23,13 @@ union cv_list_ptr
     cv_ptr o_ptr;
 };
 
-typedef char cv_verify_sizeof_list_ptr [
-    sizeof(cv_list_ptr) == sizeof(void *)
-    && sizeof(cv_list_ptr) == sizeof(void const *)
-    && sizeof(cv_list_ptr) == sizeof(cv_list_node *)
-    && sizeof(cv_list_ptr) == sizeof(cv_list_node const *)
-    ? 1 : -1 ];
+struct cv_list_ptr_assert {
+    char a_verify_sizeof_list_ptr [
+        sizeof(cv_list_ptr) == sizeof(void *)
+        && sizeof(cv_list_ptr) == sizeof(void const *)
+        && sizeof(cv_list_ptr) == sizeof(cv_list_node *)
+        && sizeof(cv_list_ptr) == sizeof(cv_list_node const *)
+        ? 1 : -1 ];
+};
 
 #endif /* #ifndef cv_list_ptr_h_ */
