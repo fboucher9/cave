@@ -32,8 +32,8 @@
 #include <cv_trace/cv_trace_map.h>
 #include <cv_trace/cv_trace_level.h>
 #include <cv_trace/cv_trace_sect.h>
+#include <cv_trace/cv_trace_count.h>
 #include <cv_trace/cv_trace_func.h>
-#include <cv_trace/cv_trace_event.h>
 
 #endif /* #ifndef cv_trace_h_ */
 

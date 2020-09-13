@@ -12,6 +12,7 @@
  */
 
 cv_bool cv_trace_load(void) {
+    cv_trace_count_load();
     cv_trace_func_load();
     return cv_true;
 }
@@ -22,6 +23,7 @@ cv_bool cv_trace_load(void) {
 
 void cv_trace_unload(void) {
     cv_trace_func_unload();
+    cv_trace_count_unload();
 }
 
 /* end-of-file: cv_trace_plugin.c */

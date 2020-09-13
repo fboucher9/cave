@@ -100,6 +100,7 @@ cv_test_srcs = \
     cv_trace/cv_trace_plugin.c \
     cv_trace/cv_trace_map.c \
     cv_trace/cv_trace_func.c \
+    cv_trace/cv_trace_count.c \
     cv_screen/cv_screen_device_desc.c \
     cv_screen/cv_screen_device.c \
     cv_screen/cv_screen_linux.c \
