@@ -27,10 +27,9 @@ struct cv_trace_sect {
     char c_padding[7u];
 };
 
-cv_bool cv_trace_sect_init( cv_trace_sect * p_this,
+void cv_trace_sect_init( cv_trace_sect * p_this,
     cv_array const * p_name, cv_array const * p_region, cv_bool b_echo);
 void cv_trace_sect_cleanup( cv_trace_sect * p_this);
-cv_array const * cv_trace_sect_get_name( cv_trace_sect const * p_this);
 void cv_trace_sect_begin( cv_trace_sect * p_this);
 void cv_trace_sect_print( cv_array const * p_array);
 void cv_trace_sect_end(void);

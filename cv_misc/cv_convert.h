@@ -65,40 +65,40 @@ cv_sll xx_convert_u2ll(cv_ull i_value);
 #else /* #if defined cv_debug_ */
 
 #define cv_convert_c2u_(expr) \
-    cv_cast_(unsigned char, cv_cast_(signed char, expr))
+    cv_cast_(unsigned char)(cv_cast_(signed char)(expr))
 
 #define cv_convert_s2u_(expr) \
-    cv_cast_(unsigned short, cv_cast_(signed short, expr))
+    cv_cast_(unsigned short)(cv_cast_(signed short)(expr))
 
 #define cv_convert_i2u_(expr) \
-    cv_cast_(unsigned int, cv_cast_(signed int, expr))
+    cv_cast_(unsigned int)(cv_cast_(signed int)(expr))
 
 #define cv_convert_l2u_(expr) \
-    cv_cast_(unsigned long, cv_cast_(signed long, expr))
+    cv_cast_(unsigned long)(cv_cast_(signed long)(expr))
 
 #define cv_convert_p2u_(expr) \
-    cv_cast_(cv_uptr, cv_cast_(cv_sptr, expr))
+    cv_cast_(cv_uptr)(cv_cast_(cv_sptr)(expr))
 
 #define cv_convert_ll2u_(expr) \
-    cv_cast_(cv_ull, cv_cast_(cv_sll, expr))
+    cv_cast_(cv_ull)(cv_cast_(cv_sll)(expr))
 
 #define cv_convert_u2c_(expr) \
-    cv_cast_(signed char, cv_cast_(unsigned char, expr))
+    cv_cast_(signed char)(cv_cast_(unsigned char)(expr))
 
 #define cv_convert_u2s_(expr) \
-    cv_cast_(signed short, cv_cast_(unsigned short, expr))
+    cv_cast_(signed short)(cv_cast_(unsigned short)(expr))
 
 #define cv_convert_u2i_(expr) \
-    cv_cast_(signed int, cv_cast_(unsigned int, expr))
+    cv_cast_(signed int)(cv_cast_(unsigned int)(expr))
 
 #define cv_convert_u2l_(expr) \
-    cv_cast_(signed long, cv_cast_(unsigned long, expr))
+    cv_cast_(signed long)(cv_cast_(unsigned long)(expr))
 
 #define cv_convert_u2p_(expr) \
-    cv_cast_(cv_sptr, cv_cast_(cv_uptr, expr))
+    cv_cast_(cv_sptr)(cv_cast_(cv_uptr)(expr))
 
 #define cv_convert_u2ll_(expr) \
-    cv_cast_(cv_sll, cv_cast_(cv_ull, expr))
+    cv_cast_(cv_sll)(cv_cast_(cv_ull)(expr))
 
 #endif /* #if defined cv_debug_ */
 

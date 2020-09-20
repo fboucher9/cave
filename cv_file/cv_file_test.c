@@ -66,7 +66,7 @@ static void process_file_contents(
                 &p_file_disk->o_file,
                 &o_read_buffer);
             if (i_read_result > 0) {
-                cv_uptr const i_buffer_len = cv_cast_(cv_uptr, i_read_result);
+                cv_uptr const i_buffer_len = cv_cast_(cv_uptr)(i_read_result);
                 cv_file_test_dump_buffer( a_read_buffer, i_buffer_len);
             } else {
                 b_continue = cv_false;

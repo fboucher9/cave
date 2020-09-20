@@ -168,7 +168,7 @@ static void cv_heap_stress_thread_entry(void * p_context) {
     static cv_thread_local_ struct cv_heap_stress_node
         a_node[cv_heap_stress_max_node];
     struct cv_heap_stress_thread * p_this =
-        cv_cast_(struct cv_heap_stress_thread *, p_context);
+        cv_cast_(struct cv_heap_stress_thread *)(p_context);
     cv_bool b_continue = cv_true;
     unsigned int i_node_index = 0;
     {

@@ -17,11 +17,11 @@ do not use the cv_cast_ macro and use directly a C-style cast.
 
 #if ! defined cv_cast_
 #if defined __cplusplus
-#define cv_cast_(type, expr) \
-    (static_cast<type>(expr))
+#define cv_cast_(type) \
+    static_cast<type>
 #else /* #if defined __cplusplus */
-#define cv_cast_(type, expr) \
-    ((type)(expr))
+#define cv_cast_(type) \
+    (type)
 #endif /* #if defined __cplusplus */
 #endif /* #if ! defined cv_cast_ */
 

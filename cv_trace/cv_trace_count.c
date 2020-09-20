@@ -50,7 +50,6 @@ void cv_trace_count_init( cv_trace_count * p_this, cv_array const * p_parent,
  */
 
 void cv_trace_count_cleanup( cv_trace_count * p_this ) {
-    cv_debug_destruct_(g_trace_count_class, p_this);
     /* lock of global list */
     /* detach from linked list */
     cv_list_join(&p_this->o_node, &p_this->o_node);
@@ -60,6 +59,7 @@ void cv_trace_count_cleanup( cv_trace_count * p_this ) {
     cv_array_cleanup(&p_this->o_name);
     cv_array_cleanup(&p_this->o_parent);
     cv_list_node_cleanup(&p_this->o_node);
+    cv_debug_destruct_(g_trace_count_class, p_this);
 }
 
 /*

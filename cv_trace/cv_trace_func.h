@@ -55,6 +55,12 @@ void cv_trace_func_init( cv_trace_func * p_trace_func,
     cv_array const * p_name);
 void cv_trace_func_cleanup( cv_trace_func * p_this);
 void cv_trace_func_enter( cv_trace_func * p_this);
+#if 0
+/* is there a way to store args? */
+/* problem is storage for strings, must be permanent */
+/* perhaps with a ref count */
+void cv_trace_func_arg( cv_array const * p_name);
+#endif
 void cv_trace_func_leave(void);
 /* this is used to substract time spent in sub functions */
 void cv_trace_func_pause(void);
