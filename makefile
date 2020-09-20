@@ -106,6 +106,7 @@ cv_test_srcs = \
     cv_screen/cv_screen_device.c \
     cv_screen/cv_screen_linux.c \
     cv_json/cv_json.c \
+    cv_json/cv_json_it.c \
     cv_json/cv_json_dec.c \
     cv_json/cv_json_test.c \
     cv_runtime.c \
@@ -212,6 +213,7 @@ cv_verbose ?= @
 test : $(cv_obj_path)/test.exe
 
 all : $(cv_obj_path)/test.exe
+all : $(cv_obj_path)/test.m32.exe
 all : $(cv_obj_path)/test.m64.exe
 all : $(cv_obj_path)/test.cxx.exe
 all : clang
@@ -225,7 +227,7 @@ bare : $(cv_obj_path)/test.bare.exe
 
 $(cv_obj_path)/test.exe : $(cv_src_path)/makefile $(cv_test_objs_abs) $(cv_src_path)/cv_export.mak
 	@echo ld $(notdir $@)
-	$(cv_verbose)echo -m32 -o $(cv_obj_path)/test.exe $(cv_cflags) $(cv_profile_cflags) -rdynamic $(cv_test_objs_abs) -Wl,--version-script=$(cv_src_path)/cv_export.mak -lpthread > $@.cmd
+	$(cv_verbose)echo -o $(cv_obj_path)/test.exe $(cv_cflags) $(cv_profile_cflags) -rdynamic $(cv_test_objs_abs) -Wl,--version-script=$(cv_src_path)/cv_export.mak -lpthread > $@.cmd
 	$(cv_verbose)gcc @$@.cmd
 
 $(cv_test_objs_abs) : $(cv_src_path)/makefile
@@ -233,8 +235,12 @@ $(cv_test_objs_abs) : $(cv_src_path)/makefile
 $(cv_obj_path)/%.c.o : $(cv_src_path)/%.c
 	@echo cc $(notdir $<)
 	$(cv_verbose)mkdir -p $(dir $@)
-	$(cv_verbose)echo -c -m32 -x c -o $@ $(cv_cflags) $(cv_profile_cflags) $(cv_defines) $(cv_includes) $< -MMD > $@.cmd
+	$(cv_verbose)echo -c -x c -o $@ $(cv_cflags) $(cv_profile_cflags) $(cv_defines) $(cv_includes) $< -MMD > $@.cmd
 	$(cv_verbose)gcc @$@.cmd
+
+$(cv_obj_path)/test.m32.exe : $(cv_src_path)/makefile $(cv_test_srcs_abs)
+	@echo ld $(notdir $@)
+	$(cv_verbose)gcc -m32 -x c -o $(cv_obj_path)/test.m64.exe $(cv_cflags) $(cv_defines) $(cv_includes) $(cv_test_srcs_abs) -lpthread
 
 $(cv_obj_path)/test.m64.exe : $(cv_src_path)/makefile $(cv_test_srcs_abs)
 	@echo ld $(notdir $@)
