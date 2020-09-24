@@ -16,7 +16,7 @@
 #include <cv_algo/cv_array.h>
 #include <cv_algo/cv_array_it.h>
 #include <cv_algo/cv_array_tool.h>
-#include <cv_misc/cv_cast.h>
+#include <cv_misc/cv_convert.h>
 #include <cv_test_print.h>
 #include <cv_number/cv_number_desc.h>
 
@@ -66,7 +66,7 @@ static void process_file_contents(
                 &p_file_disk->o_file,
                 &o_read_buffer);
             if (i_read_result > 0) {
-                cv_uptr const i_buffer_len = cv_cast_(cv_uptr)(i_read_result);
+                cv_uptr const i_buffer_len = cv_convert_p2u_(i_read_result);
                 cv_file_test_dump_buffer( a_read_buffer, i_buffer_len);
             } else {
                 b_continue = cv_false;

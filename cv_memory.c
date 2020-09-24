@@ -14,6 +14,8 @@
 
 #include <cv_misc/cv_limits.h>
 
+#include <cv_misc/cv_convert.h>
+
 void cv_memory_zero(
     void * p_buf,
     cv_uptr i_buf_len)
@@ -102,5 +104,15 @@ int cv_memory_compare(
         cv_debug_msg_(cv_debug_code_invalid_parameter);
     }
     return i_compare_result;
+}
+
+cv_uptr cv_memory_len( void const * p_min, void const * p_max) {
+    cv_uptr i_len = 0;
+    cv_sptr i_diff = cv_cast_(char const *)(p_max) -
+        cv_cast_(char const *)(p_min);
+    if (i_diff > 0) {
+        i_len = i_diff & cv_signed_ptr_max_;
+    }
+    return i_len;
 }
 

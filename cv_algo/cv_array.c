@@ -6,8 +6,6 @@
 
 #include <cv_debug/cv_debug.h>
 
-#include <cv_misc/cv_cast.h>
-
 cv_debug_decl_(g_class);
 
 void cv_array_init(
@@ -80,11 +78,10 @@ void cv_array_init_0(
 cv_uptr cv_array_len(
     cv_array const * p_this)
 {
-    cv_uptr i_count = 0;
     cv_debug_assert_( p_this, cv_debug_code_null_ptr);
-    i_count = cv_cast_(cv_uptr)(
-        p_this->o_max.pc_char - p_this->o_min.pc_char);
-    return i_count;
+    return cv_memory_len(
+        p_this->o_min.pc_void,
+        p_this->o_max.pc_void);
 }
 
 /* end-of-file: cv_array.c */
