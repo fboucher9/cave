@@ -1,6 +1,6 @@
 /* See LICENSE for license details */
 
-#include <cv_algo/cv_string0.h>
+#include <cv_algo/cv_array_0.h>
 
 #include <cv_algo/cv_array.h>
 
@@ -14,12 +14,12 @@
 
 /*
 
-Convert cv_array object to a zero-terminated string.  The cv_string0 object
+Convert cv_array object to a zero-terminated string.  The cv_array_0 object
 holds resources allocated for zero-terminated string.
 
 */
-cv_bool cv_string0_init(
-    cv_string0 * p_this,
+cv_bool cv_array_0_init(
+    cv_array_0 * p_this,
     cv_array const * p_string)
 {
     cv_bool b_result = cv_false;
@@ -44,15 +44,15 @@ cv_bool cv_string0_init(
     return b_result;
 }
 
-void cv_string0_cleanup(
-    cv_string0 * p_this)
+void cv_array_0_cleanup(
+    cv_array_0 * p_this)
 {
     cv_debug_assert_(p_this, cv_debug_code_null_ptr);
     cv_buffer_cleanup( &p_this->o_buffer);
 }
 
-char const * cv_string0_get(
-    cv_string0 const * p_this)
+char const * cv_array_0_get(
+    cv_array_0 const * p_this)
 {
     char const * p_result = 0;
     cv_debug_assert_(p_this, cv_debug_code_null_ptr);
@@ -61,8 +61,8 @@ char const * cv_string0_get(
 }
 
 /* Get length of buffer without terminating null character */
-cv_uptr cv_string0_len(
-    cv_string0 const * p_this)
+cv_uptr cv_array_0_len(
+    cv_array_0 const * p_this)
 {
     cv_uptr i_len = 0;
     cv_debug_assert_(p_this, cv_debug_code_null_ptr);

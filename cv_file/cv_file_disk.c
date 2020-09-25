@@ -8,7 +8,7 @@
 
 #include <cv_file/cv_file_disk.h>
 #include <cv_file/cv_file_disk_desc.h>
-#include <cv_algo/cv_string0.h>
+#include <cv_algo/cv_array_0.h>
 #include <cv_debug/cv_debug.h>
 #include <cv_runtime.h>
 
@@ -29,10 +29,10 @@ cv_bool cv_file_disk_init( cv_file_disk * p_this,
     cv_file_init(&p_this->o_file);
     /* Setup call to open */
     {
-        cv_string0 o_name0 = {0};
-        if (cv_string0_init(&o_name0, p_desc->p_name)) {
+        cv_array_0 o_name0 = {0};
+        if (cv_array_0_init(&o_name0, p_desc->p_name)) {
             char const * const p_open_pathname =
-                cv_string0_get(&o_name0);
+                cv_array_0_get(&o_name0);
             if (p_desc->e_mode == cv_file_disk_mode_append) {
                 cv_file_set_index(&p_this->o_file, cv_runtime_open_append(
                     p_open_pathname));
@@ -46,7 +46,7 @@ cv_bool cv_file_disk_init( cv_file_disk * p_this,
             if (cv_file_get_index(&p_this->o_file) >= 0) {
                 b_result = cv_true;
             }
-            cv_string0_cleanup(&o_name0);
+            cv_array_0_cleanup(&o_name0);
         }
     }
     if (!b_result) {
