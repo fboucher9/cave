@@ -65,6 +65,12 @@ unsigned long cv_clock_to_fraction( unsigned long i_count,
 unsigned long cv_clock_from_fraction( unsigned long i_fraction,
     unsigned long i_freq);
 
+void cv_clock_add( cv_clock const * p_left, cv_clock const * p_right,
+    cv_clock * r_result);
+
+void cv_clock_sub( cv_clock const * p_left, cv_clock const * p_right,
+    cv_clock * r_result);
+
 int cv_clock_diff( cv_clock const * p_left, cv_clock const * p_right,
     cv_clock_duration * r_duration);
 

@@ -20,7 +20,7 @@ cv_test_srcs = \
     cv_algo/cv_array_tool.c \
     cv_algo/cv_array_print.c \
     cv_algo/cv_array_0.c \
-    cv_algo/cv_buffer.c \
+    cv_algo/cv_array_heap.c \
     cv_misc/cv_convert.c \
     cv_misc/cv_convert_test.c \
     cv_algo/cv_chunk_root.c \
@@ -72,6 +72,7 @@ cv_test_srcs = \
     cv_clock/cv_clock_duration.c \
     cv_clock/cv_clock_tool.c \
     cv_clock/cv_clock_tick.c \
+    cv_clock/cv_stopwatch_tick.c \
     cv_random/cv_random.c \
     cv_random/cv_random_crypto.c \
     cv_random/cv_random_test.c \

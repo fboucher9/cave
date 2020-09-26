@@ -7,13 +7,13 @@
 
 #include <cv_algo/cv_list_node.h>
 
-#include <cv_algo/cv_buffer.h>
+#include <cv_algo/cv_array_heap.h>
 
 struct cv_options_node
 {
     cv_list_node o_node;
     /* -- */
-    cv_buffer o_buffer;
+    cv_array_heap o_buffer;
 };
 
 cv_options_node * cv_options_node_create(

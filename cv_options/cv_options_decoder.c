@@ -8,7 +8,7 @@
 #include <cv_options/cv_options.h>
 #include <cv_algo/cv_array_it.h>
 #include <cv_debug/cv_debug.h>
-#include <cv_algo/cv_buffer.h>
+#include <cv_algo/cv_array_heap.h>
 
 cv_debug_decl_(g_options_decoder);
 
@@ -40,11 +40,13 @@ static cv_bool cv_options_decoder_flush( cv_options_decoder * p_this,
     cv_uptr const i_word_len = cv_chunk_root_len(&p_this->o_chunk_root);
     if (i_word_len) {
         /* Allocate memory for a word */
-        cv_buffer o_buffer = {0};
-        /* Use cv_buffer */
-        if (cv_buffer_init(&o_buffer, i_word_len)) {
+        cv_array_heap o_buffer = {0};
+        /* Use cv_array_heap */
+        if (cv_array_heap_init(&o_buffer, i_word_len)) {
+            /* fill in the array using chunk list */
+            /* ... */
             b_result = cv_options_add(p_options, &o_buffer.o_array);
-            cv_buffer_cleanup(&o_buffer);
+            cv_array_heap_cleanup(&o_buffer);
         } else {
             b_result = cv_false;
         }

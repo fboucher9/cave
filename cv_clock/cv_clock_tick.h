@@ -61,10 +61,10 @@ struct cv_clock_tick {
     cv_clock o_clock;
 };
 
+void cv_clock_tick_init( cv_clock_tick * p_this);
+void cv_clock_tick_cleanup( cv_clock_tick * p_this);
 cv_bool cv_clock_tick_is_supported(void);
-
-cv_bool cv_clock_tick_read(
-    cv_clock_tick * r_value);
+cv_bool cv_clock_tick_read( cv_clock_tick * r_value);
 
 #endif /* #ifndef cv_clock_tick_h_ */
 

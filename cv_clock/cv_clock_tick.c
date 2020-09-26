@@ -18,6 +18,14 @@
 #endif /* #if defined __GNUC__ */
 
 
+void cv_clock_tick_init( cv_clock_tick * p_this) {
+    cv_clock_init(&p_this->o_clock);
+}
+
+void cv_clock_tick_cleanup( cv_clock_tick * p_this) {
+    cv_clock_cleanup(&p_this->o_clock);
+}
+
 /*
  *
  */

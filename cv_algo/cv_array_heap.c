@@ -1,6 +1,6 @@
 /* See LICENSE for license details */
 
-#include <cv_algo/cv_buffer.h>
+#include <cv_algo/cv_array_heap.h>
 
 #include <cv_heap/cv_heap.h>
 
@@ -8,8 +8,8 @@
 
 cv_debug_decl_(g_class);
 
-static cv_bool cv_buffer_realloc(
-    cv_buffer * p_this,
+static cv_bool cv_array_heap_realloc(
+    cv_array_heap * p_this,
     cv_uptr i_length)
 {
     cv_bool b_result = cv_false;
@@ -32,8 +32,8 @@ static cv_bool cv_buffer_realloc(
 /*
 
 */
-cv_bool cv_buffer_init(
-    cv_buffer * p_this,
+cv_bool cv_array_heap_init(
+    cv_array_heap * p_this,
     cv_uptr i_length)
 {
     cv_bool b_result = cv_false;
@@ -41,7 +41,7 @@ cv_bool cv_buffer_init(
     cv_debug_assert_( i_length > 0, cv_debug_code_invalid_length);
     {
         cv_debug_construct_(g_class, p_this);
-        if (cv_buffer_realloc(p_this, i_length)) {
+        if (cv_array_heap_realloc(p_this, i_length)) {
             b_result = cv_true;
         }
         if (!b_result) {
@@ -53,11 +53,11 @@ cv_bool cv_buffer_init(
 
 /*
 
-Free resources allocated for cv_buffer object.
+Free resources allocated for cv_array_heap object.
 
 */
-void cv_buffer_cleanup(
-    cv_buffer * p_this)
+void cv_array_heap_cleanup(
+    cv_array_heap * p_this)
 {
     cv_debug_assert_( p_this, cv_debug_code_null_ptr);
     if (p_this->o_array.o_min.pc_void) {
@@ -67,9 +67,9 @@ void cv_buffer_cleanup(
     cv_debug_destruct_(g_class, p_this);
 } /* _cleanup() */
 
-/* Get length of buffer */
-cv_uptr cv_buffer_len(
-    cv_buffer const * p_this)
+/* Get length of array_heap */
+cv_uptr cv_array_heap_len(
+    cv_array_heap const * p_this)
 {
     cv_uptr i_len = 0;
     cv_debug_assert_( p_this, cv_debug_code_null_ptr);
@@ -77,4 +77,4 @@ cv_uptr cv_buffer_len(
     return i_len;
 }
 
-/* eof: cv_buffer.c */
+/* eof: cv_array_heap.c */

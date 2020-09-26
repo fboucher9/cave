@@ -40,7 +40,7 @@ static cv_bool cv_options_node_init_buffer(
     cv_debug_assert_( p_this && p_array, cv_debug_code_null_ptr);
     {
         cv_uptr const i_array_len = cv_array_len(p_array);
-        if (cv_buffer_init(&p_this->o_buffer, i_array_len)) {
+        if (cv_array_heap_init(&p_this->o_buffer, i_array_len)) {
             cv_array_copy( &p_this->o_buffer.o_array, p_array);
             b_result = cv_true;
         }
@@ -52,7 +52,7 @@ static void cv_options_node_cleanup_buf0(
     cv_options_node * p_this)
 {
     cv_debug_assert_( p_this, cv_debug_code_null_ptr);
-    cv_buffer_cleanup(&(p_this->o_buffer));
+    cv_array_heap_cleanup(&(p_this->o_buffer));
 }
 
 static cv_bool cv_options_node_init(

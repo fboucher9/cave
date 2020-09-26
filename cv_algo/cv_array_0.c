@@ -29,7 +29,7 @@ cv_bool cv_array_0_init(
     {
         /* Get length of string */
         cv_uptr const i_length = p_string ? cv_array_len(p_string) : 0;
-        if (cv_buffer_init(
+        if (cv_array_heap_init(
                 &p_this->o_buffer,
                 i_length + 1)) {
             if (i_length) {
@@ -48,7 +48,7 @@ void cv_array_0_cleanup(
     cv_array_0 * p_this)
 {
     cv_debug_assert_(p_this, cv_debug_code_null_ptr);
-    cv_buffer_cleanup( &p_this->o_buffer);
+    cv_array_heap_cleanup( &p_this->o_buffer);
 }
 
 char const * cv_array_0_get(
@@ -66,7 +66,7 @@ cv_uptr cv_array_0_len(
 {
     cv_uptr i_len = 0;
     cv_debug_assert_(p_this, cv_debug_code_null_ptr);
-    i_len = cv_buffer_len(&p_this->o_buffer);
+    i_len = cv_array_heap_len(&p_this->o_buffer);
     if (i_len > 0) {
         i_len --;
     }

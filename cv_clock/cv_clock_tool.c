@@ -108,6 +108,28 @@ unsigned long cv_clock_from_fraction( unsigned long i_fraction,
  *
  */
 
+void cv_clock_add( cv_clock const * p_left, cv_clock const * p_right,
+    cv_clock * r_result){
+    cv_ull const ll_left = cv_clock_get(p_left);
+    cv_ull const ll_right = cv_clock_get(p_right);
+    cv_clock_set(r_result, ll_left + ll_right);
+}
+
+/*
+ *
+ */
+
+void cv_clock_sub( cv_clock const * p_left, cv_clock const * p_right,
+    cv_clock * r_result) {
+    cv_ull const ll_left = cv_clock_get(p_left);
+    cv_ull const ll_right = cv_clock_get(p_right);
+    cv_clock_set(r_result, ll_left - ll_right);
+}
+
+/*
+ *
+ */
+
 int cv_clock_diff( cv_clock const * p_left, cv_clock const * p_right,
     cv_clock_duration * r_duration) {
     int i_result = -1;
