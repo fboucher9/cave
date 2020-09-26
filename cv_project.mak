@@ -10,25 +10,18 @@ cv_dst_path ?= $(cv_src_path)
 
 cv_obj_path ?= $(cv_dst_path)/.obj
 
-cv_test_srcs = \
+include $(cv_src_path)/cv_algo/cv_sources.mak
+
+cv_test_srcs := \
     cv_test_os.c \
     cv_test.c \
     cv_test_print.c \
     cv_main.c \
-    cv_algo/cv_array.c \
-    cv_algo/cv_array_it.c \
-    cv_algo/cv_array_tool.c \
-    cv_algo/cv_array_print.c \
-    cv_algo/cv_array_0.c \
-    cv_algo/cv_array_heap.c \
     cv_misc/cv_convert.c \
     cv_misc/cv_convert_test.c \
-    cv_algo/cv_chunk_root.c \
-    cv_algo/cv_chunk_node.c \
-    cv_algo/cv_chunk_it.c \
-    cv_algo/cv_crc32.c \
-    cv_algo/cv_crc32_test.c \
     cv_manager.c \
+    $(cv_algo_lib_srcs) \
+    $(cv_algo_test_srcs) \
     cv_options/cv_options_desc.c \
     cv_options/cv_options.c \
     cv_options/cv_options_it.c \
@@ -76,20 +69,10 @@ cv_test_srcs = \
     cv_random/cv_random.c \
     cv_random/cv_random_crypto.c \
     cv_random/cv_random_test.c \
-    cv_algo/cv_list_node.c \
-    cv_algo/cv_list_it.c \
-    cv_algo/cv_list_root.c \
-    cv_algo/cv_stack.c \
-    cv_algo/cv_stack_it.c \
-    cv_algo/cv_stack_test.c \
-    cv_algo/cv_callstack.c \
     cv_thread/cv_mutex.c \
     cv_thread/cv_mutex_impl.c \
     cv_thread/cv_once.c \
     cv_thread/cv_specific.c \
-    cv_algo/cv_pool.c \
-    cv_algo/cv_pool_desc.c \
-    cv_algo/cv_pool_lock.c \
     cv_file/cv_file.c \
     cv_file/cv_file_std.c \
     cv_file/cv_file_disk_desc.c \
@@ -224,12 +207,12 @@ mingw : $(cv_obj_path)/test.mingwxx.exe
 all : bare
 bare : $(cv_obj_path)/test.bare.exe
 
-$(cv_obj_path)/test.exe : $(cv_src_path)/makefile $(cv_test_objs_abs) $(cv_src_path)/cv_export.mak
+$(cv_obj_path)/test.exe : $(cv_test_objs_abs) $(cv_src_path)/cv_export.mak
 	@echo -e "\033[1;36mld $(@:$(cv_dst_path)/%=%)\033[0m"
 	$(cv_verbose)echo -m32 -o $(cv_obj_path)/test.exe $(cv_cflags) $(cv_profile_cflags) -rdynamic $(cv_test_objs_abs) -Wl,--version-script=$(cv_src_path)/cv_export.mak -lpthread > $@.cmd
 	$(cv_verbose)gcc @$@.cmd
 
-$(cv_test_objs_abs) : $(cv_src_path)/makefile $(cv_src_path)/cv_project.mak
+$(cv_test_objs_abs) : $(MAKEFILE_LIST)
 
 $(cv_obj_path)/%.c.o : $(cv_src_path)/%.c
 	@echo -e "\033[1;32mcc $(<:$(cv_src_path)/%=%)\033[0m"
@@ -237,11 +220,11 @@ $(cv_obj_path)/%.c.o : $(cv_src_path)/%.c
 	$(cv_verbose)echo -c -m32 -x c -o $@ $(cv_cflags) $(cv_profile_cflags) $(cv_defines) $(cv_includes) $< -MMD > $@.cmd
 	$(cv_verbose)gcc @$@.cmd
 
-$(cv_obj_path)/test.m64.exe : $(cv_src_path)/makefile $(cv_test_srcs_abs)
+$(cv_obj_path)/test.m64.exe : $(MAKEFILE_LIST) $(cv_test_srcs_abs)
 	@echo -e "\033[1;36mld $(notdir $@)\033[0m"
 	$(cv_verbose)gcc -m64 -x c -o $(cv_obj_path)/test.m64.exe $(cv_cflags) $(cv_defines) $(cv_includes) $(cv_test_srcs_abs) -lpthread
 
-$(cv_obj_path)/test.cxx.exe : $(cv_src_path)/makefile $(cv_test_srcs_abs)
+$(cv_obj_path)/test.cxx.exe : $(MAKEFILE_LIST) $(cv_test_srcs_abs)
 	@echo ld $(notdir $@)
 	$(cv_verbose)g++ -x c++ -o $(cv_obj_path)/test.cxx.exe -fno-rtti -fno-exceptions -Wold-style-cast $(cv_cflags) $(cv_defines) $(cv_includes) $(cv_test_srcs_abs) -lpthread
 
@@ -255,12 +238,12 @@ cv_mingw_cxxflags = -fno-rtti -fno-exceptions -Wold-style-cast $(cv_mingw_cflags
 
 cv_mingw_libs = -lpthread
 
-$(cv_obj_path)/test.mingw.exe : $(cv_src_path)/makefile $(cv_test_srcs_abs)
+$(cv_obj_path)/test.mingw.exe : $(MAKEFILE_LIST) $(cv_test_srcs_abs)
 	@echo ld $(notdir $@)
 	$(cv_verbose)echo -o $@ $(cv_mingw_cflags) $(cv_test_srcs_abs) $(cv_mingw_libs) > $@.cmd
 	$(cv_verbose)$(cv_mingw_cc) @$@.cmd
 
-$(cv_obj_path)/test.mingwxx.exe : $(cv_src_path)/makefile $(cv_test_srcs_abs)
+$(cv_obj_path)/test.mingwxx.exe : $(MAKEFILE_LIST) $(cv_test_srcs_abs)
 	@echo ld $(notdir $@)
 	$(cv_verbose)echo -o $@ $(cv_mingw_cxxflags) $(cv_test_srcs_abs) $(cv_mingw_libs) > $@.cmd
 	$(cv_verbose)$(cv_mingw_cxx) @$@.cmd
@@ -277,19 +260,19 @@ cv_clang_cxxflags = $(cv_clang_cflags) -fno-rtti -fno-exceptions
 
 cv_clang_libs = -lpthread
 
-$(cv_obj_path)/test.clang.exe : $(cv_src_path)/makefile $(cv_test_srcs_abs)
+$(cv_obj_path)/test.clang.exe : $(MAKEFILE_LIST) $(cv_test_srcs_abs)
 	@echo ld $(notdir $@)
 	$(cv_verbose)mkdir -p $(dir $@)
 	$(cv_verbose)echo -o $@ $(cv_clang_cflags) $(cv_test_srcs_abs) $(cv_clang_libs) > $@.cmd
 	$(cv_verbose)$(cv_clang_cc) @$@.cmd
 
-$(cv_obj_path)/test.clangxx.exe : $(cv_src_path)/makefile $(cv_test_srcs_abs)
+$(cv_obj_path)/test.clangxx.exe : $(MAKEFILE_LIST) $(cv_test_srcs_abs)
 	@echo ld $(notdir $@)
 	$(cv_verbose)mkdir -p $(dir $@)
 	$(cv_verbose)echo -o $@ $(cv_clang_cxxflags) $(cv_test_srcs_abs) $(cv_clang_libs) > $@.cmd
 	$(cv_verbose)$(cv_clang_cxx) @$@.cmd
 
-$(cv_obj_path)/test.bare.exe : $(cv_src_path)/makefile $(cv_test_srcs_abs)
+$(cv_obj_path)/test.bare.exe : $(MAKEFILE_LIST) $(cv_test_srcs_abs)
 	@echo ld $(notdir $@)
 	$(cv_verbose)mkdir -p $(dir $@)
 	$(cv_verbose)echo -m64 -x c -o $@ -I$(cv_src_path) -D cv_debug_ -ansi -pedantic -nostdinc -Wall -Wextra -Wno-missing-braces -Wno-missing-field-initializers -fno-stack-protector $(cv_test_srcs_abs) -nodefaultlibs -nostartfiles > $@.cmd
@@ -305,19 +288,19 @@ doc : cv-template cv-heap cv-trace
 .PHONY : cv-template
 cv-template : $(cv_obj_path)/cv_template.pdf
 
-$(cv_obj_path)/cv_template.pdf : $(cv_src_path)/makefile \
+$(cv_obj_path)/cv_template.pdf : $(MAKEFILE_LIST) \
     $(cv_src_path)/cv_doc/cv_common.tex
 
 .PHONY : cv-heap
 cv-heap : $(cv_obj_path)/cv_heap.pdf
 
-$(cv_obj_path)/cv_heap.pdf : $(cv_src_path)/makefile \
+$(cv_obj_path)/cv_heap.pdf : $(MAKEFILE_LIST) \
     $(cv_src_path)/cv_doc/cv_common.tex
 
 .PHONY : cv-trace
 cv-trace : $(cv_obj_path)/cv_trace.pdf
 
-$(cv_obj_path)/cv_trace.pdf : $(cv_src_path)/makefile \
+$(cv_obj_path)/cv_trace.pdf : $(MAKEFILE_LIST) \
     $(cv_src_path)/cv_doc/cv_trace.tex
 
 $(cv_obj_path)/%.pdf : $(cv_src_path)/cv_doc/%.tex
