@@ -66,7 +66,7 @@ void cv_stack_test(void) {
         for (i_index = 0; i_index < g_test_vector_count; i_index++) {
             cv_number_stack_ptr o_node_ptr = {0};
             o_node_ptr.p_void = cv_heap_alloc(
-                sizeof(cv_number_stack_node), 0);
+                sizeof(cv_number_stack_node), "test_stack", 0);
             if (o_node_ptr.p_void) {
                 cv_stack_init(&o_node_ptr.p_number_stack_node->o_stack);
                 cv_stack_push(&o_root,

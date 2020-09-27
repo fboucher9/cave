@@ -42,7 +42,7 @@ static cv_bool cv_options_decoder_flush( cv_options_decoder * p_this,
         /* Allocate memory for a word */
         cv_array_heap o_buffer = {0};
         /* Use cv_array_heap */
-        if (cv_array_heap_init(&o_buffer, i_word_len, 0)) {
+        if (cv_array_heap_init(&o_buffer, i_word_len, "options_decoder", 0)) {
             /* fill in the array using chunk list */
             /* ... */
             b_result = cv_options_add(p_options, &o_buffer.o_array);

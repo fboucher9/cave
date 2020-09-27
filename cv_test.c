@@ -50,7 +50,7 @@ static void cv_test_job(
 static void cv_test_heap_large(void)
 {
     /* Test large allocation */
-    void * const p_large = cv_heap_alloc(64 * 1024, 0);
+    void * const p_large = cv_heap_alloc(64 * 1024, "test_heap_large", 0);
     if (p_large) {
         cv_heap_free(p_large);
     }
@@ -331,7 +331,7 @@ static void cv_test_leak3(void) {
     static cv_array const g_leak3_name = cv_array_initializer_(a_leak3_name,
         a_leak3_name + sizeof a_leak3_name);
     cv_callstack_push(&g_leak3_name);
-    cv_heap_alloc(123, 0);
+    cv_heap_alloc(123, "test_leak3", 0);
     cv_callstack_pop();
 }
 

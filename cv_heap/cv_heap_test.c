@@ -153,7 +153,8 @@ static void cv_heap_stress_node_toggle(struct cv_heap_stress_node * p_this) {
             cv_number_format_dec());
         cv_print_nl();
 #endif /* verbose */
-        p_this->p_buffer = cv_heap_alloc(p_this->i_buffer_len, 0);
+        p_this->p_buffer = cv_heap_alloc(p_this->i_buffer_len,
+            "heap_stress_node", 0);
         if (p_this->p_buffer) {
             p_this->i_alloc_count ++;
             p_this->a_pattern[0u] = (cv_random_pick(&p_this->o_random, 256) & 0xffU);

@@ -7,7 +7,6 @@
 #include <cv_heap/cv_heap.h>
 #include <cv_thread/cv_thread_plugin.h>
 #include <cv_misc/cv_thread_local.h>
-#include <cv_algo/cv_unique.h>
 
 cv_debug_decl_(g_class, "cv_thread");
 
@@ -68,12 +67,10 @@ cv_bool cv_thread_init(
         cv_debug_construct_(g_class, p_this);
         cv_memory_zero(p_this, sizeof(cv_thread));
         {
-            static cv_unique g_thread_desc_unique =
-                cv_unique_initializer_("thread_desc", 0);
+            static cv_uptr g_thread_desc_unique = 0;
             cv_thread_desc_ptr o_desc_ptr = {0};
-            cv_unique_next(&g_thread_desc_unique);
             o_desc_ptr.p_void = cv_heap_alloc(sizeof(cv_thread_desc),
-                &g_thread_desc_unique);
+                "thread_desc", ++ g_thread_desc_unique);
             if (o_desc_ptr.p_void) {
                 cv_thread_desc_init(o_desc_ptr.p_thread_desc);
                 *(o_desc_ptr.p_thread_desc) = *(p_thread_desc);

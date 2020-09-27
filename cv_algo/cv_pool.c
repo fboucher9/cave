@@ -7,7 +7,6 @@
 #include <cv_algo/cv_pool.h>
 #include <cv_heap/cv_heap.h>
 #include <cv_debug/cv_debug.h>
-#include <cv_algo/cv_unique.h>
 
 cv_debug_decl_(g_class, "cv_pool");
 
@@ -51,10 +50,8 @@ void * cv_pool_alloc( cv_pool * p_this) {
         cv_stack_cleanup(o_stack_ptr.p_stack);
         p_result = o_stack_ptr.p_void;
     } else {
-        static cv_unique g_pool_unique =
-            cv_unique_initializer_("pool", 0);
-        cv_unique_next(&g_pool_unique);
-        p_result = cv_heap_alloc(p_this->o_desc.i_len, &g_pool_unique);
+        static cv_uptr g_pool_unique = 0;
+        p_result = cv_heap_alloc(p_this->o_desc.i_len, "pool", ++ g_pool_unique);
         if (p_result) {
         } else {
             cv_debug_msg_(cv_debug_code_out_of_memory);
