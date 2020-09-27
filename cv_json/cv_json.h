@@ -27,7 +27,7 @@ cv_bool cv_json_set_label( cv_json * p_this, cv_array const * p_string);
 cv_bool cv_json_set_string( cv_json * p_this, cv_array const * p_string);
 void cv_json_join( cv_json * p_node, cv_json * p_root);
 unsigned cv_json_get_type( cv_json const * p_this);
-void cv_json_get_number( cv_json const * p_this, double * r_number);
+double cv_json_get_number( cv_json const * p_this);
 void cv_json_get_label( cv_json const * p_this, cv_array * r_string);
 void cv_json_get_string( cv_json const * p_this, cv_array * r_string);
 

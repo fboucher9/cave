@@ -13,6 +13,7 @@
 #include <cv_algo/cv_list_it.h>
 #include <cv_algo/cv_array.h>
 #include <cv_runtime.h>
+#include <cv_json/cv_json_node.h>
 
 /*
  *
@@ -48,26 +49,6 @@ static cv_bool dup_text( cv_array * p_storage, cv_array const * p_text) {
     }
     return b_result;
 }
-
-/*
- *
- *
- */
-
-struct cv_json {
-    cv_list_node o_node;
-    /* -- */
-    cv_list_root o_root;
-    /* -- */
-    cv_array o_label;
-    /* -- */
-    cv_array o_string;
-    /* -- */
-    double i_number;
-    /* -- */
-    unsigned e_type;
-    int i_padding[3u];
-};
 
 /*
  *
@@ -187,8 +168,8 @@ unsigned cv_json_get_type( cv_json const * p_this) {
  *
  */
 
-void cv_json_get_number( cv_json const * p_this, double * r_number) {
-    *r_number = p_this->i_number;
+double cv_json_get_number( cv_json const * p_this) {
+    return p_this->i_number;
 }
 
 /*
