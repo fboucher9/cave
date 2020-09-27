@@ -117,7 +117,7 @@ void cv_heap_unload(void) {
     g_heap_loaded = cv_false;
 }
 
-void * cv_heap_alloc( cv_uptr i_buffer_length) {
+void * cv_heap_alloc( cv_uptr i_buffer_length, cv_unique const * p_unique) {
     void * p_buffer = 0;
     cv_heap_mgr * const p_this = &g_heap_mgr;
     cv_debug_assert_(g_heap_loaded, cv_debug_code_not_loaded);
@@ -146,6 +146,10 @@ void * cv_heap_alloc( cv_uptr i_buffer_length) {
                 p_heap_node->a_stack[i_stack_index] =
                     cv_callstack_query(i_stack_index);
                 i_stack_index ++;
+            }
+            /* Fill in unique info */
+            if (p_unique) {
+                p_heap_node->o_unique = *p_unique;
             }
             /* Attach node to used list */
             cv_heap_used_join(&p_this->o_used, p_heap_node);

@@ -35,7 +35,7 @@ static cv_bool dup_text( cv_array * p_storage, cv_array const * p_text) {
     cv_uptr const i_text_len = cv_array_len(p_text);
     free_text(p_storage);
     if (i_text_len) {
-        p_storage->o_min.p_void = cv_heap_alloc(i_text_len);
+        p_storage->o_min.p_void = cv_heap_alloc(i_text_len, 0);
         if (p_storage->o_min.p_void) {
             cv_runtime_memcpy( p_storage->o_min.p_void,
                 p_text->o_min.pc_void, i_text_len);
@@ -115,7 +115,7 @@ static void cv_json_cleanup(cv_json * p_this) {
 cv_json * cv_json_create(void) {
     cv_json_ptr o_ptr = {0};
     cv_uptr i_placement_len = sizeof(cv_json);
-    o_ptr.p_void = cv_heap_alloc(i_placement_len);
+    o_ptr.p_void = cv_heap_alloc(i_placement_len, 0);
     if (o_ptr.p_void) {
         cv_json_init(o_ptr.p_value);
     }

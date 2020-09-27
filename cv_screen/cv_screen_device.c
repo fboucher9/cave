@@ -62,7 +62,7 @@ static void cv_screen_device_cleanup(
 struct cv_screen_device * cv_screen_device_create(
     struct cv_screen_device_desc const * p_desc) {
     union cv_screen_device_ptr o_device_ptr = {0};
-    o_device_ptr.p_void = cv_heap_alloc(sizeof(struct cv_screen_device));
+    o_device_ptr.p_void = cv_heap_alloc(sizeof(struct cv_screen_device), 0);
     if (o_device_ptr.p_void) {
         if (cv_screen_device_init(o_device_ptr.p_device, p_desc)) {
         } else {

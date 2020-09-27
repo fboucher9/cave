@@ -12,6 +12,7 @@
 #include <cv_debug/cv_debug.h>
 #include <cv_heap/cv_heap.h>
 #include <cv_misc/cv_limits.h>
+#include <cv_algo/cv_unique.h>
 #if defined cv_linux_
 #include <poll.h>
 #endif /* #if defined cv_linux_ */
@@ -87,7 +88,13 @@ static cv_bool cv_file_poll_linux_dispatch( cv_file_poll * p_poll_min,
         if (1 >= i_count) {
             o_pollfd_ptr.p_pollfd = a_pollfd;
         } else {
-            o_pollfd_ptr.p_void = cv_heap_alloc(i_pollfd_len);
+            static unsigned char const a_pollfd_class[] = {
+                'p', 'o', 'l', 'l', 'f', 'd' };
+            static cv_unique g_pollfd_unique =
+                cv_unique_initializer_(a_pollfd_class);
+            cv_unique_next(&g_pollfd_unique);
+            o_pollfd_ptr.p_void = cv_heap_alloc(i_pollfd_len,
+                &g_pollfd_unique);
         }
         if (o_pollfd_ptr.p_pollfd) {
             struct pollfd * p_pollfd = o_pollfd_ptr.p_pollfd;

@@ -6,12 +6,14 @@
 #include <cv_algo/cv_array_pred.h>
 #include <cv_algo/cv_array_heap.h>
 #include <cv_misc/cv_bool.h>
+#include <cv_algo/cv_unique_pred.h>
 
 struct cv_array_0 {
     cv_array_heap o_buffer;
 };
 
-cv_bool cv_array_0_init( cv_array_0 * p_this, cv_array const * p_string);
+cv_bool cv_array_0_init( cv_array_0 * p_this, cv_array const * p_string,
+    cv_unique const * p_unique);
 void cv_array_0_cleanup( cv_array_0 * p_this);
 char const * cv_array_0_get( cv_array_0 const * p_this);
 cv_uptr cv_array_0_len( cv_array_0 const * p_this);

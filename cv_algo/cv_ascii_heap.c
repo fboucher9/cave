@@ -4,6 +4,7 @@
 #include <cv_algo/cv_ascii_code.h>
 #include <cv_heap/cv_heap.h>
 #include <cv_memory.h>
+#include <cv_algo/cv_unique.h>
 
 void cv_ascii_heap_init(cv_ascii_heap * p_this) {
     cv_ascii_data_init(&p_this->o_base);
@@ -23,7 +24,14 @@ cv_bool cv_ascii_heap_resize(cv_ascii_heap * p_this,
         p_this->o_base.p_max = 0;
     }
     if (i_len) {
-        void * p_placement = cv_heap_alloc(i_len);
+        static unsigned char const a_ascii_heap_class[] = {
+            'a', 's', 'c', 'i', 'i', '_', 'h', 'e', 'a', 'p'
+        };
+        static cv_unique g_ascii_heap_unique =
+            cv_unique_initializer_(a_ascii_heap_class);
+        void * p_placement = 0;
+        cv_unique_next(&g_ascii_heap_unique);
+        p_placement = cv_heap_alloc(i_len, &g_ascii_heap_unique);
         if (p_placement) {
             p_this->o_base.p_min = cv_ascii_data_cast(p_placement);
             p_this->o_base.p_max = p_this->o_base.p_min + i_len;

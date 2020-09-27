@@ -15,6 +15,7 @@ static void cv_heap_node_init( cv_heap_node * p_this,
     cv_debug_construct_(g_class, p_this);
     cv_list_node_init(&p_this->o_node);
     cv_array_init_ref(&p_this->o_payload, p_payload);
+    cv_unique_init(&p_this->o_unique);
     {
         long i_index = 0;
         while (i_index < cv_heap_node_stack_max_) {
@@ -26,6 +27,7 @@ static void cv_heap_node_init( cv_heap_node * p_this,
 
 void cv_heap_node_cleanup( cv_heap_node * p_this) {
     cv_debug_assert_( p_this, cv_debug_code_null_ptr);
+    cv_unique_cleanup(&p_this->o_unique);
     cv_array_cleanup(&p_this->o_payload);
     cv_list_node_cleanup(&p_this->o_node);
     cv_debug_destruct_(g_class, p_this);

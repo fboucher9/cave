@@ -26,7 +26,8 @@ cv_algo_lib_srcs := \
     cv_algo/cv_callstack.c \
     cv_algo/cv_pool.c \
     cv_algo/cv_pool_desc.c \
-    cv_algo/cv_pool_lock.c
+    cv_algo/cv_pool_lock.c \
+    cv_algo/cv_unique.c
 
 cv_algo_test_srcs := \
     cv_algo/cv_crc32_test.c \

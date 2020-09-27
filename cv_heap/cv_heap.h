@@ -15,7 +15,9 @@ initialization phase of application.
 
 #include <cv_misc/cv_types.h>
 
-void * cv_heap_alloc( cv_uptr i_buffer_length);
+#include <cv_algo/cv_unique_pred.h>
+
+void * cv_heap_alloc( cv_uptr i_buffer_length, cv_unique const * p_unique);
 
 void cv_heap_free( void * p_buffer);
 

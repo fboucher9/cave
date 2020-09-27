@@ -70,7 +70,7 @@ static void cv_screen_raw_cleanup(struct cv_screen_raw * p_this) {
 struct cv_screen_raw * cv_screen_raw_create(cv_file const * p_file) {
     union cv_screen_raw_ptr o_ptr = {0};
     cv_uptr const i_placement_len = sizeof(struct cv_screen_raw);
-    o_ptr.p_void = cv_heap_alloc(i_placement_len);
+    o_ptr.p_void = cv_heap_alloc(i_placement_len, 0);
     if (o_ptr.p_void) {
         if (cv_screen_raw_init(o_ptr.p_screen_raw, p_file)) {
         } else {
