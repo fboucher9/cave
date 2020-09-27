@@ -88,10 +88,8 @@ static cv_bool cv_file_poll_linux_dispatch( cv_file_poll * p_poll_min,
         if (1 >= i_count) {
             o_pollfd_ptr.p_pollfd = a_pollfd;
         } else {
-            static unsigned char const a_pollfd_class[] = {
-                'p', 'o', 'l', 'l', 'f', 'd' };
             static cv_unique g_pollfd_unique =
-                cv_unique_initializer_(a_pollfd_class);
+                cv_unique_initializer_("pollfd", 0);
             cv_unique_next(&g_pollfd_unique);
             o_pollfd_ptr.p_void = cv_heap_alloc(i_pollfd_len,
                 &g_pollfd_unique);

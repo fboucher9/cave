@@ -12,7 +12,7 @@
 #include <cv_debug/cv_debug.h>
 #include <cv_misc/cv_convert.h>
 
-cv_debug_decl_(g_class);
+cv_debug_decl_(g_class, "cv_number_enc");
 
 enum cv_number_machine {
     cv_number_machine_invalid = 0,

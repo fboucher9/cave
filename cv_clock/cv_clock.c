@@ -21,7 +21,7 @@
 #include <unistd.h>
 #endif /* #if defined cv_linux_ */
 
-cv_debug_decl_(g_class);
+cv_debug_decl_(g_class, "cv_clock");
 
 /*
  *

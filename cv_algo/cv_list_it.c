@@ -8,7 +8,7 @@
 
 #include <cv_debug/cv_debug.h>
 
-cv_debug_decl_(g_class);
+cv_debug_decl_(g_class, "cv_list_it");
 
 void cv_list_it_init(
     cv_list_it * p_this,

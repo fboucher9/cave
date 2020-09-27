@@ -313,14 +313,14 @@ static void cv_test_hello(void) {
 }
 
 static void cv_test_leak1(void) {
-    cv_debug_decl_(g_class);
+    cv_debug_decl_(g_class, "leak1");
     int i = 0;
     cv_debug_construct_(g_class, &i);
     (void)(i);
 }
 
 static void cv_test_leak2(void) {
-    cv_debug_decl_(g_class);
+    cv_debug_decl_(g_class, "leak2");
     int i = 0;
     cv_debug_destruct_(g_class, &i);
     (void)(i);

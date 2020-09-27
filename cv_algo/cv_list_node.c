@@ -4,7 +4,7 @@
 
 #include <cv_debug/cv_debug.h>
 
-cv_debug_decl_(g_class);
+cv_debug_decl_(g_class, "cv_list_node");
 
 void cv_list_node_init(
     cv_list_node * p_this)

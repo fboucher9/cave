@@ -8,7 +8,7 @@
 #include <cv_algo/cv_stack.h>
 #include <cv_debug/cv_debug.h>
 
-cv_debug_decl_(g_class);
+cv_debug_decl_(g_class, "cv_stack_it");
 
 /*
  *

@@ -10,7 +10,7 @@
 #include <cv_debug/cv_debug.h>
 
 /* Debug information for cv_file_disk_desc structure */
-cv_debug_decl_(cv_file_disk_desc_class);
+cv_debug_decl_(cv_file_disk_desc_class, "cv_file_disk_desc");
 
 /*
  *  Function: cv_file_disk_desc_init

@@ -6,7 +6,7 @@
 
 #include <cv_debug/cv_debug.h>
 
-cv_debug_decl_(g_class);
+cv_debug_decl_(g_class, "cv_array");
 
 void cv_array_init(
     cv_array * p_this)

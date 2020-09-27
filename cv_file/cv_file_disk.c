@@ -13,7 +13,7 @@
 #include <cv_runtime.h>
 
 /* Debug information for cv_file_disk structure */
-cv_debug_decl_(cv_file_disk_class);
+cv_debug_decl_(cv_file_disk_class, "cv_file_disk");
 
 /*
  *  Function: cv_file_disk_init

@@ -14,7 +14,7 @@
 #include <cv_algo/cv_array_it.h>
 #include <cv_algo/cv_unique.h>
 
-cv_debug_decl_(g_chunk_root);
+cv_debug_decl_(g_chunk_root, "cv_chunk_root");
 
 /*
  *
@@ -55,11 +55,8 @@ void cv_chunk_root_empty(cv_chunk_root * p_this) {
  */
 
 static cv_bool cv_chunk_root_append(cv_chunk_root * p_this) {
-    static unsigned char const a_chunk_node_class[] = {
-        'c', 'h', 'u', 'n', 'k', '_', 'n', 'o', 'd', 'e'
-    };
     static cv_unique g_chunk_node_unique =
-        cv_unique_initializer_(a_chunk_node_class);
+        cv_unique_initializer_("chunk_node", 0);
     cv_bool b_result = cv_false;
     cv_chunk_ptr o_chunk_ptr = {0};
     cv_unique_next(&g_chunk_node_unique);

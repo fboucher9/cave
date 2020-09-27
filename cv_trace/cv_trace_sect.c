@@ -9,7 +9,7 @@
 #include <cv_misc/cv_thread_local.h>
 #include <cv_runtime.h>
 
-cv_debug_decl_(g_trace_sect_class);
+cv_debug_decl_(g_trace_sect_class, "cv_trace_sect");
 
 static cv_thread_local_ cv_trace_sect * g_trace_sect_this = 0;
 

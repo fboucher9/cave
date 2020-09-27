@@ -9,7 +9,7 @@
 #include <cv_debug/cv_debug.h>
 #include <cv_runtime.h>
 
-cv_debug_decl_(cv_trace_map_class);
+cv_debug_decl_(cv_trace_map_class, "cv_trace_map");
 
 /*
  *

@@ -7,7 +7,7 @@
 #include <cv_random/cv_random.h>
 #include <cv_debug/cv_debug.h>
 
-cv_debug_decl_(cv_random_class);
+cv_debug_decl_(cv_random_class, "cv_random");
 
 /*
  *

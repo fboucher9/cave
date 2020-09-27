@@ -24,11 +24,8 @@ cv_bool cv_ascii_heap_resize(cv_ascii_heap * p_this,
         p_this->o_base.p_max = 0;
     }
     if (i_len) {
-        static unsigned char const a_ascii_heap_class[] = {
-            'a', 's', 'c', 'i', 'i', '_', 'h', 'e', 'a', 'p'
-        };
         static cv_unique g_ascii_heap_unique =
-            cv_unique_initializer_(a_ascii_heap_class);
+            cv_unique_initializer_("ascii_heap", 0);
         void * p_placement = 0;
         cv_unique_next(&g_ascii_heap_unique);
         p_placement = cv_heap_alloc(i_len, &g_ascii_heap_unique);

@@ -10,7 +10,7 @@
 #include <cv_debug/cv_debug.h>
 #include <cv_algo/cv_array_heap.h>
 
-cv_debug_decl_(g_options_decoder);
+cv_debug_decl_(g_options_decoder, "cv_options_decoder");
 
 /*
  *

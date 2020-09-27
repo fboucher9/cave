@@ -12,7 +12,7 @@
 #include <cv_file/cv_file.h>
 #include <cv_debug/cv_debug.h>
 
-cv_debug_decl_(g_screen_device);
+cv_debug_decl_(g_screen_device, "cv_screen_device");
 
 /*
  *

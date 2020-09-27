@@ -9,7 +9,7 @@
 #include <cv_misc/cv_thread_local.h>
 #include <cv_algo/cv_unique.h>
 
-cv_debug_decl_(g_class);
+cv_debug_decl_(g_class, "cv_thread");
 
 static cv_bool g_thread_loaded = cv_false;
 
@@ -68,11 +68,8 @@ cv_bool cv_thread_init(
         cv_debug_construct_(g_class, p_this);
         cv_memory_zero(p_this, sizeof(cv_thread));
         {
-            static unsigned char const a_thread_desc_class[] = {
-                't', 'h', 'r', 'e', 'a', 'd', '_', 'd', 'e', 's', 'c'
-            };
             static cv_unique g_thread_desc_unique =
-                cv_unique_initializer_(a_thread_desc_class);
+                cv_unique_initializer_("thread_desc", 0);
             cv_thread_desc_ptr o_desc_ptr = {0};
             cv_unique_next(&g_thread_desc_unique);
             o_desc_ptr.p_void = cv_heap_alloc(sizeof(cv_thread_desc),

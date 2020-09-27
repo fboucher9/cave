@@ -7,7 +7,7 @@
 #include <cv_thread/cv_once.h>
 #include <cv_debug/cv_debug.h>
 
-cv_debug_decl_(cv_once_class);
+cv_debug_decl_(cv_once_class, "cv_once");
 
 /*
  *

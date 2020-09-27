@@ -6,7 +6,7 @@
 
 #include <cv_debug/cv_debug.h>
 
-cv_debug_decl_(g_class);
+cv_debug_decl_(g_class, "cv_thread_desc");
 
 void cv_thread_desc_init(
     cv_thread_desc * p_this)

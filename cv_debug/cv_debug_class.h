@@ -18,35 +18,29 @@
 
 struct cv_debug_class {
     cv_debug_class * p_next;
-    char const * p_file;
-    /* -- */
-    long i_init_count;
-    long i_line;
+    char const * p_name;
+    cv_sptr i_init_count;
 };
 
-#define cv_debug_decl_(g_class) \
-static cv_debug_class g_class = {0}
+#define cv_debug_decl_(g_class, p_name) \
+static cv_debug_class g_class = {0, (p_name), 0}
 
 void xx_debug_class_construct(
     cv_debug_class * p_class,
-    char const * p_file,
-    int i_line,
     void * p_buf,
     cv_uptr i_buf_len);
 
 #define cv_debug_construct_(g_class, p_this) \
-    xx_debug_class_construct(&(g_class), __FILE__, __LINE__, \
+    xx_debug_class_construct(&(g_class), \
         (p_this), sizeof(*(p_this)))
 
 void xx_debug_class_destruct(
     cv_debug_class * p_class,
-    char const * p_file,
-    int i_line,
     void * p_buf,
     cv_uptr i_buf_len);
 
 #define cv_debug_destruct_(g_class, p_this) \
-    xx_debug_class_destruct(&(g_class), __FILE__, __LINE__, \
+    xx_debug_class_destruct(&(g_class), \
         (p_this), sizeof(*(p_this)))
 
 #else /* #if defined cv_debug_ */

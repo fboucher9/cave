@@ -11,6 +11,7 @@
 
 #include <cv_thread/cv_mutex_impl.h>
 #include <cv_runtime.h>
+#include <cv_misc/cv_cast.h>
 
 #if defined cv_have_libc_
 #include <stdio.h>
@@ -28,12 +29,9 @@ static cv_mutex g_debug_class_mutex = {0};
  *
  */
 
-static void cv_debug_class_register( cv_debug_class * p_class,
-    char const * p_file, int i_line) {
+static void cv_debug_class_register( cv_debug_class * p_class) {
     if (p_class->p_next) {
     } else {
-        p_class->p_file = p_file;
-        p_class->i_line = i_line;
         p_class->p_next = g_debug_class_list;
         g_debug_class_list = p_class;
     }
@@ -44,11 +42,10 @@ static void cv_debug_class_register( cv_debug_class * p_class,
  */
 
 void xx_debug_class_construct( cv_debug_class * p_class,
-    char const * p_file, int i_line,
     void * p_buf, cv_uptr i_buf_len) {
     cv_mutex_impl_lock(&g_debug_class_mutex);
     cv_runtime_memset(p_buf, 0xcc, i_buf_len);
-    cv_debug_class_register(p_class, p_file, i_line);
+    cv_debug_class_register(p_class);
     p_class->i_init_count ++;
     g_debug_class_count ++;
     cv_mutex_impl_unlock(&g_debug_class_mutex);
@@ -59,11 +56,10 @@ void xx_debug_class_construct( cv_debug_class * p_class,
  */
 
 void xx_debug_class_destruct( cv_debug_class * p_class,
-    char const * p_file, int i_line,
     void * p_buf, cv_uptr i_buf_len) {
     cv_mutex_impl_lock(&g_debug_class_mutex);
     cv_runtime_memset(p_buf, 0xcd, i_buf_len);
-    cv_debug_class_register(p_class, p_file, i_line);
+    cv_debug_class_register(p_class);
     p_class->i_init_count --;
     g_debug_class_count --;
     cv_mutex_impl_unlock(&g_debug_class_mutex);
@@ -76,10 +72,11 @@ void xx_debug_class_destruct( cv_debug_class * p_class,
 static void cv_debug_class_report_node(cv_debug_class const * p_iterator) {
     if (p_iterator->i_init_count) {
 #if defined cv_have_libc_
-        fprintf(stderr, "%s:%ld:%ld\n",
-            p_iterator->p_file,
-            p_iterator->i_line,
-            p_iterator->i_init_count);
+        signed long const i_init_count =
+            cv_cast_(signed long)(p_iterator->i_init_count);
+        fprintf(stderr, "%s:%ld\n",
+            p_iterator->p_name,
+            i_init_count);
 #endif /* #if defined cv_have_libc_ */
     }
 }

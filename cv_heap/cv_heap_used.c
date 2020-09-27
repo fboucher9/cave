@@ -15,7 +15,7 @@
 #include <cv_file/cv_file_print.h>
 #include <cv_number/cv_number_desc.h>
 
-cv_debug_decl_(g_class);
+cv_debug_decl_(g_class, "cv_heap_used");
 
 /*
  *

@@ -6,7 +6,7 @@
 #include <cv_debug/cv_debug.h>
 #include <cv_heap/cv_heap_secondary.h>
 
-cv_debug_decl_(g_class);
+cv_debug_decl_(g_class, "cv_heap_node");
 
 static void cv_heap_node_init( cv_heap_node * p_this,
     cv_array const * p_payload)

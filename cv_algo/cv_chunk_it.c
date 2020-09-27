@@ -8,7 +8,7 @@
 #include <cv_algo/cv_chunk_root.h>
 #include <cv_debug/cv_debug.h>
 
-cv_debug_decl_(g_chunk_it);
+cv_debug_decl_(g_chunk_it, "cv_chunk_it");
 
 /*
  *

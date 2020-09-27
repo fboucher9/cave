@@ -12,6 +12,8 @@
 #include <cv_algo/cv_array.h>
 #include <cv_test_print.h>
 #include <cv_misc/cv_cast.h>
+#include <cv_json/cv_json_dec.h>
+#include <cv_algo/cv_array_it.h>
 
 /*
  *
@@ -224,8 +226,33 @@ static void cv_json_test_1(void) {
  *
  */
 
+static void cv_json_test_2(void) {
+    /* test for cv_json_dec */
+    static unsigned char const a_text[] = {
+        '\"', 'h', 'i', '\"'
+    };
+    static cv_array o_text = cv_array_initializer_(
+        a_text, a_text + sizeof(a_text));
+    cv_array_it o_document;
+    cv_array_it_init(&o_document, &o_text);
+    {
+        /* */
+        cv_json * p_json_node = cv_json_dec(&o_document);
+        if (p_json_node) {
+            dump_json_node(p_json_node, cv_false, cv_true);
+            cv_json_destroy(p_json_node);
+        }
+    }
+    cv_array_it_cleanup(&o_document);
+}
+
+/*
+ *
+ */
+
 void cv_json_test(void) {
     cv_json_test_1();
+    cv_json_test_2();
 }
 
 /* end-of-file: cv_json_test.h */

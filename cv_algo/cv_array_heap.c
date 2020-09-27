@@ -8,7 +8,7 @@
 
 #include <cv_algo/cv_unique.h>
 
-cv_debug_decl_(g_class);
+cv_debug_decl_(g_class, "cv_buffer");
 
 static cv_bool cv_array_heap_realloc(
     cv_array_heap * p_this,
@@ -24,11 +24,8 @@ static cv_bool cv_array_heap_realloc(
         if (p_unique) {
             o_array_ptr.p_void = cv_heap_alloc(i_length, p_unique);
         } else {
-            static unsigned char const a_array_heap_class[] = {
-                'a', 'r', 'r', 'a', 'y', '_', 'h', 'e', 'a', 'p'
-            };
             static cv_unique g_array_heap_unique =
-                cv_unique_initializer_(a_array_heap_class);
+                cv_unique_initializer_("array_heap", 0);
             cv_unique_next(&g_array_heap_unique);
             o_array_ptr.p_void = cv_heap_alloc(i_length, &g_array_heap_unique);
         }
