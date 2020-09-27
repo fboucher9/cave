@@ -192,6 +192,17 @@ cv_cflags = \
 
 cv_verbose ?= @
 
+cv_color_fn = [ -t 1 ] && echo -n -e $(1) || true
+cv_color_green = $(call cv_color_fn,"\033[1;32m")
+cv_color_yellow = $(call cv_color_fn,"\033[1;33m")
+cv_color_cyan = $(call cv_color_fn,"\033[1;36m")
+cv_color_normal = $(call cv_color_fn,"\033[0m")
+
+cv_echo_message = $(cv_color_$(2));echo -n $(1);$(cv_color_normal);echo ''
+cv_echo_green_message = $(call cv_echo_message,$(1),green)
+cv_echo_yellow_message = $(call cv_echo_message,$(1),yellow)
+cv_echo_cyan_message = $(call cv_echo_message,$(1),cyan)
+
 .PHONY : test all clang mingw bare
 test : $(cv_obj_path)/test.exe
 
@@ -208,24 +219,24 @@ all : bare
 bare : $(cv_obj_path)/test.bare.exe
 
 $(cv_obj_path)/test.exe : $(cv_test_objs_abs) $(cv_src_path)/cv_export.mak
-	@echo -e "\033[1;36mld $(@:$(cv_dst_path)/%=%)\033[0m"
+	@$(call cv_echo_cyan_message,ld $(@:$(cv_dst_path)/%=%))
 	$(cv_verbose)echo -m32 -o $(cv_obj_path)/test.exe $(cv_cflags) $(cv_profile_cflags) -rdynamic $(cv_test_objs_abs) -Wl,--version-script=$(cv_src_path)/cv_export.mak -lpthread > $@.cmd
 	$(cv_verbose)gcc @$@.cmd
 
 $(cv_test_objs_abs) : $(MAKEFILE_LIST)
 
 $(cv_obj_path)/%.c.o : $(cv_src_path)/%.c
-	@echo -e "\033[1;32mcc $(<:$(cv_src_path)/%=%)\033[0m"
+	@$(call cv_echo_green_message,cc $(<:$(cv_src_path)/%=%))
 	$(cv_verbose)mkdir -p $(dir $@)
 	$(cv_verbose)echo -c -m32 -x c -o $@ $(cv_cflags) $(cv_profile_cflags) $(cv_defines) $(cv_includes) $< -MMD > $@.cmd
 	$(cv_verbose)gcc @$@.cmd
 
 $(cv_obj_path)/test.m64.exe : $(MAKEFILE_LIST) $(cv_test_srcs_abs)
-	@echo -e "\033[1;36mld $(notdir $@)\033[0m"
+	@$(call cv_echo_cyan_message,ld $(notdir $@))
 	$(cv_verbose)gcc -m64 -x c -o $(cv_obj_path)/test.m64.exe $(cv_cflags) $(cv_defines) $(cv_includes) $(cv_test_srcs_abs) -lpthread
 
 $(cv_obj_path)/test.cxx.exe : $(MAKEFILE_LIST) $(cv_test_srcs_abs)
-	@echo ld $(notdir $@)
+	@$(call cv_echo_cyan_message,ld $(notdir $@))
 	$(cv_verbose)g++ -x c++ -o $(cv_obj_path)/test.cxx.exe -fno-rtti -fno-exceptions -Wold-style-cast $(cv_cflags) $(cv_defines) $(cv_includes) $(cv_test_srcs_abs) -lpthread
 
 cv_mingw_cc = i686-w64-mingw32-gcc -x c
@@ -239,12 +250,12 @@ cv_mingw_cxxflags = -fno-rtti -fno-exceptions -Wold-style-cast $(cv_mingw_cflags
 cv_mingw_libs = -lpthread
 
 $(cv_obj_path)/test.mingw.exe : $(MAKEFILE_LIST) $(cv_test_srcs_abs)
-	@echo ld $(notdir $@)
+	@$(call cv_echo_cyan_message,ld $(notdir $@))
 	$(cv_verbose)echo -o $@ $(cv_mingw_cflags) $(cv_test_srcs_abs) $(cv_mingw_libs) > $@.cmd
 	$(cv_verbose)$(cv_mingw_cc) @$@.cmd
 
 $(cv_obj_path)/test.mingwxx.exe : $(MAKEFILE_LIST) $(cv_test_srcs_abs)
-	@echo ld $(notdir $@)
+	@$(call cv_echo_cyan_message,ld $(notdir $@))
 	$(cv_verbose)echo -o $@ $(cv_mingw_cxxflags) $(cv_test_srcs_abs) $(cv_mingw_libs) > $@.cmd
 	$(cv_verbose)$(cv_mingw_cxx) @$@.cmd
 
@@ -261,19 +272,19 @@ cv_clang_cxxflags = $(cv_clang_cflags) -fno-rtti -fno-exceptions
 cv_clang_libs = -lpthread
 
 $(cv_obj_path)/test.clang.exe : $(MAKEFILE_LIST) $(cv_test_srcs_abs)
-	@echo ld $(notdir $@)
+	@$(call cv_echo_cyan_message,ld $(notdir $@))
 	$(cv_verbose)mkdir -p $(dir $@)
 	$(cv_verbose)echo -o $@ $(cv_clang_cflags) $(cv_test_srcs_abs) $(cv_clang_libs) > $@.cmd
 	$(cv_verbose)$(cv_clang_cc) @$@.cmd
 
 $(cv_obj_path)/test.clangxx.exe : $(MAKEFILE_LIST) $(cv_test_srcs_abs)
-	@echo ld $(notdir $@)
+	@$(call cv_echo_cyan_message,ld $(notdir $@))
 	$(cv_verbose)mkdir -p $(dir $@)
 	$(cv_verbose)echo -o $@ $(cv_clang_cxxflags) $(cv_test_srcs_abs) $(cv_clang_libs) > $@.cmd
 	$(cv_verbose)$(cv_clang_cxx) @$@.cmd
 
 $(cv_obj_path)/test.bare.exe : $(MAKEFILE_LIST) $(cv_test_srcs_abs)
-	@echo ld $(notdir $@)
+	@$(call cv_echo_cyan_message,ld $(notdir $@))
 	$(cv_verbose)mkdir -p $(dir $@)
 	$(cv_verbose)echo -m64 -x c -o $@ -I$(cv_src_path) -D cv_debug_ -ansi -pedantic -nostdinc -Wall -Wextra -Wno-missing-braces -Wno-missing-field-initializers -fno-stack-protector $(cv_test_srcs_abs) -nodefaultlibs -nostartfiles > $@.cmd
 	$(cv_verbose)gcc @$@.cmd
