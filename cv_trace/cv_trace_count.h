@@ -37,12 +37,18 @@ struct cv_trace_count {
     /* -- */
 
     /* name of parent object */
-    cv_array o_parent;
+    char const * p_parent;
+
+    /* name of counter */
+    char const * p_name;
 
     /* -- */
 
-    /* name of counter */
-    cv_array o_name;
+    /* unique instance id for counter */
+    cv_uptr i_instance;
+
+    /* align to 64-bit */
+    cv_uptr z_padding[1u];
 
     /* -- */
 
@@ -60,8 +66,8 @@ struct cv_trace_count {
 
 void cv_trace_count_load(void);
 void cv_trace_count_unload(void);
-void cv_trace_count_init( cv_trace_count * p_this, cv_array const * p_parent,
-    cv_array const * p_name );
+void cv_trace_count_init( cv_trace_count * p_this, char const * p_parent,
+    char const * p_name );
 void cv_trace_count_cleanup( cv_trace_count * p_this );
 void cv_trace_count_add( cv_trace_count * p_this,
     cv_ull i_increment);

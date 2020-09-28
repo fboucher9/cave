@@ -22,12 +22,12 @@ static void cv_trace_test_dump_stack(void) {
     cv_print_nl();
     /* cv_trace_stack_report(); */
     while (i_callstack_index < i_callstack_count) {
-        cv_array const * p_callstack_name =
+        char const * p_callstack_name =
             cv_callstack_query(i_callstack_index);
         i_callstack_index ++;
         if (p_callstack_name) {
             cv_print_char('[');
-            cv_print_array(p_callstack_name);
+            cv_print_0(p_callstack_name, 80);
             cv_print_char(']');
             cv_print_nl();
         }
@@ -50,9 +50,13 @@ static void cv_trace_test_func_report(void) {
     while (cv_trace_count_it_next(&o_it, &o_ptr)) {
         cv_trace_count const * p_trace_count = o_ptr.pc_trace_count;
         cv_print_char('[');
-        cv_print_array(&p_trace_count->o_parent);
-        cv_print_char('.');
-        cv_print_array(&p_trace_count->o_name);
+        if (p_trace_count->p_parent) {
+            cv_print_0(p_trace_count->p_parent, 80);
+            cv_print_char('.');
+        }
+        if (p_trace_count->p_name) {
+            cv_print_0(p_trace_count->p_name, 80);
+        }
         cv_print_char(']');
         cv_print_char(':');
         {
@@ -115,11 +119,8 @@ void cv_trace_test(void) {
             cv_trace_sect_cleanup(&o_echo);
         }
         {
-            static char const a_f1_name[] = { 'f', '1' };
-            static cv_array const o_f1_name = cv_array_initializer_(a_f1_name,
-                a_f1_name + sizeof a_f1_name);
             static cv_trace_func f1 = {0};
-            cv_trace_func_init(&f1, &o_f1_name);
+            cv_trace_func_init(&f1, "f1");
             {
                 cv_trace_func_enter(&f1);
                 cv_trace_test_dump_stack();

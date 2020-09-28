@@ -32,15 +32,15 @@ void cv_trace_count_unload(void) {
  *
  */
 
-void cv_trace_count_init( cv_trace_count * p_this, cv_array const * p_parent,
-    cv_array const * p_name ) {
+void cv_trace_count_init( cv_trace_count * p_this, char const * p_parent,
+    char const * p_name ) {
     cv_debug_construct_(g_trace_count_class, p_this);
     cv_list_node_init(&p_this->o_node);
     /* lock of global list */
     cv_list_root_append(&g_trace_count_root, &p_this->o_node);
     /* unlock of global list */
-    cv_array_init_ref(&p_this->o_parent, p_parent);
-    cv_array_init_ref(&p_this->o_name, p_name);
+    p_this->p_parent = p_parent;
+    p_this->p_name = p_name;
     p_this->i_summary_count = 0;
     p_this->i_period_count = 0;
 }
@@ -56,8 +56,8 @@ void cv_trace_count_cleanup( cv_trace_count * p_this ) {
     /* unlock of global list */
     p_this->i_summary_count = 0;
     p_this->i_period_count = 0;
-    cv_array_cleanup(&p_this->o_name);
-    cv_array_cleanup(&p_this->o_parent);
+    p_this->p_name = 0;
+    p_this->p_parent = 0;
     cv_list_node_cleanup(&p_this->o_node);
     cv_debug_destruct_(g_trace_count_class, p_this);
 }

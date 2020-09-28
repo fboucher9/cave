@@ -35,7 +35,10 @@ struct cv_trace_func {
     /* -- */
 
     /* Symbol for name */
-    cv_array o_symbol;
+    char const * p_symbol;
+
+    /* Align to 64-bit */
+    void * p_padding[1u];
 
     /* -- */
 
@@ -52,7 +55,7 @@ struct cv_trace_func {
 void cv_trace_func_load(void);
 void cv_trace_func_unload(void);
 void cv_trace_func_init( cv_trace_func * p_trace_func,
-    cv_array const * p_name);
+    char const * p_name);
 void cv_trace_func_cleanup( cv_trace_func * p_this);
 void cv_trace_func_enter( cv_trace_func * p_this);
 #if 0
