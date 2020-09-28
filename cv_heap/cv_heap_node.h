@@ -29,7 +29,7 @@ struct cv_heap_node {
     /* -- */
     /* statistics ... */
     /* stack ... */
-    cv_array const * a_stack[cv_heap_node_stack_max_];
+    char const * a_stack[cv_heap_node_stack_max_];
 };
 
 void cv_heap_node_cleanup( cv_heap_node * p_heap_node);

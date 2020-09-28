@@ -51,10 +51,10 @@ static void cv_heap_print_leak_node(cv_heap_node const * p_heap_node) {
     {
         cv_uptr i_index = 0;
         while (i_index < cv_heap_node_stack_max_) {
-            cv_array const * const p_symbol = p_heap_node->a_stack[i_index];
+            char const * const p_symbol = p_heap_node->a_stack[i_index];
             if (p_symbol) {
                 cv_file_print_char(p_std_err, '[');
-                cv_file_print_array(p_std_err, p_symbol);
+                cv_file_print_0(p_std_err, p_symbol, 80);
                 cv_file_print_char(p_std_err, ']');
                 cv_file_print_nl(p_std_err);
             }

@@ -327,10 +327,7 @@ static void cv_test_leak2(void) {
 }
 
 static void cv_test_leak3(void) {
-    static char const a_leak3_name[] = { 'l', 'e', 'a', 'k', '3' };
-    static cv_array const g_leak3_name = cv_array_initializer_(a_leak3_name,
-        a_leak3_name + sizeof a_leak3_name);
-    cv_callstack_push(&g_leak3_name);
+    cv_callstack_push("leak3");
     cv_heap_alloc(123, "test_leak3", 0);
     cv_callstack_pop();
 }

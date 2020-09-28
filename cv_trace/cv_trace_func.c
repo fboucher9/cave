@@ -65,22 +65,12 @@ void cv_trace_func_unload(void) {
  */
 
 void cv_trace_func_init( cv_trace_func * p_this,
-    cv_array const * p_name) {
-    static unsigned char const a_count_call_name[] = {
-        'c', 'a', 'l', 'l' };
-    static cv_array const g_count_call_name =
-        cv_array_initializer_(a_count_call_name,
-            a_count_call_name + sizeof(a_count_call_name));
-    static unsigned char const a_count_elapsed_name[] = {
-        'e', 'l', 'a', 'p', 's', 'e', 'd' };
-    static cv_array const g_count_elapsed_name =
-        cv_array_initializer_(a_count_elapsed_name,
-            a_count_elapsed_name + sizeof(a_count_elapsed_name));
+    char const * p_name) {
     cv_debug_construct_(g_trace_func_class, p_this);
     cv_list_node_init(&p_this->o_node);
-    cv_array_init_ref(&p_this->o_symbol, p_name);
-    cv_trace_count_init(&p_this->o_call, p_name, &g_count_call_name);
-    cv_trace_count_init(&p_this->o_elapsed, p_name, &g_count_elapsed_name);
+    p_this->p_symbol = p_name;
+    cv_trace_count_init(&p_this->o_call, p_name, "call");
+    cv_trace_count_init(&p_this->o_elapsed, p_name, "elapsed");
     /* lock of global mutex */
     cv_list_join(&p_this->o_node, &g_trace_func_list.o_node);
     /* unlock of global mutex */
@@ -96,7 +86,7 @@ void cv_trace_func_cleanup( cv_trace_func * p_this) {
     /* unlock of global mutex */
     cv_trace_count_cleanup(&p_this->o_elapsed);
     cv_trace_count_cleanup(&p_this->o_call);
-    cv_array_cleanup(&p_this->o_symbol);
+    p_this->p_symbol = 0;
     cv_list_node_cleanup(&p_this->o_node);
     cv_debug_destruct_(g_trace_func_class, p_this);
 }
@@ -106,7 +96,7 @@ void cv_trace_func_cleanup( cv_trace_func * p_this) {
  */
 
 void cv_trace_func_enter( cv_trace_func * p_this) {
-    cv_callstack_push(&p_this->o_symbol);
+    cv_callstack_push(p_this->p_symbol);
     if (g_local.i_depth < cv_trace_func_depth_max) {
         g_local.a_stack[g_local.i_depth].p_this = p_this;
         cv_clock_tick_read(&g_local.a_stack[g_local.i_depth].o_clock);
