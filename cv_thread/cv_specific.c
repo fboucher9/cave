@@ -10,7 +10,7 @@
  *
  */
 
-cv_bool cv_specific_init( struct cv_specific * p_this,
+cv_bool cv_specific_init( cv_specific * p_this,
     cv_specific_destructor * p_destructor) {
     cv_bool b_result = cv_false;
 #if defined cv_have_pthread_
@@ -31,7 +31,7 @@ cv_bool cv_specific_init( struct cv_specific * p_this,
  *
  */
 
-void cv_specific_cleanup( struct cv_specific * p_this) {
+void cv_specific_cleanup( cv_specific * p_this) {
     (void)p_this;
 }
 
@@ -39,7 +39,7 @@ void cv_specific_cleanup( struct cv_specific * p_this) {
  *
  */
 
-void cv_specific_set( struct cv_specific * p_this, void const * p_value) {
+void cv_specific_set( cv_specific * p_this, void const * p_value) {
 #if defined cv_have_pthread_
     int const i_pthread_result = pthread_setspecific(
         p_this->u.o_handle, p_value);
@@ -53,7 +53,7 @@ void cv_specific_set( struct cv_specific * p_this, void const * p_value) {
  *
  */
 
-void * cv_specific_get( struct cv_specific * p_this) {
+void * cv_specific_get( cv_specific * p_this) {
     void * p_value = 0;
 #if defined cv_have_pthread_
     p_value = pthread_getspecific(p_this->u.o_handle);

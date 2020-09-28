@@ -14,7 +14,7 @@ cv_node_it modules.
 
 #include <cv_debug/cv_debug.h>
 
-cv_debug_decl_(g_class, "cv_list_root");
+cv_debug_decl_(g_class, "cv_list_root", sizeof(cv_list_root));
 
 /*
 

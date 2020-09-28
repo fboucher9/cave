@@ -9,7 +9,7 @@
 #include <cv_debug/cv_debug.h>
 #include <cv_misc/cv_convert.h>
 
-cv_debug_decl_(g_class, "cv_clock_counter");
+cv_debug_decl_(g_class, "cv_clock_counter", sizeof(cv_clock_counter));
 
 /*
  *

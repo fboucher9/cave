@@ -10,7 +10,7 @@
 #include <cv_debug/cv_debug.h>
 #include <cv_algo/cv_array_it.h>
 
-cv_debug_decl_(g_class, "cv_number_dec");
+cv_debug_decl_(g_class, "cv_number_dec", sizeof(cv_number_dec));
 
 /*
  *

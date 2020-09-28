@@ -41,10 +41,9 @@ static void cv_debug_class_register( cv_debug_class * p_class) {
  *
  */
 
-void xx_debug_class_construct( cv_debug_class * p_class,
-    void * p_buf, cv_uptr i_buf_len) {
+void xx_debug_class_construct( cv_debug_class * p_class, void * p_buf) {
     cv_mutex_impl_lock(&g_debug_class_mutex);
-    cv_runtime_memset(p_buf, 0xcc, i_buf_len);
+    cv_runtime_memset(p_buf, 0xcc, p_class->i_placement_len);
     cv_debug_class_register(p_class);
     p_class->i_init_count ++;
     g_debug_class_count ++;
@@ -55,10 +54,9 @@ void xx_debug_class_construct( cv_debug_class * p_class,
  *
  */
 
-void xx_debug_class_destruct( cv_debug_class * p_class,
-    void * p_buf, cv_uptr i_buf_len) {
+void xx_debug_class_destruct( cv_debug_class * p_class, void * p_buf) {
     cv_mutex_impl_lock(&g_debug_class_mutex);
-    cv_runtime_memset(p_buf, 0xcd, i_buf_len);
+    cv_runtime_memset(p_buf, 0xcd, p_class->i_placement_len);
     cv_debug_class_register(p_class);
     p_class->i_init_count --;
     g_debug_class_count --;

@@ -8,7 +8,7 @@
 #include <cv_debug/cv_debug.h>
 #include <cv_misc/cv_sizeof.h>
 
-cv_debug_decl_(g_class, "cv_heap_secondary");
+cv_debug_decl_(g_class, "cv_heap_secondary", sizeof(cv_heap_secondary));
 
 static cv_uptr const g_heap_secondary_grow_len = 4096;
 

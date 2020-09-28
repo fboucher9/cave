@@ -12,7 +12,7 @@
 #include <cv_debug/cv_debug.h>
 
 /* Debugging information for cv_file structure */
-cv_debug_decl_(cv_file_class, "cv_file");
+cv_debug_decl_(cv_file_class, "cv_file", sizeof(cv_file));
 
 /*
  *  Function: cv_file_init

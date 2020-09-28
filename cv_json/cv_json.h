@@ -19,6 +19,8 @@
 #include <cv_misc/cv_bool.h>
 #include <cv_algo/cv_array_pred.h>
 
+void cv_json_load(void);
+void cv_json_unload(void);
 cv_json * cv_json_create(void);
 void cv_json_destroy( cv_json * p_this);
 void cv_json_set_type( cv_json * p_this, unsigned e_type);

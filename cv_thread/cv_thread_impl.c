@@ -8,7 +8,7 @@
 #include <cv_thread/cv_thread_plugin.h>
 #include <cv_misc/cv_thread_local.h>
 
-cv_debug_decl_(g_class, "cv_thread");
+cv_debug_decl_(g_class, "cv_thread", sizeof(cv_thread));
 
 static cv_bool g_thread_loaded = cv_false;
 

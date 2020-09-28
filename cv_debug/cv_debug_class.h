@@ -19,29 +19,31 @@
 struct cv_debug_class {
     cv_debug_class * p_next;
     char const * p_name;
+    /* -- */
+    cv_uptr i_placement_len;
     cv_sptr i_init_count;
 };
 
-#define cv_debug_decl_(g_class, p_name) \
-static cv_debug_class g_class = {0, (p_name), 0}
+#define cv_debug_class_initializer_(p_name, i_placement_len) \
+{0, (p_name), (i_placement_len), 0}
+
+#define cv_debug_decl_(g_class, p_name, i_placement_len) \
+static cv_debug_class g_class = \
+cv_debug_class_initializer_(p_name, i_placement_len)
 
 void xx_debug_class_construct(
     cv_debug_class * p_class,
-    void * p_buf,
-    cv_uptr i_buf_len);
+    void * p_buf);
 
 #define cv_debug_construct_(g_class, p_this) \
-    xx_debug_class_construct(&(g_class), \
-        (p_this), sizeof(*(p_this)))
+    xx_debug_class_construct(&(g_class), (p_this))
 
 void xx_debug_class_destruct(
     cv_debug_class * p_class,
-    void * p_buf,
-    cv_uptr i_buf_len);
+    void * p_buf);
 
 #define cv_debug_destruct_(g_class, p_this) \
-    xx_debug_class_destruct(&(g_class), \
-        (p_this), sizeof(*(p_this)))
+    xx_debug_class_destruct(&(g_class), (p_this))
 
 #else /* #if defined cv_debug_ */
 

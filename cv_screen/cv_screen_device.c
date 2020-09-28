@@ -12,8 +12,6 @@
 #include <cv_file/cv_file.h>
 #include <cv_debug/cv_debug.h>
 
-cv_debug_decl_(g_screen_device, "cv_screen_device");
-
 /*
  *
  */
@@ -28,6 +26,9 @@ struct cv_screen_device {
     cv_bool b_enabled;
     char c_padding[7u];
 };
+
+cv_debug_decl_(g_screen_device, "cv_screen_device",
+    sizeof(struct cv_screen_device));
 
 union cv_screen_device_ptr {
     void const * pc_void;

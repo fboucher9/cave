@@ -13,7 +13,7 @@
 #include <cv_heap/cv_heap.h>
 #include <cv_algo/cv_array_it.h>
 
-cv_debug_decl_(g_chunk_root, "cv_chunk_root");
+cv_debug_decl_(g_chunk_root, "cv_chunk_root", sizeof(cv_chunk_root));
 
 /*
  *

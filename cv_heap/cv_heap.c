@@ -22,10 +22,6 @@ are thread-safe.
 #include <cv_debug/cv_debug.h>
 #include <cv_algo/cv_callstack.h>
 
-cv_debug_decl_(g_class, "cv_heap_mgr");
-
-static cv_bool g_heap_loaded = cv_false;
-
 /*
  *
  */
@@ -37,6 +33,10 @@ struct cv_heap_mgr {
     cv_heap_large o_large;
     cv_heap_used o_used;
 };
+
+cv_debug_decl_(g_class, "cv_heap_mgr", sizeof(cv_heap_mgr));
+
+static cv_bool g_heap_loaded = cv_false;
 
 static cv_bool cv_heap_mgr_init(cv_heap_mgr * p_this) {
     cv_bool b_result = cv_false;

@@ -28,6 +28,7 @@ cv_test_srcs := \
     cv_options/cv_options_node.c \
     cv_options/cv_options_pool.c \
     cv_options/cv_options_decoder.c \
+    cv_object/cv_object.c \
     cv_heap/cv_heap.c \
     cv_heap/cv_heap_primary.c \
     cv_heap/cv_heap_secondary.c \

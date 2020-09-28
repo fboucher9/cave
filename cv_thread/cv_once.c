@@ -7,13 +7,13 @@
 #include <cv_thread/cv_once.h>
 #include <cv_debug/cv_debug.h>
 
-cv_debug_decl_(cv_once_class, "cv_once");
+cv_debug_decl_(cv_once_class, "cv_once", sizeof(cv_once));
 
 /*
  *
  */
 
-void cv_once_init(struct cv_once * p_this) {
+void cv_once_init(cv_once * p_this) {
     cv_debug_assert_(p_this, cv_debug_code_null_ptr);
     cv_debug_construct_(cv_once_class, p_this);
     cv_mutex_init(&p_this->o_mutex);
@@ -24,7 +24,7 @@ void cv_once_init(struct cv_once * p_this) {
  *
  */
 
-void cv_once_cleanup(struct cv_once * p_this) {
+void cv_once_cleanup(cv_once * p_this) {
     cv_debug_assert_(p_this, cv_debug_code_null_ptr);
     cv_mutex_cleanup(&p_this->o_mutex);
     cv_debug_destruct_(cv_once_class, p_this);
@@ -34,7 +34,7 @@ void cv_once_cleanup(struct cv_once * p_this) {
  *
  */
 
-cv_bool cv_once_lock(struct cv_once * p_this) {
+cv_bool cv_once_lock(cv_once * p_this) {
     cv_bool b_result = cv_false;
     cv_debug_assert_(p_this, cv_debug_code_null_ptr);
     if (p_this->o_done.b_done) {
@@ -53,7 +53,7 @@ cv_bool cv_once_lock(struct cv_once * p_this) {
  *
  */
 
-void cv_once_unlock(struct cv_once * p_this) {
+void cv_once_unlock(cv_once * p_this) {
     cv_debug_assert_(p_this, cv_debug_code_null_ptr);
     p_this->o_done.b_done = cv_true;
     cv_mutex_unlock(&p_this->o_mutex);

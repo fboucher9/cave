@@ -7,7 +7,7 @@
 #include <cv_algo/cv_pool_desc.h>
 #include <cv_debug/cv_debug.h>
 
-cv_debug_decl_(g_class, "cv_pool_desc");
+cv_debug_decl_(g_class, "cv_pool_desc", sizeof(cv_pool_desc));
 
 /*
  *

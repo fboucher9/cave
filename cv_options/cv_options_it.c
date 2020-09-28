@@ -14,7 +14,7 @@
 
 #include <cv_debug/cv_debug.h>
 
-cv_debug_decl_(g_class, "cv_options_it");
+cv_debug_decl_(g_class, "cv_options_it", sizeof(cv_options_it));
 
 void cv_options_it_init( cv_options_it * p_this,
     cv_options const * p_options) {

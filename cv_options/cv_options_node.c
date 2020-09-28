@@ -16,7 +16,7 @@
 
 #include <cv_algo/cv_array_tool.h>
 
-cv_debug_decl_(g_class, "cv_options_node");
+cv_debug_decl_(g_class, "cv_options_node", sizeof(cv_options_node));
 
 static void cv_options_node_init_node(
     cv_options_node * p_this)

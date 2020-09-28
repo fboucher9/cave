@@ -8,7 +8,7 @@
 #include <cv_debug/cv_debug.h>
 #include <cv_algo/cv_list_root.h>
 
-cv_debug_decl_(g_trace_count_class, "cv_trace_count");
+cv_debug_decl_(g_trace_count_class, "cv_trace_count", sizeof(cv_trace_count));
 
 static cv_list_root g_trace_count_root = {0};
 

@@ -38,7 +38,7 @@ struct cv_trace_func_local {
     struct cv_trace_func_stack a_stack[cv_trace_func_depth_max];
 };
 
-cv_debug_decl_(g_trace_func_class, "cv_trace_func");
+cv_debug_decl_(g_trace_func_class, "cv_trace_func", sizeof(cv_trace_func));
 
 static cv_list_root g_trace_func_list = {0};
 

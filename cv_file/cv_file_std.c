@@ -12,7 +12,7 @@
 static cv_file g_file_std_in = {0};
 static cv_file g_file_std_out = {0};
 static cv_file g_file_std_err = {0};
-static struct cv_once g_once = {0};
+static cv_once g_once = {0};
 
 /*
  *

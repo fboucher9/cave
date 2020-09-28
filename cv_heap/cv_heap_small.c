@@ -14,7 +14,7 @@
 
 #include <cv_debug/cv_debug.h>
 
-cv_debug_decl_(g_class, "cv_heap_small");
+cv_debug_decl_(g_class, "cv_heap_small", sizeof(cv_heap_small));
 
 cv_bool cv_heap_small_init(cv_heap_small * p_this) {
     cv_bool b_result = cv_false;

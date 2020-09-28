@@ -12,8 +12,6 @@
 
 #include <cv_algo/cv_array.h>
 
-cv_debug_decl_(g_class, "cv_heap_section_node");
-
 /* Predefine */
 typedef struct cv_heap_section_node cv_heap_section_node;
 
@@ -60,6 +58,8 @@ struct cv_heap_section_node
     { 0 } \
 }
 #endif
+
+cv_debug_decl_(g_class, "cv_heap_section_node", sizeof(cv_heap_section_node));
 
 static void cv_heap_section_node_init(
     cv_heap_section_node * p_this,

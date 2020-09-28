@@ -14,6 +14,7 @@
 #include <cv_algo/cv_array.h>
 #include <cv_runtime.h>
 #include <cv_json/cv_json_node.h>
+#include <cv_object/cv_object.h>
 
 /*
  *
@@ -87,6 +88,25 @@ static void cv_json_cleanup(cv_json * p_this) {
     p_this->e_type = cv_json_type_null;
 }
 
+static cv_object g_json_node_object;
+
+/*
+ *
+ */
+
+void cv_json_load(void) {
+    cv_uptr i_placement_len = sizeof(cv_json);
+    cv_object_init(&g_json_node_object, i_placement_len, "json_node");
+}
+
+/*
+ *
+ */
+
+void cv_json_unload(void) {
+    cv_object_cleanup(&g_json_node_object);
+}
+
 /*
  *  Function: cv_json_create()
  *
@@ -95,8 +115,7 @@ static void cv_json_cleanup(cv_json * p_this) {
 
 cv_json * cv_json_create(void) {
     cv_json_ptr o_ptr = {0};
-    cv_uptr i_placement_len = sizeof(cv_json);
-    o_ptr.p_void = cv_heap_alloc(i_placement_len, "json_node", 0);
+    o_ptr.p_void = cv_object_alloc(&g_json_node_object, 0);
     if (o_ptr.p_void) {
         cv_json_init(o_ptr.p_value);
     }
@@ -113,7 +132,7 @@ void cv_json_destroy( cv_json * p_this) {
     cv_json_ptr o_ptr = {0};
     o_ptr.p_value = p_this;
     cv_json_cleanup(o_ptr.p_value);
-    cv_heap_free(o_ptr.p_void);
+    cv_object_free(&g_json_node_object, o_ptr.p_void);
 }
 
 /*

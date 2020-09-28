@@ -249,7 +249,8 @@ static void cv_heap_stress_thread_entry(void * p_context) {
     }
 }
 
-cv_debug_decl_(cv_heap_stress_thread_class, "stress_heap");
+cv_debug_decl_(cv_heap_stress_thread_class, "stress_heap",
+    sizeof(struct cv_heap_stress_thread));
 
 static void cv_heap_stress_thread_init(
     struct cv_heap_stress_thread * p_this, unsigned long i_seed) {
@@ -303,7 +304,8 @@ struct cv_heap_stress_manager {
     struct cv_heap_stress_thread a_thread[cv_heap_stress_max_thread];
 };
 
-cv_debug_decl_(cv_heap_stress_manager_class, "stress_manager");
+cv_debug_decl_(cv_heap_stress_manager_class, "stress_manager",
+    sizeof(struct cv_heap_stress_manager));
 
 static void cv_heap_stress_manager_init(
     struct cv_heap_stress_manager * p_this,

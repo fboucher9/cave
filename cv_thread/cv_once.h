@@ -28,13 +28,13 @@ struct cv_once {
     } o_done;
 };
 
-void cv_once_init(struct cv_once * p_this);
+void cv_once_init(cv_once * p_this);
 
-void cv_once_cleanup(struct cv_once * p_this);
+void cv_once_cleanup(cv_once * p_this);
 
-cv_bool cv_once_lock(struct cv_once * p_this);
+cv_bool cv_once_lock(cv_once * p_this);
 
-void cv_once_unlock(struct cv_once * p_this);
+void cv_once_unlock(cv_once * p_this);
 
 #endif /* #ifndef cv_once_h_ */
 

@@ -26,7 +26,7 @@
 
 #include <cv_misc/cv_limits.h>
 
-cv_debug_decl_(g_class, "cv_options");
+cv_debug_decl_(g_class, "cv_options", sizeof(cv_options));
 
 cv_bool cv_options_load(void)
 {

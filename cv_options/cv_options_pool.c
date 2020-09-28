@@ -14,13 +14,13 @@ Description: Memory allocation pool for cv_options_node objects.
 #include <cv_options/cv_options_node_ptr.h>
 #include <cv_debug/cv_debug.h>
 
-cv_debug_decl_(g_class, "cv_options_pool");
-
 typedef struct cv_options_pool cv_options_pool;
 
 struct cv_options_pool {
     cv_pool_lock o_pool;
 };
+
+cv_debug_decl_(g_class, "cv_options_pool", sizeof(cv_options_pool));
 
 static cv_bool g_options_pool_loaded = cv_false;
 static cv_options_pool g_options_pool = {0};

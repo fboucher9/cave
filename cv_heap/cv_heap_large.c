@@ -8,7 +8,7 @@
 #include <cv_runtime.h>
 #include <cv_debug/cv_debug.h>
 
-cv_debug_decl_(g_class, "cv_heap_large");
+cv_debug_decl_(g_class, "cv_heap_large", sizeof(cv_heap_large));
 
 cv_bool cv_heap_large_init( cv_heap_large * p_this ) {
     cv_bool b_result = cv_false;

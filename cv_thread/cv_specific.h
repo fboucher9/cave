@@ -37,14 +37,14 @@ struct cv_specific {
     } u;
 };
 
-cv_bool cv_specific_init( struct cv_specific * p_this,
+cv_bool cv_specific_init( cv_specific * p_this,
     cv_specific_destructor * p_destructor);
 
-void cv_specific_cleanup( struct cv_specific * p_this);
+void cv_specific_cleanup( cv_specific * p_this);
 
-void cv_specific_set( struct cv_specific * p_this, void const * p_value);
+void cv_specific_set( cv_specific * p_this, void const * p_value);
 
-void * cv_specific_get( struct cv_specific * p_this);
+void * cv_specific_get( cv_specific * p_this);
 
 #endif /* #ifndef cv_specific_h_ */
 

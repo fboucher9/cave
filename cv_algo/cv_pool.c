@@ -8,7 +8,7 @@
 #include <cv_heap/cv_heap.h>
 #include <cv_debug/cv_debug.h>
 
-cv_debug_decl_(g_class, "cv_pool");
+cv_debug_decl_(g_class, "cv_pool", sizeof(cv_pool));
 
 /*
  *

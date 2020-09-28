@@ -14,7 +14,7 @@
 #include <cv_memory.h>
 #include <cv_debug/cv_debug.h>
 
-cv_debug_decl_(g_class, "cv_heap_pool");
+cv_debug_decl_(g_class, "cv_heap_pool", sizeof(cv_heap_pool));
 
 cv_bool cv_heap_pool_init(
     cv_heap_pool * p_this,

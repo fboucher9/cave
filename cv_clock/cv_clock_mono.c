@@ -8,7 +8,7 @@
 #include <cv_debug/cv_debug.h>
 #include <cv_clock/cv_clock_tool.h>
 
-cv_debug_decl_(g_class, "cv_clock_mono");
+cv_debug_decl_(g_class, "cv_clock_mono", sizeof(cv_clock_mono));
 
 /*
  *

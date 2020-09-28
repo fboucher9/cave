@@ -9,7 +9,7 @@
 #include <cv_clock/cv_clock_duration.h>
 #include <cv_clock/cv_clock_tool.h>
 
-cv_debug_decl_(g_class, "cv_clock_it");
+cv_debug_decl_(g_class, "cv_clock_it", sizeof(cv_clock_it));
 
 /*
  *

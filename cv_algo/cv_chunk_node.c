@@ -7,7 +7,7 @@
 #include <cv_algo/cv_chunk_node.h>
 #include <cv_debug/cv_debug_class.h>
 
-cv_debug_decl_(g_chunk_node_class, "cv_chunk_node");
+cv_debug_decl_(g_chunk_node_class, "cv_chunk_node", sizeof(cv_chunk_node));
 
 /*
  *

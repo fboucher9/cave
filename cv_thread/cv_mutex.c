@@ -7,7 +7,7 @@
 #include <cv_thread/cv_mutex.h>
 #include <cv_debug/cv_debug.h>
 
-cv_debug_decl_(g_class, "cv_mutex");
+cv_debug_decl_(g_class, "cv_mutex", sizeof(cv_mutex));
 
 /*
  *

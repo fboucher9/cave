@@ -7,7 +7,7 @@
  *
  */
 
-struct cv_specific;
+typedef struct cv_specific cv_specific;
 
 #endif /* #ifndef cv_specific_pred_h_ */
 

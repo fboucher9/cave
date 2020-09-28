@@ -11,7 +11,7 @@
 
 #include <cv_debug/cv_debug.h>
 
-cv_debug_decl_(g_class, "cv_stack");
+cv_debug_decl_(g_class, "cv_stack", sizeof(cv_stack));
 
 /*
  *  Function: cv_stack_init()

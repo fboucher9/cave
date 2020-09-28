@@ -9,7 +9,7 @@
 #include <cv_algo/cv_pool_lock.h>
 #include <cv_debug/cv_debug.h>
 
-cv_debug_decl_(g_class, "cv_pool_lock");
+cv_debug_decl_(g_class, "cv_pool_lock", sizeof(cv_pool_lock));
 
 /*
  *

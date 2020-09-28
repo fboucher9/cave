@@ -6,7 +6,7 @@
 
 #include <cv_debug/cv_debug.h>
 
-cv_debug_decl_(g_class, "cv_array_heap");
+cv_debug_decl_(g_class, "cv_array_heap", sizeof(cv_array_heap));
 
 static cv_bool cv_array_heap_realloc(
     cv_array_heap * p_this,

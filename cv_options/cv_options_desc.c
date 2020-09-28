@@ -4,7 +4,7 @@
 
 #include <cv_debug/cv_debug.h>
 
-cv_debug_decl_(g_class, "cv_options_desc");
+cv_debug_decl_(g_class, "cv_options_desc", sizeof(cv_options_desc));
 
 void cv_options_desc_init(
     cv_options_desc * p_options_desc,
