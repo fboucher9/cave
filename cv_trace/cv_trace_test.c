@@ -16,23 +16,27 @@
  */
 
 static void cv_trace_test_dump_stack(void) {
-    unsigned char i_callstack_count = cv_callstack_count();
-    unsigned char i_callstack_index = 0;
     cv_print_0("--- stack ---", 80);
     cv_print_nl();
     /* cv_trace_stack_report(); */
-    while (i_callstack_index < i_callstack_count) {
-        union cv_callstack_value o_stack_value;
-        unsigned char e_stack_type =
-            cv_callstack_query(i_callstack_index, &o_stack_value);
-        i_callstack_index ++;
-        if (cv_callstack_type_function == e_stack_type) {
-            cv_print_char('[');
-            cv_print_0(o_stack_value.p_text, 80);
-            cv_print_char(']');
-            cv_print_nl();
+#if defined cv_have_callstack_
+    {
+        unsigned char i_callstack_count = cv_callstack_count();
+        unsigned char i_callstack_index = 0;
+        while (i_callstack_index < i_callstack_count) {
+            union cv_callstack_value o_stack_value;
+            unsigned char e_stack_type =
+                cv_callstack_query(i_callstack_index, &o_stack_value);
+            i_callstack_index ++;
+            if (cv_callstack_type_function == e_stack_type) {
+                cv_print_char('[');
+                cv_print_0(o_stack_value.p_text, 80);
+                cv_print_char(']');
+                cv_print_nl();
+            }
         }
     }
+#endif /* #if defined cv_have_callstack_ */
     cv_print_0("--- end ---", 80);
     cv_print_nl();
 }

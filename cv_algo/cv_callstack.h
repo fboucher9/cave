@@ -36,6 +36,10 @@
 
 #include <cv_misc/cv_types.h>
 
+#define cv_have_callstack_
+
+#if defined cv_have_callstack_
+
 /* Types returned by query() */
 enum cv_callstack_type {
     /* Function name pushed on stack on enter() */
@@ -59,6 +63,8 @@ void cv_callstack_leave(unsigned long i_stack_pointer);
 unsigned char cv_callstack_count(void);
 unsigned char cv_callstack_query( unsigned char i_index,
     union cv_callstack_value * r_value);
+
+#endif /* #if defined cv_have_callstack_ */
 
 #endif /* #ifndef cv_callstack_h_ */
 

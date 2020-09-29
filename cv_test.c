@@ -327,9 +327,13 @@ static void cv_test_leak2(void) {
 }
 
 static void cv_test_leak3(void) {
+#if defined cv_have_callstack_
     unsigned long n = cv_callstack_enter("leak3");
+#endif
     cv_heap_alloc(123, "test_leak3", 0);
+#if defined cv_have_callstack_
     cv_callstack_leave(n);
+#endif
 }
 
 static cv_bool cv_test_main_cb(

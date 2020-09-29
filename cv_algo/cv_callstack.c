@@ -5,6 +5,9 @@
  */
 
 #include <cv_algo/cv_callstack.h>
+
+#if defined cv_have_callstack_
+
 #include <cv_misc/cv_thread_local.h>
 #include <cv_misc/cv_limits.h>
 
@@ -68,5 +71,7 @@ unsigned char cv_callstack_query( unsigned char i_index,
     }
     return e_type;
 }
+
+#endif /* #if defined cv_have_callstack_ */
 
 /* end-of-file: cv_callstack.c */
