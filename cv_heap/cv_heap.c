@@ -142,11 +142,20 @@ void * cv_heap_alloc( cv_uptr i_buffer_length, char const * p_class,
         }
         if (p_heap_node) {
             /* Fill in stack info */
-            unsigned char i_stack_index = 0;
-            while (i_stack_index < cv_heap_node_stack_max_) {
-                p_heap_node->a_stack[i_stack_index] =
-                    cv_callstack_query(i_stack_index);
-                i_stack_index ++;
+            unsigned char i_stack_write_index = 0;
+            unsigned char i_stack_read_index = 0;
+            unsigned char i_stack_read_max = cv_callstack_count();
+            while ((i_stack_write_index < cv_heap_node_stack_max_) &&
+                (i_stack_read_index < i_stack_read_max)) {
+                union cv_callstack_value o_stack_value;
+                unsigned char e_stack_type =
+                    cv_callstack_query(i_stack_read_index, &o_stack_value);
+                if (cv_callstack_type_function == e_stack_type) {
+                    p_heap_node->a_stack[i_stack_write_index] =
+                        o_stack_value.p_text;
+                    i_stack_write_index ++;
+                }
+                i_stack_read_index ++;
             }
             /* Fill in unique info */
             cv_unique_set(&p_heap_node->o_unique, p_class, i_instance);

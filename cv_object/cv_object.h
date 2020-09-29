@@ -25,6 +25,10 @@ struct cv_object {
     cv_unique o_unique;
     /* -- */
     cv_mutex o_mutex;
+    /* -- */
+#if defined cv_debug_
+    cv_sptr i_debug_count;
+#endif /* #if defined cv_debug_ */
 };
 
 void cv_object_load(void);
@@ -33,8 +37,8 @@ void cv_object_unload(void);
 
 void cv_object_init(
     cv_object * p_this,
-    cv_uptr i_placement_len,
-    char const * p_class);
+    char const * p_class,
+    cv_uptr i_placement_len);
 
 void cv_object_cleanup(
     cv_object * p_this);
@@ -44,6 +48,18 @@ void * cv_object_alloc(
     cv_unique * r_unique);
 
 void cv_object_free(
+    cv_object * p_this,
+    void * p_placement);
+
+void cv_object_pick(
+    cv_object * p_this,
+    cv_unique * r_unique);
+
+void cv_object_construct(
+    cv_object * p_this,
+    void * p_placement);
+
+void cv_object_destruct(
     cv_object * p_this,
     void * p_placement);
 

@@ -20,7 +20,12 @@ struct cv_thread_desc {
     cv_array o_name;
 };
 
+void cv_thread_desc_load(void);
+void cv_thread_desc_unload(void);
+cv_thread_desc * cv_thread_desc_cast(void * p_placement);
 void cv_thread_desc_init( cv_thread_desc * p_this);
 void cv_thread_desc_cleanup( cv_thread_desc * p_this);
+cv_thread_desc * cv_thread_desc_create(void);
+void cv_thread_desc_destroy( cv_thread_desc * p_this);
 
 #endif /* #ifndef cv_thread_desc_h_ */

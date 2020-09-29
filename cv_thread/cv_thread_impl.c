@@ -19,6 +19,7 @@ static cv_thread_local_ cv_thread t_thread_self = { 0 };
 cv_bool cv_thread_load(void) {
     cv_bool b_result = cv_false;
     cv_debug_assert_(!g_thread_loaded, cv_debug_code_already_loaded);
+    cv_thread_desc_load();
     g_thread_loaded = cv_true;
     b_result = cv_true;
     return b_result;
@@ -26,6 +27,7 @@ cv_bool cv_thread_load(void) {
 
 void cv_thread_unload(void) {
     cv_debug_assert_(g_thread_loaded, cv_debug_code_already_unloaded);
+    cv_thread_desc_unload();
     g_thread_loaded = cv_false;
 }
 
@@ -67,12 +69,9 @@ cv_bool cv_thread_init(
         cv_debug_construct_(g_class, p_this);
         cv_memory_zero(p_this, sizeof(cv_thread));
         {
-            static cv_uptr g_thread_desc_unique = 0;
             cv_thread_desc_ptr o_desc_ptr = {0};
-            o_desc_ptr.p_void = cv_heap_alloc(sizeof(cv_thread_desc),
-                "thread_desc", ++ g_thread_desc_unique);
-            if (o_desc_ptr.p_void) {
-                cv_thread_desc_init(o_desc_ptr.p_thread_desc);
+            o_desc_ptr.p_thread_desc = cv_thread_desc_create();
+            if (o_desc_ptr.p_thread_desc) {
                 *(o_desc_ptr.p_thread_desc) = *(p_thread_desc);
                 {
                     int i_pthread_result = 0;
@@ -90,8 +89,7 @@ cv_bool cv_thread_init(
                     }
                 }
                 if (!b_result) {
-                    cv_thread_desc_cleanup(o_desc_ptr.p_thread_desc);
-                    cv_heap_free(o_desc_ptr.p_void);
+                    cv_thread_desc_destroy(o_desc_ptr.p_thread_desc);
                 }
             }
         }

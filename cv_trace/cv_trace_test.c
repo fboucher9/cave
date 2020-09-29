@@ -22,12 +22,13 @@ static void cv_trace_test_dump_stack(void) {
     cv_print_nl();
     /* cv_trace_stack_report(); */
     while (i_callstack_index < i_callstack_count) {
-        char const * p_callstack_name =
-            cv_callstack_query(i_callstack_index);
+        union cv_callstack_value o_stack_value;
+        unsigned char e_stack_type =
+            cv_callstack_query(i_callstack_index, &o_stack_value);
         i_callstack_index ++;
-        if (p_callstack_name) {
+        if (cv_callstack_type_function == e_stack_type) {
             cv_print_char('[');
-            cv_print_0(p_callstack_name, 80);
+            cv_print_0(o_stack_value.p_text, 80);
             cv_print_char(']');
             cv_print_nl();
         }

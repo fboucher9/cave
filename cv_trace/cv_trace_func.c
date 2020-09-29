@@ -96,7 +96,7 @@ void cv_trace_func_cleanup( cv_trace_func * p_this) {
  */
 
 void cv_trace_func_enter( cv_trace_func * p_this) {
-    cv_callstack_push(p_this->p_symbol);
+    /* cv_callstack_enter(p_this->p_symbol); */
     if (g_local.i_depth < cv_trace_func_depth_max) {
         g_local.a_stack[g_local.i_depth].p_this = p_this;
         cv_clock_tick_read(&g_local.a_stack[g_local.i_depth].o_clock);
@@ -110,7 +110,7 @@ void cv_trace_func_enter( cv_trace_func * p_this) {
 
 void cv_trace_func_leave(void) {
     cv_trace_func * p_this = 0;
-    cv_callstack_pop();
+    /* cv_callstack_pop(); */
     if (g_local.i_depth) {
         g_local.i_depth --;
         if (g_local.i_depth < cv_trace_func_depth_max) {

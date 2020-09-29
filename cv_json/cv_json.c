@@ -95,8 +95,8 @@ static cv_object g_json_node_object;
  */
 
 void cv_json_load(void) {
-    cv_uptr i_placement_len = sizeof(cv_json);
-    cv_object_init(&g_json_node_object, i_placement_len, "json_node");
+    cv_uptr const i_placement_len = sizeof(cv_json);
+    cv_object_init(&g_json_node_object, "json_node", i_placement_len);
 }
 
 /*
