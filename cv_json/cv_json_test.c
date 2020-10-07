@@ -226,24 +226,93 @@ static void cv_json_test_1(void) {
  *
  */
 
+static void cv_json_test_2_generic(
+    unsigned char const * p_text,
+    cv_uptr i_text_len) {
+    cv_array o_text;
+    cv_array_init_vector(&o_text, p_text, i_text_len);
+    {
+        cv_array_it o_document;
+        cv_array_it_init(&o_document, &o_text);
+        {
+            /* */
+            cv_json * p_json_node = cv_json_dec(&o_document);
+            if (p_json_node) {
+                dump_json_node(p_json_node, cv_false, cv_true);
+                cv_json_destroy(p_json_node);
+            }
+        }
+        cv_array_it_cleanup(&o_document);
+    }
+    cv_array_cleanup(&o_text);
+}
+
+/*
+ *
+ */
+
+static void cv_json_test_2_null(void) {
+    static unsigned char const a_text[] = {
+        'n', 'u', 'l', 'l'
+    };
+    cv_json_test_2_generic(a_text, sizeof(a_text));
+}
+
+/*
+ *
+ */
+
+static void cv_json_test_2_false(void) {
+    static unsigned char const a_text[] = {
+        'f', 'a', 'l', 's', 'e'
+    };
+    cv_json_test_2_generic(a_text, sizeof(a_text));
+}
+
+/*
+ *
+ */
+
+static void cv_json_test_2_true(void) {
+    static unsigned char const a_text[] = {
+        't', 'r', 'u', 'e'
+    };
+    cv_json_test_2_generic(a_text, sizeof(a_text));
+}
+
+/*
+ *
+ */
+
+static void cv_json_test_2_number(void) {
+    static unsigned char const a_text[] = {
+        '1', '2', '3', '4'
+    };
+    cv_json_test_2_generic(a_text, sizeof(a_text));
+}
+
+/*
+ *
+ */
+
+static void cv_json_test_2_string(void) {
+    static unsigned char const a_text[] = {
+        '\"', 'h', 'e', 'l', 'l', 'o', '\"'
+    };
+    cv_json_test_2_generic(a_text, sizeof(a_text));
+}
+
+/*
+ *
+ */
+
 static void cv_json_test_2(void) {
     /* test for cv_json_dec */
-    static unsigned char const a_text[] = {
-        '\"', 'h', 'i', '\"'
-    };
-    static cv_array o_text = cv_array_initializer_(
-        a_text, a_text + sizeof(a_text));
-    cv_array_it o_document;
-    cv_array_it_init(&o_document, &o_text);
-    {
-        /* */
-        cv_json * p_json_node = cv_json_dec(&o_document);
-        if (p_json_node) {
-            dump_json_node(p_json_node, cv_false, cv_true);
-            cv_json_destroy(p_json_node);
-        }
-    }
-    cv_array_it_cleanup(&o_document);
+    cv_json_test_2_null();
+    cv_json_test_2_false();
+    cv_json_test_2_true();
+    cv_json_test_2_number();
+    cv_json_test_2_string();
 }
 
 /*
