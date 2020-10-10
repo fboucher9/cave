@@ -7,7 +7,9 @@
  *
  */
 
-void cv_json_test(void);
+#include <cv_options/cv_options_pred.h>
+
+void cv_json_test(cv_options_it * p_options);
 
 #endif /* #ifndef cv_json_test_h_ */
 

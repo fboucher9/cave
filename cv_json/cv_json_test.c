@@ -14,6 +14,11 @@
 #include <cv_misc/cv_cast.h>
 #include <cv_json/cv_json_dec.h>
 #include <cv_algo/cv_array_it.h>
+#include <cv_options/cv_options.h>
+#include <cv_options/cv_options_it.h>
+#if defined cv_have_libc_
+#include <stdio.h>
+#endif /* #if defined cv_have_libc_ */
 
 /*
  *
@@ -43,8 +48,13 @@ static void dump_json_node(cv_json const * p_this, cv_bool b_field,
         cv_print_0("true", 80);
     } else if (cv_json_type_number == e_type) {
         double const f_number = cv_json_get_number(p_this);
+#if defined cv_have_libc_
+        fprintf(stdout, "%f", f_number);
+        fflush(stdout);
+#else /* #if defined cv_have_libc_ */
         long const i_number = cv_cast_(long)(f_number);
         cv_print_dec(i_number);
+#endif /* #if defined cv_have_libc_ */
     } else if (cv_json_type_string == e_type) {
         cv_array o_string;
         cv_array_init(&o_string);
@@ -343,9 +353,21 @@ static void cv_json_test_2(void) {
  *
  */
 
-void cv_json_test(void) {
-    cv_json_test_1();
-    cv_json_test_2();
+void cv_json_test(cv_options_it * p_options) {
+    cv_array o_option_node;
+    cv_array_init(&o_option_node);
+    if (cv_options_it_next(p_options, &o_option_node)) {
+        /* */
+        cv_print_0("option: ", 80);
+        cv_print_array(&o_option_node);
+        cv_print_nl();
+        cv_json_test_2_generic(o_option_node.o_min.pc_uchar,
+            cv_array_len(&o_option_node));
+    } else {
+        cv_json_test_1();
+        cv_json_test_2();
+    }
+    cv_array_cleanup(&o_option_node);
 }
 
 /* end-of-file: cv_json_test.h */

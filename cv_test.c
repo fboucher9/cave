@@ -469,7 +469,7 @@ static cv_bool cv_test_main_cb(
                 } else if (cv_array_compare(&o_string, &g_crc32_array)) {
                     cv_crc32_test();
                 } else if (cv_array_compare(&o_string, &g_json_array)) {
-                    cv_json_test();
+                    cv_json_test(&o_options_it);
                 } else {
                     /* invalid command */
                     static unsigned char const a_text[] = {
