@@ -49,8 +49,7 @@ enum parser_state {
  */
 
 enum parser_const {
-    parser_stack_max = 8,
-    parser_accum_max = 256
+    parser_stack_max = 64
 };
 
 /*
