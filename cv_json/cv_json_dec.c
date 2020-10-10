@@ -20,18 +20,12 @@
 
 enum parser_state {
     state_idle = 0,
-    state_number_prefix,
-    state_number_mantisse,
-    state_number_fraction,
-    state_number_exponent,
     state_string_normal,
     state_string_escape,
     state_string_unicode1,
     state_string_unicode2,
     state_string_unicode3,
     state_string_unicode4,
-    state_string_after,
-    state_string_label,
     state_number_sign,
     state_number_zero,
     state_number_dec_digit,
@@ -412,90 +406,97 @@ static void parser_accumulate_unicode(parser * p_this,
  *
  */
 
-static cv_bool parser_step(parser * p_this,
+static cv_bool parser_step_idle(parser * p_this,
     unsigned char c_token) {
     cv_bool b_repeat = cv_false;
-    if (state_idle == p_this->e_state) {
-        if (' ' == c_token) {
-        } else if ('\t' == c_token) {
-        } else if ('\r' == c_token) {
-        } else if ('\n' == c_token) {
-        } else if (',' == c_token) {
-        } else if (':' == c_token) {
-        } else if ('\"' == c_token) {
-            p_this->b_string_started = cv_true;
-            p_this->e_state = state_string_normal;
-        } else if ('-' == c_token) {
-            /* process sign */
-            parser_accumulate(p_this, c_token);
-            p_this->e_state = state_number_sign;
-            p_this->b_number_started = cv_true;
-        } else if ('+' == c_token) {
-            /* process sign */
-            parser_accumulate(p_this, c_token);
-            p_this->e_state = state_number_sign;
-            p_this->b_number_started = cv_true;
-        } else if ('0' == c_token) {
-            parser_accumulate(p_this, c_token);
-            p_this->e_state = state_number_zero;
-            p_this->b_number_started = cv_true;
-        } else if (('1' <= c_token) && ('9' >= c_token)) {
-            p_this->e_state = state_number_dec_digit;
-            p_this->b_number_started = cv_true;
-            b_repeat = cv_true;
-        } else if ('.' == c_token) {
-            parser_accumulate(p_this, c_token);
-            p_this->e_state = state_number_frac_digit;
-            p_this->b_number_started = cv_true;
-        } else if (('[' == c_token) ||
-            ('{' == c_token)) {
-            /* create an array node */
+    if (' ' == c_token) {
+    } else if ('\t' == c_token) {
+    } else if ('\r' == c_token) {
+    } else if ('\n' == c_token) {
+    } else if (',' == c_token) {
+    } else if (':' == c_token) {
+    } else if ('\"' == c_token) {
+        p_this->b_string_started = cv_true;
+        p_this->e_state = state_string_normal;
+    } else if ('-' == c_token) {
+        /* process sign */
+        parser_accumulate(p_this, c_token);
+        p_this->e_state = state_number_sign;
+        p_this->b_number_started = cv_true;
+    } else if ('+' == c_token) {
+        /* process sign */
+        parser_accumulate(p_this, c_token);
+        p_this->e_state = state_number_sign;
+        p_this->b_number_started = cv_true;
+    } else if ('0' == c_token) {
+        parser_accumulate(p_this, c_token);
+        p_this->e_state = state_number_zero;
+        p_this->b_number_started = cv_true;
+    } else if (('1' <= c_token) && ('9' >= c_token)) {
+        p_this->e_state = state_number_dec_digit;
+        p_this->b_number_started = cv_true;
+        b_repeat = cv_true;
+    } else if ('.' == c_token) {
+        parser_accumulate(p_this, c_token);
+        p_this->e_state = state_number_frac_digit;
+        p_this->b_number_started = cv_true;
+    } else if (('[' == c_token) ||
+        ('{' == c_token)) {
+        /* create an array node */
+        cv_json * p_value = cv_json_create();
+        if (p_value) {
+            unsigned e_value_type = 0;
+            if ('[' == c_token) {
+                e_value_type = cv_json_type_array;
+            } else {
+                e_value_type = cv_json_type_object;
+            }
+            cv_json_set_type(p_value, e_value_type);
+            parser_apply_label(p_this, p_value);
+            /* add to stack of nodes */
+            parser_push(p_this, p_value);
+        }
+        p_this->e_state = state_idle;
+    } else if ((']' == c_token) ||
+        ('}' == c_token)) {
+        /* Flush of label */
+        if (p_this->b_label_cache_initialized) {
             cv_json * p_value = cv_json_create();
             if (p_value) {
-                unsigned e_value_type = 0;
-                if ('[' == c_token) {
-                    e_value_type = cv_json_type_array;
-                } else {
-                    e_value_type = cv_json_type_object;
-                }
-                cv_json_set_type(p_value, e_value_type);
-                parser_apply_label(p_this, p_value);
-
-                /* add to stack of nodes */
-                parser_push(p_this, p_value);
+                cv_json_set_type(p_value, cv_json_type_null);
+                parser_join( p_this, p_value);
             }
-            p_this->e_state = state_idle;
-        } else if ((']' == c_token) ||
-            ('}' == c_token)) {
-            /* Flush of label */
-            if (p_this->b_label_cache_initialized) {
-                cv_json * p_value = cv_json_create();
-                if (p_value) {
-                    cv_json_set_type(p_value, cv_json_type_null);
-                    parser_join( p_this, p_value);
-                }
-            }
-            /* complete this array or object */
-            if (0 == p_this->i_stack_len) {
-                /* Error? */
-                p_this->e_state = state_end;
-            } else {
-                /* do a final */
-                /* push this to parent */
-                cv_json * p_value = parser_pop(p_this);
-                if (p_value) {
-                    parser_join( p_this, p_value);
-                }
-            }
-        } else if ((('a' <= c_token) && ('z' >= c_token))
-            || (('A' <= c_token) && ('Z' >= c_token))
-            || ('_' == c_token)) {
-            /* could be null, true, false or error */
-            p_this->e_state = state_word;
-            b_repeat = cv_true;
-        } else {
         }
-    } else if (state_string_normal == p_this->e_state) {
+        /* complete this array or object */
+        if (0 == p_this->i_stack_len) {
+            /* Error? */
+            p_this->e_state = state_end;
+        } else {
+            /* do a final */
+            /* push this to parent */
+            cv_json * p_value = parser_pop(p_this);
+            if (p_value) {
+                parser_join( p_this, p_value);
+            }
+        }
+    } else if ((('a' <= c_token) && ('z' >= c_token))
+        || (('A' <= c_token) && ('Z' >= c_token))
+        || ('_' == c_token)) {
+        /* could be null, true, false or error */
+        p_this->e_state = state_word;
+        b_repeat = cv_true;
+    } else {
+    }
+    return b_repeat;
+}
+
+/*
+ *
+ */
+
+static cv_bool parser_step_string(parser * p_this, unsigned char c_token) {
+    cv_bool b_repeat = cv_false;
+    if (state_string_normal == p_this->e_state) {
         if ('\"' == c_token) {
             parser_flush(p_this);
         } else if ('\\' == c_token) {
@@ -543,7 +544,17 @@ static cv_bool parser_step(parser * p_this,
         parser_accumulate(p_this, p_this->i_unicode & 0xffu);
         p_this->i_unicode = 0;
         p_this->e_state = state_string_normal;
-    } else if (state_number_sign == p_this->e_state) {
+    }
+    return b_repeat;
+}
+
+/*
+ *
+ */
+
+static cv_bool parser_step_number(parser * p_this, unsigned char c_token) {
+    cv_bool b_repeat = cv_false;
+    if (state_number_sign == p_this->e_state) {
         if ('0' == c_token) {
             parser_accumulate(p_this, c_token);
             p_this->e_state = state_number_zero;
@@ -651,19 +662,48 @@ static cv_bool parser_step(parser * p_this,
             p_this->e_state = state_idle;
             b_repeat = cv_true;
         }
+    }
+    return b_repeat;
+}
+
+/*
+ *
+ */
+
+static cv_bool parser_step_word(parser * p_this, unsigned char c_token) {
+    cv_bool b_repeat = cv_false;
+    if ((('a' <= c_token) && ('z' >= c_token))
+        || (('A' <= c_token) && ('Z' >= c_token))
+        || (('0' <= c_token) && ('9' >= c_token))
+        || ('_' == c_token)) {
+        p_this->b_word_started = cv_true;
+        p_this->e_state = state_word;
+        parser_accumulate(p_this, c_token);
+    } else {
+        p_this->e_state = state_idle;
+        b_repeat = cv_true;
+        parser_flush(p_this);
+    }
+    return b_repeat;
+}
+
+/*
+ *
+ */
+
+static cv_bool parser_step(parser * p_this,
+    unsigned char c_token) {
+    cv_bool b_repeat = cv_false;
+    if (state_idle == p_this->e_state) {
+        b_repeat = parser_step_idle(p_this, c_token);
+    } else if ((state_string_normal <= p_this->e_state) &&
+        (state_string_unicode4 >= p_this->e_state)) {
+        b_repeat = parser_step_string(p_this, c_token);
+    } else if ((state_number_sign <= p_this->e_state) &&
+        (state_number_hex_digit >= p_this->e_state)) {
+        b_repeat = parser_step_number(p_this, c_token);
     } else if (state_word == p_this->e_state) {
-        if ((('a' <= c_token) && ('z' >= c_token))
-            || (('A' <= c_token) && ('Z' >= c_token))
-            || (('0' <= c_token) && ('9' >= c_token))
-            || ('_' == c_token)) {
-            p_this->b_word_started = cv_true;
-            p_this->e_state = state_word;
-            parser_accumulate(p_this, c_token);
-        } else {
-            p_this->e_state = state_idle;
-            b_repeat = cv_true;
-            parser_flush(p_this);
-        }
+        b_repeat = parser_step_word(p_this, c_token);
     } else {
         /* error ? */
     }
