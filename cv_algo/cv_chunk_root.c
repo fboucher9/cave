@@ -32,6 +32,7 @@ void cv_chunk_root_init(cv_chunk_root * p_this) {
 void cv_chunk_root_cleanup(cv_chunk_root * p_this) {
     /* empty the list */
     cv_chunk_root_empty(p_this);
+    cv_list_root_cleanup(&p_this->o_root);
     cv_debug_destruct_(g_chunk_root, p_this);
 }
 
@@ -47,6 +48,7 @@ void cv_chunk_root_empty(cv_chunk_root * p_this) {
         cv_chunk_node_cleanup(o_chunk_ptr.p_chunk);
         cv_heap_free(o_chunk_ptr.p_void);
     }
+    cv_list_it_cleanup(&o_list_it);
 }
 
 /*
