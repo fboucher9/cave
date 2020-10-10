@@ -306,6 +306,28 @@ static void cv_json_test_2_string(void) {
  *
  */
 
+static void cv_json_test_2_array(void) {
+    static unsigned char const a_text[] = {
+        '[', '4', ',', '8', ']'
+    };
+    cv_json_test_2_generic(a_text, sizeof(a_text));
+}
+
+/*
+ *
+ */
+
+static void cv_json_test_2_object(void) {
+    static unsigned char const a_text[] = {
+        '{', '\"', 'a', '\"', ':', '4', ',', '\"', 'b', '\"', ':', '8', '}'
+    };
+    cv_json_test_2_generic(a_text, sizeof(a_text));
+}
+
+/*
+ *
+ */
+
 static void cv_json_test_2(void) {
     /* test for cv_json_dec */
     cv_json_test_2_null();
@@ -313,6 +335,8 @@ static void cv_json_test_2(void) {
     cv_json_test_2_true();
     cv_json_test_2_number();
     cv_json_test_2_string();
+    cv_json_test_2_array();
+    cv_json_test_2_object();
 }
 
 /*
