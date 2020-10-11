@@ -12,6 +12,7 @@
 #include <cv_algo/cv_list_node.h>
 #include <cv_algo/cv_list_it.h>
 #include <cv_algo/cv_array.h>
+#include <cv_algo/cv_array_heap.h>
 #include <cv_runtime.h>
 #include <cv_json/cv_json_node.h>
 #include <cv_object/cv_object.h>
@@ -209,6 +210,28 @@ cv_bool cv_json_set_label( cv_json * p_this, cv_array const * p_text) {
 
 cv_bool cv_json_set_string( cv_json * p_this, cv_array const * p_text) {
     return dup_text(&p_this->o_string, p_text);
+}
+
+/*
+ *
+ */
+
+void cv_json_move_label( cv_json * p_this, cv_array_heap * r_string) {
+    /* Free the previous instance */
+    free_text(&p_this->o_label);
+    /* Acquire new instance */
+    cv_array_move(&p_this->o_label, &r_string->o_array);
+}
+
+/*
+ *
+ */
+
+void cv_json_move_string( cv_json * p_this, cv_array_heap * r_string) {
+    /* Free the previous instance */
+    free_text(&p_this->o_string);
+    /* Acquire new instance */
+    cv_array_move(&p_this->o_string, &r_string->o_array);
 }
 
 /*
