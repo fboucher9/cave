@@ -49,6 +49,7 @@ void cv_chunk_root_empty(cv_chunk_root * p_this) {
         cv_heap_free(o_chunk_ptr.p_void);
     }
     cv_list_it_cleanup(&o_list_it);
+    p_this->i_total_len = 0;
 }
 
 /*
