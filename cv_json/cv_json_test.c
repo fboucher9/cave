@@ -31,12 +31,10 @@ static void dump_json_node(cv_json const * p_this, cv_bool b_field,
         cv_array o_label;
         cv_array_init(&o_label);
         cv_json_get_label(p_this, &o_label);
-        if (0 != cv_array_len(&o_label)) {
-            cv_print_char('\"');
-            cv_print_array(&o_label);
-            cv_print_char('\"');
-            cv_print_char(':');
-        }
+        cv_print_char('\"');
+        cv_print_array(&o_label);
+        cv_print_char('\"');
+        cv_print_char(':');
         cv_array_cleanup(&o_label);
     }
 

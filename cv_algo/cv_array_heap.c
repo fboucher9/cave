@@ -16,8 +16,7 @@ static cv_bool cv_array_heap_realloc(
 {
     cv_bool b_result = cv_false;
     cv_debug_assert_( p_this, cv_debug_code_null_ptr);
-    cv_debug_assert_( i_length > 0, cv_debug_code_invalid_length);
-    {
+    if (i_length > 0) {
         cv_array_ptr o_array_ptr;
         o_array_ptr.p_void = cv_heap_alloc(i_length, p_class,
             i_instance);
@@ -28,6 +27,9 @@ static cv_bool cv_array_heap_realloc(
         } else {
             cv_debug_msg_(cv_debug_code_out_of_memory);
         }
+    } else {
+        cv_array_init(&p_this->o_array);
+        b_result = cv_true;
     }
     return b_result;
 }
@@ -43,7 +45,6 @@ cv_bool cv_array_heap_init(
 {
     cv_bool b_result = cv_false;
     cv_debug_assert_( p_this, cv_debug_code_null_ptr);
-    cv_debug_assert_( i_length > 0, cv_debug_code_invalid_length);
     {
         cv_debug_construct_(g_class, p_this);
         if (cv_array_heap_realloc(p_this, i_length, p_class, i_instance)) {
