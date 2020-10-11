@@ -68,8 +68,10 @@ static void cv_json_init(cv_json * p_this) {
  *
  */
 
-static void cv_json_cleanup(cv_json * p_this) {
-    cv_list_node_cleanup(&p_this->o_node);
+static void cv_json_empty(cv_json * p_this) {
+    /* Detach ourselves from any parent */
+    /* cv_list_join(&p_this->o_node, &p_this->o_node); */
+    /* Destroy all children */
     {
         cv_list_it o_list_it = {0};
         cv_json_ptr o_ptr = {0};
@@ -79,13 +81,22 @@ static void cv_json_cleanup(cv_json * p_this) {
         }
         cv_list_it_cleanup(&o_list_it);
     }
-    cv_list_root_cleanup(&p_this->o_root);
     free_text(&p_this->o_label);
-    cv_array_cleanup(&p_this->o_label);
     free_text(&p_this->o_string);
-    cv_array_cleanup(&p_this->o_string);
     p_this->i_number = 0.0;
     p_this->e_type = cv_json_type_null;
+}
+
+/*
+ *
+ */
+
+static void cv_json_cleanup(cv_json * p_this) {
+    cv_json_empty(p_this);
+    cv_list_node_cleanup(&p_this->o_node);
+    cv_list_root_cleanup(&p_this->o_root);
+    cv_array_cleanup(&p_this->o_label);
+    cv_array_cleanup(&p_this->o_string);
 }
 
 static cv_object g_json_node_object;
@@ -133,6 +144,39 @@ void cv_json_destroy( cv_json * p_this) {
     o_ptr.p_value = p_this;
     cv_json_cleanup(o_ptr.p_value);
     cv_object_free(&g_json_node_object, o_ptr.p_void);
+}
+
+/*
+ *
+ */
+
+void cv_json_move( cv_json * p_this, cv_json * p_other) {
+    /* first, release everything */
+    cv_json_empty(p_this);
+    /* Move type */
+    p_this->e_type = p_other->e_type;
+    p_other->e_type = cv_json_type_null;
+    /* Move number */
+    p_this->i_number = p_other->i_number;
+    p_other->i_number = 0.0;
+    /* Move label */
+    cv_array_move(&p_this->o_label, &p_other->o_label);
+    /* Move string */
+    cv_array_move(&p_this->o_string, &p_other->o_string);
+    /* Move children */
+    {
+        cv_list_it o_list_it = {0};
+        cv_json_ptr o_ptr = {0};
+        cv_list_it_init(&o_list_it, &p_other->o_root);
+        while (cv_list_it_first(&o_list_it, &o_ptr.o_list_ptr)) {
+            /* Detach child from other list */
+            cv_list_join(&o_ptr.p_value->o_node, &o_ptr.p_value->o_node);
+            /* Attach child to this list */
+            cv_json_join(o_ptr.p_value, p_this);
+        }
+        cv_list_it_cleanup(&o_list_it);
+    }
+    /* Keep same parents? */
 }
 
 /*

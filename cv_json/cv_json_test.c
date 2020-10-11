@@ -246,8 +246,9 @@ static void cv_json_test_2_generic(
         cv_array_it_init(&o_document, &o_text);
         {
             /* */
-            cv_json * p_json_node = cv_json_dec(&o_document);
+            cv_json * p_json_node = cv_json_create();
             if (p_json_node) {
+                cv_json_dec(&o_document, p_json_node);
                 dump_json_node(p_json_node, cv_false, cv_true);
                 cv_json_destroy(p_json_node);
             }

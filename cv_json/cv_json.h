@@ -23,6 +23,7 @@ void cv_json_load(void);
 void cv_json_unload(void);
 cv_json * cv_json_create(void);
 void cv_json_destroy( cv_json * p_this);
+void cv_json_move( cv_json * p_this, cv_json * p_other);
 void cv_json_set_type( cv_json * p_this, unsigned e_type);
 void cv_json_set_number( cv_json * p_this, double i_number);
 cv_bool cv_json_set_label( cv_json * p_this, cv_array const * p_string);

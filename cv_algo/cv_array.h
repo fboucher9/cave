@@ -32,6 +32,7 @@ void cv_array_init_0( cv_array * p_array,
 void cv_array_init_vector( cv_array * p_array,
     void const * p_buf, cv_uptr i_buf_len);
 void cv_array_cleanup( cv_array * p_array);
+void cv_array_move( cv_array * p_this, cv_array * p_other);
 cv_uptr cv_array_len( cv_array const * p_array);
 
 #endif /* #ifndef cv_array_h_ */

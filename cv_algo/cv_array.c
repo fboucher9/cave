@@ -75,6 +75,12 @@ void cv_array_init_0(
     }
 }
 
+void cv_array_move( cv_array * p_this, cv_array * p_other) {
+    *p_this = *p_other;
+    p_other->o_min.pc_void = 0;
+    p_other->o_max.pc_void = 0;
+}
+
 cv_uptr cv_array_len(
     cv_array const * p_this)
 {

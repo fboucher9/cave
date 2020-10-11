@@ -50,13 +50,19 @@ enum parser_const {
  */
 
 typedef struct parser {
-    cv_ull i_number_accum;
+    union parser_number {
+        double f_value;
+        cv_ull ll_padding[(sizeof(double) + sizeof(cv_ull) - 1) /
+            sizeof(cv_ull)];
+    } o_number_accum;
+    /* -- */
+    unsigned long i_unicode_accum;
+    unsigned long i_exp_accum;
     /* -- */
     unsigned e_state;
     unsigned i_stack_len;
-    /* -- */
-    unsigned long i_exp_accum;
-    unsigned long l_padding[1u];
+    unsigned i_frac_count;
+    unsigned i_padding[1u];
     /* -- */
     cv_bool b_number_started;
     cv_bool b_word_started;
@@ -65,9 +71,9 @@ typedef struct parser {
     cv_bool b_label_cache_initialized;
     cv_bool b_negative;
     cv_bool b_exp_negative;
-    unsigned char i_frac_count;
+    char c_padding[1u];
     /* -- */
-    cv_json * p_final;
+    cv_json * p_value;
     /* -- */
     cv_json * a_stack[parser_stack_max];
     /* -- */
@@ -82,16 +88,29 @@ typedef struct parser {
  *
  */
 
-static void parser_init(parser * p_this) {
+static void parser_reset_number_state(parser * p_this) {
+    p_this->b_number_started = cv_false;
+    p_this->b_negative = cv_false;
+    p_this->b_exp_negative = cv_false;
+    p_this->i_frac_count = 0;
+    p_this->i_exp_accum = 0;
+    p_this->o_number_accum.f_value = 0.0;
+}
+
+/*
+ *
+ */
+
+static void parser_init(parser * p_this, cv_json * p_value) {
     p_this->e_state = state_idle;
     p_this->i_stack_len = 0;
-    p_this->b_number_started = cv_false;
     p_this->b_word_started = cv_false;
     p_this->b_string_started = cv_false;
     p_this->b_accum_cache_initialized = cv_false;
     p_this->b_label_cache_initialized = cv_false;
-    p_this->p_final = 0;
+    p_this->p_value = p_value;
     cv_chunk_root_init(&p_this->o_chunk_root);
+    parser_reset_number_state(p_this);
 }
 
 /*
@@ -167,7 +186,8 @@ static void parser_apply_label(parser * p_this, cv_json * p_value) {
 static void parser_join(parser * p_this, cv_json * p_value) {
     parser_apply_label(p_this, p_value);
     if (0 == p_this->i_stack_len) {
-        p_this->p_final = p_value;
+        cv_json_move(p_this->p_value, p_value);
+        cv_json_destroy(p_value);
         p_this->e_state = state_end;
     } else {
         cv_json_join(p_value,
@@ -256,15 +276,7 @@ static void parser_flush_number(parser * p_this) {
         cv_json * p_value = cv_json_create();
         if (p_value) {
             double i_value = 0.0;
-            double f_shift = 1.0;
-            cv_ull i_number_iterator = p_this->i_number_accum;
-            while (i_number_iterator) {
-                cv_ull ll_number_part = i_number_iterator % 10000ul;
-                unsigned int const i_number_part = ll_number_part & 0x7fffu;
-                i_value = i_value + i_number_part * f_shift;
-                i_number_iterator = i_number_iterator / 10000ul;
-                f_shift = f_shift * 10000.0;
-            }
+            i_value = p_this->o_number_accum.f_value;
             if (p_this->b_negative) {
                 i_value = -i_value;
             }
@@ -331,11 +343,14 @@ static unsigned parser_detect_word_type(parser * p_this) {
         cv_array_initializer_(a_ref_true,
             a_ref_true + sizeof(a_ref_true));
     unsigned e_word_type = 0;
-    if (cv_array_compare(&p_this->o_accum_cache.o_array, &g_ref_null)) {
+    if (cv_array_compare(
+            &p_this->o_accum_cache.o_array, &g_ref_null)) {
         e_word_type = cv_json_type_null;
-    } else if (cv_array_compare(&p_this->o_accum_cache.o_array, &g_ref_false)) {
+    } else if (cv_array_compare(
+            &p_this->o_accum_cache.o_array, &g_ref_false)) {
         e_word_type = cv_json_type_false;
-    } else if (cv_array_compare(&p_this->o_accum_cache.o_array, &g_ref_true)) {
+    } else if (cv_array_compare(
+            &p_this->o_accum_cache.o_array, &g_ref_true)) {
         e_word_type = cv_json_type_true;
     }
     return e_word_type;
@@ -392,19 +407,6 @@ static void parser_accum_cache_alloc(parser * p_this) {
  *
  */
 
-static void parser_reset_number_state(parser * p_this) {
-    p_this->b_number_started = cv_false;
-    p_this->b_negative = cv_false;
-    p_this->b_exp_negative = cv_false;
-    p_this->i_frac_count = 0;
-    p_this->i_exp_accum = 0;
-    p_this->i_number_accum = 0;
-}
-
-/*
- *
- */
-
 static void parser_flush(parser * p_this) {
     parser_accum_cache_alloc(p_this);
     if (p_this->b_accum_cache_initialized) {
@@ -449,7 +451,8 @@ static unsigned parser_hex_digit(unsigned int c_token) {
 
 static void parser_accumulate_unicode(parser * p_this,
     unsigned char c_token) {
-    p_this->i_number_accum = (p_this->i_number_accum << 4u) + parser_hex_digit(c_token);
+    p_this->i_unicode_accum = (p_this->i_unicode_accum << 4u) +
+        parser_hex_digit(c_token);
 }
 
 /*
@@ -559,7 +562,7 @@ static cv_bool parser_step_string(parser * p_this, unsigned char c_token) {
     } else if (state_string_escape == p_this->e_state) {
         if (('u' == c_token) ||
             ('U' == c_token)) {
-            p_this->i_number_accum = 0;
+            p_this->o_number_accum.f_value = 0.0;
             p_this->e_state = state_string_unicode1;
         } else if ('t' == c_token) {
             parser_accumulate(p_this, '\t');
@@ -592,8 +595,8 @@ static cv_bool parser_step_string(parser * p_this, unsigned char c_token) {
     } else if (state_string_unicode4 == p_this->e_state) {
         /* store this character into unicode accumulator */
         parser_accumulate_unicode(p_this, c_token);
-        parser_accumulate(p_this, p_this->i_number_accum & 0xffu);
-        p_this->i_number_accum = 0;
+        parser_accumulate(p_this, p_this->i_unicode_accum & 0xffu);
+        p_this->i_unicode_accum = 0;
         p_this->e_state = state_string_normal;
     }
     return b_repeat;
@@ -639,7 +642,8 @@ static cv_bool parser_step_number(parser * p_this, unsigned char c_token) {
         if (('0' <= c_token) && ('9' >= c_token)) {
             /* process the digit */
             parser_accumulate(p_this, c_token);
-            p_this->i_number_accum = (p_this->i_number_accum * 10ul) +
+            p_this->o_number_accum.f_value =
+                (p_this->o_number_accum.f_value * 10ul) +
                 c_token - '0';
             p_this->e_state = state_number_dec_digit;
         } else if ('.' == c_token) {
@@ -659,7 +663,8 @@ static cv_bool parser_step_number(parser * p_this, unsigned char c_token) {
     } else if (state_number_frac_digit == p_this->e_state) {
         if (('0' <= c_token) && ('9' >= c_token)) {
             parser_accumulate(p_this, c_token);
-            p_this->i_number_accum = (p_this->i_number_accum * 10ul) +
+            p_this->o_number_accum.f_value =
+                (p_this->o_number_accum.f_value * 10ul) +
                 c_token - '0';
             p_this->i_frac_count ++;
             p_this->e_state = state_number_frac_digit;
@@ -706,19 +711,22 @@ static cv_bool parser_step_number(parser * p_this, unsigned char c_token) {
         if (('0' <= c_token) && ('9' >= c_token)) {
             /* process digit */
             parser_accumulate(p_this, c_token);
-            p_this->i_number_accum = p_this->i_number_accum * 16ul
+            p_this->o_number_accum.f_value =
+                p_this->o_number_accum.f_value * 16ul
                 + c_token - '0';
             p_this->e_state = state_number_hex_digit;
         } else if (('a' <= c_token) && ('f' >= c_token)) {
             /* process digit */
             parser_accumulate(p_this, c_token);
-            p_this->i_number_accum = p_this->i_number_accum * 16ul
+            p_this->o_number_accum.f_value =
+                p_this->o_number_accum.f_value * 16ul
                 + c_token - 'a' + 10;
             p_this->e_state = state_number_hex_digit;
         } else if (('A' <= c_token) && ('F' >= c_token)) {
             /* process digit */
             parser_accumulate(p_this, c_token);
-            p_this->i_number_accum = p_this->i_number_accum * 16ul
+            p_this->o_number_accum.f_value =
+                p_this->o_number_accum.f_value * 16ul
                 + c_token - 'A' + 10;
             p_this->e_state = state_number_hex_digit;
         } else {
@@ -789,36 +797,23 @@ static void parser_walk(parser * p_this,
  *
  */
 
-static cv_json * parser_pop_final(parser * p_this) {
-    cv_json * const p_result = p_this->p_final;
-    p_this->p_final = 0;
-    return p_result;
-}
-
-/*
- *
- */
-
-static cv_json * parser_run(parser * p_this,
+static void parser_run(parser * p_this,
     cv_array_it * p_document) {
     unsigned char c_token = 0;
     while (cv_array_it_read_next_char(p_document, &c_token)) {
         parser_walk(p_this, c_token);
     }
     parser_flush(p_this);
-    return parser_pop_final(p_this);
 }
 
 /*
  *
  */
 
-cv_json * cv_json_dec( cv_array_it * p_document ) {
-    cv_json * p_result = 0;
+void cv_json_dec( cv_array_it * p_document, cv_json * p_value ) {
     parser o_parser;
-    parser_init(&o_parser);
-    p_result = parser_run(&o_parser, p_document);
+    parser_init(&o_parser, p_value);
+    parser_run(&o_parser, p_document);
     parser_cleanup(&o_parser);
-    return p_result;
 }
 
