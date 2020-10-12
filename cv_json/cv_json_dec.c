@@ -338,43 +338,6 @@ static void parser_apply_label(parser * p_this, cv_json * p_value) {
  *
  */
 
-static void parser_join(parser * p_this, cv_json * p_value) {
-    cv_debug_assert_(p_this && p_value, cv_debug_code_null_ptr);
-    if (0 == p_this->i_stack_len) {
-        if (p_value == p_this->p_value) {
-        } else {
-            cv_json_move(p_this->p_value, p_value);
-            cv_json_destroy(p_value);
-        }
-        p_this->e_state = state_end;
-    } else {
-        cv_json_join(p_value,
-            p_this->a_stack[p_this->i_stack_len - 1]);
-        p_this->e_state = state_idle;
-    }
-}
-
-/*
- *
- */
-
-static void parser_push(parser * p_this, cv_json * p_value) {
-    cv_debug_assert_(p_this && p_value, cv_debug_code_null_ptr);
-    p_this->e_state = state_idle;
-    if (p_this->i_stack_len < parser_stack_max) {
-        p_this->a_stack[p_this->i_stack_len] = p_value;
-        p_this->i_stack_len ++;
-    } else {
-        if (p_value != p_this->p_value) {
-            cv_json_destroy(p_value);
-        }
-    }
-}
-
-/*
- *
- */
-
 static cv_bool parser_is_object(parser * p_this) {
     cv_bool b_is_object = cv_false;
     cv_debug_assert_(p_this, cv_debug_code_null_ptr);
@@ -400,10 +363,68 @@ static void parser_apply_string(parser * p_this, cv_json * p_value) {
 }
 
 /*
+ *  parser_stack_join()
  *
+ *  Join of json value with parent, or update final value if stack is empty.
+ *
+ *  p_this - Pointer to json decoder object.
+ *
+ *  p_value - Pointer to cv_json object.
  */
 
-static cv_json * parser_alloc_node(parser * p_this, unsigned e_type) {
+static void parser_stack_join(parser * p_this, cv_json * p_value) {
+    cv_debug_assert_(p_this && p_value, cv_debug_code_null_ptr);
+    if (0 == p_this->i_stack_len) {
+        if (p_value != p_this->p_value) {
+            cv_json_move(p_this->p_value, p_value);
+            cv_json_destroy(p_value);
+        }
+    } else {
+        cv_json_join(p_value,
+            p_this->a_stack[p_this->i_stack_len - 1]);
+    }
+}
+
+/*
+ *  parser_stack_push()
+ *
+ *  Insert a json value into stack.  Size of stack is limited, this operation
+ *  may fail, in that case value must be destroyed.
+ *
+ *  p_this - Pointer to json decoder object.
+ *
+ *  p_value - Pointer to cv_json object.
+ *
+ *  Returns cv_true on success, cv_false on error.
+ */
+
+static cv_bool parser_stack_push(parser * p_this, cv_json * p_value) {
+    cv_bool b_result = cv_false;
+    cv_debug_assert_(p_this && p_value, cv_debug_code_null_ptr);
+    if (p_this->i_stack_len < parser_stack_max) {
+        p_this->a_stack[p_this->i_stack_len] = p_value;
+        p_this->i_stack_len ++;
+        b_result = cv_true;
+    }
+    return b_result;
+}
+
+/*
+ *  parser_stack_alloc()
+ *
+ *  Alloc a json value.  First value used is the one provided by application.
+ *  Subsequence allocation create a new json value.  For arrays and objects the
+ *  value is pushed onto the stack.  For other types of values, it is attached
+ *  to it's parent.
+ *
+ *  p_this - Pointer to json decoder object.
+ *
+ *  e_type - Type of json value.  One of cv_json_type_xx enumerations.
+ *
+ *  Returns a pointer to cv_json object, or null on error.
+ */
+
+static cv_json * parser_stack_alloc(parser * p_this, unsigned e_type) {
     cv_json * p_value = 0;
     cv_debug_assert_(p_this, cv_debug_code_null_ptr);
     if (0 == p_this->i_stack_len) {
@@ -416,88 +437,62 @@ static cv_json * parser_alloc_node(parser * p_this, unsigned e_type) {
         parser_apply_label(p_this, p_value);
         if ((cv_json_type_array == e_type) ||
             (cv_json_type_object == e_type)) {
-            parser_push(p_this, p_value);
+            if (parser_stack_push(p_this, p_value)) {
+            } else {
+                if (p_value != p_this->p_value) {
+                    cv_json_destroy(p_value);
+                    p_value = 0;
+                }
+            }
         } else {
-            parser_join(p_this, p_value);
+            parser_stack_join(p_this, p_value);
         }
-    } else {
-        p_this->e_state = state_idle;
     }
     return p_value;
 }
 
 /*
+ *  parser_stack_pop()
  *
+ *  Remove a json value from the stack and join with it's parent.  If last item
+ *  of stack is removed then it marks the end of the json value.  If a label is
+ *  in cache without any value then insert a null.
+ *
+ *  p_this - Pointer to json decoder object.
  */
 
-static void parser_pop(parser * p_this) {
+static void parser_stack_pop(parser * p_this) {
     cv_debug_assert_(p_this, cv_debug_code_null_ptr);
     /* Flush of label */
     if (p_this->b_label_cache_initialized) {
-        parser_alloc_node(p_this, cv_json_type_null);
+        parser_stack_alloc(p_this, cv_json_type_null);
     }
     if (0 < p_this->i_stack_len) {
-        parser_join( p_this, p_this->a_stack[--p_this->i_stack_len]);
-    } else {
-        p_this->e_state = state_end;
+        parser_stack_join( p_this, p_this->a_stack[--p_this->i_stack_len]);
     }
 }
 
 /*
+ *  parser_accum_cache_alloc()
  *
+ *  Create a linear buffer using the accumulated data in the chunk list.  The
+ *  chunk list may be empty, that may occur for empty strings, in that case
+ *  create an empty linear buffer.
+ *
+ *  p_this - Pointer to json decoder object.
  */
 
-static void parser_flush_string(parser * p_this) {
+static void parser_accum_cache_alloc(parser * p_this) {
     cv_debug_assert_(p_this, cv_debug_code_null_ptr);
-    /* flush the accumulated string */
-    /* create a string node */
-    if (p_this->b_string_started) {
-        cv_json * p_value = parser_alloc_node(p_this, cv_json_type_string);
-        if (p_value) {
-            parser_apply_string(p_this, p_value);
-        }
-    }
-}
-
-/*
- *
- */
-
-static void parser_flush_number(parser * p_this) {
-    cv_debug_assert_(p_this, cv_debug_code_null_ptr);
-    if (p_this->b_number_started) {
-        cv_json * p_value = parser_alloc_node(p_this, cv_json_type_number);
-        if (p_value) {
-            double i_value = 0.0;
-            i_value = p_this->o_dec_section.u.f_value;
-            /* Divide by ten for each fraction */
-            {
-                double i_fraction = p_this->o_frac_section.u.f_value;
-                unsigned long i_digit_iterator =
-                    p_this->o_frac_section.i_digit_count;
-                while (i_digit_iterator --) {
-                    i_fraction = i_fraction / parser_base_decimal;
-                }
-                i_value += i_fraction;
-            }
-            if (p_this->o_dec_section.b_negative) {
-                i_value = -i_value;
-            }
-            /* Multiply by ten for each exponent */
-            {
-                signed long i_exp_iterator =
-                    p_this->o_exp_section.ll_digits & cv_signed_long_max_;
-                if (p_this->o_exp_section.b_negative) {
-                    while (i_exp_iterator --) {
-                        i_value = i_value / parser_base_decimal;
-                    }
-                } else {
-                    while (i_exp_iterator --) {
-                        i_value = i_value * parser_base_decimal;
-                    }
-                }
-            }
-            cv_json_set_number(p_value, i_value);
+    parser_accum_cache_free(p_this);
+    if (!p_this->b_accum_cache_initialized) {
+        cv_uptr const i_accum_len = cv_chunk_root_len(&p_this->o_chunk_root);
+        if (cv_array_heap_init(&p_this->o_accum_cache, i_accum_len)) {
+            cv_array_it o_array_it;
+            cv_array_it_init(&o_array_it, &p_this->o_accum_cache.o_array);
+            cv_chunk_root_read(&p_this->o_chunk_root, &o_array_it);
+            cv_array_it_cleanup(&o_array_it);
+            p_this->b_accum_cache_initialized = cv_true;
         }
     }
 }
@@ -527,7 +522,7 @@ static unsigned parser_detect_word_type(cv_array const * p_array) {
             a_ref_false + sizeof(a_ref_false));
     static cv_array const g_ref_true = cv_array_initializer_(a_ref_true,
             a_ref_true + sizeof(a_ref_true));
-    unsigned e_word_type = 0;
+    unsigned e_word_type = cv_json_type_string;
     cv_debug_assert_(p_array, cv_debug_code_null_ptr);
     if (cv_array_compare( p_array, &g_ref_null)) {
         e_word_type = cv_json_type_null;
@@ -540,56 +535,124 @@ static unsigned parser_detect_word_type(cv_array const * p_array) {
 }
 
 /*
+ *  parser_convert_number()
+ *
+ *  Convert accumulated number data to a single floating point number.  The
+ *  accumulated data contains three components, decimal, fraction and exponent.
+ *  This function combined all three components.
+ *
+ *  p_this - Pointer to json decoder object.
+ *
+ *  Returns floating point number.
+ */
+
+static double parser_convert_number(parser * p_this) {
+    double i_value = 0.0;
+    cv_debug_assert_(p_this, cv_debug_code_null_ptr);
+    i_value = p_this->o_dec_section.u.f_value;
+    /* Divide by ten for each fraction */
+    {
+        double i_fraction = p_this->o_frac_section.u.f_value;
+        unsigned long i_digit_iterator =
+            p_this->o_frac_section.i_digit_count;
+        while (i_digit_iterator --) {
+            i_fraction = i_fraction / parser_base_decimal;
+        }
+        i_value += i_fraction;
+    }
+    if (p_this->o_dec_section.b_negative) {
+        i_value = -i_value;
+    }
+    /* Multiply by ten for each exponent */
+    {
+        signed long i_exp_iterator =
+            p_this->o_exp_section.ll_digits & cv_signed_long_max_;
+        if (p_this->o_exp_section.b_negative) {
+            while (i_exp_iterator --) {
+                i_value = i_value / parser_base_decimal;
+            }
+        } else {
+            while (i_exp_iterator --) {
+                i_value = i_value * parser_base_decimal;
+            }
+        }
+    }
+    return i_value;
+}
+
+/*
+ *  parser_flush_string()
+ *
+ *  Helper function for parser_flush().  Create a json value for a string.  The
+ *  accumulated data is free of quotes and escapes, unicode characters have
+ *  been converted or stripped.  Only thing left to do is to stored into a json
+ *  value.
+ *
+ *  p_this - Pointer to json decoder object.
+ */
+
+static void parser_flush_string(parser * p_this) {
+    cv_debug_assert_(p_this, cv_debug_code_null_ptr);
+    cv_debug_assert_(p_this->b_string_started, cv_debug_code_error);
+    {
+        /* flush the accumulated string */
+        /* create a string node */
+        cv_json * p_value = parser_stack_alloc(p_this, cv_json_type_string);
+        if (p_value) {
+            parser_apply_string(p_this, p_value);
+        }
+    }
+}
+
+/*
+ *  parser_flush_number()
+ *
+ *  Helper function for parser_flush(), flush of accumulated data for numbers.
+ *  If a number was accumulated by state machine then convert the accumulated
+ *  data to a floating point number and store into a json value.
+ *
+ *  p_this - Pointer to json decoder object.
+ *
+ *  The accumulated data is stored into three components, decimal, fraction and
+ *  exponent.  All three components must be recombined in order to form a
+ *  floating point number.
+ */
+
+static void parser_flush_number(parser * p_this) {
+    cv_debug_assert_(p_this, cv_debug_code_null_ptr);
+    cv_debug_assert_(p_this->b_number_started, cv_debug_code_error);
+    {
+        cv_json * const p_value = parser_stack_alloc(p_this,
+            cv_json_type_number);
+        if (p_value) {
+            double i_value = parser_convert_number(p_this);
+            cv_json_set_number(p_value, i_value);
+        }
+    }
+}
+
+/*
  *  parser_flush_word()
  *
- *  Create a json value using identifier.  If the idenfifier corresponds to one
- *  of the reserved words, then create a matching json value.  If the
- *  identifier is not a reserved word, then create a string.
+ *  Helper function for parser_flush().  Create a json value using identifier.
+ *  If the idenfifier corresponds to one of the reserved words, then create a
+ *  matching json value.  If the identifier is not a reserved word, then create
+ *  a string.
  *
  *  p_this - Pointer to json decoder object.
  */
 
 static void parser_flush_word(parser * p_this) {
     cv_debug_assert_(p_this, cv_debug_code_null_ptr);
-    if (p_this->b_word_started) {
+    cv_debug_assert_(p_this->b_word_started, cv_debug_code_error);
+    {
         unsigned const e_word_type = parser_detect_word_type(
             &p_this->o_accum_cache.o_array);
-        if (0 != e_word_type) {
-            parser_alloc_node(p_this, e_word_type);
-        } else {
-            /* Insert a string */
-            cv_json * const p_value = parser_alloc_node(p_this,
-                cv_json_type_string);
-            if (p_value) {
+        cv_json * const p_value = parser_stack_alloc(p_this, e_word_type);
+        if (p_value) {
+            if (cv_json_type_string == e_word_type) {
                 parser_apply_string(p_this, p_value);
             }
-        }
-    }
-}
-
-/*
- *  parser_accum_cache_alloc()
- *
- *  Create a linear buffer using the accumulated data in the chunk list.  The
- *  chunk list may be empty, that may occur for empty strings, in that case
- *  create an empty linear buffer.
- *
- *  p_this - Pointer to json decoder object.
- */
-
-static void parser_accum_cache_alloc(parser * p_this) {
-    cv_debug_assert_(p_this, cv_debug_code_null_ptr);
-    parser_accum_cache_free(p_this);
-    if (!p_this->b_accum_cache_initialized) {
-        cv_uptr const i_accum_len = cv_chunk_root_len(&p_this->o_chunk_root);
-        if (cv_array_heap_init(&p_this->o_accum_cache, i_accum_len)) {
-            if (i_accum_len) {
-                cv_array_it o_array_it;
-                cv_array_it_init(&o_array_it, &p_this->o_accum_cache.o_array);
-                cv_chunk_root_read(&p_this->o_chunk_root, &o_array_it);
-                cv_array_it_cleanup(&o_array_it);
-            }
-            p_this->b_accum_cache_initialized = cv_true;
         }
     }
 }
@@ -617,9 +680,15 @@ static void parser_flush(parser * p_this) {
         if (b_is_object && !p_this->b_label_cache_initialized) {
             parser_save_label(p_this);
         } else {
-            parser_flush_number(p_this);
-            parser_flush_string(p_this);
-            parser_flush_word(p_this);
+            if (p_this->b_number_started) {
+                parser_flush_number(p_this);
+            }
+            if (p_this->b_string_started) {
+                parser_flush_string(p_this);
+            }
+            if (p_this->b_word_started) {
+                parser_flush_word(p_this);
+            }
         }
         p_this->b_string_started = cv_false;
         p_this->b_word_started = cv_false;
@@ -627,9 +696,6 @@ static void parser_flush(parser * p_this) {
         parser_accum_cache_free(p_this);
     }
     cv_chunk_root_empty(&p_this->o_chunk_root);
-    if (state_flush == p_this->e_state) {
-        p_this->e_state = state_idle;
-    }
 }
 
 /*
@@ -659,18 +725,18 @@ static cv_bool parser_step_idle(parser * p_this,
         p_this->e_state = state_number_dec_digit;
         b_repeat = cv_true;
     } else if (parser_token_array_begin == c_token) {
-        parser_alloc_node(p_this, cv_json_type_array);
+        parser_stack_alloc(p_this, cv_json_type_array);
     } else if (parser_token_array_end == c_token) {
-        parser_pop(p_this);
+        parser_stack_pop(p_this);
+        p_this->e_state = (0 == p_this->i_stack_len) ? state_end : state_idle;
     } else if (parser_token_object_begin == c_token) {
-        parser_alloc_node(p_this, cv_json_type_object);
+        parser_stack_alloc(p_this, cv_json_type_object);
     } else if (parser_token_object_end == c_token) {
-        parser_pop(p_this);
+        parser_stack_pop(p_this);
+        p_this->e_state = (0 == p_this->i_stack_len) ? state_end : state_idle;
     } else if (parser_is_identifier(c_token)) {
-        /* could be null, true, false or error */
         p_this->e_state = state_word;
         b_repeat = cv_true;
-    } else {
     }
     return b_repeat;
 }
@@ -704,8 +770,7 @@ static cv_bool parser_step_string(parser * p_this, unsigned char c_token) {
             parser_accumulate(p_this, c_token);
         }
     } else if (state_string_escape == p_this->e_state) {
-        if ((parser_token_u == c_token) ||
-            (parser_token_U == c_token)) {
+        if ((parser_token_u == c_token) || (parser_token_U == c_token)) {
             number_accum_reset(&p_this->o_unicode_section);
             p_this->e_state = state_string_unicode;
         } else if (parser_escape_tab == c_token) {
@@ -878,6 +943,7 @@ static cv_bool parser_step(parser * p_this, unsigned char c_token) {
         b_repeat = parser_step_word(p_this, c_token);
     } else if (state_flush == p_this->e_state) {
         parser_flush(p_this);
+        p_this->e_state = (0 == p_this->i_stack_len) ? state_end : state_idle;
         b_repeat = cv_true;
     }
     return b_repeat;
@@ -969,7 +1035,7 @@ static void parser_cleanup(parser * p_this) {
     parser_flush(p_this);
     /* Free the stack */
     while (p_this->i_stack_len) {
-        parser_pop(p_this);
+        parser_stack_pop(p_this);
     }
     p_this->p_value = 0;
     parser_label_cache_free(p_this);
