@@ -47,7 +47,7 @@ static void dump_json_node(cv_json const * p_this, cv_bool b_field,
     } else if (cv_json_type_number == e_type) {
         double const f_number = cv_json_get_number(p_this);
 #if defined cv_have_libc_
-        fprintf(stdout, "%f", f_number);
+        fprintf(stdout, "%g", f_number);
         fflush(stdout);
 #else /* #if defined cv_have_libc_ */
         long const i_number = cv_cast_(long)(f_number);
