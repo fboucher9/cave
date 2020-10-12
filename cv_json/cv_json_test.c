@@ -189,7 +189,7 @@ static void cv_json_test_1_object(void) {
             cv_json * p_child = cv_json_create();
             if (p_child) {
                 static unsigned char const a_label[] = {
-                    'l', 'a', 'b', 'e', 'l', '1' };
+                    'a' };
                 static cv_array const o_label = cv_array_initializer_(
                     a_label, a_label + sizeof(a_label));
                 cv_json_set_label(p_child, &o_label);
@@ -202,7 +202,7 @@ static void cv_json_test_1_object(void) {
             cv_json * p_child = cv_json_create();
             if (p_child) {
                 static unsigned char const a_label[] = {
-                    'l', 'a', 'b', 'e', 'l', '2' };
+                    'b' };
                 static cv_array const o_label = cv_array_initializer_(
                     a_label, a_label + sizeof(a_label));
                 cv_json_set_label(p_child, &o_label);
