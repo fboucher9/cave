@@ -30,7 +30,7 @@ cv_bool cv_file_disk_init( cv_file_disk * p_this,
     /* Setup call to open */
     {
         cv_array_0 o_name0 = {0};
-        if (cv_array_0_init(&o_name0, p_desc->p_name, "file_disk_name", 0)) {
+        if (cv_array_0_init(&o_name0, p_desc->p_name)) {
             char const * const p_open_pathname =
                 cv_array_0_get(&o_name0);
             if (p_desc->e_mode == cv_file_disk_mode_append) {

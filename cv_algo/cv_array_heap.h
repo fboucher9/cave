@@ -11,8 +11,11 @@ struct cv_array_heap {
     cv_array o_array;
 };
 
-cv_bool cv_array_heap_init( cv_array_heap * p_this, cv_uptr i_length,
-    char const * p_class, cv_uptr i_instance);
+cv_bool cv_array_heap_init( cv_array_heap * p_this, cv_uptr i_length);
+cv_bool cv_array_heap_init_dup( cv_array_heap * p_this,
+    cv_array const * p_array);
+cv_bool cv_array_heap_init_move( cv_array_heap * p_this,
+    cv_array_heap * p_other);
 void cv_array_heap_cleanup( cv_array_heap * p_this);
 cv_uptr cv_array_heap_len( cv_array_heap const * p_this);
 

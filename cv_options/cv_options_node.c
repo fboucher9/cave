@@ -39,11 +39,7 @@ static cv_bool cv_options_node_init_buffer(
     cv_bool b_result = cv_false;
     cv_debug_assert_( p_this && p_array, cv_debug_code_null_ptr);
     {
-        static cv_uptr g_options_node_buf_unique = 0;
-        cv_uptr const i_array_len = cv_array_len(p_array);
-        if (cv_array_heap_init(&p_this->o_buffer, i_array_len,
-                "options_node", ++ g_options_node_buf_unique)) {
-            cv_array_copy( &p_this->o_buffer.o_array, p_array);
+        if (cv_array_heap_init_dup(&p_this->o_buffer, p_array)) {
             b_result = cv_true;
         }
     }

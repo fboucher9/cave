@@ -20,9 +20,7 @@ holds resources allocated for zero-terminated string.
 */
 cv_bool cv_array_0_init(
     cv_array_0 * p_this,
-    cv_array const * p_string,
-    char const * p_class,
-    cv_uptr i_instance)
+    cv_array const * p_string)
 {
     cv_bool b_result = cv_false;
 
@@ -33,9 +31,7 @@ cv_bool cv_array_0_init(
         cv_uptr const i_length = p_string ? cv_array_len(p_string) : 0;
         if (cv_array_heap_init(
                 &p_this->o_buffer,
-                i_length + 1,
-                p_class,
-                i_instance)) {
+                i_length + 1)) {
             if (i_length) {
                 cv_array_copy(
                     &p_this->o_buffer.o_array,

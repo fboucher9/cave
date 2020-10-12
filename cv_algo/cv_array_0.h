@@ -11,8 +11,7 @@ struct cv_array_0 {
     cv_array_heap o_buffer;
 };
 
-cv_bool cv_array_0_init( cv_array_0 * p_this, cv_array const * p_string,
-    char const * p_class, cv_uptr i_instance);
+cv_bool cv_array_0_init( cv_array_0 * p_this, cv_array const * p_string );
 void cv_array_0_cleanup( cv_array_0 * p_this);
 char const * cv_array_0_get( cv_array_0 const * p_this);
 cv_uptr cv_array_0_len( cv_array_0 const * p_this);

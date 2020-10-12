@@ -10,10 +10,12 @@
  */
 
 #include <cv_json/cv_json_pred.h>
-#include <cv_algo/cv_array_it.h>
+#include <cv_algo/cv_array_pred.h>
 #include <cv_misc/cv_bool.h>
 
-void cv_json_dec( cv_array_it * p_document, cv_json * p_value );
+void cv_json_dec_array( cv_array const * p_document, cv_json * p_value );
+
+void cv_json_dec_array_it( cv_array_it * p_document, cv_json * p_value );
 
 #endif /* #ifndef cv_json_dec_h_ */
 
