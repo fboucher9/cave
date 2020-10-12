@@ -16,6 +16,9 @@
 #include <cv_runtime.h>
 #include <cv_json/cv_json_node.h>
 #include <cv_object/cv_object.h>
+#include <cv_debug/cv_debug.h>
+
+cv_debug_decl_(g_class, "cv_json", sizeof(cv_json));
 
 /*
  *
@@ -57,6 +60,7 @@ static cv_bool dup_text( cv_array * p_storage, cv_array const * p_text) {
  */
 
 static void cv_json_init(cv_json * p_this) {
+    cv_debug_construct_(g_class, p_this);
     cv_list_node_init(&p_this->o_node);
     cv_list_root_init(&p_this->o_root);
     cv_array_init(&p_this->o_label);
@@ -98,6 +102,7 @@ static void cv_json_cleanup(cv_json * p_this) {
     cv_list_root_cleanup(&p_this->o_root);
     cv_array_cleanup(&p_this->o_label);
     cv_array_cleanup(&p_this->o_string);
+    cv_debug_destruct_(g_class, p_this);
 }
 
 static cv_object g_json_node_object;
