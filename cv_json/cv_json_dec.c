@@ -63,6 +63,87 @@ typedef struct parser_number_section {
  *
  */
 
+static void parser_number_section_reset(
+    parser_number_section * p_this) {
+    p_this->b_negative = cv_false;
+    p_this->i_digit_count = 0;
+    p_this->ll_digits = 0;
+    p_this->u.f_value = 0.0;
+}
+
+/*
+ *
+ */
+
+static void parser_number_section_add(
+    parser_number_section * p_this,
+    unsigned int i_base, unsigned int i_digit) {
+    p_this->u.f_value =
+        (p_this->u.f_value * i_base) + i_digit;
+    p_this->ll_digits =
+        (p_this->ll_digits * i_base) + i_digit;
+    p_this->i_digit_count ++;
+}
+
+/*
+ *
+ */
+
+static void parser_number_section_add_decimal(
+    parser_number_section * p_this, unsigned char c_token) {
+    unsigned const i_token = c_token;
+    parser_number_section_add(p_this, 10, i_token - '0');
+}
+
+/*
+ *
+ */
+
+static cv_bool parser_number_section_step_decimal(
+    parser_number_section * p_this, unsigned char c_token) {
+    cv_bool b_result = cv_true;
+    if ('-' == c_token) {
+        p_this->b_negative = cv_true;
+    } else if ('+' == c_token) {
+        p_this->b_negative = cv_false;
+    } else if (('0' <= c_token) && ('9' >= c_token)) {
+        parser_number_section_add_decimal(p_this, c_token);
+    } else {
+        b_result = cv_false;
+    }
+    return b_result;
+}
+
+/*
+ *
+ */
+
+static unsigned parser_hex_digit(unsigned int c_token) {
+    unsigned i_digit = 0;
+    if (('0' <= c_token) && ('9' >= c_token)) {
+        i_digit = c_token - '0';
+    } else if (('a' <= c_token) && ('f' >= c_token)) {
+        i_digit = c_token - 'a' + 10;
+    } else if (('A' <= c_token) && ('F' >= c_token)) {
+        i_digit = c_token - 'A' + 10;
+    }
+    return i_digit;
+}
+
+/*
+ *
+ */
+
+static void parser_number_section_add_hexadecimal(
+    parser_number_section * p_this, unsigned char c_token) {
+    unsigned const i_digit = parser_hex_digit(c_token);
+    parser_number_section_add(p_this, 16, i_digit);
+}
+
+/*
+ *
+ */
+
 typedef struct parser {
     parser_number_section o_dec_section;
     /* -- */
@@ -92,32 +173,6 @@ typedef struct parser {
     /* -- */
     cv_array_heap o_label_cache;
 } parser;
-
-/*
- *
- */
-
-static void parser_number_section_reset(
-    parser_number_section * p_this) {
-    p_this->b_negative = cv_false;
-    p_this->i_digit_count = 0;
-    p_this->ll_digits = 0;
-    p_this->u.f_value = 0.0;
-}
-
-/*
- *
- */
-
-static void parser_number_section_add_decimal(
-    parser_number_section * p_this,
-    unsigned char c_token) {
-    p_this->u.f_value =
-        (p_this->u.f_value * 10ul) + c_token - '0';
-    p_this->ll_digits =
-        (p_this->ll_digits * 10ul) + c_token - '0';
-    p_this->i_digit_count ++;
-}
 
 /*
  *
@@ -441,36 +496,6 @@ static void parser_flush(parser * p_this) {
  *
  */
 
-static unsigned parser_hex_digit(unsigned int c_token) {
-    unsigned i_digit = 0;
-    if (('0' <= c_token) && ('9' >= c_token)) {
-        i_digit = c_token - '0';
-    } else if (('a' <= c_token) && ('f' >= c_token)) {
-        i_digit = c_token - 'a' + 10;
-    } else if (('A' <= c_token) && ('F' >= c_token)) {
-        i_digit = c_token - 'A' + 10;
-    }
-    return i_digit;
-}
-
-/*
- *
- */
-
-static void parser_accumulate_unicode(parser * p_this,
-    unsigned char c_token) {
-    unsigned const i_digit = parser_hex_digit(c_token);
-    p_this->o_unicode_section.u.f_value =
-        (p_this->o_unicode_section.u.f_value * 16u) + i_digit;
-    p_this->o_unicode_section.ll_digits =
-        (p_this->o_unicode_section.ll_digits << 4u) + i_digit;
-    p_this->o_unicode_section.i_digit_count ++;
-}
-
-/*
- *
- */
-
 static cv_bool parser_step_idle(parser * p_this,
     unsigned char c_token) {
     cv_bool b_repeat = cv_false;
@@ -542,7 +567,8 @@ static cv_bool parser_step_string(parser * p_this, unsigned char c_token) {
         }
     } else if (state_string_unicode == p_this->e_state) {
         /* store this character into unicode accumulator */
-        parser_accumulate_unicode(p_this, c_token);
+        parser_number_section_add_hexadecimal(
+            &p_this->o_unicode_section, c_token);
         if (p_this->o_unicode_section.i_digit_count >= 4u) {
             /* store this character into unicode accumulator */
             parser_accumulate(p_this,
@@ -561,14 +587,8 @@ static cv_bool parser_step_string(parser * p_this, unsigned char c_token) {
 static cv_bool parser_step_number(parser * p_this, unsigned char c_token) {
     cv_bool b_repeat = cv_false;
     if (state_number_dec_digit == p_this->e_state) {
-        if ('-' == c_token) {
-            p_this->o_dec_section.b_negative = cv_true;
-        } else if ('+' == c_token) {
-            p_this->o_dec_section.b_negative = cv_false;
-        } else if (('0' <= c_token) && ('9' >= c_token)) {
-            /* process the digit */
-            parser_number_section_add_decimal(
-                &p_this->o_dec_section, c_token);
+        if (parser_number_section_step_decimal(
+                &p_this->o_dec_section, c_token)) {
         } else if ('.' == c_token) {
             p_this->e_state = state_number_frac_digit;
         } else if (('e' == c_token) || ('E' == c_token)) {
@@ -580,9 +600,8 @@ static cv_bool parser_step_number(parser * p_this, unsigned char c_token) {
             b_repeat = cv_true;
         }
     } else if (state_number_frac_digit == p_this->e_state) {
-        if (('0' <= c_token) && ('9' >= c_token)) {
-            parser_number_section_add_decimal(
-                &p_this->o_frac_section, c_token);
+        if (parser_number_section_step_decimal(
+                &p_this->o_frac_section, c_token)) {
         } else if (('e' == c_token) || ('E' == c_token)) {
             p_this->e_state = state_number_exp_digit;
         } else {
@@ -591,13 +610,8 @@ static cv_bool parser_step_number(parser * p_this, unsigned char c_token) {
             b_repeat = cv_true;
         }
     } else if (state_number_exp_digit == p_this->e_state) {
-        if ('-' == c_token) {
-            p_this->o_exp_section.b_negative = cv_true;
-        } else if ('+' == c_token) {
-            p_this->o_exp_section.b_negative = cv_false;
-        } else if (('0' <= c_token) && ('9' >= c_token)) {
-            parser_number_section_add_decimal(
-                &p_this->o_exp_section, c_token);
+        if (parser_number_section_step_decimal(
+                &p_this->o_exp_section, c_token)) {
         } else {
             /* error ? */
             p_this->e_state = state_flush;
