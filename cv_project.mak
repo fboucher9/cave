@@ -94,6 +94,8 @@ cv_test_srcs := \
     cv_json/cv_json_dec.c \
     cv_json/cv_json_it.c \
     cv_json/cv_json_test.c \
+    cv_unicode/cv_utf16.c \
+    cv_unicode/cv_unicode_test.c \
     cv_runtime.c \
     cv_linux.c \
     cv_windows.c \

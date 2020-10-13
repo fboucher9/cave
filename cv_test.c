@@ -32,6 +32,7 @@
 #include <cv_random/cv_random_test.h>
 #include <cv_algo/cv_crc32_test.h>
 #include <cv_json/cv_json_test.h>
+#include <cv_unicode/cv_unicode_test.h>
 
 static void cv_test_job(
     void * p_context)
@@ -385,6 +386,8 @@ static cv_bool cv_test_main_cb(
                     'c', 'r', 'c', '3', '2' };
                 static char const g_json_text[] = {
                     'j', 's', 'o', 'n' };
+                static char const g_unicode_text[] = {
+                    'u', 'n', 'i', 'c', 'o', 'd', 'e' };
 
                 static cv_array const g_number_array =
                     cv_array_text_initializer_(g_number_text);
@@ -426,6 +429,8 @@ static cv_bool cv_test_main_cb(
                     cv_array_text_initializer_(g_crc32_text);
                 static cv_array const g_json_array =
                     cv_array_text_initializer_(g_json_text);
+                static cv_array const g_unicode_array =
+                    cv_array_text_initializer_(g_unicode_text);
 
                 if (cv_array_compare(&o_string, &g_number_array)) {
 #if 0
@@ -470,6 +475,8 @@ static cv_bool cv_test_main_cb(
                     cv_crc32_test();
                 } else if (cv_array_compare(&o_string, &g_json_array)) {
                     cv_json_test(&o_options_it);
+                } else if (cv_array_compare(&o_string, &g_unicode_array)) {
+                    cv_unicode_test();
                 } else {
                     /* invalid command */
                     static unsigned char const a_text[] = {
