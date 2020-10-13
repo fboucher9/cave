@@ -4,15 +4,12 @@
 #define cv_json_h_
 
 /*
- *  json file:
+ *  Module: cv_json.h
  *
- *      true
- *      false
- *      null
- *      number: [-] 0 | [1-9][0-9]*[.[0-9]][Ee][-+][0-9]+
- *      "string \\ with backslash escapes"
- *      [ value , value ]
- *      { "label" : value , "label" : value }
+ *  Description:
+ *
+ *      Object for a single json value.  A json value may be one of the
+ *      following types: null, true, false, number, string, array or object.
  */
 
 #include <cv_json/cv_json_pred.h>

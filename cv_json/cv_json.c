@@ -1,7 +1,12 @@
 /* See LICENSE for license details */
 
 /*
+ *  Module: cv_json.c
  *
+ *  Description:
+ *
+ *      Object for a single json value.  A json value may be one of the
+ *      following types: null, true, false, number, string, array or object.
  */
 
 #include <cv_json/cv_json.h>

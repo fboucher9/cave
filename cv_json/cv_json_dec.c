@@ -18,61 +18,155 @@
 #include <cv_debug/cv_debug.h>
 
 /*
+ *  Enumaration: parser_state
  *
+ *  States for json decoder.
  */
 
 enum parser_state {
+
+    /* Waiting to find a value */
     state_idle = 0,
+
+    /* Waiting for normal characters to insert into quoted string */
     state_string_normal,
+
+    /* Waiting for second character of escape */
     state_string_escape,
+
+    /* Waiting for hexadecimal digits of unicode character */
     state_string_unicode,
+
+    /* Waiting for decimal digits of mantissa */
     state_number_dec_digit,
+
+    /* Waiting for decimal digits of fraction */
     state_number_frac_digit,
+
+    /* Waiting for decimal digits of exponent */
     state_number_exp_digit,
+
+    /* Waiting for identifier characters to insert into word */
     state_word,
+
+    /* Flush of accumulated data */
     state_flush,
+
+    /* Json value is complete, decoder may stop */
     state_end
 };
 
 /*
+ *  Enumaration: parser_const
  *
+ *  Miscellaneous constants reserved for use by json decoder implementation.
  */
 
 enum parser_const {
+
+    /* Maximum number of values in stack */
     parser_stack_max = 64,
+
+    /* Numeric base for decimal */
     parser_base_decimal = 10,
+
+    /* Numeric base for hexadecimal */
     parser_base_hexadecimal = 16,
+
+    /* Maximum number of hexadecimal digits for unicode character */
     parser_unicode_max = 4,
+
+    /* Minimum character of decimal digit */
     parser_token_0 = '0',
+
+    /* Maximum character of decimal digit */
     parser_token_9 = '9',
+
+    /* Minimum character of hexadecimal digit or alphabet */
     parser_token_a = 'a',
+
+    /* Minimum character of hexadecimal digit or alphabet */
     parser_token_A = 'A',
+
+    /* Exponent prefix */
     parser_token_e = 'e',
+
+    /* Exponent prefix */
     parser_token_E = 'E',
+
+    /* Maximum character of hexadecimal digit */
     parser_token_f = 'f',
+
+    /* Maximum character of hexadecimal digit */
     parser_token_F = 'F',
+
+    /* Prefix of unicode character */
     parser_token_u = 'u',
+
+    /* Prefix of unicode character */
     parser_token_U = 'U',
+
+    /* Maximum character of alphabet */
     parser_token_z = 'z',
+
+    /* Maximum character of alphabet */
     parser_token_Z = 'Z',
+
+    /* Period used for number */
     parser_token_period = '.',
+
+    /* Minus used for number */
     parser_token_minus = '-',
+
+    /* Plus used for number */
     parser_token_plus = '+',
+
+    /* Underscore used for words */
     parser_token_underscore = '_',
+
+    /* Dollar sign used for words */
     parser_token_dollar = '$',
+
+    /* Mark begin and end of quoted string */
     parser_token_string = '\"',
+
+    /* Escape character within quoted strings */
     parser_token_backslash = '\\',
+
+    /* Escape code for tab */
     parser_escape_tab = 't',
+
+    /* Escape code for bell */
     parser_escape_bell = 'b',
+
+    /* Escape code for carriage return */
     parser_escape_cr = 'r',
+
+    /* Escape code for line feed */
     parser_escape_lf = 'n',
+
+    /* Raw literal for tab */
     parser_literal_tab = '\t',
+
+    /* Raw literal for bell */
     parser_literal_bell = '\b',
+
+    /* Raw literal for carriage return */
     parser_literal_cr = '\r',
+
+    /* Raw literal for line feed */
     parser_literal_lf = '\n',
+
+    /* Mark begin of array */
     parser_token_array_begin = '[',
+
+    /* Mark end of array */
     parser_token_array_end = ']',
+
+    /* Mark begin of object */
     parser_token_object_begin = '{',
+
+    /* Mark end of object */
     parser_token_object_end = '}'
 };
 
@@ -228,55 +322,107 @@ static void number_accum_add_hexadecimal(
 }
 
 /*
+ *  Structure: parser
  *
+ *  Json decoder state machine.
  */
 
 typedef struct parser {
-    number_accum o_dec_section;
-    /* -- */
-    number_accum o_frac_section;
-    /* -- */
-    number_accum o_exp_section;
-    /* -- */
-    number_accum o_unicode_section;
-    /* -- */
+
+    /*
+     *  Current state of state machine, see parser_state enumeration for more
+     *  details.
+     */
     unsigned long e_state;
+
+    /* Current depth in json value stack */
     unsigned long i_stack_len;
+
     /* -- */
+
+    /* Indicate that decoder has started parsing a number */
     cv_bool b_number_started;
+
+    /* Indicate that decoder has started parsing a word */
     cv_bool b_word_started;
+
+    /* Indicate that decoder has started parsing a quoted string */
     cv_bool b_string_started;
+
+    /* Indicate that o_accum_cache field is initialized */
     cv_bool b_accum_cache_initialized;
+
+    /* Indicate that o_label_cache field is initialized */
     cv_bool b_label_cache_initialized;
+
+    /* Align to 64-bit */
     char c_padding[3u];
+
     /* -- */
+
+    /* Reference to application's final json value */
     cv_json * p_value;
+
+    /* Align to 64-bit */
+    void * p_padding[1u];
+
     /* -- */
-    cv_json * a_stack[parser_stack_max];
-    /* -- */
+
     cv_chunk_root o_chunk_root;
+
     /* -- */
+
     cv_array_heap o_accum_cache;
+
     /* -- */
+
     cv_array_heap o_label_cache;
+
+    /* -- */
+
+    number_accum o_dec_section;
+
+    /* -- */
+
+    number_accum o_frac_section;
+
+    /* -- */
+
+    number_accum o_exp_section;
+
+    /* -- */
+
+    number_accum o_unicode_section;
+
+    /* -- */
+
+    cv_json * a_stack[parser_stack_max];
+
 } parser;
 
 cv_debug_decl_(g_parser_class, "cv_json_dec", sizeof(parser));
 
 /*
+ *  parser_reset_number_state()
  *
+ *  Reset all number components.
+ *
+ *  p_this - Pointer to json decoder object.
  */
 
 static void parser_reset_number_state(parser * p_this) {
     cv_debug_assert_(p_this, cv_debug_code_null_ptr);
-    p_this->b_number_started = cv_false;
     number_accum_reset(&p_this->o_dec_section);
     number_accum_reset(&p_this->o_frac_section);
     number_accum_reset(&p_this->o_exp_section);
 }
 
 /*
+ *  parser_label_cache_free()
  *
+ *  Cleanup the cached label.
+ *
+ *  p_this - Pointer to json decoder object.
  */
 
 static void parser_label_cache_free(parser * p_this) {
@@ -288,7 +434,11 @@ static void parser_label_cache_free(parser * p_this) {
 }
 
 /*
+ *  parser_accum_cache_free()
  *
+ *  Cleanup the cached accumulator.
+ *
+ *  p_this - Pointer to json decoder object.
  */
 
 static void parser_accum_cache_free(parser * p_this) {
@@ -300,7 +450,15 @@ static void parser_accum_cache_free(parser * p_this) {
 }
 
 /*
+ *  parser_accumulate()
  *
+ *  Store given token into accumulator.  The accumulator is implemented as a
+ *  chunk list, the chunk list is not a linear buffer so it must be converted
+ *  to a linear buffer before use.
+ *
+ *  p_this - Pointer to json decoder object.
+ *
+ *  c_token - Single character from document.
  */
 
 static void parser_accumulate(parser * p_this, unsigned char c_token) {
@@ -309,7 +467,13 @@ static void parser_accumulate(parser * p_this, unsigned char c_token) {
 }
 
 /*
+ *  parser_save_label()
  *
+ *  Keep a copy of the accumulated string to use as a label.  The saved label
+ *  is kept until the next value is decoded or until the current object is
+ *  completed.
+ *
+ *  p_this - Pointer to json decoder object.
  */
 
 static void parser_save_label(parser * p_this) {
@@ -323,19 +487,14 @@ static void parser_save_label(parser * p_this) {
 }
 
 /*
+ *  parser_is_object()
  *
- */
-
-static void parser_apply_label(parser * p_this, cv_json * p_value) {
-    cv_debug_assert_(p_this && p_value, cv_debug_code_null_ptr);
-    if (p_this->b_label_cache_initialized) {
-        cv_json_move_label(p_value, &p_this->o_label_cache);
-        parser_label_cache_free(p_this);
-    }
-}
-
-/*
+ *  Detect if parent is an object.  When parent is an object, values must
+ *  be prefixed with labels.
  *
+ *  p_this - Pointer to json decoder object.
+ *
+ *  Returns cv_true is parent is an object.
  */
 
 static cv_bool parser_is_object(parser * p_this) {
@@ -352,7 +511,35 @@ static cv_bool parser_is_object(parser * p_this) {
 }
 
 /*
+ *  parser_apply_label()
  *
+ *  Apply the cached label to the given json value.  The move operation
+ *  is used to reduce number of memory allocation and number of memory copy
+ *  operations.
+ *
+ *  p_this - Pointer to json decoder object.
+ *
+ *  p_value - Pointer to cv_json object.
+ */
+
+static void parser_apply_label(parser * p_this, cv_json * p_value) {
+    cv_debug_assert_(p_this && p_value, cv_debug_code_null_ptr);
+    if (p_this->b_label_cache_initialized) {
+        cv_json_move_label(p_value, &p_this->o_label_cache);
+        parser_label_cache_free(p_this);
+    }
+}
+
+/*
+ *  parser_apply_string()
+ *
+ *  Apply the accumulated string to the given json value.  The move operation
+ *  is used to reduce number of memory allocation and number of memory copy
+ *  operations.
+ *
+ *  p_this - Pointer to json decoder object.
+ *
+ *  p_value - Pointer to cv_json object.
  */
 
 static void parser_apply_string(parser * p_this, cv_json * p_value) {
@@ -692,6 +879,7 @@ static void parser_flush(parser * p_this) {
         }
         p_this->b_string_started = cv_false;
         p_this->b_word_started = cv_false;
+        p_this->b_number_started = cv_false;
         parser_reset_number_state(p_this);
         parser_accum_cache_free(p_this);
     }
@@ -1010,6 +1198,7 @@ static void parser_init(parser * p_this, cv_json * p_value) {
     p_this->i_stack_len = 0;
     p_this->b_word_started = cv_false;
     p_this->b_string_started = cv_false;
+    p_this->b_number_started = cv_false;
     p_this->b_accum_cache_initialized = cv_false;
     p_this->b_label_cache_initialized = cv_false;
     p_this->p_value = p_value;
