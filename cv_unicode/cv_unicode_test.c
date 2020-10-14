@@ -6,6 +6,7 @@
 
 #include <cv_unicode/cv_unicode_test.h>
 #include <cv_unicode/cv_utf16.h>
+#include <cv_unicode/cv_utf16be_decoder.h>
 #include <cv_algo/cv_array.h>
 #include <cv_algo/cv_array_it.h>
 #include <cv_test_print.h>
@@ -26,6 +27,7 @@ void cv_unicode_test(void) {
         {
             unsigned long i_output = 0;
             if (cv_utf16be_decode(&o_input, &i_output)) {
+                cv_print_0("0x", 80);
                 cv_print_hex(i_output);
                 cv_print_nl();
             }
@@ -41,7 +43,7 @@ void cv_unicode_test(void) {
         cv_array_it_init(&o_output, &o_storage);
         {
             if (cv_utf16be_encode(0x1234ul, &o_output)) {
-                cv_print_0("0x", 2);
+                cv_print_0("0x", 80);
                 cv_print_hex(a_storage[0u]);
                 cv_print_0(", 0x", 80);
                 cv_print_hex(a_storage[1u]);
@@ -52,6 +54,20 @@ void cv_unicode_test(void) {
         cv_array_cleanup(&o_storage);
     }
 
+    {
+        cv_utf16be_decoder o_decoder;
+        cv_utf16be_decoder_init(&o_decoder);
+        {
+            unsigned long i_output = 0;
+            cv_utf16be_decoder_produce(&o_decoder, 0x12);
+            cv_utf16be_decoder_produce(&o_decoder, 0x34);
+            cv_utf16be_decoder_consume(&o_decoder, &i_output);
+            cv_print_0("0x", 80);
+            cv_print_hex(i_output);
+            cv_print_nl();
+        }
+        cv_utf16be_decoder_cleanup(&o_decoder);
+    }
 }
 
 /* end-of-file: cv_unicode_test.c */

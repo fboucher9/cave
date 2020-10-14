@@ -95,6 +95,8 @@ cv_test_srcs := \
     cv_json/cv_json_it.c \
     cv_json/cv_json_test.c \
     cv_unicode/cv_utf16.c \
+    cv_unicode/cv_utf16be_decoder.c \
+    cv_unicode/cv_utf16be_encoder.c \
     cv_unicode/cv_unicode_test.c \
     cv_runtime.c \
     cv_linux.c \
