@@ -7,6 +7,7 @@
 #include <cv_unicode/cv_unicode_test.h>
 #include <cv_unicode/cv_utf16.h>
 #include <cv_unicode/cv_utf16be_decoder.h>
+#include <cv_unicode/cv_utf8_decoder.h>
 #include <cv_algo/cv_array.h>
 #include <cv_algo/cv_array_it.h>
 #include <cv_test_print.h>
@@ -83,6 +84,26 @@ void cv_unicode_test(void) {
             cv_print_nl();
         }
         cv_utf16be_decoder_cleanup(&o_decoder);
+    }
+
+    {
+        unsigned long i_output = 0;
+        cv_utf8_decoder o_decoder;
+        cv_utf8_decoder_init(&o_decoder);
+        cv_utf8_decoder_produce(&o_decoder, 0x41);
+        cv_utf8_decoder_consume(&o_decoder, &i_output);
+        cv_print_0("0x", 80);
+        cv_print_hex(i_output);
+        cv_print_nl();
+        cv_utf8_decoder_produce(&o_decoder, 0xf4);
+        cv_utf8_decoder_produce(&o_decoder, 0x8f);
+        cv_utf8_decoder_produce(&o_decoder, 0xbf);
+        cv_utf8_decoder_produce(&o_decoder, 0xbf);
+        cv_utf8_decoder_consume(&o_decoder, &i_output);
+        cv_print_0("0x", 80);
+        cv_print_hex(i_output);
+        cv_print_nl();
+        cv_utf8_decoder_cleanup(&o_decoder);
     }
 }
 

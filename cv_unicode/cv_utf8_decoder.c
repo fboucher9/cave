@@ -1,12 +1,16 @@
 /* See LICENSE for license details */
 
 #include <cv_unicode/cv_utf8_decoder.h>
+#include <cv_debug/cv_debug.h>
+
+cv_debug_decl_(g_class, "cv_utf8_decoder", sizeof(cv_utf8_decoder));
 
 /*
  *
  */
 
 void cv_utf8_decoder_init(cv_utf8_decoder * p_this) {
+    cv_debug_construct_(g_class, p_this);
     p_this->i_count = 0;
     p_this->b_ready = cv_false;
 }
@@ -17,6 +21,7 @@ void cv_utf8_decoder_init(cv_utf8_decoder * p_this) {
 
 void cv_utf8_decoder_cleanup(cv_utf8_decoder * p_this) {
     (void)p_this;
+    cv_debug_destruct_(g_class, p_this);
 }
 
 /*
@@ -77,8 +82,8 @@ cv_bool cv_utf8_decoder_consume(cv_utf8_decoder * p_this,
             i_output = p_this->a_accum[0u] & g_first_mask[p_this->i_count - 1];
         }
         {
-            unsigned char i_index = 2;
-            while (i_index <= p_this->i_count) {
+            unsigned char i_index = 1;
+            while (i_index < p_this->i_count) {
                 i_output <<= 6;
                 i_output += p_this->a_accum[i_index] & 0x3f;
                 i_index ++;
