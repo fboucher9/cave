@@ -65,6 +65,22 @@ void cv_unicode_test(void) {
             cv_print_0("0x", 80);
             cv_print_hex(i_output);
             cv_print_nl();
+            cv_utf16be_decoder_produce(&o_decoder, 0xd8);
+            cv_utf16be_decoder_produce(&o_decoder, 0x00);
+            cv_utf16be_decoder_produce(&o_decoder, 0xdc);
+            cv_utf16be_decoder_produce(&o_decoder, 0x00);
+            cv_utf16be_decoder_consume(&o_decoder, &i_output);
+            cv_print_0("0x", 80);
+            cv_print_hex(i_output);
+            cv_print_nl();
+            cv_utf16be_decoder_produce(&o_decoder, 0xdb);
+            cv_utf16be_decoder_produce(&o_decoder, 0xff);
+            cv_utf16be_decoder_produce(&o_decoder, 0xdf);
+            cv_utf16be_decoder_produce(&o_decoder, 0xff);
+            cv_utf16be_decoder_consume(&o_decoder, &i_output);
+            cv_print_0("0x", 80);
+            cv_print_hex(i_output);
+            cv_print_nl();
         }
         cv_utf16be_decoder_cleanup(&o_decoder);
     }

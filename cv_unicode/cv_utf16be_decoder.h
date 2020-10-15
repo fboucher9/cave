@@ -20,21 +20,16 @@
 struct cv_utf16be_decoder {
 
     /* Temporary storage for bytes until enough bytes are found */
-    unsigned char a_accum[3u];
+    unsigned char a_accum[4u];
 
     /* Number of bytes accumulated */
     unsigned char i_count;
 
+    /* Indicate that output is ready */
+    cv_bool b_ready;
+
     /* Align to 64-bits */
-    unsigned char c_padding[4u];
-
-    /* -- */
-
-    /* Storage for output */
-    unsigned long i_output;
-
-    /* Flag for output */
-    unsigned long b_output_ready;
+    unsigned char c_padding[2u];
 
 };
 
