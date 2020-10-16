@@ -34,40 +34,37 @@ void cv_utf16be_decoder_cleanup(cv_utf16be_decoder * p_this) {
 
 cv_bool cv_utf16be_decoder_produce(cv_utf16be_decoder * p_this,
     unsigned char c_token) {
-    cv_bool b_result = cv_false;
     cv_debug_assert_(p_this, cv_debug_code_null_ptr);
     cv_debug_assert_(p_this->i_count <= 4u, cv_debug_code_error);
-    if (!p_this->b_ready) {
-        if (0 == p_this->i_count) {
-            p_this->a_accum[0u] = c_token;
-            p_this->i_count = 1;
-        } else if (1 == p_this->i_count) {
-            /* Special case for 0xd800 and 0xdc00 */
-            if (0xd8 == (p_this->a_accum[0u] & 0xfc)) {
-                p_this->a_accum[1u] = c_token;
-                p_this->i_count = 2;
-            } else if (0xdc == (p_this->a_accum[0u] & 0xfc)) {
-                p_this->i_count = 0;
-            } else {
-                p_this->a_accum[1u] = c_token;
-                p_this->i_count = 2;
-                p_this->b_ready = cv_true;
-            }
-        } else if (2 == p_this->i_count) {
-            p_this->a_accum[2u] = c_token;
-            p_this->i_count = 3;
-        } else if (3 == p_this->i_count) {
-            if (0xdc == (p_this->a_accum[2u] & 0xfc)) {
-                p_this->a_accum[3u] = c_token;
-                p_this->i_count = 4;
-                p_this->b_ready = cv_true;
-            } else {
-                p_this->i_count = 0;
-            }
+    p_this->b_ready = cv_false;
+    if (0 == p_this->i_count) {
+        p_this->a_accum[0u] = c_token;
+        p_this->i_count = 1;
+    } else if (1 == p_this->i_count) {
+        /* Special case for 0xd800 and 0xdc00 */
+        if (0xd8 == (p_this->a_accum[0u] & 0xfc)) {
+            p_this->a_accum[1u] = c_token;
+            p_this->i_count = 2;
+        } else if (0xdc == (p_this->a_accum[0u] & 0xfc)) {
+            p_this->i_count = 0;
+        } else {
+            p_this->a_accum[1u] = c_token;
+            p_this->i_count = 2;
+            p_this->b_ready = cv_true;
         }
-        b_result = cv_true;
+    } else if (2 == p_this->i_count) {
+        p_this->a_accum[2u] = c_token;
+        p_this->i_count = 3;
+    } else if (3 == p_this->i_count) {
+        if (0xdc == (p_this->a_accum[2u] & 0xfc)) {
+            p_this->a_accum[3u] = c_token;
+            p_this->i_count = 4;
+            p_this->b_ready = cv_true;
+        } else {
+            p_this->i_count = 0;
+        }
     }
-    return b_result;
+    return p_this->b_ready;
 }
 
 /*

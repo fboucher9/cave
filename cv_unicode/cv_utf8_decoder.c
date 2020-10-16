@@ -30,41 +30,36 @@ void cv_utf8_decoder_cleanup(cv_utf8_decoder * p_this) {
 
 cv_bool cv_utf8_decoder_produce(cv_utf8_decoder * p_this,
     unsigned char c_input) {
-    cv_bool b_result = cv_false;
-    if (p_this->b_ready) {
-        /* Caller must du consume to free space */
-        b_result = cv_false;
-    } else {
-        /* Synchronize first byte */
-        if (0x80 != (c_input & 0xc0)) {
-            /* Any accumulated data is lost */
-            p_this->i_count = 0;
-        }
-        p_this->a_accum[p_this->i_count] = c_input;
-        p_this->i_count ++;
-        /* Detect if the number is ready */
-        if (0x7f >= p_this->a_accum[0u]) {
-            if (1 == p_this->i_count) {
-                p_this->b_ready = cv_true;
-            }
-        } else if (0xc0 == (p_this->a_accum[0u] & 0xe0)) {
-            if (2 == p_this->i_count) {
-                p_this->b_ready = cv_true;
-            }
-        } else if (0xe0 == (p_this->a_accum[0u] & 0xf0)) {
-            if (3 == p_this->i_count) {
-                p_this->b_ready = cv_true;
-            }
-        } else if (0xf0 == (p_this->a_accum[0u] & 0xf8)) {
-            if (4 == p_this->i_count) {
-                p_this->b_ready = cv_true;
-            }
-        } else {
-            p_this->i_count = 0;
-        }
-        b_result = cv_true;
+    cv_debug_assert_(p_this, cv_debug_code_null_ptr);
+    p_this->b_ready = cv_false;
+    /* Synchronize first byte */
+    if (0x80 != (c_input & 0xc0)) {
+        /* Any accumulated data is lost */
+        p_this->i_count = 0;
     }
-    return b_result;
+    p_this->a_accum[p_this->i_count] = c_input;
+    p_this->i_count ++;
+    /* Detect if the number is ready */
+    if (0x00 == (p_this->a_accum[0u] & 0x80)) {
+        if (1 == p_this->i_count) {
+            p_this->b_ready = cv_true;
+        }
+    } else if (0xc0 == (p_this->a_accum[0u] & 0xe0)) {
+        if (2 == p_this->i_count) {
+            p_this->b_ready = cv_true;
+        }
+    } else if (0xe0 == (p_this->a_accum[0u] & 0xf0)) {
+        if (3 == p_this->i_count) {
+            p_this->b_ready = cv_true;
+        }
+    } else if (0xf0 == (p_this->a_accum[0u] & 0xf8)) {
+        if (4 == p_this->i_count) {
+            p_this->b_ready = cv_true;
+        }
+    } else {
+        p_this->i_count = 0;
+    }
+    return p_this->b_ready;
 }
 
 /*
@@ -74,6 +69,7 @@ cv_bool cv_utf8_decoder_produce(cv_utf8_decoder * p_this,
 cv_bool cv_utf8_decoder_consume(cv_utf8_decoder * p_this,
     unsigned long * r_output) {
     cv_bool b_result = cv_false;
+    cv_debug_assert_(p_this, cv_debug_code_null_ptr);
     if (p_this->b_ready) {
         unsigned long i_output = 0;
         {
