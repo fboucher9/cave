@@ -14,8 +14,7 @@
 #include <cv_algo/cv_array_it.h>
 #include <cv_test_print.h>
 
-static void step_utf16be_encoder(
-    cv_utf16be_encoder * p_this,
+static void step_utf16be_encoder( cv_unicode_encoder * p_this,
     unsigned long i_input) {
     cv_uptr i_count = cv_utf16be_encoder_produce(p_this, i_input);
     if (i_count) {
@@ -96,8 +95,7 @@ static void step_utf8_decoder(
     }
 }
 
-static void step_utf8_encoder(
-    cv_utf8_encoder * p_this,
+static void step_utf8_encoder( cv_unicode_encoder * p_this,
     unsigned long i_input) {
     cv_uptr i_count = cv_utf8_encoder_produce(p_this, i_input);
     if (i_count) {
@@ -188,7 +186,7 @@ void cv_unicode_test(void) {
     cv_print_0("utf16be encoder", 80);
     cv_print_nl();
     {
-        cv_utf16be_encoder o_encoder;
+        cv_unicode_encoder o_encoder;
         cv_utf16be_encoder_init(&o_encoder);
         step_utf16be_encoder(&o_encoder, 0x41);
         step_utf16be_encoder(&o_encoder, 0x1234);
@@ -204,6 +202,8 @@ void cv_unicode_test(void) {
     {
         cv_unicode_decoder o_decoder;
         cv_utf16be_decoder_init(&o_decoder);
+        step_utf16be_decoder(&o_decoder, 0x00);
+        step_utf16be_decoder(&o_decoder, 0x41);
         step_utf16be_decoder(&o_decoder, 0x12);
         step_utf16be_decoder(&o_decoder, 0x34);
         step_utf16be_decoder(&o_decoder, 0xd8);
@@ -221,7 +221,7 @@ void cv_unicode_test(void) {
     cv_print_0("utf8 encoder", 80);
     cv_print_nl();
     {
-        cv_utf8_encoder o_encoder;
+        cv_unicode_encoder o_encoder;
         cv_utf8_encoder_init(&o_encoder);
         step_utf8_encoder(&o_encoder, 0x41);
         step_utf8_encoder(&o_encoder, 0x1234);
@@ -240,6 +240,10 @@ void cv_unicode_test(void) {
         step_utf8_decoder(&o_decoder, 0xe1);
         step_utf8_decoder(&o_decoder, 0x88);
         step_utf8_decoder(&o_decoder, 0xb4);
+        step_utf8_decoder(&o_decoder, 0xf0);
+        step_utf8_decoder(&o_decoder, 0x90);
+        step_utf8_decoder(&o_decoder, 0x80);
+        step_utf8_decoder(&o_decoder, 0x80);
         step_utf8_decoder(&o_decoder, 0xf4);
         step_utf8_decoder(&o_decoder, 0x8f);
         step_utf8_decoder(&o_decoder, 0xbf);

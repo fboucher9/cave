@@ -100,6 +100,7 @@ cv_test_srcs := \
     cv_unicode/cv_utf8_decoder.c \
     cv_unicode/cv_utf8_encoder.c \
     cv_unicode/cv_unicode_decoder.c \
+    cv_unicode/cv_unicode_encoder.c \
     cv_unicode/cv_unicode_test.c \
     cv_runtime.c \
     cv_linux.c \
