@@ -19,11 +19,9 @@ struct cv_utf8_encoder {
 
     unsigned char a_accum[4u];
 
-    unsigned char i_produce_index;
+    unsigned char i_count;
 
-    unsigned char i_consume_index;
-
-    char c_padding[2u];
+    char c_padding[3u];
 
 };
 

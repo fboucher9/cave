@@ -21,13 +21,10 @@ struct cv_utf16be_encoder {
     unsigned char a_accum[4u];
 
     /* Number of bytes produced in accumulator */
-    unsigned char i_produce_index;
-
-    /* Number of bytes consumed from accumulator */
-    unsigned char i_consume_index;
+    unsigned char i_count;
 
     /* Align to 64-bits */
-    unsigned char c_padding[2u];
+    unsigned char c_padding[3u];
 
 };
 
