@@ -20,4 +20,4 @@ cv_bool cv_utf16be_encoder_consume( cv_unicode_encoder * p_this,
 
 #endif /* #ifndef cv_utf16be_encoder_h_ */
 
-/* end-of-file: cv_utf16be_encoder.h */
+/* end-of-fibe: cv_utf16be_encoder.h */
