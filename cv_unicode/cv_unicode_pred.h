@@ -7,6 +7,7 @@
  *
  */
 
+typedef struct cv_unicode_decoder cv_unicode_decoder;
 typedef struct cv_utf16be_decoder cv_utf16be_decoder;
 typedef struct cv_utf16be_encoder cv_utf16be_encoder;
 typedef struct cv_utf8_decoder cv_utf8_decoder;

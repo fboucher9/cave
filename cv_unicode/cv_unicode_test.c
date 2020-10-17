@@ -63,7 +63,7 @@ static void step_utf16be_encoder(
 }
 
 static void step_utf16be_decoder(
-    cv_utf16be_decoder * p_this,
+    cv_unicode_decoder * p_this,
     unsigned char i_input) {
     if (cv_utf16be_decoder_produce(p_this, i_input)) {
         unsigned long i_output = 0;
@@ -80,7 +80,7 @@ static void step_utf16be_decoder(
 }
 
 static void step_utf8_decoder(
-    cv_utf8_decoder * p_this,
+    cv_unicode_decoder * p_this,
     unsigned char i_input) {
     if (cv_utf8_decoder_produce(p_this, i_input)) {
         unsigned long i_output = 0;
@@ -183,6 +183,7 @@ void cv_unicode_test(void) {
         cv_array_it_cleanup(&o_output);
         cv_array_cleanup(&o_storage);
     }
+    cv_print_nl();
 
     cv_print_0("utf16be encoder", 80);
     cv_print_nl();
@@ -196,11 +197,12 @@ void cv_unicode_test(void) {
         step_utf16be_encoder(&o_encoder, 0x10ffff);
         cv_utf16be_encoder_cleanup(&o_encoder);
     }
+    cv_print_nl();
 
     cv_print_0("utf16be decoder", 80);
     cv_print_nl();
     {
-        cv_utf16be_decoder o_decoder;
+        cv_unicode_decoder o_decoder;
         cv_utf16be_decoder_init(&o_decoder);
         step_utf16be_decoder(&o_decoder, 0x12);
         step_utf16be_decoder(&o_decoder, 0x34);
@@ -214,6 +216,7 @@ void cv_unicode_test(void) {
         step_utf16be_decoder(&o_decoder, 0xff);
         cv_utf16be_decoder_cleanup(&o_decoder);
     }
+    cv_print_nl();
 
     cv_print_0("utf8 encoder", 80);
     cv_print_nl();
@@ -226,10 +229,12 @@ void cv_unicode_test(void) {
         step_utf8_encoder(&o_encoder, 0x10ffff);
         cv_utf8_encoder_cleanup(&o_encoder);
     }
+    cv_print_nl();
+
     cv_print_0("utf8 decoder", 80);
     cv_print_nl();
     {
-        cv_utf8_decoder o_decoder;
+        cv_unicode_decoder o_decoder;
         cv_utf8_decoder_init(&o_decoder);
         step_utf8_decoder(&o_decoder, 0x41);
         step_utf8_decoder(&o_decoder, 0xe1);

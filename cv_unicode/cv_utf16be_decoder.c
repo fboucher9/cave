@@ -5,37 +5,35 @@
  */
 
 #include <cv_unicode/cv_utf16be_decoder.h>
+#include <cv_unicode/cv_unicode_format.h>
 #include <cv_debug/cv_debug.h>
 
-cv_debug_decl_(g_class, "cv_utf16be_decoder", sizeof(cv_utf16be_decoder));
-
 /*
  *
  */
 
-void cv_utf16be_decoder_init(cv_utf16be_decoder * p_this) {
-    cv_debug_construct_(g_class, p_this);
-    p_this->i_count = 0;
-    p_this->b_ready = cv_false;
+void cv_utf16be_decoder_init(cv_unicode_decoder * p_this) {
+    cv_unicode_decoder_init(p_this, cv_unicode_format_utf16be);
 }
 
 /*
  *
  */
 
-void cv_utf16be_decoder_cleanup(cv_utf16be_decoder * p_this) {
-    (void)p_this;
-    cv_debug_destruct_(g_class, p_this);
+void cv_utf16be_decoder_cleanup(cv_unicode_decoder * p_this) {
+    cv_unicode_decoder_cleanup(p_this);
 }
 
 /*
  *
  */
 
-cv_bool cv_utf16be_decoder_produce(cv_utf16be_decoder * p_this,
+cv_bool cv_utf16be_decoder_produce(cv_unicode_decoder * p_this,
     unsigned char c_token) {
     cv_debug_assert_(p_this, cv_debug_code_null_ptr);
     cv_debug_assert_(p_this->i_count <= 4u, cv_debug_code_error);
+    cv_debug_assert_(p_this->e_format == cv_unicode_format_utf16be,
+        cv_debug_code_error);
     p_this->b_ready = cv_false;
     if (0 == p_this->i_count) {
         p_this->a_accum[0u] = c_token;
@@ -71,11 +69,15 @@ cv_bool cv_utf16be_decoder_produce(cv_utf16be_decoder * p_this,
  *
  */
 
-cv_bool cv_utf16be_decoder_consume(cv_utf16be_decoder * p_this,
+cv_bool cv_utf16be_decoder_consume(cv_unicode_decoder * p_this,
     unsigned long * r_output) {
     cv_bool b_result = cv_false;
-    unsigned long i_output = 0;
+    cv_debug_assert_(p_this && r_output, cv_debug_code_null_ptr);
+    cv_debug_assert_(p_this->i_count <= 4u, cv_debug_code_error);
+    cv_debug_assert_(p_this->e_format == cv_unicode_format_utf16be,
+        cv_debug_code_error);
     if (p_this->b_ready) {
+        unsigned long i_output = 0;
         if (2 == p_this->i_count) {
             i_output = p_this->a_accum[0u];
             i_output <<= 8u;
