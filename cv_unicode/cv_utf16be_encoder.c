@@ -72,11 +72,7 @@ cv_bool cv_utf16be_encoder_consume( cv_unicode_encoder * p_this,
     cv_debug_assert_(p_this && r_output, cv_debug_code_null_ptr);
     cv_debug_assert_(cv_unicode_format_utf16be == p_this->e_format,
         cv_debug_code_error);
-    if (p_this->i_count) {
-        p_this->i_count --;
-        *r_output = p_this->a_accum[p_this->i_count];
-        b_result = cv_true;
-    }
+    b_result = cv_unicode_encoder_consume(p_this, r_output);
     return b_result;
 }
 

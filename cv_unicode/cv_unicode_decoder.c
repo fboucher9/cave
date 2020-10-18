@@ -10,6 +10,7 @@
 #include <cv_unicode/cv_utf16be_decoder.h>
 #include <cv_unicode/cv_utf16le_decoder.h>
 #include <cv_unicode/cv_utf32be_decoder.h>
+#include <cv_unicode/cv_utf32le_decoder.h>
 #include <cv_debug/cv_debug.h>
 
 cv_debug_decl_(g_class, "cv_unicode_decoder", sizeof(cv_unicode_decoder));
@@ -51,6 +52,8 @@ cv_bool cv_unicode_decoder_produce( cv_unicode_decoder * p_this,
         b_result = cv_utf16le_decoder_produce(p_this, i_input);
     } else if (cv_unicode_format_utf32be == p_this->e_format) {
         b_result = cv_utf32be_decoder_produce(p_this, i_input);
+    } else if (cv_unicode_format_utf32le == p_this->e_format) {
+        b_result = cv_utf32le_decoder_produce(p_this, i_input);
     } else {
     }
     return b_result;
@@ -72,6 +75,8 @@ cv_bool cv_unicode_decoder_consume( cv_unicode_decoder * p_this,
         b_result = cv_utf16le_decoder_consume(p_this, r_output);
     } else if (cv_unicode_format_utf32be == p_this->e_format) {
         b_result = cv_utf32be_decoder_consume(p_this, r_output);
+    } else if (cv_unicode_format_utf32le == p_this->e_format) {
+        b_result = cv_utf32le_decoder_consume(p_this, r_output);
     } else {
     }
     return b_result;

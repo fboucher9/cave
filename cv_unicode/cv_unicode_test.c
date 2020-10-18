@@ -12,6 +12,8 @@
 #include <cv_unicode/cv_utf16le_encoder.h>
 #include <cv_unicode/cv_utf32be_decoder.h>
 #include <cv_unicode/cv_utf32be_encoder.h>
+#include <cv_unicode/cv_utf32le_decoder.h>
+#include <cv_unicode/cv_utf32le_encoder.h>
 #include <cv_unicode/cv_utf8_decoder.h>
 #include <cv_unicode/cv_utf8_encoder.h>
 #include <cv_algo/cv_array.h>
@@ -146,14 +148,14 @@ static void step_utf16le_decoder(
     }
 }
 
-static void step_utf32be_encoder( cv_unicode_encoder * p_this,
+static void step_unicode_encoder( cv_unicode_encoder * p_this,
     unsigned long i_input) {
-    cv_uptr i_count = cv_utf32be_encoder_produce(p_this, i_input);
+    cv_uptr i_count = cv_unicode_encoder_produce(p_this, i_input);
     if (i_count) {
         cv_uptr i_index = 0;
         while (i_index < i_count) {
             unsigned char i_output = 0;
-            if (cv_utf32be_encoder_consume(p_this, &i_output)) {
+            if (cv_unicode_encoder_consume(p_this, &i_output)) {
                 if (i_output) {
                     cv_print_0("0x", 80);
                     cv_print_hex(i_output);
@@ -172,12 +174,12 @@ static void step_utf32be_encoder( cv_unicode_encoder * p_this,
     }
 }
 
-static void step_utf32be_decoder(
+static void step_unicode_decoder(
     cv_unicode_decoder * p_this,
     unsigned char i_input) {
-    if (cv_utf32be_decoder_produce(p_this, i_input)) {
+    if (cv_unicode_decoder_produce(p_this, i_input)) {
         unsigned long i_output = 0;
-        if (cv_utf32be_decoder_consume(p_this, &i_output)) {
+        if (cv_unicode_decoder_consume(p_this, &i_output)) {
             cv_print_0("0x", 80);
             cv_print_hex(i_output);
             if (i_output <= 0x10fffful) {
@@ -369,11 +371,11 @@ void cv_unicode_test(void) {
     {
         cv_unicode_encoder o_encoder;
         cv_utf32be_encoder_init(&o_encoder);
-        step_utf32be_encoder(&o_encoder, 0x41);
-        step_utf32be_encoder(&o_encoder, 0x1234);
-        step_utf32be_encoder(&o_encoder, 0xffff);
-        step_utf32be_encoder(&o_encoder, 0x10000);
-        step_utf32be_encoder(&o_encoder, 0x10ffff);
+        step_unicode_encoder(&o_encoder, 0x41);
+        step_unicode_encoder(&o_encoder, 0x1234);
+        step_unicode_encoder(&o_encoder, 0xffff);
+        step_unicode_encoder(&o_encoder, 0x10000);
+        step_unicode_encoder(&o_encoder, 0x10ffff);
         cv_utf32be_encoder_cleanup(&o_encoder);
     }
     cv_print_nl();
@@ -383,23 +385,62 @@ void cv_unicode_test(void) {
     {
         cv_unicode_decoder o_decoder;
         cv_utf32be_decoder_init(&o_decoder);
-        step_utf32be_decoder(&o_decoder, 0x00);
-        step_utf32be_decoder(&o_decoder, 0x00);
-        step_utf32be_decoder(&o_decoder, 0x00);
-        step_utf32be_decoder(&o_decoder, 0x41);
-        step_utf32be_decoder(&o_decoder, 0x00);
-        step_utf32be_decoder(&o_decoder, 0x00);
-        step_utf32be_decoder(&o_decoder, 0x12);
-        step_utf32be_decoder(&o_decoder, 0x34);
-        step_utf32be_decoder(&o_decoder, 0x00);
-        step_utf32be_decoder(&o_decoder, 0x01);
-        step_utf32be_decoder(&o_decoder, 0x00);
-        step_utf32be_decoder(&o_decoder, 0x00);
-        step_utf32be_decoder(&o_decoder, 0x00);
-        step_utf32be_decoder(&o_decoder, 0x10);
-        step_utf32be_decoder(&o_decoder, 0xff);
-        step_utf32be_decoder(&o_decoder, 0xff);
+        step_unicode_decoder(&o_decoder, 0x00);
+        step_unicode_decoder(&o_decoder, 0x00);
+        step_unicode_decoder(&o_decoder, 0x00);
+        step_unicode_decoder(&o_decoder, 0x41);
+        step_unicode_decoder(&o_decoder, 0x00);
+        step_unicode_decoder(&o_decoder, 0x00);
+        step_unicode_decoder(&o_decoder, 0x12);
+        step_unicode_decoder(&o_decoder, 0x34);
+        step_unicode_decoder(&o_decoder, 0x00);
+        step_unicode_decoder(&o_decoder, 0x01);
+        step_unicode_decoder(&o_decoder, 0x00);
+        step_unicode_decoder(&o_decoder, 0x00);
+        step_unicode_decoder(&o_decoder, 0x00);
+        step_unicode_decoder(&o_decoder, 0x10);
+        step_unicode_decoder(&o_decoder, 0xff);
+        step_unicode_decoder(&o_decoder, 0xff);
         cv_utf32be_decoder_cleanup(&o_decoder);
+    }
+    cv_print_nl();
+
+    cv_print_0("utf32le encoder", 80);
+    cv_print_nl();
+    {
+        cv_unicode_encoder o_encoder;
+        cv_utf32le_encoder_init(&o_encoder);
+        step_unicode_encoder(&o_encoder, 0x41);
+        step_unicode_encoder(&o_encoder, 0x1234);
+        step_unicode_encoder(&o_encoder, 0xffff);
+        step_unicode_encoder(&o_encoder, 0x10000);
+        step_unicode_encoder(&o_encoder, 0x10ffff);
+        cv_utf32le_encoder_cleanup(&o_encoder);
+    }
+    cv_print_nl();
+
+    cv_print_0("utf32le decoder", 80);
+    cv_print_nl();
+    {
+        cv_unicode_decoder o_decoder;
+        cv_utf32le_decoder_init(&o_decoder);
+        step_unicode_decoder(&o_decoder, 0x41);
+        step_unicode_decoder(&o_decoder, 0x00);
+        step_unicode_decoder(&o_decoder, 0x00);
+        step_unicode_decoder(&o_decoder, 0x00);
+        step_unicode_decoder(&o_decoder, 0x34);
+        step_unicode_decoder(&o_decoder, 0x12);
+        step_unicode_decoder(&o_decoder, 0x00);
+        step_unicode_decoder(&o_decoder, 0x00);
+        step_unicode_decoder(&o_decoder, 0x00);
+        step_unicode_decoder(&o_decoder, 0x00);
+        step_unicode_decoder(&o_decoder, 0x01);
+        step_unicode_decoder(&o_decoder, 0x00);
+        step_unicode_decoder(&o_decoder, 0xff);
+        step_unicode_decoder(&o_decoder, 0xff);
+        step_unicode_decoder(&o_decoder, 0x10);
+        step_unicode_decoder(&o_decoder, 0x00);
+        cv_utf32le_decoder_cleanup(&o_decoder);
     }
     cv_print_nl();
 
