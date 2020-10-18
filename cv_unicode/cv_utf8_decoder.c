@@ -69,18 +69,24 @@ cv_bool cv_utf8_decoder_consume(cv_unicode_decoder * p_this,
     cv_debug_assert_(p_this, cv_debug_code_null_ptr);
     if (p_this->b_ready) {
         unsigned long i_output = 0;
-        {
-            static unsigned char const g_first_mask[4u] = {
-                0x7f, 0x1f, 0x0f, 0x07 };
-            i_output = p_this->a_accum[0u] & g_first_mask[p_this->i_count - 1];
-        }
-        {
-            unsigned char i_index = 1;
-            while (i_index < p_this->i_count) {
-                i_output <<= 6;
-                i_output += p_this->a_accum[i_index] & 0x3f;
-                i_index ++;
-            }
+        if (1 == p_this->i_count) {
+            i_output = p_this->a_accum[0u] & 0x7f;
+        } else if (2 == p_this->i_count) {
+            unsigned long const i_temp1 = p_this->a_accum[0u] & 0x1f;
+            unsigned long const i_temp2 = p_this->a_accum[1u] & 0x3f;
+            i_output = (i_temp1 << 6u) + i_temp2;
+        } else if (3 == p_this->i_count) {
+            unsigned long const i_temp1 = p_this->a_accum[0u] & 0x0f;
+            unsigned long const i_temp2 = p_this->a_accum[1u] & 0x3f;
+            unsigned long const i_temp3 = p_this->a_accum[2u] & 0x3f;
+            i_output = (i_temp1 << 12) + (i_temp2 << 6) + i_temp3;
+        } else if (4 == p_this->i_count) {
+            unsigned long const i_temp1 = p_this->a_accum[0u] & 0x07;
+            unsigned long const i_temp2 = p_this->a_accum[1u] & 0x3f;
+            unsigned long const i_temp3 = p_this->a_accum[2u] & 0x3f;
+            unsigned long const i_temp4 = p_this->a_accum[3u] & 0x3f;
+            i_output = (i_temp1 << 18) + (i_temp2 << 12) +
+                (i_temp3 << 6) + i_temp4;
         }
         *r_output = i_output;
         p_this->i_count = 0;
