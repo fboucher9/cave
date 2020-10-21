@@ -12,9 +12,9 @@
 
 #if defined cv_linux_
 
-struct cv_screen_raw * cv_screen_raw_create(cv_file const * p_file);
+cv_screen_raw * cv_screen_raw_create(cv_file const * p_file);
 
-void cv_screen_raw_destroy(struct cv_screen_raw * p_screen_raw);
+void cv_screen_raw_destroy(cv_screen_raw * p_screen_raw);
 
 #endif /* #if defined cv_linux_ */
 

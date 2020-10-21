@@ -24,11 +24,11 @@ struct cv_screen_raw {
 union cv_screen_raw_ptr {
     void const * pc_void;
     void * p_void;
-    struct cv_screen_raw const * pc_screen_raw;
-    struct cv_screen_raw * p_screen_raw;
+    cv_screen_raw const * pc_screen_raw;
+    cv_screen_raw * p_screen_raw;
 };
 
-static cv_bool cv_screen_raw_init( struct cv_screen_raw * p_this,
+static cv_bool cv_screen_raw_init( cv_screen_raw * p_this,
     cv_file const * p_file) {
     cv_bool b_result = cv_false;
     p_this->p_file = p_file;
@@ -59,7 +59,7 @@ static cv_bool cv_screen_raw_init( struct cv_screen_raw * p_this,
     return b_result;
 }
 
-static void cv_screen_raw_cleanup(struct cv_screen_raw * p_this) {
+static void cv_screen_raw_cleanup(cv_screen_raw * p_this) {
     int const i_tty_fd = cv_file_get_index(p_this->p_file);
     int const i_tcsetattr_result = tcsetattr( i_tty_fd, TCSADRAIN,
             &p_this->o_termios_storage.o_data);
@@ -67,9 +67,9 @@ static void cv_screen_raw_cleanup(struct cv_screen_raw * p_this) {
     }
 }
 
-struct cv_screen_raw * cv_screen_raw_create(cv_file const * p_file) {
+cv_screen_raw * cv_screen_raw_create(cv_file const * p_file) {
     union cv_screen_raw_ptr o_ptr = {0};
-    cv_uptr const i_placement_len = sizeof(struct cv_screen_raw);
+    cv_uptr const i_placement_len = sizeof(cv_screen_raw);
     o_ptr.p_void = cv_heap_alloc(i_placement_len, "screen_raw", 0);
     if (o_ptr.p_void) {
         if (cv_screen_raw_init(o_ptr.p_screen_raw, p_file)) {
@@ -81,7 +81,7 @@ struct cv_screen_raw * cv_screen_raw_create(cv_file const * p_file) {
     return o_ptr.p_screen_raw;
 }
 
-void cv_screen_raw_destroy(struct cv_screen_raw * p_screen_raw) {
+void cv_screen_raw_destroy(cv_screen_raw * p_screen_raw) {
     cv_screen_raw_cleanup(p_screen_raw);
     {
         union cv_screen_raw_ptr o_ptr = {0};

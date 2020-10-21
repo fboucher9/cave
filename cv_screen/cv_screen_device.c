@@ -11,59 +11,279 @@
 #include <cv_runtime.h>
 #include <cv_file/cv_file.h>
 #include <cv_debug/cv_debug.h>
+#include <cv_misc/cv_cast.h>
 
 /*
  *
  */
 
 struct cv_screen_device {
-    struct cv_screen_device_desc o_desc;
+    cv_screen_device_desc o_desc;
     /* -- */
 #if defined cv_linux_
-    struct cv_screen_raw * p_raw;
+    cv_screen_raw * p_raw;
 #endif /* #if defined cv_linux_ */
+    /* -- */
+    cv_screen_attribute * * p_attribute_table;
+    /* -- */
+    cv_screen_glyph * * p_glyph_table;
+    /* -- */
+    cv_screen_key * * p_key_table;
+    /* -- */
+    cv_screen_window * * p_window_table;
     /* -- */
     cv_bool b_enabled;
     char c_padding[7u];
 };
 
 cv_debug_decl_(g_screen_device, "cv_screen_device",
-    sizeof(struct cv_screen_device));
+    sizeof(cv_screen_device));
 
 union cv_screen_device_ptr {
     void const * pc_void;
     void * p_void;
-    struct cv_screen_device const * pc_device;
-    struct cv_screen_device * p_device;
+    cv_screen_device const * pc_device;
+    cv_screen_device * p_device;
 };
 
 /*
  *
  */
 
-static cv_bool cv_screen_device_init(
-    struct cv_screen_device * p_this,
-    struct cv_screen_device_desc const * p_desc) {
-    cv_bool b_result = cv_false;
-    cv_debug_construct_(g_screen_device, p_this);
-    p_this->o_desc = *p_desc;
-#if defined cv_linux_
-    p_this->p_raw = 0;
-#endif /* #if defined cv_linux_ */
-    b_result = 1;
+static cv_bool init_attribute_table( cv_screen_device * p_this ) {
+    cv_bool b_result = cv_true;
+    cv_debug_assert_(p_this, cv_debug_code_null_ptr);
+    if (p_this->o_desc.i_attribute_count) {
+        cv_uptr const i_placement_len =
+            sizeof(cv_screen_attribute *) * p_this->o_desc.i_attribute_count;
+        void * const p_placement = cv_heap_alloc(i_placement_len,
+            "attribute_table", 0);
+        if (p_placement) {
+            p_this->p_attribute_table = cv_cast_(cv_screen_attribute * *)(
+                p_placement);
+            {
+                unsigned short i_index = 0;
+                while (i_index < p_this->o_desc.i_attribute_count) {
+                    p_this->p_attribute_table[i_index] = 0;
+                    i_index ++;
+                }
+            }
+            b_result = cv_true;
+        }
+    } else {
+        b_result = cv_true;
+    }
     return b_result;
 }
 
+/*
+ *
+ */
+
+static void cleanup_attribute_table( cv_screen_device * p_this) {
+    cv_debug_assert_(p_this, cv_debug_code_null_ptr);
+    if (p_this->p_attribute_table) {
+        void * const p_placement = p_this->p_attribute_table;
+        cv_heap_free(p_placement);
+        p_this->p_attribute_table = 0;
+    }
+}
+
+/*
+ *
+ */
+
+static cv_bool init_glyph_table( cv_screen_device * p_this ) {
+    cv_bool b_result = cv_true;
+    cv_debug_assert_(p_this, cv_debug_code_null_ptr);
+    if (p_this->o_desc.i_glyph_count) {
+        cv_uptr const i_placement_len =
+            sizeof(cv_screen_glyph *) * p_this->o_desc.i_glyph_count;
+        void * const p_placement = cv_heap_alloc(i_placement_len,
+            "glyph_table", 0);
+        if (p_placement) {
+            p_this->p_glyph_table = p_placement;
+            {
+                unsigned short i_index = 0;
+                while (i_index < p_this->o_desc.i_glyph_count) {
+                    p_this->p_glyph_table[i_index] = 0;
+                    i_index ++;
+                }
+            }
+            b_result = cv_true;
+        }
+    } else {
+        b_result = cv_true;
+    }
+    return b_result;
+}
+
+/*
+ *
+ */
+
+static void cleanup_glyph_table( cv_screen_device * p_this) {
+    cv_debug_assert_(p_this, cv_debug_code_null_ptr);
+    if (p_this->p_glyph_table) {
+        void * const p_placement = p_this->p_glyph_table;
+        cv_heap_free(p_placement);
+        p_this->p_glyph_table = 0;
+    }
+}
+
+/*
+ *
+ */
+
+static cv_bool init_key_table( cv_screen_device * p_this ) {
+    cv_bool b_result = cv_true;
+    cv_debug_assert_(p_this, cv_debug_code_null_ptr);
+    if (p_this->o_desc.i_key_count) {
+        cv_uptr const i_placement_len =
+            sizeof(cv_screen_key *) * p_this->o_desc.i_key_count;
+        void * const p_placement = cv_heap_alloc(i_placement_len,
+            "key_table", 0);
+        if (p_placement) {
+            p_this->p_key_table = p_placement;
+            {
+                unsigned short i_index = 0;
+                while (i_index < p_this->o_desc.i_key_count) {
+                    p_this->p_key_table[i_index] = 0;
+                    i_index ++;
+                }
+            }
+            b_result = cv_true;
+        }
+    } else {
+        b_result = cv_true;
+    }
+    return b_result;
+}
+
+/*
+ *
+ */
+
+static void cleanup_key_table( cv_screen_device * p_this) {
+    cv_debug_assert_(p_this, cv_debug_code_null_ptr);
+    if (p_this->p_key_table) {
+        void * const p_placement = p_this->p_key_table;
+        cv_heap_free(p_placement);
+        p_this->p_key_table = 0;
+    }
+}
+
+/*
+ *
+ */
+
+static cv_bool init_window_table( cv_screen_device * p_this ) {
+    cv_bool b_result = cv_true;
+    cv_debug_assert_(p_this, cv_debug_code_null_ptr);
+    if (p_this->o_desc.i_window_count) {
+        cv_uptr const i_placement_len =
+            sizeof(cv_screen_window *) * p_this->o_desc.i_window_count;
+        void * const p_placement = cv_heap_alloc(i_placement_len,
+            "window_table", 0);
+        if (p_placement) {
+            p_this->p_window_table = p_placement;
+            {
+                unsigned short i_index = 0;
+                while (i_index < p_this->o_desc.i_window_count) {
+                    p_this->p_window_table[i_index] = 0;
+                    i_index ++;
+                }
+            }
+            b_result = cv_true;
+        }
+    } else {
+        b_result = cv_true;
+    }
+    return b_result;
+}
+
+/*
+ *
+ */
+
+static void cleanup_window_table( cv_screen_device * p_this) {
+    cv_debug_assert_(p_this, cv_debug_code_null_ptr);
+    if (p_this->p_window_table) {
+        void * const p_placement = p_this->p_window_table;
+        cv_heap_free(p_placement);
+        p_this->p_window_table = 0;
+    }
+}
+
+/*
+ *
+ */
+
+static cv_bool copy_descriptor( cv_screen_device * p_this,
+    cv_screen_device_desc const * p_desc) {
+    cv_bool b_result = cv_false;
+    p_this->o_desc = *p_desc;
+    b_result = cv_true;
+    return b_result;
+}
+
+/*
+ *
+ */
+
+static cv_bool cv_screen_device_init(
+    cv_screen_device * p_this,
+    cv_screen_device_desc const * p_desc) {
+    cv_bool b_result = cv_false;
+    cv_debug_assert_(p_this && p_desc, cv_debug_code_null_ptr);
+    cv_debug_construct_(g_screen_device, p_this);
+    if (copy_descriptor(p_this, p_desc)) {
+#if defined cv_linux_
+        p_this->p_raw = 0;
+#endif /* #if defined cv_linux_ */
+        if (init_attribute_table(p_this)) {
+            if (init_glyph_table(p_this)) {
+                if (init_key_table(p_this)) {
+                    if (init_window_table(p_this)) {
+                        b_result = cv_true;
+                        if (!b_result) {
+                            cleanup_window_table(p_this);
+                        }
+                    }
+                    if (!b_result) {
+                        cleanup_key_table(p_this);
+                    }
+                }
+                if (!b_result) {
+                    cleanup_glyph_table(p_this);
+                }
+            }
+            if (!b_result) {
+                cleanup_attribute_table(p_this);
+            }
+        }
+    }
+    return b_result;
+}
+
+/*
+ *
+ */
+
 static void cv_screen_device_cleanup(
-    struct cv_screen_device * p_this) {
-    (void)p_this;
+    cv_screen_device * p_this) {
+    cv_debug_assert_(p_this, cv_debug_code_null_ptr);
+    cleanup_window_table(p_this);
+    cleanup_key_table(p_this);
+    cleanup_glyph_table(p_this);
+    cleanup_attribute_table(p_this);
     cv_debug_destruct_(g_screen_device, p_this);
 }
 
-struct cv_screen_device * cv_screen_device_create(
-    struct cv_screen_device_desc const * p_desc) {
+cv_screen_device * cv_screen_device_create(
+    cv_screen_device_desc const * p_desc) {
     union cv_screen_device_ptr o_device_ptr = {0};
-    o_device_ptr.p_void = cv_heap_alloc(sizeof(struct cv_screen_device),
+    o_device_ptr.p_void = cv_heap_alloc(sizeof(cv_screen_device),
         "screen_device", 0);
     if (o_device_ptr.p_void) {
         if (cv_screen_device_init(o_device_ptr.p_device, p_desc)) {
@@ -75,15 +295,17 @@ struct cv_screen_device * cv_screen_device_create(
     return o_device_ptr.p_device;
 }
 
-void cv_screen_device_destroy(struct cv_screen_device * p_this) {
+void cv_screen_device_destroy(cv_screen_device * p_this) {
     union cv_screen_device_ptr o_device_ptr = {0};
+    cv_debug_assert_(p_this, cv_debug_code_null_ptr);
     o_device_ptr.p_device = p_this;
     cv_screen_device_cleanup(o_device_ptr.p_device);
     cv_heap_free(o_device_ptr.p_void);
 }
 
-cv_bool cv_screen_device_enter(struct cv_screen_device * p_this) {
+cv_bool cv_screen_device_enter(cv_screen_device * p_this) {
     cv_bool b_result = cv_false;
+    cv_debug_assert_(p_this, cv_debug_code_null_ptr);
     if (!p_this->b_enabled) {
 #if defined cv_linux_
         if (!p_this->p_raw) {
@@ -103,7 +325,8 @@ cv_bool cv_screen_device_enter(struct cv_screen_device * p_this) {
     return b_result;
 }
 
-void cv_screen_device_leave(struct cv_screen_device * p_this) {
+void cv_screen_device_leave(cv_screen_device * p_this) {
+    cv_debug_assert_(p_this, cv_debug_code_null_ptr);
     if (p_this->b_enabled) {
 #if defined cv_linux_
         if (p_this->p_raw) {
@@ -115,70 +338,88 @@ void cv_screen_device_leave(struct cv_screen_device * p_this) {
     }
 }
 
-void cv_screen_device_set_key(struct cv_screen_device * p_this,
-    unsigned short i_index, struct cv_screen_key * p_key) {
-    (void)p_this;
-    (void)i_index;
-    (void)p_key;
+void cv_screen_device_set_key(cv_screen_device * p_this,
+    unsigned short i_index, cv_screen_key * p_key) {
+    cv_debug_assert_(p_this, cv_debug_code_null_ptr);
+    if (i_index < p_this->o_desc.i_key_count) {
+        p_this->p_key_table[i_index] = p_key;
+    }
 }
 
-struct cv_screen_key * cv_screen_device_get_key(
-    struct cv_screen_device * p_this, unsigned short i_index) {
-    (void)p_this;
-    (void)i_index;
-    return 0;
+cv_screen_key * cv_screen_device_get_key(
+    cv_screen_device * p_this, unsigned short i_index) {
+    cv_screen_key * p_key = 0;
+    cv_debug_assert_(p_this, cv_debug_code_null_ptr);
+    if (i_index < p_this->o_desc.i_key_count) {
+        p_key = p_this->p_key_table[i_index];
+    }
+    return p_key;
 }
 
-void cv_screen_device_set_attribute(struct cv_screen_device * p_this,
-    unsigned short i_index, struct cv_screen_attribute * p_attribute) {
-    (void)p_this;
-    (void)i_index;
-    (void)p_attribute;
+void cv_screen_device_set_attribute(cv_screen_device * p_this,
+    unsigned short i_index, cv_screen_attribute * p_attribute) {
+    cv_debug_assert_(p_this, cv_debug_code_null_ptr);
+    if (i_index < p_this->o_desc.i_attribute_count) {
+        p_this->p_attribute_table[i_index] = p_attribute;
+    }
 }
 
-struct cv_screen_attribute * cv_screen_device_get_attribute(
-    struct cv_screen_device * p_this, unsigned short i_index) {
-    (void)p_this;
-    (void)i_index;
-    return 0;
+cv_screen_attribute * cv_screen_device_get_attribute(
+    cv_screen_device * p_this, unsigned short i_index) {
+    cv_screen_attribute * p_attribute = 0;
+    cv_debug_assert_(p_this, cv_debug_code_null_ptr);
+    if (i_index < p_this->o_desc.i_attribute_count) {
+        p_attribute = p_this->p_attribute_table[i_index];
+    }
+    return p_attribute;
 }
 
-void cv_screen_device_set_glyph(struct cv_screen_device * p_this,
-    unsigned short i_index, struct cv_screen_glyph * p_glyph) {
-    (void)p_this;
-    (void)i_index;
-    (void)p_glyph;
+void cv_screen_device_set_glyph(cv_screen_device * p_this,
+    unsigned short i_index, cv_screen_glyph * p_glyph) {
+    cv_debug_assert_(p_this, cv_debug_code_null_ptr);
+    if (i_index < p_this->o_desc.i_glyph_count) {
+        p_this->p_glyph_table[i_index] = p_glyph;
+    }
 }
 
-struct cv_screen_glyph * cv_screen_device_get_glyph(
-    struct cv_screen_device * p_this, unsigned short i_index) {
-    (void)p_this;
-    (void)i_index;
-    return 0;
+cv_screen_glyph * cv_screen_device_get_glyph(
+    cv_screen_device * p_this, unsigned short i_index) {
+    cv_screen_glyph * p_glyph = 0;
+    cv_debug_assert_(p_this, cv_debug_code_null_ptr);
+    if (i_index < p_this->o_desc.i_glyph_count) {
+        p_glyph = p_this->p_glyph_table[i_index];
+    }
+    return p_glyph;
 }
 
-void cv_screen_device_set_window(struct cv_screen_device * p_this,
-    unsigned short i_index, struct cv_screen_window * p_window) {
-    (void)p_this;
-    (void)i_index;
-    (void)p_window;
+void cv_screen_device_set_window(cv_screen_device * p_this,
+    unsigned short i_index, cv_screen_window * p_window) {
+    cv_debug_assert_(p_this, cv_debug_code_null_ptr);
+    if (i_index < p_this->o_desc.i_window_count) {
+        p_this->p_window_table[i_index] = p_window;
+    }
 }
 
-struct cv_screen_window * cv_screen_device_get_window(
-    struct cv_screen_device * p_this, unsigned short i_index) {
-    (void)p_this;
-    (void)i_index;
-    return 0;
+cv_screen_window * cv_screen_device_get_window(
+    cv_screen_device * p_this, unsigned short i_index) {
+    cv_screen_window * p_window = 0;
+    cv_debug_assert_(p_this, cv_debug_code_null_ptr);
+    if (i_index < p_this->o_desc.i_window_count) {
+        p_window = p_this->p_window_table[i_index];
+    }
+    return p_window;
 }
 
-cv_bool cv_screen_device_read(struct cv_screen_device * p_this,
+cv_bool cv_screen_device_read(cv_screen_device * p_this,
     unsigned short * r_key) {
+    cv_bool b_result = cv_false;
+    cv_debug_assert_(p_this, cv_debug_code_null_ptr);
     (void)p_this;
     (void)r_key;
-    return cv_false;
+    return b_result;
 }
 
-void cv_screen_device_apply(struct cv_screen_device * p_this) {
+void cv_screen_device_apply(cv_screen_device * p_this) {
     (void)p_this;
 }
 

@@ -27,9 +27,9 @@ struct cv_screen_color {
  */
 
 struct cv_screen_attribute_desc {
-    struct cv_screen_color o_foreground;
+    cv_screen_color o_foreground;
     /* -- */
-    struct cv_screen_color o_background;
+    cv_screen_color o_background;
     /* -- */
     char b_underline;
     char b_reverse;
@@ -37,15 +37,15 @@ struct cv_screen_attribute_desc {
     char c_padding[5u];
 };
 
-struct cv_screen_attribute * cv_screen_attribute_create(
-    struct cv_screen_attribute_desc const * p_attribute_desc);
+cv_screen_attribute * cv_screen_attribute_create(
+    cv_screen_attribute_desc const * p_attribute_desc);
 
 void cv_screen_attribute_destroy(
-    struct cv_screen_attribute * p_attribute);
+    cv_screen_attribute * p_attribute);
 
 cv_bool cv_screen_attribute_query(
-    struct cv_screen_attribute const * p_attribute,
-    struct cv_screen_attribute_desc * r_attribute);
+    cv_screen_attribute const * p_attribute,
+    cv_screen_attribute_desc * r_attribute);
 
 #endif /* #ifndef cv_screen_attribute_h_ */
 

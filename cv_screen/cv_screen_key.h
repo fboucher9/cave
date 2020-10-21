@@ -24,13 +24,13 @@ struct cv_screen_key_desc {
     char c_padding[5u];
 };
 
-struct cv_screen_key * cv_screen_key_create(
-    struct cv_screen_key_desc const * p_desc);
+cv_screen_key * cv_screen_key_create(
+    cv_screen_key_desc const * p_desc);
 
-void cv_screen_key_destroy( struct cv_screen_key * p_this);
+void cv_screen_key_destroy( cv_screen_key * p_this);
 
-cv_bool cv_screen_key_query( struct cv_screen_key const * p_this,
-    struct cv_screen_key_desc * r_desc);
+cv_bool cv_screen_key_query( cv_screen_key const * p_this,
+    cv_screen_key_desc * r_desc);
 
 #endif /* #ifndef cv_screen_key_h_ */
 

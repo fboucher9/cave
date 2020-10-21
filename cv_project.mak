@@ -10,18 +10,17 @@ cv_dst_path ?= $(cv_src_path)
 
 cv_obj_path ?= $(cv_dst_path)/.obj
 
-include $(cv_src_path)/cv_algo/cv_sources.mak
+cv_extra_makefiles := \
+    cv_algo/cv_sources.mak \
+    cv_screen/cv_sources.mak
 
-cv_test_srcs := \
-    cv_test_os.c \
-    cv_test.c \
-    cv_test_print.c \
+include $(addprefix $(cv_src_path)/,$(cv_extra_makefiles))
+
+cv_lib_srcs := \
     cv_main.c \
-    cv_misc/cv_convert.c \
-    cv_misc/cv_convert_test.c \
-    cv_manager.c \
     $(cv_algo_lib_srcs) \
-    $(cv_algo_test_srcs) \
+    cv_misc/cv_convert.c \
+    cv_manager.c \
     cv_options/cv_options_desc.c \
     cv_options/cv_options.c \
     cv_options/cv_options_it.c \
@@ -41,7 +40,6 @@ cv_test_srcs := \
     cv_heap/cv_heap_small.c \
     cv_heap/cv_heap_large.c \
     cv_heap/cv_heap_used.c \
-    cv_heap/cv_heap_test.c \
     cv_debug/cv_debug.c \
     cv_debug/cv_debug_code.c \
     cv_debug/cv_debug_class.c \
@@ -56,20 +54,17 @@ cv_test_srcs := \
     cv_number/cv_number_dec.c \
     cv_number/cv_number_scan.c \
     cv_number/cv_number_print.c \
-    cv_number/cv_number_test.c \
     cv_clock/cv_clock.c \
     cv_clock/cv_clock_it.c \
     cv_clock/cv_clock_mono.c \
     cv_clock/cv_clock_mono_it.c \
     cv_clock/cv_clock_counter.c \
-    cv_clock/cv_clock_test.c \
     cv_clock/cv_clock_duration.c \
     cv_clock/cv_clock_tool.c \
     cv_clock/cv_clock_tick.c \
     cv_clock/cv_stopwatch_tick.c \
     cv_random/cv_random.c \
     cv_random/cv_random_crypto.c \
-    cv_random/cv_random_test.c \
     cv_thread/cv_mutex.c \
     cv_thread/cv_mutex_impl.c \
     cv_thread/cv_once.c \
@@ -80,20 +75,15 @@ cv_test_srcs := \
     cv_file/cv_file_disk.c \
     cv_file/cv_file_poll.c \
     cv_file/cv_file_print.c \
-    cv_file/cv_file_test.c \
-    cv_trace/cv_trace_test.c \
+    $(cv_screen_lib_srcs) \
     cv_trace/cv_trace_plugin.c \
     cv_trace/cv_trace_map.c \
     cv_trace/cv_trace_func.c \
     cv_trace/cv_trace_count.c \
     cv_trace/cv_trace_sect.c \
-    cv_screen/cv_screen_device_desc.c \
-    cv_screen/cv_screen_device.c \
-    cv_screen/cv_screen_linux.c \
     cv_json/cv_json.c \
     cv_json/cv_json_dec.c \
     cv_json/cv_json_it.c \
-    cv_json/cv_json_test.c \
     cv_unicode/cv_utf16.c \
     cv_unicode/cv_utf16be_decoder.c \
     cv_unicode/cv_utf16be_encoder.c \
@@ -107,10 +97,26 @@ cv_test_srcs := \
     cv_unicode/cv_utf32be_encoder.c \
     cv_unicode/cv_utf32le_decoder.c \
     cv_unicode/cv_utf32le_encoder.c \
-    cv_unicode/cv_unicode_test.c \
     cv_runtime.c \
     cv_linux.c \
     cv_windows.c \
+
+cv_test_srcs := \
+    cv_test_os.c \
+    cv_test.c \
+    cv_test_print.c \
+    cv_misc/cv_convert_test.c \
+    cv_heap/cv_heap_test.c \
+    cv_number/cv_number_test.c \
+    cv_clock/cv_clock_test.c \
+    cv_random/cv_random_test.c \
+    cv_file/cv_file_test.c \
+    cv_trace/cv_trace_test.c \
+    cv_json/cv_json_test.c \
+    cv_unicode/cv_unicode_test.c \
+    $(cv_algo_test_srcs) \
+    $(cv_screen_test_srcs) \
+    $(cv_lib_srcs)
 
 cv_test_srcs_abs = $(addprefix $(cv_src_path)/,$(cv_test_srcs))
 

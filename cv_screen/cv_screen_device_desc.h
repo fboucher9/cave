@@ -27,11 +27,8 @@ struct cv_screen_device_desc {
     unsigned short s_padding[2u];
 };
 
-void cv_screen_device_desc_init(
-    struct cv_screen_device_desc * p_this);
-
-void cv_screen_device_desc_deinit(
-    struct cv_screen_device_desc * p_this);
+void cv_screen_device_desc_init( cv_screen_device_desc * p_this);
+void cv_screen_device_desc_deinit( cv_screen_device_desc * p_this);
 
 #endif /* #ifndef cv_screen_device_desc_h_ */
 
