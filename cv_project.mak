@@ -13,17 +13,25 @@ cv_obj_path ?= $(cv_dst_path)/.obj
 cv_extra_makefiles := \
     cv_algo/cv_sources.mak \
     cv_clock/cv_sources.mak \
+    cv_file/cv_sources.mak \
     cv_heap/cv_sources.mak \
+    cv_json/cv_sources.mak \
+    cv_number/cv_sources.mak \
     cv_options/cv_sources.mak \
-    cv_unicode/cv_sources.mak \
     cv_screen/cv_sources.mak \
+    cv_trace/cv_sources.mak \
+    cv_unicode/cv_sources.mak \
 
 include $(addprefix $(cv_src_path)/,$(cv_extra_makefiles))
 
 cv_lib_srcs := \
     cv_main.c \
-    cv_misc/cv_convert.c \
     cv_manager.c \
+    cv_memory.c \
+    cv_runtime.c \
+    cv_linux.c \
+    cv_windows.c \
+    cv_misc/cv_convert.c \
     cv_object/cv_object.c \
     cv_debug/cv_debug.c \
     cv_debug/cv_debug_code.c \
@@ -32,41 +40,21 @@ cv_lib_srcs := \
     cv_thread/cv_thread_desc.c \
     cv_thread/cv_thread.c \
     cv_thread/cv_thread_impl.c \
-    cv_memory.c \
-    cv_number/cv_number_desc.c \
-    cv_number/cv_number_format.c \
-    cv_number/cv_number_enc.c \
-    cv_number/cv_number_dec.c \
-    cv_number/cv_number_scan.c \
-    cv_number/cv_number_print.c \
     cv_random/cv_random.c \
     cv_random/cv_random_crypto.c \
     cv_thread/cv_mutex.c \
     cv_thread/cv_mutex_impl.c \
     cv_thread/cv_once.c \
     cv_thread/cv_specific.c \
-    cv_file/cv_file.c \
-    cv_file/cv_file_std.c \
-    cv_file/cv_file_disk_desc.c \
-    cv_file/cv_file_disk.c \
-    cv_file/cv_file_poll.c \
-    cv_file/cv_file_print.c \
-    cv_trace/cv_trace_plugin.c \
-    cv_trace/cv_trace_map.c \
-    cv_trace/cv_trace_func.c \
-    cv_trace/cv_trace_count.c \
-    cv_trace/cv_trace_sect.c \
-    cv_json/cv_json.c \
-    cv_json/cv_json_dec.c \
-    cv_json/cv_json_it.c \
-    cv_runtime.c \
-    cv_linux.c \
-    cv_windows.c \
     $(cv_algo_lib_srcs) \
     $(cv_clock_lib_srcs) \
+    $(cv_file_lib_srcs) \
     $(cv_heap_lib_srcs) \
+    $(cv_json_lib_srcs) \
+    $(cv_number_lib_srcs) \
     $(cv_options_lib_srcs) \
     $(cv_screen_lib_srcs) \
+    $(cv_trace_lib_srcs) \
     $(cv_unicode_lib_srcs) \
 
 cv_test_srcs := \
@@ -74,17 +62,16 @@ cv_test_srcs := \
     cv_test.c \
     cv_test_print.c \
     cv_misc/cv_convert_test.c \
-    cv_heap/cv_heap_test.c \
-    cv_number/cv_number_test.c \
     cv_random/cv_random_test.c \
-    cv_file/cv_file_test.c \
-    cv_trace/cv_trace_test.c \
-    cv_json/cv_json_test.c \
     $(cv_algo_test_srcs) \
     $(cv_clock_test_srcs) \
+    $(cv_file_test_srcs) \
     $(cv_heap_test_srcs) \
+    $(cv_json_test_srcs) \
+    $(cv_number_test_srcs) \
     $(cv_options_test_srcs) \
     $(cv_screen_test_srcs) \
+    $(cv_trace_test_srcs) \
     $(cv_unicode_test_srcs) \
     $(cv_lib_srcs) \
 

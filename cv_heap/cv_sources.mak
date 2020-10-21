@@ -14,5 +14,6 @@ cv_heap_lib_srcs := \
     cv_heap/cv_heap_large.c \
     cv_heap/cv_heap_used.c \
 
-cv_heap_test_srcs :=
+cv_heap_test_srcs := \
+    cv_heap/cv_heap_test.c \
 
