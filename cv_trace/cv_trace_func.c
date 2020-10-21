@@ -11,6 +11,7 @@
 #include <cv_misc/cv_thread_local.h>
 #include <cv_clock/cv_clock_tick.h>
 #include <cv_clock/cv_clock_tool.h>
+#include <cv_runtime.h>
 
 enum cv_trace_func_const {
     cv_trace_func_depth_max = 32
@@ -40,9 +41,11 @@ struct cv_trace_func_local {
 
 cv_debug_decl_(g_trace_func_class, "cv_trace_func", sizeof(cv_trace_func));
 
-static cv_list_root g_trace_func_list = {0};
+static cv_list_root g_trace_func_list;
 
-static cv_thread_local_ struct cv_trace_func_local g_local = {0};
+static cv_thread_local_ struct cv_trace_func_local g_local;
+
+static cv_thread_local_ cv_bool g_local_initialized = cv_false;
 
 /*
  *
@@ -95,7 +98,19 @@ void cv_trace_func_cleanup( cv_trace_func * p_this) {
  *
  */
 
+static void cv_trace_func_local_once(void) {
+    if (!g_local_initialized) {
+        cv_runtime_memset(&g_local, 0, sizeof(g_local));
+        g_local_initialized = cv_true;
+    }
+}
+
+/*
+ *
+ */
+
 void cv_trace_func_enter( cv_trace_func * p_this) {
+    cv_trace_func_local_once();
     /* cv_callstack_enter(p_this->p_symbol); */
     if (g_local.i_depth < cv_trace_func_depth_max) {
         g_local.a_stack[g_local.i_depth].p_this = p_this;
@@ -114,8 +129,8 @@ void cv_trace_func_leave(void) {
     if (g_local.i_depth) {
         g_local.i_depth --;
         if (g_local.i_depth < cv_trace_func_depth_max) {
-            cv_clock_tick o_enter_clock = {0};
-            cv_clock_tick o_leave_clock = {0};
+            cv_clock_tick o_enter_clock;
+            cv_clock_tick o_leave_clock;
             cv_ull i_enter_clock = 0;
             cv_ull i_leave_clock = 0;
             cv_ull i_elapsed = 0;

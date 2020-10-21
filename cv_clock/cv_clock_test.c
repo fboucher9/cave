@@ -22,7 +22,7 @@
  */
 
 static void cv_clock_test_unix_1(void) {
-    cv_clock o_value = {0};
+    cv_clock o_value;
     if (cv_clock_read(&o_value, cv_clock_epoch_unix)) {
     }
 }
@@ -32,21 +32,21 @@ static void cv_clock_test_unix_1(void) {
  */
 
 static void cv_clock_test_mono_1(void) {
-    cv_clock_mono o_clock_mono = {0};
+    cv_clock_mono o_clock_mono;
     cv_clock_mono_init(&o_clock_mono);
     cv_clock_mono_read(&o_clock_mono);
     cv_clock_mono_until(&o_clock_mono);
     {
-        cv_clock_info o_clock_info = {0};
+        cv_clock_info o_clock_info;
         cv_clock_mono_info(&o_clock_mono, &o_clock_info);
     }
     {
-        cv_clock_duration o_clock_duration = {0};
+        cv_clock_duration o_clock_duration;
         cv_clock_mono_diff(&o_clock_mono, &o_clock_mono, &o_clock_duration);
     }
     {
-        cv_clock_mono_it o_clock_mono_it = {0};
-        cv_clock_duration o_clock_duration = {0};
+        cv_clock_mono_it o_clock_mono_it;
+        cv_clock_duration o_clock_duration;
         o_clock_duration.o_clock.i_seconds = 1;
         o_clock_duration.o_clock.i_fraction = 0;
         cv_clock_mono_it_init(&o_clock_mono_it, &o_clock_mono);
@@ -61,7 +61,7 @@ static void cv_clock_test_mono_1(void) {
  */
 
 static void cv_clock_test_counter_1(void) {
-    cv_clock_counter o_clock_counter = {0};
+    cv_clock_counter o_clock_counter;
     cv_clock_counter_init(&o_clock_counter);
     cv_clock_counter_set(&o_clock_counter, 12345UL);
     {
@@ -82,35 +82,34 @@ static void cv_clock_test_counter_1(void) {
 
 static void cv_clock_test_duration_1(void) {
     {
-        cv_clock_duration o_clock_duration = {0};
+        cv_clock_duration o_clock_duration;
         cv_clock_duration_init(&o_clock_duration);
         cv_clock_duration_cleanup(&o_clock_duration);
     }
     {
-        cv_clock_duration o_clock_duration = {0};
+        cv_clock_duration o_clock_duration;
         cv_clock_duration_init_msec(&o_clock_duration, 0, 100UL);
         cv_clock_duration_until(&o_clock_duration);
 #if 0 /* not used yet */
         {
-            cv_clock_info o_clock_info = {0};
+            cv_clock_info o_clock_info;
             cv_clock_duration_info(&o_clock_duration, &o_clock_info);
         }
 #endif /* not used yet */
         {
-            cv_clock_duration o_clock_duration_min =
-            {0};
+            cv_clock_duration o_clock_duration_min;
             cv_clock_duration_min(&o_clock_duration, &o_clock_duration,
                 &o_clock_duration_min);
         }
         cv_clock_duration_cleanup(&o_clock_duration);
     }
     {
-        cv_clock_duration o_clock_duration = {0};
+        cv_clock_duration o_clock_duration;
         cv_clock_duration_init_usec(&o_clock_duration, 1, 999999UL);
         cv_clock_duration_cleanup(&o_clock_duration);
     }
     {
-        cv_clock_duration o_clock_duration = {0};
+        cv_clock_duration o_clock_duration;
         cv_clock_duration_init_nsec(&o_clock_duration, 1, 999999999UL);
         cv_clock_duration_cleanup(&o_clock_duration);
     }
@@ -121,7 +120,7 @@ static void cv_clock_test_duration_1(void) {
  */
 
 static void cv_clock_test_tick_1(void) {
-    cv_clock_tick o_value = {0};
+    cv_clock_tick o_value;
     cv_bool b_result = cv_false;
     b_result = cv_clock_tick_is_supported();
     if (b_result) {
@@ -140,14 +139,14 @@ void cv_clock_test(void) {
     cv_clock_test_duration_1();
     cv_clock_test_tick_1();
     {
-        cv_clock o_value = {0};
+        cv_clock o_value;
         if (cv_clock_read(&o_value, cv_clock_epoch_mono)) {
             cv_print_unsigned(o_value.i_seconds, cv_number_format_dec());
             cv_print_char('.');
             cv_print_unsigned(o_value.i_fraction, cv_number_format_hex8());
             cv_print_nl();
             {
-                cv_clock_msec o_value_msec = {0};
+                cv_clock_msec o_value_msec;
                 cv_clock_get_msec(&o_value, &o_value_msec);
                 cv_print_unsigned(o_value_msec.i_seconds,
                     cv_number_format_dec());
@@ -157,7 +156,7 @@ void cv_clock_test(void) {
                 cv_print_nl();
             }
             {
-                cv_clock_usec o_value_usec = {0};
+                cv_clock_usec o_value_usec;
                 cv_clock_get_usec(&o_value, &o_value_usec);
                 cv_print_unsigned(o_value_usec.i_seconds,
                     cv_number_format_dec());
@@ -167,7 +166,7 @@ void cv_clock_test(void) {
                 cv_print_nl();
             }
             {
-                cv_clock_nsec o_value_nsec = {0};
+                cv_clock_nsec o_value_nsec;
                 cv_clock_get_nsec(&o_value, &o_value_nsec);
                 cv_print_unsigned(o_value_nsec.i_seconds,
                     cv_number_format_dec());
@@ -180,7 +179,7 @@ void cv_clock_test(void) {
         }
     }
     {
-        cv_clock_mono o_value = {0};
+        cv_clock_mono o_value;
         if (cv_clock_mono_read(&o_value)) {
             cv_print_unsigned(o_value.o_clock.i_seconds,
                 cv_number_format_hex8());
@@ -193,13 +192,13 @@ void cv_clock_test(void) {
     }
     /* Try the iterator */
     {
-        cv_clock o_target = {0};
+        cv_clock o_target;
         if (cv_clock_read(&o_target, cv_clock_epoch_mono)) {
-            cv_clock_it o_clock_it = {0};
+            cv_clock_it o_clock_it;
             o_target.i_seconds += 5;
             cv_clock_it_init(&o_clock_it, &o_target, cv_clock_epoch_mono);
             {
-                cv_clock_duration o_max_sleep = {0};
+                cv_clock_duration o_max_sleep;
                 cv_clock_duration_init(&o_max_sleep);
                 o_max_sleep.o_clock.i_seconds = 2;
                 o_max_sleep.o_clock.i_fraction = 0;

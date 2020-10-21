@@ -73,7 +73,7 @@ static void cv_number_test_format(void) {
  */
 
 static void cv_number_test_desc(void) {
-    cv_number_desc o_desc = {0};
+    cv_number_desc o_desc;
     cv_number_desc_init(&o_desc);
     cv_number_desc_cleanup(&o_desc);
 }
@@ -94,12 +94,12 @@ static cv_array const * get_temp_buf(void) {
 
 static void cv_number_test_enc_step(cv_number_desc const * p_desc,
     char const * p_expected) {
-    cv_array o_result = {0};
+    cv_array o_result;
     cv_array_init(&o_result);
     if (cv_number_status_done == cv_number_enc_convert(
             p_desc, get_temp_buf(), &o_result)) {
         /* Compare result with a reference */
-        cv_array o_expected = {0};
+        cv_array o_expected;
         cv_array_init_0(&o_expected, p_expected, 0x7fff);
         cv_accum_result(cv_array_compare(&o_result, &o_expected));
         cv_array_cleanup(&o_expected);
@@ -112,7 +112,7 @@ static void cv_number_test_enc_step(cv_number_desc const * p_desc,
  */
 
 static void cv_number_test_enc(void) {
-    cv_number_desc o_desc = {0};
+    cv_number_desc o_desc;
     o_desc.o_format = *cv_number_format_dec();
     cv_number_test_enc_step(&o_desc, "0");
     o_desc.o_data.i_unsigned = 12345;
@@ -174,9 +174,9 @@ static void cv_number_test_print(void) {
 
 static void cv_number_test_dec_step(char const * p_text, unsigned int i_base,
     unsigned long i_expected_number, unsigned long b_negative) {
-    cv_array o_array = {0};
-    cv_array_it o_array_it = {0};
-    cv_number_dec o_number_dec = {0};
+    cv_array o_array;
+    cv_array_it o_array_it;
+    cv_number_dec o_number_dec;
     cv_array_init_0(&o_array, p_text, 0x7fff);
     cv_array_it_init(&o_array_it, &o_array);
     cv_number_dec_init(&o_number_dec, i_base);
@@ -185,7 +185,7 @@ static void cv_number_test_dec_step(char const * p_text, unsigned int i_base,
     }
     /* show result... */
     {
-        cv_number_desc o_desc = {0};
+        cv_number_desc o_desc;
         if (cv_number_dec_read(&o_number_dec, &o_desc)) {
             cv_accum_result(i_expected_number ==
                 o_desc.o_data.i_unsigned);
@@ -233,7 +233,7 @@ static void cv_number_test_scan(void) {
         '1', '2', '3', '4', '5' };
     long i_result = 0;
     {
-        cv_array o_array = {0};
+        cv_array o_array;
         cv_array_init_range(&o_array, a_sample,
             a_sample + sizeof(a_sample));
         {

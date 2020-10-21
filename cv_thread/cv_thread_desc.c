@@ -52,5 +52,6 @@ cv_thread_desc * cv_thread_desc_create(void) {
 }
 
 void cv_thread_desc_destroy( cv_thread_desc * p_this) {
+    cv_thread_desc_cleanup(p_this);
     cv_object_free(&g_thread_desc_object, p_this);
 }

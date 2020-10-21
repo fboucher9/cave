@@ -102,7 +102,8 @@ static cv_bool init_glyph_table( cv_screen_device * p_this ) {
         void * const p_placement = cv_heap_alloc(i_placement_len,
             "glyph_table", 0);
         if (p_placement) {
-            p_this->p_glyph_table = p_placement;
+            p_this->p_glyph_table =
+                cv_cast_(cv_screen_glyph * *)(p_placement);
             {
                 unsigned short i_index = 0;
                 while (i_index < p_this->o_desc.i_glyph_count) {
@@ -144,7 +145,8 @@ static cv_bool init_key_table( cv_screen_device * p_this ) {
         void * const p_placement = cv_heap_alloc(i_placement_len,
             "key_table", 0);
         if (p_placement) {
-            p_this->p_key_table = p_placement;
+            p_this->p_key_table =
+                cv_cast_(cv_screen_key * *)(p_placement);
             {
                 unsigned short i_index = 0;
                 while (i_index < p_this->o_desc.i_key_count) {
@@ -186,7 +188,8 @@ static cv_bool init_window_table( cv_screen_device * p_this ) {
         void * const p_placement = cv_heap_alloc(i_placement_len,
             "window_table", 0);
         if (p_placement) {
-            p_this->p_window_table = p_placement;
+            p_this->p_window_table =
+                cv_cast_(cv_screen_window * *)(p_placement);
             {
                 unsigned short i_index = 0;
                 while (i_index < p_this->o_desc.i_window_count) {

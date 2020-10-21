@@ -17,6 +17,7 @@ Description: None.
 #include <cv_trace/cv_trace_plugin.h>
 #include <cv_json/cv_json.h>
 #include <cv_object/cv_object.h>
+#include <cv_file/cv_file_std.h>
 
 /*
 
@@ -26,6 +27,7 @@ cv_bool cv_manager_load(void)
     cv_bool b_result = cv_false;
     cv_debug_load();
     cv_object_load();
+    cv_file_std_load();
     if (cv_heap_load()) {
         if (cv_trace_load()) {
             if (cv_thread_load()) {
@@ -51,6 +53,7 @@ cv_bool cv_manager_load(void)
         }
     }
     if (!b_result) {
+        cv_file_std_unload();
         cv_object_unload();
         cv_debug_unload();
     }

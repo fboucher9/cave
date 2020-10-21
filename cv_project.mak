@@ -18,7 +18,9 @@ cv_extra_makefiles := \
     cv_json/cv_sources.mak \
     cv_number/cv_sources.mak \
     cv_options/cv_sources.mak \
+    cv_random/cv_sources.mak \
     cv_screen/cv_sources.mak \
+    cv_thread/cv_sources.mak \
     cv_trace/cv_sources.mak \
     cv_unicode/cv_sources.mak \
 
@@ -37,15 +39,6 @@ cv_lib_srcs := \
     cv_debug/cv_debug_code.c \
     cv_debug/cv_debug_class.c \
     cv_misc/cv_sizeof.c \
-    cv_thread/cv_thread_desc.c \
-    cv_thread/cv_thread.c \
-    cv_thread/cv_thread_impl.c \
-    cv_random/cv_random.c \
-    cv_random/cv_random_crypto.c \
-    cv_thread/cv_mutex.c \
-    cv_thread/cv_mutex_impl.c \
-    cv_thread/cv_once.c \
-    cv_thread/cv_specific.c \
     $(cv_algo_lib_srcs) \
     $(cv_clock_lib_srcs) \
     $(cv_file_lib_srcs) \
@@ -53,7 +46,9 @@ cv_lib_srcs := \
     $(cv_json_lib_srcs) \
     $(cv_number_lib_srcs) \
     $(cv_options_lib_srcs) \
+    $(cv_random_lib_srcs) \
     $(cv_screen_lib_srcs) \
+    $(cv_thread_lib_srcs) \
     $(cv_trace_lib_srcs) \
     $(cv_unicode_lib_srcs) \
 
@@ -62,7 +57,6 @@ cv_test_srcs := \
     cv_test.c \
     cv_test_print.c \
     cv_misc/cv_convert_test.c \
-    cv_random/cv_random_test.c \
     $(cv_algo_test_srcs) \
     $(cv_clock_test_srcs) \
     $(cv_file_test_srcs) \
@@ -70,7 +64,9 @@ cv_test_srcs := \
     $(cv_json_test_srcs) \
     $(cv_number_test_srcs) \
     $(cv_options_test_srcs) \
+    $(cv_random_test_srcs) \
     $(cv_screen_test_srcs) \
+    $(cv_thread_test_srcs) \
     $(cv_trace_test_srcs) \
     $(cv_unicode_test_srcs) \
     $(cv_lib_srcs) \
@@ -127,8 +123,6 @@ cv_gnu_warnings = \
     -Wmissing-declarations \
     -Wmissing-format-attribute \
     -Wmissing-include-dirs \
-    -Wno-missing-field-initializers \
-    -Wno-missing-braces \
     -Wmultichar \
     -Woverflow \
     -Woverlength-strings \
@@ -155,8 +149,6 @@ cv_clang_warnings = \
     -ansi \
     -pedantic \
     -Weverything \
-    -Wno-missing-braces \
-    -Wno-missing-field-initializers \
     -Werror
 
 cv_cflags = \
@@ -270,7 +262,7 @@ $(cv_obj_path)/test.clangxx.exe : $(MAKEFILE_LIST) $(cv_test_srcs_abs)
 $(cv_obj_path)/test.bare.exe : $(MAKEFILE_LIST) $(cv_test_srcs_abs)
 	@$(call cv_echo_cyan_message,ld $(notdir $@))
 	$(cv_verbose)mkdir -p $(dir $@)
-	$(cv_verbose)echo -x c -o $@ -I$(cv_src_path) -D cv_debug_ -ansi -pedantic -nostdinc -Wall -Wextra -Wno-missing-braces -Wno-missing-field-initializers -fno-stack-protector $(cv_test_srcs_abs) -nodefaultlibs -nostartfiles > $@.cmd
+	$(cv_verbose)echo -x c -o $@ -I$(cv_src_path) -D cv_debug_ -ansi -pedantic -nostdinc -Wall -Wextra -fno-stack-protector $(cv_test_srcs_abs) -nodefaultlibs -nostartfiles > $@.cmd
 	$(cv_verbose)gcc @$@.cmd
 
 .PHONY : clean

@@ -69,9 +69,10 @@ struct cv_heap_stress_thread {
     char ac_padding[6u];
 };
 
+static cv_mutex g_random_lock;
+
 static unsigned int cv_heap_stress_pick(
     unsigned int i_modulo) {
-    static cv_mutex g_random_lock = {0};
     unsigned int i_result = 0;
     int i_rand_result = 0;
     cv_mutex_lock(&g_random_lock);
@@ -92,7 +93,7 @@ static unsigned int cv_heap_stress_pick(
 
 static void cv_heap_stress_sleep_usec(
     unsigned long i_useconds) {
-    cv_clock_duration o_clock_duration = {0};
+    cv_clock_duration o_clock_duration;
     cv_clock_duration_init_usec(&o_clock_duration,
         i_useconds / 1000000UL,
         i_useconds % 1000000UL);
@@ -127,7 +128,7 @@ static void cv_heap_stress_node_toggle(struct cv_heap_stress_node * p_this) {
         {
             cv_bool b_valid = cv_true;
             cv_uptr i_buffer_iterator = 0;
-            cv_array_ptr o_ptr = {0};
+            cv_array_ptr o_ptr;
             o_ptr.p_void = p_this->p_buffer;
             while (b_valid && (i_buffer_iterator < p_this->i_buffer_len)) {
                 if (p_this->a_pattern[0u] !=
@@ -285,7 +286,7 @@ static void cv_heap_stress_thread_toggle(
         cv_thread_cleanup(&p_this->o_thread);
         p_this->b_valid = cv_false;
     } else {
-        cv_thread_desc o_desc = {0};
+        cv_thread_desc o_desc;
         cv_thread_desc_init(&o_desc);
         o_desc.o_callback.p_func = & cv_heap_stress_thread_entry;
         o_desc.o_callback.p_context = p_this;
@@ -393,15 +394,16 @@ static void cv_heap_test_stress(cv_options_it * p_options_it) {
     /* free memory */
     /* sleep */
     (void)p_options_it;
+    cv_mutex_init(&g_random_lock);
     /* Grab seed from options... */
     {
         unsigned long i_manager_seed = 12345;
-        struct cv_random_crypto o_crypto = {0};
+        struct cv_random_crypto o_crypto;
         if (cv_random_crypto_init(&o_crypto)) {
             i_manager_seed = cv_random_crypto_pick(&o_crypto, 0);
             cv_random_crypto_cleanup(&o_crypto);
         } else {
-            cv_clock_mono o_clock_mono = {0};
+            cv_clock_mono o_clock_mono;
             if (cv_clock_mono_read(&o_clock_mono)) {
                 i_manager_seed = o_clock_mono.o_clock.i_fraction;
             }
@@ -410,6 +412,7 @@ static void cv_heap_test_stress(cv_options_it * p_options_it) {
     }
     cv_heap_stress_manager_run(&o_stress_manager);
     cv_heap_stress_manager_cleanup(&o_stress_manager);
+    cv_mutex_cleanup(&g_random_lock);
 }
 
 /*
@@ -421,7 +424,7 @@ void cv_heap_test(cv_options_it * p_options_it) {
         's', 't', 'r', 'e', 's', 's' };
     static cv_array const g_stress =
         cv_array_text_initializer_(a_stress);
-    cv_array o_argument = {0};
+    cv_array o_argument;
     cv_array_init(&o_argument);
     if (cv_options_it_next(p_options_it, &o_argument)) {
         if (cv_array_compare(&o_argument, &g_stress)) {

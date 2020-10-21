@@ -23,7 +23,7 @@ struct cv_options_pool {
 cv_debug_decl_(g_class, "cv_options_pool", sizeof(cv_options_pool));
 
 static cv_bool g_options_pool_loaded = cv_false;
-static cv_options_pool g_options_pool = {0};
+static cv_options_pool g_options_pool;
 
 /*
  *

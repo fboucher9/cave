@@ -41,8 +41,8 @@ void cv_chunk_root_cleanup(cv_chunk_root * p_this) {
  */
 
 void cv_chunk_root_empty(cv_chunk_root * p_this) {
-    cv_chunk_ptr o_chunk_ptr = {0};
-    cv_list_it o_list_it = {0};
+    cv_chunk_ptr o_chunk_ptr;
+    cv_list_it o_list_it;
     cv_list_it_init(&o_list_it, &p_this->o_root);
     while (cv_list_it_first(&o_list_it, &o_chunk_ptr.o_list_ptr)) {
         cv_chunk_node_cleanup(o_chunk_ptr.p_chunk);
@@ -147,7 +147,7 @@ cv_bool cv_chunk_root_write_char( cv_chunk_root * p_this,
 cv_bool cv_chunk_root_write_array(cv_chunk_root * p_this,
     cv_array const * p_array) {
     cv_bool b_result = cv_true;
-    cv_array_it o_array_it = {0};
+    cv_array_it o_array_it;
     unsigned char i_value = 0;
     cv_array_it_init(&o_array_it, p_array);
     while (b_result && cv_array_it_read_next_char(&o_array_it, &i_value)) {
@@ -171,12 +171,12 @@ cv_uptr cv_chunk_root_len(cv_chunk_root const * p_this) {
 
 void cv_chunk_root_read(cv_chunk_root const * p_this,
     cv_array_it * p_array_it) {
-    cv_chunk_it o_chunk_it = {0};
+    cv_chunk_it o_chunk_it;
     (void)p_array_it;
     cv_chunk_it_init(&o_chunk_it, p_this);
     {
         cv_bool b_continue = cv_true;
-        cv_chunk_ptr o_chunk_ptr = {0};
+        cv_chunk_ptr o_chunk_ptr;
         while (b_continue && cv_chunk_it_next(&o_chunk_it, &o_chunk_ptr)) {
             cv_chunk_node const * pc_chunk = o_chunk_ptr.pc_chunk;
             cv_uptr i_data_index = 0;

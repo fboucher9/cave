@@ -38,6 +38,8 @@ struct cv_file_poll {
     long i_flags_out;
 };
 
+void cv_file_poll_init( cv_file_poll * p_this);
+void cv_file_poll_cleanup( cv_file_poll * p_this);
 cv_bool cv_file_poll_dispatch( cv_file_poll * p_poll_min, unsigned i_count,
     cv_clock const * p_timeout);
 

@@ -10,7 +10,7 @@
 
 cv_debug_decl_(g_trace_count_class, "cv_trace_count", sizeof(cv_trace_count));
 
-static cv_list_root g_trace_count_root = {0};
+static cv_list_root g_trace_count_root;
 
 /*
  *

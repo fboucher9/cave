@@ -47,7 +47,7 @@ static void cv_options_cleanup_list(
 {
     cv_debug_assert_( p_this, cv_debug_code_null_ptr);
     {
-        cv_list_it o_list_it = {0};
+        cv_list_it o_list_it;
         cv_list_it_init(&o_list_it, &p_this->o_list);
         {
             cv_options_node_ptr o_options_node_ptr;
@@ -91,7 +91,7 @@ static cv_bool cv_options_setup_cb(
     cv_bool b_result = cv_false;
     cv_debug_assert_( p_this && p_arg0, cv_debug_code_null_ptr);
     {
-        cv_array o_string = {0};
+        cv_array o_string;
         cv_array_init_0(&o_string, p_arg0, i_arg0_max_len);
         b_result = cv_options_add(p_this, &o_string);
         cv_array_cleanup(&o_string);
@@ -106,10 +106,10 @@ cv_bool cv_options_setup(
     cv_bool b_result = cv_false;
     cv_debug_assert_( p_this && p_desc, cv_debug_code_null_ptr);
     {
-        cv_array_it o_array_it = {0};
+        cv_array_it o_array_it;
         cv_array_it_init(&o_array_it, &p_desc->o_array);
         {
-            cv_array_ptr o_array_ptr = {0};
+            cv_array_ptr o_array_ptr;
             b_result = cv_true;
             while (b_result && cv_array_it_read_next_ptr(&o_array_it,
                     &o_array_ptr.pc_void)) {
@@ -130,7 +130,7 @@ cv_bool cv_options_add(
     cv_bool b_result = cv_false;
     cv_debug_assert_( p_this && p_array, cv_debug_code_null_ptr);
     {
-        cv_options_node_desc o_options_node_desc = {0};
+        cv_options_node_desc o_options_node_desc;
         o_options_node_desc.o_array = *p_array;
         {
             cv_options_node * p_options_node = 0;

@@ -23,7 +23,7 @@ static void cv_random_test_step(
     unsigned long i_modulo,
     unsigned long i_result) {
     unsigned long i_value = 0;
-    struct cv_random o_random = {0};
+    struct cv_random o_random;
     cv_random_init(&o_random, i_seed);
     while (i_count) {
         i_value = cv_random_pick(&o_random, i_modulo);
@@ -38,7 +38,7 @@ static void cv_random_test_step(
  */
 
 static void cv_random_test_crypto_1(void) {
-    struct cv_random_crypto o_crypto = {0};
+    struct cv_random_crypto o_crypto;
     if (cv_random_crypto_init(&o_crypto)) {
         unsigned long const i_value = cv_random_crypto_pick(&o_crypto, 0);
         cv_print_unsigned(i_value, cv_number_format_hex8());
@@ -52,7 +52,7 @@ static void cv_random_test_crypto_1(void) {
  */
 
 void cv_random_test(cv_options_it * p_options_it) {
-    cv_array o_array = {0};
+    cv_array o_array;
     cv_array_init(&o_array);
     if (cv_options_it_next(p_options_it, &o_array)) {
         static unsigned char const s_crypto_text[] = {

@@ -19,11 +19,11 @@
 
 static long g_debug_class_count = 0;
 
-static cv_debug_class g_debug_class_footer = {0};
+static cv_debug_class g_debug_class_footer;
 
 static cv_debug_class * g_debug_class_list = &g_debug_class_footer;
 
-static cv_mutex g_debug_class_mutex = {0};
+static cv_mutex g_debug_class_mutex;
 
 /*
  *
@@ -98,6 +98,7 @@ static void cv_debug_class_report(void) {
  */
 
 void cv_debug_load(void) {
+    cv_runtime_memset(&g_debug_class_mutex, 0, sizeof(g_debug_class_mutex));
 }
 
 /*

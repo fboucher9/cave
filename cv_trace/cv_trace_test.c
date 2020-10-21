@@ -46,8 +46,8 @@ static void cv_trace_test_dump_stack(void) {
  */
 
 static void cv_trace_test_func_report(void) {
-    cv_trace_count_it o_it = {0};
-    cv_trace_count_ptr o_ptr = {0};
+    cv_trace_count_it o_it;
+    cv_trace_count_ptr o_ptr;
     cv_print_0("--- profile ---", 80);
     cv_print_nl();
     /* cv_trace_profile_summary_report(); */
@@ -93,7 +93,7 @@ void cv_trace_test(void) {
     static cv_array const o_map_name =
         cv_array_initializer_(a_map_name,
             a_map_name + sizeof a_map_name);
-    static cv_trace_map o_trace_map = { 0 };
+    static cv_trace_map o_trace_map;
     if (cv_trace_map_init(&o_trace_map, &o_map_name,
         1024ul * 1024ul)) {
         {
@@ -107,7 +107,7 @@ void cv_trace_test(void) {
             static cv_array const o_sect_region =
                 cv_array_initializer_(a_sect_region,
                     a_sect_region + sizeof a_sect_region);
-            static cv_trace_sect o_echo = {0};
+            static cv_trace_sect o_echo;
             /* create a section */
             cv_trace_sect_init(&o_echo, &o_sect_name, &o_sect_region, 1);
             /* print a message */
@@ -124,7 +124,7 @@ void cv_trace_test(void) {
             cv_trace_sect_cleanup(&o_echo);
         }
         {
-            static cv_trace_func f1 = {0};
+            static cv_trace_func f1;
             cv_trace_func_init(&f1, "f1");
             {
                 cv_trace_func_enter(&f1);

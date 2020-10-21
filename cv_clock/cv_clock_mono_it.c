@@ -35,14 +35,14 @@ cv_bool cv_clock_mono_it_next( cv_clock_mono_it * p_this,
     cv_bool b_result = cv_false;
     cv_debug_assert_(p_this && p_max_sleep, cv_debug_code_null_ptr);
     {
-        cv_clock_mono o_now = {0};
+        cv_clock_mono o_now;
         cv_clock_mono_init(&o_now);
         if (cv_clock_mono_read(&o_now)) {
-            cv_clock_duration o_duration = {0};
+            cv_clock_duration o_duration;
             cv_clock_duration_init(&o_duration);
             if (0 <= cv_clock_mono_diff(&p_this->o_target,
                     &o_now, &o_duration)) {
-                cv_clock_duration o_min_sleep = {0};
+                cv_clock_duration o_min_sleep;
                 cv_clock_duration_init(&o_min_sleep);
                 if (cv_clock_duration_min(&o_duration, p_max_sleep,
                         &o_min_sleep)) {

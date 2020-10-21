@@ -5,6 +5,10 @@
 
 #include <cv_file/cv_file_pred.h>
 
+void cv_file_std_load(void);
+
+void cv_file_std_unload(void);
+
 cv_file const * cv_file_std_in(void);
 
 cv_file const * cv_file_std_out(void);

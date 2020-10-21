@@ -83,8 +83,8 @@ static void cv_json_empty(cv_json * p_this) {
     /* cv_list_join(&p_this->o_node, &p_this->o_node); */
     /* Destroy all children */
     {
-        cv_list_it o_list_it = {0};
-        cv_json_ptr o_ptr = {0};
+        cv_list_it o_list_it;
+        cv_json_ptr o_ptr;
         cv_list_it_init(&o_list_it, &p_this->o_root);
         while (cv_list_it_first(&o_list_it, &o_ptr.o_list_ptr)) {
             cv_json_destroy(o_ptr.p_value);
@@ -136,7 +136,7 @@ void cv_json_unload(void) {
  */
 
 cv_json * cv_json_create(void) {
-    cv_json_ptr o_ptr = {0};
+    cv_json_ptr o_ptr;
     o_ptr.p_void = cv_object_alloc(&g_json_node_object, 0);
     if (o_ptr.p_void) {
         cv_json_init(o_ptr.p_value);
@@ -151,7 +151,7 @@ cv_json * cv_json_create(void) {
  */
 
 void cv_json_destroy( cv_json * p_this) {
-    cv_json_ptr o_ptr = {0};
+    cv_json_ptr o_ptr;
     o_ptr.p_value = p_this;
     cv_json_cleanup(o_ptr.p_value);
     cv_object_free(&g_json_node_object, o_ptr.p_void);
@@ -176,8 +176,8 @@ void cv_json_move( cv_json * p_this, cv_json * p_other) {
     cv_array_move(&p_this->o_string, &p_other->o_string);
     /* Move children */
     {
-        cv_list_it o_list_it = {0};
-        cv_json_ptr o_ptr = {0};
+        cv_list_it o_list_it;
+        cv_json_ptr o_ptr;
         cv_list_it_init(&o_list_it, &p_other->o_root);
         while (cv_list_it_first(&o_list_it, &o_ptr.o_list_ptr)) {
             /* Detach child from other list */

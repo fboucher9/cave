@@ -41,7 +41,7 @@ static cv_bool cv_options_decoder_flush( cv_options_decoder * p_this,
     cv_uptr const i_word_len = cv_chunk_root_len(&p_this->o_chunk_root);
     if (i_word_len) {
         /* Allocate memory for a word */
-        cv_array_heap o_buffer = {0};
+        cv_array_heap o_buffer;
         /* Use cv_array_heap */
         if (cv_array_heap_init(&o_buffer, i_word_len)) {
             /* fill in the array using chunk list */
@@ -94,7 +94,7 @@ cv_bool cv_options_decoder_write_array( cv_options_decoder * p_this,
     cv_array const * p_input, cv_options * p_options) {
     cv_bool b_result = cv_true;
     unsigned char c_input = 0;
-    cv_array_it o_array_it = {0};
+    cv_array_it o_array_it;
     cv_array_it_init(&o_array_it, p_input);
     while (b_result && cv_array_it_read_next_char(&o_array_it, &c_input)) {
         b_result = cv_options_decoder_write_char(p_this, c_input, p_options);

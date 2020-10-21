@@ -5,6 +5,7 @@
 #include <cv_misc/cv_bool.h>
 #include <cv_file/cv_file.h>
 #include <cv_heap/cv_heap.h>
+#include <cv_runtime.h>
 #include <unistd.h>
 #include <termios.h>
 
@@ -39,7 +40,8 @@ static cv_bool cv_screen_raw_init( cv_screen_raw * p_this,
             int const i_tcgetattr_result =
                 tcgetattr(i_tty_fd, &p_this->o_termios_storage.o_data);
             if (0 <= i_tcgetattr_result) {
-                struct termios o_termios_raw = {0};
+                struct termios o_termios_raw;
+                cv_runtime_memset(&o_termios_raw, 0, sizeof(o_termios_raw));
                 o_termios_raw = p_this->o_termios_storage.o_data;
                 cfmakeraw(&o_termios_raw);
                 {

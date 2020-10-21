@@ -14,7 +14,7 @@ static cv_bool g_thread_loaded = cv_false;
 
 static cv_thread_local_ cv_bool t_thread_self_initialized = cv_false;
 
-static cv_thread_local_ cv_thread t_thread_self = { 0 };
+static cv_thread_local_ cv_thread t_thread_self;
 
 cv_bool cv_thread_load(void) {
     cv_bool b_result = cv_false;
@@ -45,8 +45,7 @@ static void * cv_thread_start(
         cv_thread_desc const o_desc =
             *(o_context_ptr.pc_thread_desc);
 
-        cv_thread_desc_cleanup(o_context_ptr.p_thread_desc);
-        cv_heap_free(o_context_ptr.p_void);
+        cv_thread_desc_destroy(o_context_ptr.p_thread_desc);
 
         cv_debug_assert_( o_desc.o_callback.p_func,
             cv_debug_code_null_ptr);

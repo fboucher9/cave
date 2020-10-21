@@ -143,3 +143,21 @@ cv_bool cv_file_poll_dispatch(
     return b_result;
 }
 
+/*
+ *
+ */
+
+void cv_file_poll_init( cv_file_poll * p_this) {
+    p_this->p_file = 0;
+    p_this->i_flags_in = 0;
+    p_this->i_flags_out = 0;
+}
+
+/*
+ *
+ */
+
+void cv_file_poll_cleanup( cv_file_poll * p_this) {
+    (void)p_this;
+}
+

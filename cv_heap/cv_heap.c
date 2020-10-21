@@ -83,7 +83,7 @@ static void cv_heap_mgr_cleanup(cv_heap_mgr * p_this) {
     cv_debug_destruct_(g_class, p_this);
 }
 
-static cv_heap_mgr g_heap_mgr = {0};
+static cv_heap_mgr g_heap_mgr;
 
 cv_bool cv_heap_load(void) {
     cv_bool b_result = cv_false;
