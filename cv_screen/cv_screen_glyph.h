@@ -8,19 +8,11 @@
  */
 
 #include <cv_screen/cv_screen_pred.h>
+#include <cv_misc/cv_bool.h>
 
-/*
- *
- */
+void cv_screen_glyph_load(void);
 
-struct cv_screen_glyph_desc {
-    unsigned long i_code;
-    unsigned long l_padding[1u];
-};
-
-void cv_screen_glyph_desc_init( cv_screen_glyph_desc * p_this);
-
-void cv_screen_glyph_desc_cleanup( cv_screen_glyph_desc * p_this);
+void cv_screen_glyph_unload(void);
 
 cv_screen_glyph * cv_screen_glyph_create(
     cv_screen_glyph_desc const * p_desc);

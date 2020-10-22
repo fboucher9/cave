@@ -10,33 +10,6 @@
 #include <cv_screen/cv_screen_pred.h>
 #include <cv_misc/cv_bool.h>
 
-/*
- *
- */
-
-struct cv_screen_color {
-    unsigned short i_red;
-    unsigned short i_green;
-    /* -- */
-    unsigned short i_blue;
-    unsigned short i_padding[1u];
-};
-
-/*
- *
- */
-
-struct cv_screen_attribute_desc {
-    cv_screen_color o_foreground;
-    /* -- */
-    cv_screen_color o_background;
-    /* -- */
-    char b_underline;
-    char b_reverse;
-    char b_blink;
-    char c_padding[5u];
-};
-
 cv_screen_attribute * cv_screen_attribute_create(
     cv_screen_attribute_desc const * p_attribute_desc);
 

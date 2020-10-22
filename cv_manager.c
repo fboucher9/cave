@@ -18,6 +18,7 @@ Description: None.
 #include <cv_json/cv_json.h>
 #include <cv_object/cv_object.h>
 #include <cv_file/cv_file_std.h>
+#include <cv_screen/cv_screen_plugin.h>
 
 /*
 
@@ -34,6 +35,7 @@ cv_bool cv_manager_load(void)
                 if (cv_clock_load()) {
                     if (cv_options_load()) {
                         cv_json_load();
+                        cv_screen_load();
                         b_result = cv_true;
                     }
                     if (!b_result) {
@@ -62,6 +64,7 @@ cv_bool cv_manager_load(void)
 
 void cv_manager_unload(void)
 {
+    cv_screen_unload();
     cv_json_unload();
     cv_options_unload();
     cv_clock_unload();
