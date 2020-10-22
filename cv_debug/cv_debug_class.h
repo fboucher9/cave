@@ -47,7 +47,7 @@ void xx_debug_class_destruct(
 
 #else /* #if defined cv_debug_ */
 
-#define cv_debug_decl_(g_class) \
+#define cv_debug_decl_(g_class, p_name, i_placement_len) \
 static char g_class
 
 #define cv_debug_construct_(g_class, p_this) \

@@ -25,6 +25,14 @@ cv_debug_decl_(g_class, "cv_screen_attribute", sizeof(cv_screen_attribute));
  *
  */
 
+static cv_screen_attribute * cv_screen_attribute_cast(void * p_placement) {
+    return cv_cast_(cv_screen_attribute *)(p_placement);
+}
+
+/*
+ *
+ */
+
 static cv_bool cv_screen_attribute_init(
     cv_screen_attribute * p_this,
     cv_screen_attribute_desc const * p_attribute_desc) {
@@ -56,8 +64,8 @@ cv_screen_attribute * cv_screen_attribute_create(
     cv_screen_attribute_desc const * p_attribute_desc) {
     cv_screen_attribute * p_this = 0;
     cv_debug_assert_(p_attribute_desc, cv_debug_code_null_ptr);
-    p_this = cv_cast_(cv_screen_attribute *)cv_heap_alloc(
-        sizeof(cv_screen_attribute), "cv_screen_attribute", 0);
+    p_this = cv_screen_attribute_cast(cv_heap_alloc(
+        sizeof(cv_screen_attribute), "cv_screen_attribute", 0));
     if (p_this) {
         if (cv_screen_attribute_init(p_this, p_attribute_desc)) {
         } else {

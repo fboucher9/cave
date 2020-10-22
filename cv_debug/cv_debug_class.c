@@ -98,7 +98,9 @@ static void cv_debug_class_report(void) {
  */
 
 void cv_debug_load(void) {
+#if defined cv_debug_
     cv_runtime_memset(&g_debug_class_mutex, 0, sizeof(g_debug_class_mutex));
+#endif /* #if defined cv_debug_ */
 }
 
 /*
