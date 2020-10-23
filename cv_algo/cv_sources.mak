@@ -31,5 +31,6 @@ cv_algo_lib_srcs := \
 
 cv_algo_test_srcs := \
     cv_algo/cv_crc32_test.c \
-    cv_algo/cv_stack_test.c
+    cv_algo/cv_stack_test.c \
+    cv_algo/cv_ascii_test.c
 

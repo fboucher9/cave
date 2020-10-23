@@ -45,12 +45,23 @@ static void cv_clock_test_mono_1(void) {
         cv_clock_mono_diff(&o_clock_mono, &o_clock_mono, &o_clock_duration);
     }
     {
+        cv_clock_mono o_clock_target;
         cv_clock_mono_it o_clock_mono_it;
         cv_clock_duration o_clock_duration;
         o_clock_duration.o_clock.i_seconds = 1;
         o_clock_duration.o_clock.i_fraction = 0;
-        cv_clock_mono_it_init(&o_clock_mono_it, &o_clock_mono);
-        cv_clock_mono_it_next(&o_clock_mono_it, &o_clock_duration);
+        o_clock_target = o_clock_mono;
+        cv_clock_add(&o_clock_target.o_clock, &o_clock_duration.o_clock,
+            &o_clock_target.o_clock);
+        cv_clock_add(&o_clock_target.o_clock, &o_clock_duration.o_clock,
+            &o_clock_target.o_clock);
+        cv_clock_add(&o_clock_target.o_clock, &o_clock_duration.o_clock,
+            &o_clock_target.o_clock);
+        cv_clock_mono_it_init(&o_clock_mono_it, &o_clock_target);
+        while (cv_clock_mono_it_next(&o_clock_mono_it, &o_clock_duration)) {
+            cv_print_char('.');
+        }
+        cv_print_nl();
         cv_clock_mono_it_cleanup(&o_clock_mono_it);
     }
     cv_clock_mono_cleanup(&o_clock_mono);

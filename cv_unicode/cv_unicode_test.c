@@ -450,6 +450,7 @@ void cv_unicode_test(void) {
         cv_unicode_encoder o_encoder;
         cv_utf8_encoder_init(&o_encoder);
         step_utf8_encoder(&o_encoder, 0x41);
+        step_utf8_encoder(&o_encoder, 0x666);
         step_utf8_encoder(&o_encoder, 0x1234);
         step_utf8_encoder(&o_encoder, 0x10000);
         step_utf8_encoder(&o_encoder, 0x10ffff);
@@ -463,6 +464,8 @@ void cv_unicode_test(void) {
         cv_unicode_decoder o_decoder;
         cv_utf8_decoder_init(&o_decoder);
         step_utf8_decoder(&o_decoder, 0x41);
+        step_utf8_decoder(&o_decoder, 0xd9);
+        step_utf8_decoder(&o_decoder, 0xa6);
         step_utf8_decoder(&o_decoder, 0xe1);
         step_utf8_decoder(&o_decoder, 0x88);
         step_utf8_decoder(&o_decoder, 0xb4);
