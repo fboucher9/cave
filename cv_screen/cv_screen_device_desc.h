@@ -28,7 +28,7 @@ struct cv_screen_device_desc {
 };
 
 void cv_screen_device_desc_init( cv_screen_device_desc * p_this);
-void cv_screen_device_desc_deinit( cv_screen_device_desc * p_this);
+void cv_screen_device_desc_cleanup( cv_screen_device_desc * p_this);
 
 #endif /* #ifndef cv_screen_device_desc_h_ */
 

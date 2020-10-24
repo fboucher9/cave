@@ -16,7 +16,7 @@ void cv_screen_device_desc_init( cv_screen_device_desc * p_this) {
     p_this->i_height = 0;
 }
 
-void cv_screen_device_desc_deinit( cv_screen_device_desc * p_this) {
+void cv_screen_device_desc_cleanup( cv_screen_device_desc * p_this) {
     (void)p_this;
 }
 

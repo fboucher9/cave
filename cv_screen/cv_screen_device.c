@@ -248,6 +248,7 @@ static cv_bool cv_screen_device_init(
             if (init_glyph_table(p_this)) {
                 if (init_key_table(p_this)) {
                     if (init_window_table(p_this)) {
+                        p_this->b_enabled = cv_false;
                         b_result = cv_true;
                         if (!b_result) {
                             cleanup_window_table(p_this);
