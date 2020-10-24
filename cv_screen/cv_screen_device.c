@@ -413,17 +413,46 @@ cv_screen_window * cv_screen_device_get_window(
     return p_window;
 }
 
+/*
+ *
+ */
+
 cv_bool cv_screen_device_read(cv_screen_device * p_this,
     unsigned short * r_key) {
     cv_bool b_result = cv_false;
     cv_debug_assert_(p_this, cv_debug_code_null_ptr);
-    (void)p_this;
-    (void)r_key;
+    /* read from input one byte at a time */
+    {
+        unsigned char a_buffer[1u];
+        cv_array o_array;
+        cv_array_init_vector(&o_array, a_buffer, sizeof(a_buffer));
+        {
+            cv_sptr const i_read_result = cv_file_read(
+                p_this->o_desc.p_file, &o_array);
+            if (i_read_result > 0) {
+                *r_key = a_buffer[0u];
+                b_result = cv_true;
+            }
+        }
+        cv_array_cleanup(&o_array);
+    }
+    /* read until a full character or escape sequence is read */
+    /* compare input sequence with table of keys */
+    /* return found key */
     return b_result;
 }
 
 void cv_screen_device_apply(cv_screen_device * p_this) {
     (void)p_this;
+    /* first step is to render an image of all the windows */
+    /* start with empty screen */
+    /* render windows from bottom to top */
+    /* Each pixel has an attribute and a glyph */
+    /* clear the screen? */
+    /* move cursor to home */
+    /* for all characters of screen */
+    /* set attribute */
+    /* set glyph */
 }
 
 /* end-of-file: cv_screen_device.c */
