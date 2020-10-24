@@ -8,6 +8,7 @@
  */
 
 #include <cv_screen/cv_screen_pred.h>
+#include <cv_algo/cv_array.h>
 
 /*
  *
@@ -16,6 +17,10 @@
 struct cv_screen_glyph_desc {
     unsigned long i_code;
     unsigned long l_padding[1u];
+    /* -- */
+    cv_array o_sequence;
+    /* -- */
+    cv_array o_name;
 };
 
 void cv_screen_glyph_desc_init( cv_screen_glyph_desc * p_this);

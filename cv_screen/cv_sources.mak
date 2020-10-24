@@ -8,6 +8,8 @@ cv_screen_lib_srcs := \
     cv_screen/cv_screen_device.c \
     cv_screen/cv_screen_glyph_desc.c \
     cv_screen/cv_screen_glyph.c \
+    cv_screen/cv_screen_key_desc.c \
+    cv_screen/cv_screen_key.c \
     cv_screen/cv_screen_linux.c \
     cv_screen/cv_screen_plugin.c \
     cv_screen/cv_screen_window.c \

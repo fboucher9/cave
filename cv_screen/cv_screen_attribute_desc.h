@@ -9,6 +9,7 @@
 
 #include <cv_screen/cv_screen_pred.h>
 #include <cv_screen/cv_screen_color.h>
+#include <cv_algo/cv_array.h>
 #include <cv_misc/cv_bool.h>
 
 /*
@@ -24,6 +25,10 @@ struct cv_screen_attribute_desc {
     cv_bool b_reverse;
     cv_bool b_blink;
     char c_padding[5u];
+    /* -- */
+    cv_array o_sequence;
+    /* -- */
+    cv_array o_name;
 };
 
 void cv_screen_attribute_desc_init(

@@ -20,14 +20,14 @@ struct cv_screen_glyph {
     cv_screen_glyph_desc o_desc;
 };
 
-static cv_object g_screen_glyph_object;
+static cv_object g_object;
 
 /*
  *
  */
 
 void cv_screen_glyph_load(void) {
-    cv_object_init(&g_screen_glyph_object, "cv_screen_glyph",
+    cv_object_init(&g_object, "cv_screen_glyph",
         sizeof(cv_screen_glyph));
 }
 
@@ -36,7 +36,7 @@ void cv_screen_glyph_load(void) {
  */
 
 void cv_screen_glyph_unload(void) {
-    cv_object_cleanup(&g_screen_glyph_object);
+    cv_object_cleanup(&g_object);
 }
 
 /*
@@ -56,7 +56,7 @@ static cv_bool cv_screen_glyph_init( cv_screen_glyph * p_this,
     cv_unique const * p_unique) {
     cv_bool b_result = cv_false;
     cv_debug_assert_(p_this && p_desc, cv_debug_code_null_ptr);
-    cv_object_construct(&g_screen_glyph_object, p_this);
+    cv_object_construct(&g_object, p_this);
     cv_unique_init(&p_this->o_unique);
     cv_screen_glyph_desc_init(&p_this->o_desc);
     p_this->o_unique = *p_unique;
@@ -73,7 +73,7 @@ static void cv_screen_glyph_cleanup( cv_screen_glyph * p_this ) {
     cv_debug_assert_(p_this, cv_debug_code_null_ptr);
     cv_screen_glyph_desc_cleanup(&p_this->o_desc);
     cv_unique_cleanup(&p_this->o_unique);
-    cv_object_destruct(&g_screen_glyph_object, p_this);
+    cv_object_destruct(&g_object, p_this);
 }
 
 /*
@@ -86,13 +86,13 @@ cv_screen_glyph * cv_screen_glyph_create(
     cv_unique o_unique;
     cv_unique_init(&o_unique);
     {
-        void * p_placement = cv_object_alloc(&g_screen_glyph_object, &o_unique);
+        void * p_placement = cv_object_alloc(&g_object, &o_unique);
         if (p_placement) {
             p_this = cv_screen_glyph_cast(p_placement);
             if (cv_screen_glyph_init(p_this, p_desc, &o_unique)) {
             } else {
                 if (p_placement) {
-                    cv_object_free(&g_screen_glyph_object, p_placement);
+                    cv_object_free(&g_object, p_placement);
                     p_placement = 0;
                 }
             }
@@ -109,7 +109,7 @@ cv_screen_glyph * cv_screen_glyph_create(
 void cv_screen_glyph_destroy( cv_screen_glyph * p_this) {
     cv_debug_assert_(p_this, cv_debug_code_null_ptr);
     cv_screen_glyph_cleanup( p_this );
-    cv_object_free(&g_screen_glyph_object, p_this);
+    cv_object_free(&g_object, p_this);
 }
 
 /*

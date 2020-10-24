@@ -16,8 +16,7 @@ cv_screen_attribute * cv_screen_attribute_create(
 void cv_screen_attribute_destroy(
     cv_screen_attribute * p_attribute);
 
-cv_bool cv_screen_attribute_query(
-    cv_screen_attribute const * p_attribute,
+cv_bool cv_screen_attribute_query( cv_screen_attribute const * p_attribute,
     cv_screen_attribute_desc * r_attribute);
 
 #endif /* #ifndef cv_screen_attribute_h_ */

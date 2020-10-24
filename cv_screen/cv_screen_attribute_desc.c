@@ -22,6 +22,8 @@ void cv_screen_attribute_desc_init(
     p_this->b_underline = cv_false;
     p_this->b_reverse = cv_false;
     p_this->b_blink = cv_false;
+    cv_array_init(&p_this->o_sequence);
+    cv_array_init(&p_this->o_name);
 }
 
 /*
@@ -30,6 +32,8 @@ void cv_screen_attribute_desc_init(
 
 void cv_screen_attribute_desc_cleanup(
     cv_screen_attribute_desc * p_this) {
+    cv_array_cleanup(&p_this->o_name);
+    cv_array_cleanup(&p_this->o_sequence);
     cv_screen_color_cleanup(&p_this->o_background);
     cv_screen_color_cleanup(&p_this->o_foreground);
     cv_debug_destruct_(g_attribute_desc_class, p_this);
