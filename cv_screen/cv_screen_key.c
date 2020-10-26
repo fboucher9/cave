@@ -9,6 +9,7 @@
 #include <cv_debug/cv_debug.h>
 #include <cv_object/cv_object.h>
 #include <cv_misc/cv_cast.h>
+#include <cv_algo/cv_array_tool.h>
 
 /*
  *
@@ -108,6 +109,24 @@ cv_bool cv_screen_key_query( cv_screen_key const * p_this,
     cv_debug_assert_(p_this && r_desc, cv_debug_code_null_ptr);
     *r_desc = p_this->o_desc;
     b_result = cv_true;
+    return b_result;
+}
+
+/*
+ *
+ */
+
+cv_bool cv_screen_key_compare( cv_screen_key const * p_this,
+    unsigned char const * p_buffer, cv_uptr i_buffer_len) {
+    cv_bool b_result = cv_false;
+    cv_debug_assert_(p_this, cv_debug_code_null_ptr);
+    {
+        cv_array o_buffer;
+        cv_array_init_vector(&o_buffer, p_buffer, i_buffer_len);
+        b_result = cv_array_compare(&p_this->o_desc.o_sequence,
+            &o_buffer);
+        cv_array_cleanup(&o_buffer);
+    }
     return b_result;
 }
 

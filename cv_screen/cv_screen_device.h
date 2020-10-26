@@ -30,6 +30,10 @@ void cv_screen_device_set_key(cv_screen_device * p_device,
 cv_screen_key * cv_screen_device_get_key(
     cv_screen_device * p_device, unsigned short i_index);
 
+cv_screen_key * cv_screen_device_lookup_key(
+    cv_screen_device * p_device, unsigned char const * p_buffer,
+    cv_uptr i_buffer_len);
+
 /* --- attribute table --- */
 
 void cv_screen_device_set_attribute(cv_screen_device * p_device,
@@ -61,10 +65,9 @@ cv_screen_window * cv_screen_device_get_window(
 /* read input one char at a time until a key is found */
 /* compare key with table */
 /* detect modifier keys */
-/* escape code parser ESC [ n ; n ST */
+/* escape code parser ESC [ n ; n F */
 cv_uptr cv_screen_device_read(cv_screen_device * p_device,
-    cv_array * p_buffer,
-    unsigned short * r_key);
+    cv_array const * p_buffer);
 
 /* --- output --- */
 

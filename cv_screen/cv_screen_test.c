@@ -8,6 +8,7 @@
 #include <cv_screen/cv_screen_device.h>
 #include <cv_screen/cv_screen_device_desc.h>
 #include <cv_file/cv_file_std.h>
+#include <cv_file/cv_file_poll.h>
 #include <cv_test_print.h>
 #include <cv_runtime.h>
 #include <cv_algo/cv_array.h>
@@ -46,39 +47,45 @@ void cv_screen_test(void) {
             {
                 cv_bool b_continue = cv_true;
                 while (b_continue) {
-                    static unsigned char a_buffer[32u];
-                    unsigned short i_key = 0;
-                    cv_array o_buffer;
-                    cv_uptr i_buffer_len = 0;
-                    cv_runtime_memset(a_buffer, 0, sizeof(a_buffer));
-                    cv_array_init_vector(&o_buffer, a_buffer, sizeof(a_buffer));
-                    i_buffer_len = cv_screen_device_read(p_device, &o_buffer, &i_key);
-                    if (i_buffer_len) {
-                        cv_uptr i_buffer_iterator = 0;
-                        while (i_buffer_iterator < i_buffer_len) {
-                            unsigned char const c_token = a_buffer[i_buffer_iterator];
-                            if (i_buffer_iterator) {
-                                cv_print_0(", ", 80);
+                    cv_file_poll a_poll[1u];
+                    cv_file_poll_init(&a_poll[0u]);
+                    a_poll[0u].p_file = cv_file_std_in();
+                    a_poll[0u].i_flags_in = cv_file_poll_flag_read;
+                    if (cv_file_poll_dispatch(a_poll, 1, 0)) {
+                        static unsigned char a_buffer[32u];
+                        cv_array o_buffer;
+                        cv_uptr i_buffer_len = 0;
+                        cv_runtime_memset(a_buffer, 0, sizeof(a_buffer));
+                        cv_array_init_vector(&o_buffer, a_buffer, sizeof(a_buffer));
+                        i_buffer_len = cv_screen_device_read(p_device, &o_buffer);
+                        if (i_buffer_len) {
+                            cv_uptr i_buffer_iterator = 0;
+                            while (i_buffer_iterator < i_buffer_len) {
+                                unsigned char const c_token = a_buffer[i_buffer_iterator];
+                                if (i_buffer_iterator) {
+                                    cv_print_0(", ", 80);
+                                }
+                                if ((32 <= c_token) &&
+                                    (127 > c_token)) {
+                                    cv_print_char('\'');
+                                    cv_print_char(c_token);
+                                    cv_print_char('\'');
+                                } else {
+                                    cv_print_0("0x", 80);
+                                    cv_print_hex(c_token);
+                                }
+                                i_buffer_iterator ++;
                             }
-                            if ((32 <= c_token) &&
-                                (127 > c_token)) {
-                                cv_print_char('\'');
-                                cv_print_char(c_token);
-                                cv_print_char('\'');
-                            } else {
-                                cv_print_0("0x", 80);
-                                cv_print_hex(c_token);
+                            cv_print_0("\r\n", 80);
+                            if ('q' == a_buffer[0u]) {
+                                b_continue = cv_false;
                             }
-                            i_buffer_iterator ++;
                         }
-                        cv_print_0("\r\n", 80);
-                        if ('q' == a_buffer[0u]) {
-                            b_continue = cv_false;
-                        }
+                        cv_array_cleanup(&o_buffer);
                     } else {
-                        cv_print_0("err!\r\n", 80);
+                        cv_print_0("timeout...\r\n", 80);
                     }
-                    cv_array_cleanup(&o_buffer);
+                    cv_file_poll_cleanup(&a_poll[0u]);
                 }
             }
 

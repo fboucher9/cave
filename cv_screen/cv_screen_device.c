@@ -6,6 +6,7 @@
 
 #include <cv_screen/cv_screen_device.h>
 #include <cv_screen/cv_screen_device_desc.h>
+#include <cv_screen/cv_screen_key.h>
 #include <cv_screen/cv_screen_linux.h>
 #include <cv_heap/cv_heap.h>
 #include <cv_runtime.h>
@@ -290,6 +291,10 @@ static void cv_screen_device_cleanup(
     cv_debug_destruct_(g_screen_device, p_this);
 }
 
+/*
+ *
+ */
+
 cv_screen_device * cv_screen_device_create(
     cv_screen_device_desc const * p_desc) {
     union cv_screen_device_ptr o_device_ptr = {0};
@@ -305,6 +310,10 @@ cv_screen_device * cv_screen_device_create(
     return o_device_ptr.p_device;
 }
 
+/*
+ *
+ */
+
 void cv_screen_device_destroy(cv_screen_device * p_this) {
     union cv_screen_device_ptr o_device_ptr = {0};
     cv_debug_assert_(p_this, cv_debug_code_null_ptr);
@@ -312,6 +321,10 @@ void cv_screen_device_destroy(cv_screen_device * p_this) {
     cv_screen_device_cleanup(o_device_ptr.p_device);
     cv_heap_free(o_device_ptr.p_void);
 }
+
+/*
+ *
+ */
 
 cv_bool cv_screen_device_enter(cv_screen_device * p_this) {
     cv_bool b_result = cv_false;
@@ -335,6 +348,10 @@ cv_bool cv_screen_device_enter(cv_screen_device * p_this) {
     return b_result;
 }
 
+/*
+ *
+ */
+
 void cv_screen_device_leave(cv_screen_device * p_this) {
     cv_debug_assert_(p_this, cv_debug_code_null_ptr);
     if (p_this->b_enabled) {
@@ -348,6 +365,10 @@ void cv_screen_device_leave(cv_screen_device * p_this) {
     }
 }
 
+/*
+ *
+ */
+
 void cv_screen_device_set_key(cv_screen_device * p_this,
     unsigned short i_index, cv_screen_key * p_key) {
     cv_debug_assert_(p_this, cv_debug_code_null_ptr);
@@ -355,6 +376,10 @@ void cv_screen_device_set_key(cv_screen_device * p_this,
         p_this->p_key_table[i_index] = p_key;
     }
 }
+
+/*
+ *
+ */
 
 cv_screen_key * cv_screen_device_get_key(
     cv_screen_device * p_this, unsigned short i_index) {
@@ -366,6 +391,10 @@ cv_screen_key * cv_screen_device_get_key(
     return p_key;
 }
 
+/*
+ *
+ */
+
 void cv_screen_device_set_attribute(cv_screen_device * p_this,
     unsigned short i_index, cv_screen_attribute * p_attribute) {
     cv_debug_assert_(p_this, cv_debug_code_null_ptr);
@@ -373,6 +402,10 @@ void cv_screen_device_set_attribute(cv_screen_device * p_this,
         p_this->p_attribute_table[i_index] = p_attribute;
     }
 }
+
+/*
+ *
+ */
 
 cv_screen_attribute * cv_screen_device_get_attribute(
     cv_screen_device * p_this, unsigned short i_index) {
@@ -384,6 +417,10 @@ cv_screen_attribute * cv_screen_device_get_attribute(
     return p_attribute;
 }
 
+/*
+ *
+ */
+
 void cv_screen_device_set_glyph(cv_screen_device * p_this,
     unsigned short i_index, cv_screen_glyph * p_glyph) {
     cv_debug_assert_(p_this, cv_debug_code_null_ptr);
@@ -391,6 +428,10 @@ void cv_screen_device_set_glyph(cv_screen_device * p_this,
         p_this->p_glyph_table[i_index] = p_glyph;
     }
 }
+
+/*
+ *
+ */
 
 cv_screen_glyph * cv_screen_device_get_glyph(
     cv_screen_device * p_this, unsigned short i_index) {
@@ -402,6 +443,30 @@ cv_screen_glyph * cv_screen_device_get_glyph(
     return p_glyph;
 }
 
+/*
+ *
+ */
+
+cv_screen_key * cv_screen_device_lookup_key(
+    cv_screen_device * p_this, unsigned char const * p_buffer,
+    cv_uptr i_buffer_len) {
+    cv_screen_key * p_key = 0;
+    unsigned short i_key_index = 0;
+    while (!p_key && (i_key_index < p_this->o_desc.i_key_count)) {
+        if (cv_screen_key_compare(p_this->p_key_table[i_key_index],
+                p_buffer, i_buffer_len)) {
+            p_key = p_this->p_key_table[i_key_index];
+        } else {
+            i_key_index ++;
+        }
+    }
+    return p_key;
+}
+
+/*
+ *
+ */
+
 void cv_screen_device_set_window(cv_screen_device * p_this,
     unsigned short i_index, cv_screen_window * p_window) {
     cv_debug_assert_(p_this, cv_debug_code_null_ptr);
@@ -409,6 +474,10 @@ void cv_screen_device_set_window(cv_screen_device * p_this,
         p_this->p_window_table[i_index] = p_window;
     }
 }
+
+/*
+ *
+ */
 
 cv_screen_window * cv_screen_device_get_window(
     cv_screen_device * p_this, unsigned short i_index) {
@@ -453,35 +522,49 @@ static cv_bool cv_screen_device_is_complete_sequence(
     unsigned char const * pc_uchar,
     cv_uptr i_buffer_iterator) {
     cv_bool b_result = cv_false;
-    /* Detect that we have accumulated enough data */
-    if (0x1b == pc_uchar[0u]) {
-        if (i_buffer_iterator > 1) {
-            if ('[' == pc_uchar[1u]) {
-                if (i_buffer_iterator > 2) {
-                    if ((0x20u <= pc_uchar[i_buffer_iterator - 1]) &&
-                        (0x3fu >= pc_uchar[i_buffer_iterator - 1])) {
+    if (i_buffer_iterator >= 1) {
+        /* Detect that we have accumulated enough data */
+        if (0x1b == pc_uchar[0u]) {
+            if (i_buffer_iterator >= 2) {
+                if ('[' == pc_uchar[1u]) {
+                    if (i_buffer_iterator >= 3) {
+                        if ((0x20u <= pc_uchar[i_buffer_iterator - 1]) &&
+                            (0x3fu >= pc_uchar[i_buffer_iterator - 1])) {
+                        } else {
+                            b_result = cv_true;
+                        }
+                    }
+                } else if ('O' == pc_uchar[1u]) {
+                    if (i_buffer_iterator >= 3) {
+                        b_result = cv_true;
+                    }
+                } else if ('P' == pc_uchar[1u]) {
+                    if (i_buffer_iterator >= 3) {
+                        b_result = cv_true;
+                    }
+                } else {
+                    if ((0x20u <= pc_uchar[1u]) &&
+                        (0x2fu >= pc_uchar[1u])) {
                     } else {
                         b_result = cv_true;
                     }
                 }
-            } else if ('O' == pc_uchar[1u]) {
-                if (i_buffer_iterator > 2) {
-                    b_result = cv_true;
-                }
-            } else if ('P' == pc_uchar[1u]) {
-                if (i_buffer_iterator > 2) {
-                    b_result = cv_true;
-                }
-            } else {
-                if ((0x20u <= pc_uchar[1u]) &&
-                    (0x2fu >= pc_uchar[1u])) {
-                } else {
-                    b_result = cv_true;
-                }
             }
+        } else if (0xc0 == (pc_uchar[0u] & 0xe0)) {
+            if (i_buffer_iterator >= 2) {
+                b_result = cv_true;
+            }
+        } else if (0xe0 == (pc_uchar[0u] & 0xf0)) {
+            if (i_buffer_iterator >= 3) {
+                b_result = cv_true;
+            }
+        } else if (0xf0 == (pc_uchar[0u] & 0xf8)) {
+            if (i_buffer_iterator >= 4) {
+                b_result = cv_true;
+            }
+        } else {
+            b_result = cv_true;
         }
-    } else {
-        b_result = cv_true;
     }
     return b_result;
 }
@@ -491,8 +574,7 @@ static cv_bool cv_screen_device_is_complete_sequence(
  */
 
 cv_uptr cv_screen_device_read(cv_screen_device * p_this,
-    cv_array * p_buffer,
-    unsigned short * r_key) {
+    cv_array const * p_buffer) {
     cv_uptr i_buffer_iterator = 0;
     unsigned char c_token = 0;
     cv_debug_assert_(p_this, cv_debug_code_null_ptr);
@@ -516,9 +598,6 @@ cv_uptr cv_screen_device_read(cv_screen_device * p_this,
                     }
                 }
                 p_this->i_input_cache_len = 0;
-                /* compare input sequence with table of keys */
-                /* return found key */
-                *r_key = c_token;
             }
         } else {
             p_this->i_input_cache_len = 0;
@@ -526,6 +605,9 @@ cv_uptr cv_screen_device_read(cv_screen_device * p_this,
     }
     return i_buffer_iterator;
 }
+
+/* compare input sequence with table of keys */
+/* return found key */
 
 /*
  *
