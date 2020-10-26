@@ -10,6 +10,8 @@
 #include <cv_screen/cv_screen_pred.h>
 #include <cv_misc/cv_bool.h>
 #include <cv_file/cv_file_pred.h>
+#include <cv_algo/cv_array_pred.h>
+#include <cv_misc/cv_types.h>
 
 cv_screen_device * cv_screen_device_create(
     cv_screen_device_desc const * p_device_desc);
@@ -60,7 +62,8 @@ cv_screen_window * cv_screen_device_get_window(
 /* compare key with table */
 /* detect modifier keys */
 /* escape code parser ESC [ n ; n ST */
-cv_bool cv_screen_device_read(cv_screen_device * p_device,
+cv_uptr cv_screen_device_read(cv_screen_device * p_device,
+    cv_array * p_buffer,
     unsigned short * r_key);
 
 /* --- output --- */

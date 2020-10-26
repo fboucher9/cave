@@ -33,7 +33,11 @@ struct cv_screen_device {
     cv_screen_window * * p_window_table;
     /* -- */
     cv_bool b_enabled;
-    char c_padding[7u];
+    unsigned char i_input_cache_len;
+    unsigned char e_input_cache_state;
+    char c_padding[5u];
+    /* -- */
+    unsigned char a_input_cache[32u];
 };
 
 cv_debug_decl_(g_screen_device, "cv_screen_device",
@@ -249,6 +253,8 @@ static cv_bool cv_screen_device_init(
                 if (init_key_table(p_this)) {
                     if (init_window_table(p_this)) {
                         p_this->b_enabled = cv_false;
+                        p_this->i_input_cache_len = 0;
+                        p_this->e_input_cache_state = 0;
                         b_result = cv_true;
                         if (!b_result) {
                             cleanup_window_table(p_this);
@@ -418,11 +424,10 @@ cv_screen_window * cv_screen_device_get_window(
  *
  */
 
-cv_bool cv_screen_device_read(cv_screen_device * p_this,
-    unsigned short * r_key) {
+static cv_bool cv_screen_device_read_token(
+    cv_screen_device * p_this, unsigned char * r_token) {
     cv_bool b_result = cv_false;
-    cv_debug_assert_(p_this, cv_debug_code_null_ptr);
-    /* read from input one byte at a time */
+    cv_debug_assert_(p_this && r_token, cv_debug_code_null_ptr);
     {
         unsigned char a_buffer[1u];
         cv_array o_array;
@@ -431,16 +436,110 @@ cv_bool cv_screen_device_read(cv_screen_device * p_this,
             cv_sptr const i_read_result = cv_file_read(
                 p_this->o_desc.p_file, &o_array);
             if (i_read_result > 0) {
-                *r_key = a_buffer[0u];
+                *r_token = a_buffer[0u];
                 b_result = cv_true;
             }
         }
         cv_array_cleanup(&o_array);
     }
+    return b_result;
+}
+
+/*
+ *
+ */
+
+static cv_bool cv_screen_device_is_complete_sequence(
+    unsigned char const * pc_uchar,
+    cv_uptr i_buffer_iterator) {
+    cv_bool b_result = cv_false;
+    /* Detect that we have accumulated enough data */
+    if (0x1b == pc_uchar[0u]) {
+        if (i_buffer_iterator > 1) {
+            if ('[' == pc_uchar[1u]) {
+                if (i_buffer_iterator > 2) {
+                    if ((0x20u <= pc_uchar[i_buffer_iterator - 1]) &&
+                        (0x3fu >= pc_uchar[i_buffer_iterator - 1])) {
+                    } else {
+                        b_result = cv_true;
+                    }
+                }
+            } else if ('O' == pc_uchar[1u]) {
+                if (i_buffer_iterator > 2) {
+                    b_result = cv_true;
+                }
+            } else if ('P' == pc_uchar[1u]) {
+                if (i_buffer_iterator > 2) {
+                    b_result = cv_true;
+                }
+            } else {
+                if ((0x20u <= pc_uchar[1u]) &&
+                    (0x2fu >= pc_uchar[1u])) {
+                } else {
+                    b_result = cv_true;
+                }
+            }
+        }
+    } else {
+        b_result = cv_true;
+    }
+    return b_result;
+}
+
+/*
+ *
+ */
+
+cv_uptr cv_screen_device_read(cv_screen_device * p_this,
+    cv_array * p_buffer,
+    unsigned short * r_key) {
+    cv_uptr i_buffer_iterator = 0;
+    cv_bool b_continue = cv_true;
+    cv_uptr const i_buffer_len = cv_array_len(p_buffer);
+    cv_debug_assert_(p_this, cv_debug_code_null_ptr);
+    /* read from input one byte at a time */
+    while (b_continue) {
+        unsigned char c_token = 0;
+        if (cv_screen_device_read_token(p_this, &c_token)) {
+            /* level 1 decode of unicode */
+            /* level 2 handle of C0, C1, CSI, SS2, SS3, OSC, ... */
+            /* c0 is 0x00 - 0x1f */
+            /* ESC is 0x1b */
+            /* c1 is 0x80 - 0x9f or ESC 0x40 - 0x5f */
+            /* CSI is 0x9b or ESC 0x5b */
+            /* ST is 0x9c or ESC 0x5c */
+            /* Fs is ESC 0x60 - 0x7f */
+            /* Spec is ECMA-48 */
+            /* Generic escape */
+            /* ESC I F */
+            /* I is 0x20 - 0x2f */
+            /* Fp is 0x30 - 0x3f */
+            /* Fe is 0x40 - 0x5f */
+            /* Fs is 0x60 - 0x7f */
+            /* Ft is 0x40 - 0x7f */
+            if (i_buffer_iterator < i_buffer_len) {
+                p_buffer->o_min.p_uchar[i_buffer_iterator] = c_token;
+                i_buffer_iterator ++;
+                if (cv_screen_device_is_complete_sequence(
+                        p_buffer->o_min.pc_uchar,
+                        i_buffer_iterator)) {
+                    *r_key = c_token;
+                    b_continue = cv_false;
+                }
+            } else {
+                i_buffer_iterator = 0;
+                b_continue = cv_false;
+
+            }
+        } else {
+            i_buffer_iterator = 0;
+            b_continue = cv_false;
+        }
+    }
     /* read until a full character or escape sequence is read */
     /* compare input sequence with table of keys */
     /* return found key */
-    return b_result;
+    return i_buffer_iterator;
 }
 
 void cv_screen_device_apply(cv_screen_device * p_this) {

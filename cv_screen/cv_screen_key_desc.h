@@ -16,11 +16,6 @@
  */
 
 struct cv_screen_key_desc {
-    cv_bool b_modifier_shift;
-    cv_bool b_modifier_control;
-    cv_bool b_modifier_alt;
-    char c_padding[5u];
-    /* -- */
     cv_array o_sequence;
     /* -- */
     cv_array o_name;

@@ -9,6 +9,7 @@
 #include <cv_debug/cv_debug.h>
 #include <cv_heap/cv_heap.h>
 #include <cv_misc/cv_cast.h>
+#include <cv_runtime.h>
 
 /*
  *
@@ -46,6 +47,7 @@ static cv_bool init_glyph_table( cv_screen_window * p_window ) {
         p_window->p_glyph_table = cv_cast_(unsigned short *)cv_heap_alloc(
             i_glyph_table_len, "window_glyph_table", 0);
         if (p_window->p_glyph_table) {
+            cv_runtime_memset(p_window->p_glyph_table, 0, i_glyph_table_len);
             b_result = cv_true;
         }
     }
@@ -79,6 +81,8 @@ static cv_bool init_attribute_table( cv_screen_window * p_window ) {
         p_window->p_attribute_table = cv_cast_(unsigned short *)cv_heap_alloc(
             i_attribute_table_len, "window_attr_table", 0);
         if (p_window->p_attribute_table) {
+            cv_runtime_memset(p_window->p_attribute_table, 0,
+                i_attribute_table_len);
             b_result = cv_true;
         }
     }

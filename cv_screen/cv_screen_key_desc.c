@@ -18,9 +18,6 @@ void cv_screen_key_desc_init( cv_screen_key_desc * p_this ) {
     cv_debug_construct_(g_class, p_this);
     cv_array_init(&p_this->o_sequence);
     cv_array_init(&p_this->o_name);
-    p_this->b_modifier_shift = cv_false;
-    p_this->b_modifier_control = cv_false;
-    p_this->b_modifier_alt = cv_false;
 }
 
 /*
