@@ -494,53 +494,42 @@ cv_uptr cv_screen_device_read(cv_screen_device * p_this,
     cv_array * p_buffer,
     unsigned short * r_key) {
     cv_uptr i_buffer_iterator = 0;
-    cv_bool b_continue = cv_true;
-    cv_uptr const i_buffer_len = cv_array_len(p_buffer);
+    unsigned char c_token = 0;
     cv_debug_assert_(p_this, cv_debug_code_null_ptr);
     /* read from input one byte at a time */
-    while (b_continue) {
-        unsigned char c_token = 0;
-        if (cv_screen_device_read_token(p_this, &c_token)) {
-            /* level 1 decode of unicode */
-            /* level 2 handle of C0, C1, CSI, SS2, SS3, OSC, ... */
-            /* c0 is 0x00 - 0x1f */
-            /* ESC is 0x1b */
-            /* c1 is 0x80 - 0x9f or ESC 0x40 - 0x5f */
-            /* CSI is 0x9b or ESC 0x5b */
-            /* ST is 0x9c or ESC 0x5c */
-            /* Fs is ESC 0x60 - 0x7f */
-            /* Spec is ECMA-48 */
-            /* Generic escape */
-            /* ESC I F */
-            /* I is 0x20 - 0x2f */
-            /* Fp is 0x30 - 0x3f */
-            /* Fe is 0x40 - 0x5f */
-            /* Fs is 0x60 - 0x7f */
-            /* Ft is 0x40 - 0x7f */
-            if (i_buffer_iterator < i_buffer_len) {
-                p_buffer->o_min.p_uchar[i_buffer_iterator] = c_token;
-                i_buffer_iterator ++;
-                if (cv_screen_device_is_complete_sequence(
-                        p_buffer->o_min.pc_uchar,
-                        i_buffer_iterator)) {
-                    *r_key = c_token;
-                    b_continue = cv_false;
+    if (cv_screen_device_read_token(p_this, &c_token)) {
+        if (p_this->i_input_cache_len < sizeof(p_this->a_input_cache)) {
+            p_this->a_input_cache[p_this->i_input_cache_len] =
+                c_token;
+            p_this->i_input_cache_len ++;
+            /* read until a full character or escape sequence is read */
+            if (cv_screen_device_is_complete_sequence(
+                    p_this->a_input_cache,
+                    p_this->i_input_cache_len)) {
+                cv_uptr const i_buffer_len = cv_array_len(p_buffer);
+                if (i_buffer_len >= p_this->i_input_cache_len) {
+                    while ((i_buffer_iterator < p_this->i_input_cache_len) &&
+                        (i_buffer_iterator < i_buffer_len)) {
+                        p_buffer->o_min.p_uchar[i_buffer_iterator] =
+                            p_this->a_input_cache[i_buffer_iterator];
+                        i_buffer_iterator ++;
+                    }
                 }
-            } else {
-                i_buffer_iterator = 0;
-                b_continue = cv_false;
-
+                p_this->i_input_cache_len = 0;
+                /* compare input sequence with table of keys */
+                /* return found key */
+                *r_key = c_token;
             }
         } else {
-            i_buffer_iterator = 0;
-            b_continue = cv_false;
+            p_this->i_input_cache_len = 0;
         }
     }
-    /* read until a full character or escape sequence is read */
-    /* compare input sequence with table of keys */
-    /* return found key */
     return i_buffer_iterator;
 }
+
+/*
+ *
+ */
 
 void cv_screen_device_apply(cv_screen_device * p_this) {
     (void)p_this;

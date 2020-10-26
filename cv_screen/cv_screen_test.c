@@ -75,6 +75,8 @@ void cv_screen_test(void) {
                         if ('q' == a_buffer[0u]) {
                             b_continue = cv_false;
                         }
+                    } else {
+                        cv_print_0("err!\r\n", 80);
                     }
                     cv_array_cleanup(&o_buffer);
                 }
