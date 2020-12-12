@@ -8,6 +8,12 @@ cv_number_format const * cv_number_format_dec(void) {
     return &g_format_dec;
 }
 
+cv_number_format const * cv_number_format_dec10(void) {
+    static cv_number_format g_format_dec10 = {
+        0, 10, 0, 0, cv_number_base_decimal, {0u} };
+    return &g_format_dec10;
+}
+
 cv_number_format const * cv_number_format_hex(void) {
     static cv_number_format g_format_hex = {
         0, 0, 0, 0, cv_number_base_hexadecimal, {0u} };

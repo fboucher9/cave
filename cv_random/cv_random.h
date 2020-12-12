@@ -14,10 +14,8 @@
  */
 
 struct cv_random {
-    union cv_random_data {
-        unsigned long i_machine;
-        void * pv_padding[1u];
-    } o_data;
+    unsigned long i_machine[3u];
+    unsigned long l_padding[1u];
 };
 
 void cv_random_init( struct cv_random * p_this, unsigned long i_seed );

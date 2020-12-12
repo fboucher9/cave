@@ -7,9 +7,11 @@
  *
  */
 
-struct cv_random;
+typedef struct cv_random cv_random;
 
-struct cv_random_crypto;
+typedef struct cv_random_crypto cv_random_crypto;
+
+typedef struct cv_random_tiny cv_random_tiny;
 
 #endif /* #ifndef cv_random_pred_h_ */
 

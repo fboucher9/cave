@@ -49,6 +49,8 @@ struct cv_number_format {
 
 cv_number_format const * cv_number_format_dec(void);
 
+cv_number_format const * cv_number_format_dec10(void);
+
 cv_number_format const * cv_number_format_hex(void);
 
 cv_number_format const * cv_number_format_hex2(void);
