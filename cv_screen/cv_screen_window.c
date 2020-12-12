@@ -146,6 +146,7 @@ static void cv_screen_window_cleanup( cv_screen_window * p_window ) {
     cv_debug_assert_(p_window, cv_debug_code_null_ptr);
     cleanup_attribute_table(p_window);
     cleanup_glyph_table(p_window);
+    cv_debug_destruct_(g_class, p_window);
 }
 
 /*

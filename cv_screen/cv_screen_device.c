@@ -8,6 +8,8 @@
 #include <cv_screen/cv_screen_device_desc.h>
 #include <cv_screen/cv_screen_key.h>
 #include <cv_screen/cv_screen_linux.h>
+#include <cv_screen/cv_screen_window.h>
+#include <cv_screen/cv_screen_window_desc.h>
 #include <cv_heap/cv_heap.h>
 #include <cv_runtime.h>
 #include <cv_file/cv_file.h>
@@ -39,6 +41,10 @@ struct cv_screen_device {
     char c_padding[5u];
     /* -- */
     unsigned char a_input_cache[32u];
+    /* -- */
+    unsigned short * p_root_glyph_rect;
+    /* -- */
+    unsigned short * p_root_attribute_rect;
 };
 
 cv_debug_decl_(g_screen_device, "cv_screen_device",
@@ -227,6 +233,81 @@ static void cleanup_window_table( cv_screen_device * p_this) {
  *
  */
 
+static void clear_root_rect( cv_screen_device * p_this) {
+    cv_uptr i_cursor_max = p_this->o_desc.i_width;
+    i_cursor_max *= p_this->o_desc.i_height;
+    {
+        cv_uptr i_cursor_offset = 0;
+        while (i_cursor_offset < i_cursor_max) {
+            p_this->p_root_glyph_rect[i_cursor_offset] = 0;
+            p_this->p_root_attribute_rect[i_cursor_offset] = 0;
+            i_cursor_offset ++;
+        }
+    }
+}
+
+/*
+ *
+ */
+
+static cv_bool init_root_rect( cv_screen_device * p_this ) {
+    cv_bool b_result = cv_false;
+    cv_debug_assert_(p_this, cv_debug_code_null_ptr);
+    {
+        cv_uptr i_placement_len = sizeof(unsigned short);
+        i_placement_len *= p_this->o_desc.i_width;
+        i_placement_len *= p_this->o_desc.i_height;
+        {
+            void * p_glyph_placement = cv_heap_alloc(i_placement_len,
+                "root_glyph_rect", 0);
+            if (p_glyph_placement) {
+                void * p_attribute_placement = cv_heap_alloc(i_placement_len,
+                    "root_attribute_rect", 0);
+                if (p_attribute_placement) {
+                    p_this->p_root_glyph_rect =
+                        cv_cast_(unsigned short *)(p_glyph_placement);
+                    p_this->p_root_attribute_rect =
+                        cv_cast_(unsigned short *)(p_attribute_placement);
+                    clear_root_rect(p_this);
+                    b_result = cv_true;
+                    if (!b_result) {
+                        if (p_attribute_placement) {
+                            cv_heap_free(p_attribute_placement);
+                            p_attribute_placement = 0;
+                        }
+                    }
+                }
+                if (!b_result) {
+                    if (p_glyph_placement) {
+                        cv_heap_free(p_glyph_placement);
+                        p_glyph_placement = 0;
+                    }
+                }
+            }
+        }
+    }
+    return b_result;
+}
+
+/*
+ *
+ */
+
+static void cleanup_root_rect( cv_screen_device * p_this ) {
+    if (p_this->p_root_glyph_rect) {
+        cv_heap_free(p_this->p_root_glyph_rect);
+        p_this->p_root_glyph_rect = 0;
+    }
+    if (p_this->p_root_attribute_rect) {
+        cv_heap_free(p_this->p_root_attribute_rect);
+        p_this->p_root_attribute_rect = 0;
+    }
+}
+
+/*
+ *
+ */
+
 static cv_bool copy_descriptor( cv_screen_device * p_this,
     cv_screen_device_desc const * p_desc) {
     cv_bool b_result = cv_false;
@@ -253,10 +334,15 @@ static cv_bool cv_screen_device_init(
             if (init_glyph_table(p_this)) {
                 if (init_key_table(p_this)) {
                     if (init_window_table(p_this)) {
-                        p_this->b_enabled = cv_false;
-                        p_this->i_input_cache_len = 0;
-                        p_this->e_input_cache_state = 0;
-                        b_result = cv_true;
+                        if (init_root_rect(p_this)) {
+                            p_this->b_enabled = cv_false;
+                            p_this->i_input_cache_len = 0;
+                            p_this->e_input_cache_state = 0;
+                            b_result = cv_true;
+                            if (!b_result) {
+                                cleanup_root_rect(p_this);
+                            }
+                        }
                         if (!b_result) {
                             cleanup_window_table(p_this);
                         }
@@ -284,6 +370,7 @@ static cv_bool cv_screen_device_init(
 static void cv_screen_device_cleanup(
     cv_screen_device * p_this) {
     cv_debug_assert_(p_this, cv_debug_code_null_ptr);
+    cleanup_root_rect(p_this);
     cleanup_window_table(p_this);
     cleanup_key_table(p_this);
     cleanup_glyph_table(p_this);
@@ -613,6 +700,65 @@ cv_uptr cv_screen_device_read(cv_screen_device * p_this,
  *
  */
 
+static void render_window(cv_screen_device * p_this,
+    cv_screen_window * p_window) {
+    /* copy the window into the root rect */
+    cv_screen_window_desc o_window_desc;
+    unsigned short * p_window_glyph = 0;
+    unsigned short * p_window_attr = 0;
+    if (cv_screen_window_query(p_window,
+            &o_window_desc,
+            &p_window_glyph,
+            &p_window_attr)) {
+        unsigned short i_cursor_y = 0;
+        /* for all lines of window */
+        while (i_cursor_y < o_window_desc.i_height) {
+            /* for all columns of window */
+            unsigned short i_cursor_x = 0;
+            while (i_cursor_x < o_window_desc.i_width) {
+                cv_uptr i_offset = 0;
+                unsigned short i_glyph = 0;
+                unsigned short i_attr = 0;
+                i_offset = i_cursor_y;
+                i_offset *= o_window_desc.i_width;
+                i_offset += i_cursor_x;
+                i_glyph = p_window_glyph[i_offset];
+                i_attr = p_window_attr[i_offset];
+                (void)i_attr;
+                if (i_glyph) {
+                    cv_uptr i_root_offset = 0;
+                    i_root_offset = o_window_desc.i_top;
+                    i_root_offset *= p_this->o_desc.i_width;
+                    i_root_offset += o_window_desc.i_left;
+                    p_this->p_root_glyph_rect[i_root_offset] = i_glyph;
+                }
+                i_cursor_x ++;
+            }
+            i_cursor_y ++;
+        }
+    }
+}
+
+/*
+ *
+ */
+
+static void render_all_window(cv_screen_device * p_this) {
+    unsigned short i_window_index = 0;
+    while (i_window_index < p_this->o_desc.i_window_count) {
+        cv_screen_window * p_window = 0;
+        p_window = p_this->p_window_table[i_window_index];
+        if (p_window) {
+            render_window(p_this, p_window);
+        }
+        i_window_index ++;
+    }
+}
+
+/*
+ *
+ */
+
 void cv_screen_device_apply(cv_screen_device * p_this) {
     (void)p_this;
     /* first step is to render an image of all the windows */
@@ -624,6 +770,61 @@ void cv_screen_device_apply(cv_screen_device * p_this) {
     /* for all characters of screen */
     /* set attribute */
     /* set glyph */
+
+    /* clear the front buffer */
+    clear_root_rect(p_this);
+
+    /* render the front buffer */
+    render_all_window(p_this);
+
+#if 0
+    {
+        cv_screen_window_desc o_root_info;
+        unsigned short * p_root_glyph = 0;
+        unsigned short * p_root_attr = 0;
+        if (cv_screen_window_query(p_root,
+                &o_root_info,
+                &p_root_glyph,
+                &p_root_attr)) {
+            unsigned short i_cursor_y = 0;
+            /* for all lines of window */
+            while (i_cursor_y < o_root_info.i_height) {
+                /* for all columns of window */
+                unsigned short i_cursor_x = 0;
+                cv_print_char('[');
+                while (i_cursor_x < o_root_info.i_width) {
+                    unsigned long i_offset = 0;
+                    unsigned short i_glyph = 0;
+                    unsigned short i_attr = 0;
+                    i_offset = i_cursor_y;
+                    i_offset *= o_root_info.i_width;
+                    i_offset += i_cursor_x;
+                    i_glyph = p_root_glyph[i_offset];
+                    i_attr = p_root_attr[i_offset];
+                    (void)i_attr;
+                    if (i_glyph) {
+                        cv_print_char(i_glyph & 0x7fu);
+                    } else {
+                        cv_print_char('.');
+                    }
+                    i_cursor_x ++;
+                }
+                cv_print_char(']');
+                i_cursor_y ++;
+                if (i_cursor_y < o_root_info.i_height) {
+                    cv_print_char('\r');
+                    cv_print_char('\n');
+                }
+            }
+        }
+        cv_print_char('\r');
+        cv_print_char(0x1b);
+        cv_print_char('[');
+        cv_print_char('1');
+        cv_print_char('0');
+        cv_print_char('A');
+    }
+#endif /* #if 0 */
 }
 
 /* end-of-file: cv_screen_device.c */
