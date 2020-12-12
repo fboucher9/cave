@@ -61,7 +61,6 @@ void cv_screen_test(void) {
                     cv_bool b_continue = cv_true;
                     unsigned short i_player_x = 20;
                     unsigned short i_player_y = 5;
-                    cv_screen_device_set_window(p_device, 0, p_root);
                     while (b_continue) {
                         cv_bool b_render = cv_false;
                         cv_file_poll a_poll[1u];
@@ -129,6 +128,7 @@ void cv_screen_test(void) {
                             cv_screen_window_attribute(p_root, 2);
                             cv_screen_window_write(p_root, 'F');
 
+#if 1
                             /* Do a debug preview */
                             {
                                 cv_screen_window_desc o_root_info;
@@ -176,6 +176,7 @@ void cv_screen_test(void) {
                                 cv_print_char('0');
                                 cv_print_char('A');
                             }
+#endif
 
                             /* render of screen */
                             cv_screen_device_set_window(p_device, 0, p_root);
