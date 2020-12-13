@@ -42,31 +42,23 @@ unsigned long cv_random_pick( struct cv_random * p_this,
         cv_ull const oldstate = p_this->i_machine;
 
         /* LCG */
-#define cv_random_a_ \
-        ((cv_cast_(cv_ull)(0x5851f42dul) << 32u) + \
-         (cv_cast_(cv_ull)(0x4c957f2dul)))
-#define cv_random_c_ \
-        ((cv_cast_(cv_ull)(0x14057b7eul) << 32u) + \
-         (cv_cast_(cv_ull)(0xf767814ful)))
         p_this->i_machine =
-            p_this->i_machine * cv_random_a_ +
-            cv_random_c_;
-#undef cv_random_a_
-#undef cv_random_c_
+            oldstate *
+            ((cv_cast_(cv_ull)(0x5851f42dul) << 32u) +
+                (cv_cast_(cv_ull)(0x4c957f2dul))) +
+            ((cv_cast_(cv_ull)(0x14057b7eul) << 32u) +
+                (cv_cast_(cv_ull)(0xf767814ful))) ;
 
         /* PCG-XSH-RR */
         {
-            unsigned long const xorshifted =
-                cv_cast_(unsigned long)(
-                    ((oldstate >> 18u) ^ oldstate) >> 27u);
+            unsigned long const xorshifted = cv_cast_(unsigned long)(
+                ((oldstate >> 18u) ^ oldstate) >> 27u);
 
-            unsigned int const rot =
-                cv_cast_(unsigned int)(
-                    oldstate >> 59u);
+            unsigned int const rot = cv_cast_(unsigned int)(
+                oldstate >> 59u);
 
-            i_value =
-                cv_cast_(unsigned long)(
-                    (xorshifted >> rot) | (xorshifted << ((-rot) & 31)));
+            i_value = cv_cast_(unsigned long)(
+                (xorshifted >> rot) | (xorshifted << ((-rot) & 31)));
         }
 
         if ( i_modulo) {
