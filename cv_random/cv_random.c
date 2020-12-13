@@ -6,6 +6,7 @@
 
 #include <cv_random/cv_random.h>
 #include <cv_debug/cv_debug.h>
+#include <cv_misc/cv_cast.h>
 
 cv_debug_decl_(cv_random_class, "cv_random", sizeof(struct cv_random));
 
@@ -16,9 +17,7 @@ cv_debug_decl_(cv_random_class, "cv_random", sizeof(struct cv_random));
 void cv_random_init( struct cv_random * p_this, unsigned long i_seed ) {
     cv_debug_assert_(p_this, cv_debug_code_null_ptr);
     cv_debug_construct_(cv_random_class, p_this);
-    p_this->i_machine[0u] = i_seed;
-    p_this->i_machine[1u] = i_seed;
-    p_this->i_machine[2u] = i_seed;
+    p_this->i_machine = i_seed;
 }
 
 /*
@@ -38,18 +37,43 @@ unsigned long cv_random_pick( struct cv_random * p_this,
     unsigned long i_modulo) {
     unsigned long i_value = 0;
     cv_debug_assert_(p_this, cv_debug_code_null_ptr);
-    p_this->i_machine[0u] =
-        ( ( p_this->i_machine[0u] * 1103515245ul) + 12345ul);
-    p_this->i_machine[1u] =
-        ( ( p_this->i_machine[1u] * 1103515245ul) + 12345ul);
-    p_this->i_machine[2u] =
-        ( ( p_this->i_machine[2u] * 1103515245ul) + 12345ul);
-    i_value = ((p_this->i_machine[0u] >> 18u) & 0x000003FFul)
-        | ((p_this->i_machine[1u] >> 8u) & 0x000FFC00ul)
-        | ((p_this->i_machine[2u] << 2u) & 0xFFF00000ul);
-    if ( i_modulo) {
-        i_value = ( i_value % i_modulo);
+
+    {
+        cv_ull const oldstate = p_this->i_machine;
+
+        /* LCG */
+#define cv_random_a_ \
+        ((cv_cast_(cv_ull)(0x5851f42dul) << 32u) + \
+         (cv_cast_(cv_ull)(0x4c957f2dul)))
+#define cv_random_c_ \
+        ((cv_cast_(cv_ull)(0x14057b7eul) << 32u) + \
+         (cv_cast_(cv_ull)(0xf767814ful)))
+        p_this->i_machine =
+            p_this->i_machine * cv_random_a_ +
+            cv_random_c_;
+#undef cv_random_a_
+#undef cv_random_c_
+
+        /* PCG-XSH-RR */
+        {
+            unsigned long const xorshifted =
+                cv_cast_(unsigned long)(
+                    ((oldstate >> 18u) ^ oldstate) >> 27u);
+
+            unsigned int const rot =
+                cv_cast_(unsigned int)(
+                    oldstate >> 59u);
+
+            i_value =
+                cv_cast_(unsigned long)(
+                    (xorshifted >> rot) | (xorshifted << ((-rot) & 31)));
+        }
+
+        if ( i_modulo) {
+            i_value = ( i_value % i_modulo);
+        }
     }
+
     return i_value;
 }
 

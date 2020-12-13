@@ -8,14 +8,14 @@
  */
 
 #include <cv_random/cv_random_pred.h>
+#include <cv_misc/cv_types.h>
 
 /*
  *
  */
 
 struct cv_random {
-    unsigned long i_machine[3u];
-    unsigned long l_padding[1u];
+    cv_ull i_machine;
 };
 
 void cv_random_init( struct cv_random * p_this, unsigned long i_seed );
