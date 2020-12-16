@@ -17,7 +17,12 @@ cv_debug_decl_(cv_random_class, "cv_random", sizeof(struct cv_random));
 void cv_random_init( struct cv_random * p_this, unsigned long i_seed ) {
     cv_debug_assert_(p_this, cv_debug_code_null_ptr);
     cv_debug_construct_(cv_random_class, p_this);
-    p_this->i_machine = i_seed;
+    p_this->i_machine =
+        i_seed *
+        ((cv_cast_(cv_ull)(0x5851f42dul) << 32u) +
+            (cv_cast_(cv_ull)(0x4c957f2dul))) +
+        ((cv_cast_(cv_ull)(0x14057b7eul) << 32u) +
+            (cv_cast_(cv_ull)(0xf767814ful))) ;
 }
 
 /*

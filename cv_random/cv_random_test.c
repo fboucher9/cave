@@ -19,19 +19,13 @@
  */
 
 static void cv_random_test_step(
-    unsigned long i_seed,
-    unsigned long i_count,
-    unsigned long i_modulo,
-    unsigned long i_result) {
+    unsigned long i_seed) {
     unsigned long i_value = 0;
     struct cv_random o_random;
     cv_random_init(&o_random, i_seed);
-    while (i_count) {
-        i_value = cv_random_pick(&o_random, i_modulo);
-        i_count --;
-    }
+    i_value = cv_random_pick(&o_random, 0);
+    (void)i_value;
     cv_random_cleanup(&o_random);
-    cv_debug_assert_(i_value == i_result, cv_debug_code_error);
 }
 
 /*
@@ -86,16 +80,41 @@ static void cv_random_test_bench_2(void) {
  *
  */
 
-static void cv_random_test_check_tiny(void) {
-    struct cv_random_tiny o_random;
-    unsigned long i_count = 10ul;
+static void cv_random_test_check_pcg(
+    unsigned long i_seed,
+    unsigned long i_count) {
+    struct cv_random o_random;
+    unsigned long i_iterator = i_count;
     unsigned long i_value = 0;
-    cv_random_tiny_init(&o_random, 1ul);
-    while (i_count) {
+    cv_random_init(&o_random, i_seed);
+    cv_print_0("PCG", 80);
+    cv_print_nl();
+    while (i_iterator) {
+        i_value = cv_random_pick(&o_random, 0) & 0xfffffffful;
+        cv_print_unsigned(i_value, cv_number_format_dec10());
+        cv_print_nl();
+        i_iterator --;
+    }
+}
+
+/*
+ *
+ */
+
+static void cv_random_test_check_tiny(
+    unsigned long i_seed,
+    unsigned long i_count) {
+    struct cv_random_tiny o_random;
+    unsigned long i_iterator = i_count;
+    unsigned long i_value = 0;
+    cv_random_tiny_init(&o_random, i_seed);
+    cv_print_0("TINY", 80);
+    cv_print_nl();
+    while (i_iterator) {
         i_value = cv_random_tiny_pick(&o_random, 0) & 0xfffffffful;
         cv_print_unsigned(i_value, cv_number_format_dec10());
         cv_print_nl();
-        i_count --;
+        i_iterator --;
     }
     cv_random_tiny_cleanup(&o_random);
 }
@@ -128,8 +147,9 @@ void cv_random_test(cv_options_it * p_options_it) {
             cv_random_test_bench_2();
         }
     } else {
-        cv_random_test_step(12345UL, 10, 52, 49);
-        cv_random_test_check_tiny();
+        cv_random_test_check_pcg(2UL, 10ul);
+        cv_random_test_check_tiny(1ul, 10ul);
+        cv_random_test_step(12345UL);
     }
     cv_array_cleanup(&o_array);
 }
