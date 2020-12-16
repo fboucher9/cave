@@ -27,8 +27,8 @@ void cv_screen_test(void) {
     o_device_desc.i_attribute_count = 16;
     o_device_desc.i_glyph_count = 128;
     o_device_desc.i_window_count = 4;
-    o_device_desc.i_width = 80;
-    o_device_desc.i_height = 24;
+    o_device_desc.i_width = 50;
+    o_device_desc.i_height = 14;
     {
         cv_screen_device * p_device = 0;
         p_device = cv_screen_device_create(&o_device_desc);
@@ -54,8 +54,8 @@ void cv_screen_test(void) {
                 cv_screen_window_desc_init(&o_desc);
                 o_desc.i_width = 40;
                 o_desc.i_height = 10;
-                o_desc.i_left = 0;
-                o_desc.i_top = 0;
+                o_desc.i_left = 5;
+                o_desc.i_top = 2;
                 p_root = cv_screen_window_create( &o_desc);
                 if (p_root) {
                     cv_bool b_continue = cv_true;
@@ -128,56 +128,6 @@ void cv_screen_test(void) {
                             cv_screen_window_attribute(p_root, 2);
                             cv_screen_window_write(p_root, 'F');
 
-#if 1
-                            /* Do a debug preview */
-                            {
-                                cv_screen_window_desc o_root_info;
-                                unsigned short * p_root_glyph = 0;
-                                unsigned short * p_root_attr = 0;
-                                if (cv_screen_window_query(p_root,
-                                        &o_root_info,
-                                        &p_root_glyph,
-                                        &p_root_attr)) {
-                                    unsigned short i_cursor_y = 0;
-                                    /* for all lines of window */
-                                    while (i_cursor_y < o_root_info.i_height) {
-                                        /* for all columns of window */
-                                        unsigned short i_cursor_x = 0;
-                                        cv_print_char('[');
-                                        while (i_cursor_x < o_root_info.i_width) {
-                                            unsigned long i_offset = 0;
-                                            unsigned short i_glyph = 0;
-                                            unsigned short i_attr = 0;
-                                            i_offset = i_cursor_y;
-                                            i_offset *= o_root_info.i_width;
-                                            i_offset += i_cursor_x;
-                                            i_glyph = p_root_glyph[i_offset];
-                                            i_attr = p_root_attr[i_offset];
-                                            (void)i_attr;
-                                            if (i_glyph) {
-                                                cv_print_char(i_glyph & 0x7fu);
-                                            } else {
-                                                cv_print_char('.');
-                                            }
-                                            i_cursor_x ++;
-                                        }
-                                        cv_print_char(']');
-                                        i_cursor_y ++;
-                                        if (i_cursor_y < o_root_info.i_height) {
-                                            cv_print_char('\r');
-                                            cv_print_char('\n');
-                                        }
-                                    }
-                                }
-                                cv_print_char('\r');
-                                cv_print_char(0x1b);
-                                cv_print_char('[');
-                                cv_print_char('1');
-                                cv_print_char('0');
-                                cv_print_char('A');
-                            }
-#endif
-
                             /* render of screen */
                             cv_screen_device_set_window(p_device, 0, p_root);
                             cv_screen_device_apply(p_device);
@@ -198,7 +148,7 @@ void cv_screen_test(void) {
 
 
             cv_screen_device_leave(p_device);
-            cv_print_0("\n\n\n\n\n\n\n\n\n\n\n", 80);
+            cv_print_0("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", 80);
             cv_print_0("\033[?25h", 80);
             cv_print_0("after", 80);
             cv_print_nl();

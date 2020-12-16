@@ -728,8 +728,10 @@ static void render_window(cv_screen_device * p_this,
                 if (i_glyph) {
                     cv_uptr i_root_offset = 0;
                     i_root_offset = o_window_desc.i_top;
+                    i_root_offset += i_cursor_y;
                     i_root_offset *= p_this->o_desc.i_width;
                     i_root_offset += o_window_desc.i_left;
+                    i_root_offset += i_cursor_x;
                     p_this->p_root_glyph_rect[i_root_offset] = i_glyph;
                 }
                 i_cursor_x ++;
@@ -759,6 +761,17 @@ static void render_all_window(cv_screen_device * p_this) {
  *
  */
 
+static void print_char(cv_screen_device * p_this, unsigned char c_value) {
+    cv_array o_array;
+    cv_array_init_vector(&o_array, &c_value, 1);
+    cv_file_write(p_this->o_desc.p_file, &o_array);
+    cv_array_cleanup(&o_array);
+}
+
+/*
+ *
+ */
+
 void cv_screen_device_apply(cv_screen_device * p_this) {
     (void)p_this;
     /* first step is to render an image of all the windows */
@@ -777,54 +790,55 @@ void cv_screen_device_apply(cv_screen_device * p_this) {
     /* render the front buffer */
     render_all_window(p_this);
 
-#if 0
     {
-        cv_screen_window_desc o_root_info;
-        unsigned short * p_root_glyph = 0;
-        unsigned short * p_root_attr = 0;
-        if (cv_screen_window_query(p_root,
-                &o_root_info,
-                &p_root_glyph,
-                &p_root_attr)) {
-            unsigned short i_cursor_y = 0;
-            /* for all lines of window */
-            while (i_cursor_y < o_root_info.i_height) {
-                /* for all columns of window */
-                unsigned short i_cursor_x = 0;
-                cv_print_char('[');
-                while (i_cursor_x < o_root_info.i_width) {
-                    unsigned long i_offset = 0;
-                    unsigned short i_glyph = 0;
-                    unsigned short i_attr = 0;
-                    i_offset = i_cursor_y;
-                    i_offset *= o_root_info.i_width;
-                    i_offset += i_cursor_x;
-                    i_glyph = p_root_glyph[i_offset];
-                    i_attr = p_root_attr[i_offset];
-                    (void)i_attr;
-                    if (i_glyph) {
-                        cv_print_char(i_glyph & 0x7fu);
-                    } else {
-                        cv_print_char('.');
-                    }
-                    i_cursor_x ++;
+        unsigned short i_cursor_y = 0;
+        /* for all lines of window */
+        while (i_cursor_y < p_this->o_desc.i_height) {
+            /* for all columns of window */
+            unsigned short i_cursor_x = 0;
+            print_char(p_this, '[');
+            while (i_cursor_x < p_this->o_desc.i_width) {
+                unsigned long i_offset = 0;
+                unsigned short i_glyph = 0;
+                i_offset = i_cursor_y;
+                i_offset *= p_this->o_desc.i_width;
+                i_offset += i_cursor_x;
+                i_glyph = p_this->p_root_glyph_rect[i_offset];
+                /* unsigned short i_attr = 0; */
+                /*i_attr = p_root_attr[i_offset];
+                (void)i_attr; */
+                if (i_glyph) {
+                    print_char(p_this, i_glyph & 0x7fu);
+                } else {
+                    print_char(p_this, '.');
                 }
-                cv_print_char(']');
-                i_cursor_y ++;
-                if (i_cursor_y < o_root_info.i_height) {
-                    cv_print_char('\r');
-                    cv_print_char('\n');
-                }
+                i_cursor_x ++;
+            }
+            print_char(p_this, ']');
+            i_cursor_y ++;
+            if (i_cursor_y < p_this->o_desc.i_height) {
+                print_char(p_this, '\r');
+                print_char(p_this, '\n');
             }
         }
-        cv_print_char('\r');
-        cv_print_char(0x1b);
-        cv_print_char('[');
-        cv_print_char('1');
-        cv_print_char('0');
-        cv_print_char('A');
+        print_char(p_this, '\r');
+        print_char(p_this, 0x1b);
+        print_char(p_this, '[');
+        if (p_this->o_desc.i_height >= 10) {
+            unsigned int i_temp = p_this->o_desc.i_height;
+            i_temp /= 10;
+            i_temp %= 10;
+            i_temp += '0';
+            print_char(p_this, i_temp & 0xff);
+        }
+        {
+            unsigned int i_temp = p_this->o_desc.i_height;
+            i_temp %= 10;
+            i_temp += '0';
+            print_char(p_this, i_temp & 0xff);
+        }
+        print_char(p_this, 'A');
     }
-#endif /* #if 0 */
 }
 
 /* end-of-file: cv_screen_device.c */
