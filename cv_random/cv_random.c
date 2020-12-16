@@ -56,8 +56,8 @@ unsigned long cv_random_pick( struct cv_random * p_this,
 
         /* PCG-XSH-RR */
         {
-            unsigned long const xorshifted = cv_cast_(unsigned long)(
-                ((oldstate >> 18u) ^ oldstate) >> 27u);
+            unsigned long const xorshifted = cv_cast_(unsigned long)((
+                ((oldstate >> 18u) ^ oldstate) >> 27u) & 0xfffffffful);
 
             unsigned int const rot = cv_cast_(unsigned int)(
                 oldstate >> 59u);
