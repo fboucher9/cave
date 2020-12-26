@@ -41,12 +41,9 @@ void cv_screen_test(void) {
             /* setup windows */
 
 
-            cv_print_0("before", 80);
-            cv_print_nl();
             cv_screen_device_enter(p_device);
             cv_print_0("\033[?25l", 80);
-            cv_print_0("during\r\n", 80);
-            cv_print_0("\n\n\n\n\n\n\n\n\n\n\033[10A", 80);
+            cv_print_0("\r\n", 80);
 
             {
                 cv_screen_window_desc o_desc;
@@ -76,6 +73,7 @@ void cv_screen_test(void) {
                             i_buffer_len = cv_screen_device_read(p_device, &o_buffer);
                             if (i_buffer_len) {
                                 cv_uptr i_buffer_iterator = 0;
+                                cv_print_0("\033[A", 80);
                                 while (i_buffer_iterator < i_buffer_len) {
                                     unsigned char const c_token = a_buffer[i_buffer_iterator];
                                     if (i_buffer_iterator) {
@@ -118,6 +116,7 @@ void cv_screen_test(void) {
                             cv_array_cleanup(&o_buffer);
                         } else {
                             /* timeout ... */
+                            b_render = 1;
                         }
 
                         if (b_render) {
@@ -125,7 +124,7 @@ void cv_screen_test(void) {
                             /* modify windows */
                             cv_screen_window_goto(p_root,
                                 i_player_x, i_player_y);
-                            cv_screen_window_attribute(p_root, 2);
+                            cv_screen_window_attribute(p_root, 1);
                             cv_screen_window_write(p_root, 'F');
 
                             /* render of screen */
@@ -146,12 +145,9 @@ void cv_screen_test(void) {
                 cv_screen_window_desc_cleanup(&o_desc);
             }
 
-
             cv_screen_device_leave(p_device);
-            cv_print_0("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", 80);
+            cv_print_0("\n\n\n\n\n\n\n\n\n\n\n\n\n\n", 80);
             cv_print_0("\033[?25h", 80);
-            cv_print_0("after", 80);
-            cv_print_nl();
             cv_screen_device_destroy(p_device);
         }
     }
